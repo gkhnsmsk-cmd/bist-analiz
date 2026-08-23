@@ -483,8 +483,63 @@ div[data-baseweb="tab-panel"] {animation: icerik-gir .28s cubic-bezier(.22,.9,.3
     /* Başlık dar ekranda taşmasın */
     h1 {font-size: 1.5rem;}
 }
+
+/* ═════════════════════════════════════════════════════════════════════════
+   YENİ NAVİGASYON — düz buton tabanlı ana/alt gezinme çubukları
+   (st.tabs()'in yerini aldı; bkz. app.py'de _nav_satiri() yorum bloğu).
+   `.st-key-<isim>` sınıfları st.container(key=...) tarafından üretilir. ══ */
+
+/* Genel görünüm — masaüstünde de sekmelerden daha "buton" hissi versin */
+.st-key-ana_nav_bar button, .st-key-tarama_alt_nav button, .st-key-portfoy_alt_nav button {
+    font-weight: 650; letter-spacing: -.01em;
+}
+.st-key-ana_nav_bar {margin-bottom: .3rem;}
+.st-key-tarama_alt_nav, .st-key-portfoy_alt_nav {margin-bottom: .6rem;}
+.st-key-tarama_alt_nav button, .st-key-portfoy_alt_nav button {font-size: .86rem;}
+
+/* Yüzen sohbet düğmesi — masaüstünde gizli (sohbet zaten sağda sabit
+   görünür), sadece dar ekranda belirir. */
+.sohbet-fab {display: none; position: fixed; right: 18px; bottom: 18px; z-index: 1000;
+             width: 54px; height: 54px; border-radius: 50%; align-items: center;
+             justify-content: center; font-size: 1.5rem; text-decoration: none;
+             background: linear-gradient(135deg, rgba(14,165,233,.92), rgba(56,189,248,.78));
+             box-shadow: 0 8px 24px -4px rgba(56,189,248,.65), 0 0 0 1px rgba(125,211,252,.35);
+             transition: transform .12s ease, box-shadow .15s ease;}
+.sohbet-fab:active {transform: scale(.94);}
+
+@media (max-width: 480px) {
+    /* ── ANA NAV: gerçek bir mobil uygulama "bottom nav bar"ına dönüşür ──
+       position:fixed ile ekranın altına sabitlenir; içerik onun ALTINDA
+       kalmasın diye .block-container'a telafi edici alt boşluk eklenir. */
+    .st-key-ana_nav_bar {
+        position: fixed; left: 0; right: 0; bottom: 0; z-index: 999;
+        margin: 0; padding: 6px 8px calc(6px + env(safe-area-inset-bottom));
+        background: rgba(10,14,23,.94); backdrop-filter: blur(16px);
+        border-top: 1px solid var(--cam-kenar);
+        box-shadow: 0 -8px 24px rgba(0,0,0,.35);
+    }
+    .st-key-ana_nav_bar button {min-height: 56px; font-size: .82rem; padding: 4px 2px;}
+    /* Sayfa içeriği sabit alt çubuğun ARKASINDA kalmasın */
+    .block-container {padding-bottom: 84px !important;}
+
+    /* Alt (ikincil) seçiciler sabitlenmez — sayfayla birlikte kayar, sadece
+       dokunma hedefi büyütülür ve şerit taşmadan sığar. */
+    .st-key-tarama_alt_nav button, .st-key-portfoy_alt_nav button {
+        min-height: 46px; font-size: .74rem; padding: 4px 2px; white-space: normal;
+        line-height: 1.15;
+    }
+
+    /* Yüzen sohbet düğmesi: alt nav çubuğunun ÜSTÜNDE dursun */
+    .sohbet-fab {display: flex; bottom: calc(78px + env(safe-area-inset-bottom));}
+}
 </style>
 """, unsafe_allow_html=True)
+
+# Yüzen sohbet düğmesi — sadece mobilde görünür (yukarıdaki CSS), tıklanınca
+# sayfa içindeki #sohbet-panel-app çapasına native tarayıcı kaydırmasıyla
+# atlar (ekstra Streamlit çalıştırması/JS gerekmez).
+st.markdown('<a href="#sohbet-panel-app" class="sohbet-fab" title="AI Asistan">🤖</a>',
+           unsafe_allow_html=True)
 
 
 def radyal_gosterge_html(puan, etiket: str = "PUAN", kucuk: bool = False) -> str:
@@ -1447,12 +1502,60 @@ _bekleyen_secimleri_isle()
 # ana sayfa akışı iki kolona bölünür; sağ kolon CSS'te `position: sticky`
 # olduğu için ekranda kalır ama KENDİ kaydırma çubuğunu oluşturmaz.
 #
-# ÖNEMLİ TEKNİK AYRINTI: st.tabs() çağrısı `_ana_kolon` içinde yapılır, ama
-# aşağıdaki `with sekme_xxx:` blokları dosya boyunca kolonun DIŞINDA kalabilir.
-# Bu sorun değildir — Streamlit'te sekme nesneleri birer KAPSAYICIDIR; içeriğe
-# nerede yazıldığından bağımsız olarak kendi (kolonun içindeki) yerlerine
-# çizilirler. Böylece 1000+ satırlık sekme kodunu yeniden girintilemeye gerek
-# kalmaz.
+# NAVİGASYON MİMARİSİ — 2026 sonu, "baştan yazıldı" (kullanıcı isteği):
+# ─────────────────────────────────────────────────────────────────────
+# ÖNCEDEN: 10 sekmelik tek bir st.tabs() şeridi vardı. Masaüstünde çalışıyordu
+# ama mobilde ("dar ekranda 10 sekme yatay kayan bir şerit") gerçek bir mobil
+# UYGULAMA hissi vermiyordu — sadece masaüstü tasarımına "yama" (CSS ile
+# küçültme/kaydırma) yapılmıştı. Kullanıcı bunu AÇIKÇA reddetti: "sanki her
+# şey yama yapılmış gibi... profesyonel bir mobil web sitesi gibi olsun."
+#
+# YENİ MİMARİ: gerçek bir mobil uygulamanın yaptığı gibi — BİLGİ MİMARİSİ
+# baştan gruplandı, tek düz liste değil. iOS/Android'in "en fazla 5 alt sekme"
+# kuralına uyan 4 ANA hedef + gerektiğinde bir İKİNCİL (alt) seçici:
+#   🔍 Araştır   — tek hisse derinlemesine analiz (en sık kullanılan, ilk sekme)
+#   📈 Tarama    — "keşif" ailesi: Yükselebilecek / Öne Çıkan / Takas / Fon
+#   💼 Portföy   — "param" ailesi: Tavsiye / Sanal Portföy / Backtest / Geçmiş
+#   ℹ️ Durum     — sistem/ayarlar (en az kullanılan, son sırada)
+# Alt gruplar kendi içinde küçük bir ikinci buton sırası (segmented control)
+# ile seçilir. Böylece kullanıcı ASLA 10 seçenekle karşılaşmaz, en fazla 4.
+#
+# TEKNİK UYGULAMA: st.tabs() (baseweb pill şeridi, mobilde kaydırma gerektirir)
+# TAMAMEN kaldırıldı. Yerine düz st.button + st.session_state ile "hangi
+# sayfadayız" durumu tutuluyor; aktif buton type="primary" ile vurgulanıyor
+# (Streamlit'in kendi vurgu stilini kullanır, ekstra JS gerekmez). Bu, CSS
+# media query ile MASAÜSTÜNDE üstte yatay şerit, MOBİLDE ekranın altına
+# sabitlenmiş gerçek bir "bottom nav bar" (native app hissi) olarak render
+# edilir — `.st-key-ana_nav_bar` sınıfı üzerinden (bkz. yukarıdaki <style>).
+#
+# ÖNEMLİ: aşağıdaki `if _sayfa == "xxx":` blokları artık KOŞULLU ÇALIŞIR —
+# eski st.tabs() modelinde tüm sekmelerin Python kodu HER rerun'da çalışıp
+# sadece görsel olarak gizleniyordu; şimdi sadece aktif sayfanın kodu çalışır.
+# Bu hem daha hızlı hem de mobilde pil/veri tasarrufu sağlar.
+def _nav_satiri(kap_anahtari: str, durum_anahtari: str, ogeler, varsayilan: str):
+    """Sekme şeridi YERİNE geçen, düz buton tabanlı navigasyon sırası.
+
+    ogeler: (deger, ikon, etiket) üçlülerinden oluşan liste. Tıklanan öğe
+    `durum_anahtari` ile session_state'e yazılır ve sayfa yeniden çalıştırılır.
+    Aktif öğe type="primary" ile (mevcut camgöbeği vurgu stiliyle) öne çıkar.
+    `st.container(key=...)` sarmalayıcısı sayesinde CSS'te `.st-key-{kap_anahtari}`
+    ile hedeflenip mobilde sabit alt çubuğa, masaüstünde üst şeride dönüştürülür.
+    """
+    if durum_anahtari not in st.session_state:
+        st.session_state[durum_anahtari] = varsayilan
+    with st.container(key=kap_anahtari):
+        kolonlar = st.columns(len(ogeler))
+        for (deger, ikon, etiket), kol in zip(ogeler, kolonlar):
+            with kol:
+                aktif = st.session_state[durum_anahtari] == deger
+                if st.button(f"{ikon} {etiket}", key=f"{kap_anahtari}_{deger}",
+                             use_container_width=True,
+                             type="primary" if aktif else "secondary"):
+                    st.session_state[durum_anahtari] = deger
+                    st.rerun()
+    return st.session_state[durum_anahtari]
+
+
 _SOHBET_ACIK = True          # sohbet panelini kapatmak için False yapın
 
 if _SOHBET_ACIK:
@@ -1461,17 +1564,29 @@ else:
     _ana_kolon, _sohbet_kolonu = st.container(), None
 
 with _ana_kolon:
-    (sekme_arastir, sekme_yukselecek, sekme_tarama, sekme_takas, sekme_fon,
-     sekme_oto, sekme_sanal, sekme_backtest, sekme_tavsiye_gecmisi, sekme_durum) = st.tabs(
-        ["🔍 Hisse Araştır", "📈 Yükselebilecek Hisseler", "🚀 Öne Çıkan Hisseler",
-         "🤝 Takas Analizi", "🏦 Fon & Kurumsal", "💼 Portföy & Tavsiye",
-         "🧪 Sanal Portföy (Paper)", "📐 Backtest / Doğrulama",
-         "📒 Tavsiye Geçmişi", "ℹ️ Sistem Durumu"])
+    _sayfa = _nav_satiri("ana_nav_bar", "_sayfa_ana",
+        [("arastir", "🔍", "Araştır"), ("tarama", "📈", "Tarama"),
+         ("portfoy", "💼", "Portföy"), ("durum", "ℹ️", "Durum")],
+        varsayilan="arastir")
+
+    _alt_tarama = None
+    if _sayfa == "tarama":
+        _alt_tarama = _nav_satiri("tarama_alt_nav", "_sayfa_tarama_alt",
+            [("yukselecek", "📈", "Yükselebilecek"), ("one_cikan", "🚀", "Öne Çıkan"),
+             ("takas", "🤝", "Takas"), ("fon", "🏦", "Fon & Kurumsal")],
+            varsayilan="yukselecek")
+
+    _alt_portfoy = None
+    if _sayfa == "portfoy":
+        _alt_portfoy = _nav_satiri("portfoy_alt_nav", "_sayfa_portfoy_alt",
+            [("oto", "💼", "Tavsiye"), ("sanal", "🧪", "Sanal Portföy"),
+             ("backtest", "📐", "Backtest"), ("gecmis", "📒", "Geçmiş")],
+            varsayilan="oto")
 
 # ─────────────────────────────────────────────────────────────────────────────
 # 1) HİSSE ARAŞTIR
 # ─────────────────────────────────────────────────────────────────────────────
-with sekme_arastir:
+if _sayfa == "arastir":
     col1, col2 = st.columns([3, 1])
     with col1:
         sembol = hisse_secici("Hisse seçin — kod ya da şirket adı yazabilirsiniz:",
@@ -1805,7 +1920,7 @@ with sekme_arastir:
 # örüntü/istatistiksel benzerlik) kullanıyordu; kullanıcı geri bildirimiyle
 # yanıltıcı bulunduğu için kaldırıldı. Artık analiz_motoru.vade_taramasi()
 # çağrılır — saf TEKNİK (fiyat/hacim/trend) puanlamaya dayanır.
-with sekme_yukselecek:
+if _sayfa == "tarama" and _alt_tarama == "yukselecek":
     st.markdown("Tarama evrenindeki hisseleri **teknik puanlama motorundan** geçirip, "
                 "Kısa/Orta/Uzun vadede en güçlü görünenleri sıralar. Amaç: doğru hisseyi "
                 "erken bulmak.")
@@ -1941,7 +2056,7 @@ with sekme_yukselecek:
 # ─────────────────────────────────────────────────────────────────────────────
 # 2) ÖNE ÇIKAN HİSSELER (TARAMA)
 # ─────────────────────────────────────────────────────────────────────────────
-with sekme_tarama:
+if _sayfa == "tarama" and _alt_tarama == "one_cikan":
     st.markdown("Tüm borsayı tarar, **kısa ve orta vadede potansiyeli en yüksek görünen** "
                 "hisseleri puana göre sıralar.")
     c1, c2, c3 = st.columns([1.2, 1, 1])
@@ -2096,7 +2211,7 @@ with sekme_tarama:
 # ─────────────────────────────────────────────────────────────────────────────
 # 3) TAKAS ANALİZİ
 # ─────────────────────────────────────────────────────────────────────────────
-with sekme_takas:
+if _sayfa == "tarama" and _alt_tarama == "takas":
     st.markdown("**Takas analizi** — hisseye kimin para soktuğunu izler: MKK kaynaklı "
                 "*yabancı takas oranı* + hacim tabanlı *para akışı / toplama-dağıtım* göstergeleri.")
     ts = hisse_secici("Hisse seçin — kod ya da şirket adı:", anahtar="takas_sembol")
@@ -2164,7 +2279,7 @@ with sekme_takas:
 # ─────────────────────────────────────────────────────────────────────────────
 # 4) FON & KURUMSAL
 # ─────────────────────────────────────────────────────────────────────────────
-with sekme_fon:
+if _sayfa == "tarama" and _alt_tarama == "fon":
     st.markdown("**Kurumsal para nerede?** Yerli fonların borsaya genel yaklaşımı (TEFAS) ve "
                 "hisse bazında uluslararası ETF sahipliği (BlackRock, Vanguard...).")
 
@@ -2224,7 +2339,7 @@ hacim tabanlı toplama/dağıtım analizi. Matriks aboneliğiniz olursa söyleyi
 # ─────────────────────────────────────────────────────────────────────────────
 # 5) PORTFÖY & TAVSİYE
 # ─────────────────────────────────────────────────────────────────────────────
-with sekme_oto:
+if _sayfa == "portfoy" and _alt_portfoy == "oto":
     import tavsiye_paneli
     tavsiye_paneli.render(st, pd, np, go, dt, vk, am, pt, la, _gecmis, _endeks, ozm, tob,
                           tiklanabilir_tablo, hisse_linki, _mini_analiz_karti)
@@ -2233,7 +2348,7 @@ with sekme_oto:
 # ─────────────────────────────────────────────────────────────────────────────
 # 6) SANAL PORTFÖY (PAPER TRADING)
 # ─────────────────────────────────────────────────────────────────────────────
-with sekme_sanal:
+if _sayfa == "portfoy" and _alt_portfoy == "sanal":
     import sanal_portfoy_paneli
     sanal_portfoy_paneli.render(st, pd, np, go, dt, vk, am, sv, _gecmis, _endeks,
                                 _semboller, ozm, _toplu_fiyat,
@@ -2243,7 +2358,7 @@ with sekme_sanal:
 # ─────────────────────────────────────────────────────────────────────────────
 # 7) BACKTEST / DOĞRULAMA
 # ─────────────────────────────────────────────────────────────────────────────
-with sekme_backtest:
+if _sayfa == "portfoy" and _alt_portfoy == "backtest":
     st.markdown("Motorların **geçmiş veride gerçekten işe yarayıp yaramadığını** ölçer. "
                 "Her tarihsel gün için, SADECE o güne kadar bilinebilecek veriyle hesap "
                 "yapılır (gelecek bilgisi sızdırılmaz) ve üretilen sinyalin gerçekten "
@@ -2369,7 +2484,7 @@ with sekme_backtest:
 # ─────────────────────────────────────────────────────────────────────────────
 # 8) TAVSİYE GEÇMİŞİ & PERFORMANS (ileriye dönük gerçek kanıt)
 # ─────────────────────────────────────────────────────────────────────────────
-with sekme_tavsiye_gecmisi:
+if _sayfa == "portfoy" and _alt_portfoy == "gecmis":
     st.markdown("Motorun **gerçek zamanda verdiği** tavsiyeler burada kalıcı olarak "
                 "kaydedilir ve sonradan gerçek fiyatlarla puanlanır. Backtest geçmişi "
                 "yeniden oynatır; bu sekme ise motorun sonucu bilinmezken ne dediğini "
@@ -2503,7 +2618,7 @@ with sekme_tavsiye_gecmisi:
 # ─────────────────────────────────────────────────────────────────────────────
 # 9) SİSTEM DURUMU
 # ─────────────────────────────────────────────────────────────────────────────
-with sekme_durum:
+if _sayfa == "durum":
     st.markdown("### 🔤 Şirket Adları (hisse arama için)")
     _mevcut_adlar = _hisse_adlari()
     st.caption(f"Şu an **{len(_mevcut_adlar)}** hissenin şirket adı biliniyor. Bu adlar "
@@ -2576,6 +2691,12 @@ if _SOHBET_ACIK and _sohbet_kolonu is not None:
     st.session_state["_analize_gonder_fn"] = _analize_gonder
 
     with _sohbet_kolonu:
+        # Mobilde sohbet paneli, iki kolon alt alta dizildiğinde sayfanın
+        # EN ALTINA düşer (Streamlit'in kendi dar-ekran davranışı). Kullanıcı
+        # oraya kadar kaydırmak zorunda kalmasın diye sağ-alt köşede sabit
+        # bir "💬" düğmesi (bkz. yukarıdaki .sohbet-fab CSS) bu çapaya
+        # doğrudan atlıyor — native uygulamalardaki yüzen sohbet düğmesi gibi.
+        st.markdown('<div id="sohbet-panel-app"></div>', unsafe_allow_html=True)
         try:
             import sohbet_paneli as sp
             sp.ciz(_sohbet_kaynaklari)
