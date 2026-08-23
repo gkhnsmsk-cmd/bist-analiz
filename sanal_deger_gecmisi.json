@@ -1,0 +1,68 @@
+[
+  {
+    "tarih": "2026-07-28",
+    "toplam_deger": 999422.93,
+    "nakit": 0.0,
+    "endeks": 13687.9
+  },
+  {
+    "tarih": "2026-07-30",
+    "toplam_deger": 838056.7,
+    "nakit": 0.0,
+    "endeks": 13292.9
+  },
+  {
+    "tarih": "2026-08-02",
+    "toplam_deger": 767792.33,
+    "nakit": 0.0,
+    "endeks": 13458.1
+  },
+  {
+    "tarih": "2026-08-03",
+    "toplam_deger": 830036.61,
+    "nakit": 0.0,
+    "endeks": 13410.5
+  },
+  {
+    "tarih": "2026-08-06",
+    "toplam_deger": 813863.74,
+    "nakit": 0.0,
+    "endeks": 13798.8
+  },
+  {
+    "tarih": "2026-08-07",
+    "toplam_deger": 737826.9,
+    "nakit": 0.0,
+    "endeks": 13779.4
+  },
+  {
+    "tarih": "2026-08-18",
+    "toplam_deger": 965548.63,
+    "nakit": 0.0,
+    "endeks": 14128.0
+  },
+  {
+    "tarih": "2026-08-19",
+    "toplam_deger": 983769.94,
+    "nakit": 0.0,
+    "endeks": 14459.0
+  },
+  {
+    "tarih": "2026-08-20",
+    "toplam_deger": 986686.52,
+    "nakit": 0.0,
+    "endeks": 14396.5
+  },
+  {
+    "tarih": "2026-08-21",
+    "toplam_deger": 984078.84,
+    "nakit": 0.0,
+    "endeks": 14514.8
+  },
+  {
+    "tarih": "2026-08-23",
+    "toplam_deger": 983907.63,
+    "nakit": 281196.17,
+    "endeks": 14514.8
+  }
+]

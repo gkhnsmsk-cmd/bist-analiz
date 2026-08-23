@@ -1,0 +1,19 @@
+streamlit>=1.40,<2.0
+pandas>=2.0
+numpy>=1.24
+plotly>=5.18
+yfinance>=0.2.40
+borsapy
+requests>=2.31
+lxml>=5.0
+matplotlib>=3.7
+
+# --- Telegram AKD entegrasyonu (opsiyonel — bkz. telegram_akd.py) ---
+pillow>=10.0
+telethon>=1.36
+pytesseract>=0.3.10
+# NOT: pytesseract için ayrıca Tesseract-OCR programının Windows'a kurulu
+# olması gerekir: https://github.com/UB-Mannheim/tesseract/wiki
+# --- AKD makine öğrenmesi modeli (opsiyonel — bkz. akd_model.py) ---
+xgboost>=2.0
+scikit-learn>=1.3

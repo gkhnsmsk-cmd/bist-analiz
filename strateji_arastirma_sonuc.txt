@@ -1,0 +1,95 @@
+══════════════════════════════════════════════════════════════════════════
+  STRATEJİ ARAŞTIRMASI — 'ne zaman al, ne zaman sat?'
+  22.08.2026 23:50
+══════════════════════════════════════════════════════════════════════════
+  Test edilen yöntemler akademik literatürden alınmıştır ama
+  hiçbiri peşinen doğru kabul EDİLMEZ — BIST verisiyle sınanır.
+
+  Kapsam: TUM · 5 yıl · rebalans 21 iş günü
+  Portföy: en iyi 10 hisse · maliyet %0.5/tur
+
+  Veri indiriliyor (birkaç dakika sürebilir)...
+  539/559 hissenin verisi geldi.
+  Endeks verisi: 1250 gün.
+
+  Özellikler hesaplanıyor...
+    ... 50/539 hisse işlendi
+    ... 100/539 hisse işlendi
+    ... 150/539 hisse işlendi
+    ... 200/539 hisse işlendi
+    ... 250/539 hisse işlendi
+    ... 300/539 hisse işlendi
+    ... 350/539 hisse işlendi
+    ... 400/539 hisse işlendi
+    ... 450/539 hisse işlendi
+    ... 500/539 hisse işlendi
+
+  22,732 gözlem üretildi (539 hisse, 903 rebalans tarihi).
+  Ham veri: strateji_arastirma_veri.csv
+
+══════════════════════════════════════════════════════════════════════════
+  1) HANGİ ÖZELLİK GELECEĞİ ÖNGÖRÜYOR? (Spearman korelasyon)
+══════════════════════════════════════════════════════════════════════════
+  Korelasyon 0'a yakınsa öngörü YOK demektir. |0,05| üstü zayıf ama
+  anlamlı, |0,10| üstü BIST için iyi sayılır.
+
+  Özellik            ham getiri   endeks üstü         n
+  ────────────────────────────────────────────────────────────
+  mom_12_1             +0.0025      -0.0212    22,732
+  mom_6_1              -0.0719      -0.0319    22,732
+  son_1ay              +0.0504      +0.0433    22,732
+  mom_12               +0.0112      -0.0143    22,732
+  volatilite           -0.0303      -0.0621    22,732
+
+  YORUM: 'son_1ay' NEGATİF çıkarsa, literatürdeki kısa vadeli tersine
+  dönüş etkisi BIST'te de var demektir — motorun RSI/MACD gibi kısa
+  vadeli göstergelere yaslanması bu durumda ZARARLIDIR.
+
+══════════════════════════════════════════════════════════════════════════
+  2) STRATEJİ TESTİ — her ay en iyi 10 hisseyi al, 1 ay tut
+══════════════════════════════════════════════════════════════════════════
+  Tur maliyeti %0.50 DÜŞÜLMÜŞTÜR.
+  'Endeks üstü' sütunu asıl ölçüttür: negatifse endekse yatırmak daha iyi.
+
+  Strateji                                    aylık  endeks üstü  kazanan
+  ───────────────────────────────────────────────────────────────────────
+  BIST 100 (endeks, al-tut)                  +2.94%       +0.00%      61%
+  Tüm hisseler eşit ağırlık (al-tut)         +3.32%       +0.38%      56%
+
+  12-1 momentum — en iyi 10                  +2.38%       -0.12%      61%
+  6-1 momentum — en iyi 10                   +3.95%       +1.44%      62%
+  Son 1 ay getirisi — en iyi 10              +4.17%       +1.67%      63%
+  Son 1 ayda en ÇOK DÜŞEN 10                 +1.00%       -1.51%      52%
+
+  12-1 mom + MUTLAK filtre (MA200 üstü)      +2.44%       +0.01%      60%
+  12-1 mom + mutlak + DÜŞÜK volatilite       +4.01%       +1.35%      62%
+
+══════════════════════════════════════════════════════════════════════════
+  3) WALK-FORWARD — sonuç TESADÜF mü, TUTARLI mı?
+══════════════════════════════════════════════════════════════════════════
+  Veri ikiye bölünür. Bir yöntem SADECE bir yarıda işe yarıyorsa
+  tesadüftür ve KULLANILMAMALIDIR. İki yarıda da pozitifse güvenilir.
+
+  1. yarı: 05.09.2022 → 09.10.2024
+  2. yarı: 09.10.2024 → 22.07.2026
+
+  Strateji                                     1.yarı     2.yarı     karar
+  ────────────────────────────────────────────────────────────────────────
+  12-1 momentum                                -2.36%     +0.90% ~ karışık
+  6-1 momentum                                 -0.59%     +2.37% ~ karışık
+  Son 1 ay kovalama                            +1.52%     +1.74% ✓ TUTARLI
+  12-1 + mutlak filtre                         -2.40%     +1.55% ~ karışık
+
+══════════════════════════════════════════════════════════════════════════
+  SINIRLAR — bu sonuçları okurken dikkat
+══════════════════════════════════════════════════════════════════════════
+  • HAYATTA KALMA YANLILIĞI: Sadece bugün işlem gören hisseler var.
+    Borsadan çıkmış/battı olanlar yok — sonuçlar İYİMSER.
+  • Tek bir dönem: BIST'in bu 5 yılı yüksek enflasyon ve güçlü
+    yükseliş dönemiydi. Başka rejimde sonuç farklı olabilir.
+  • Tavan/taban ve likidite kısıtları basitleştirilmiştir.
+  • Walk-forward 'karışık' veya 'işe yaramaz' çıkan bir yöntem
+    KULLANILMAMALIDIR — tek dönemde iyi görünmesi tesadüf olabilir.
+
+  Rapor: strateji_arastirma_sonuc.txt
+══════════════════════════════════════════════════════════════════════════

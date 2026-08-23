@@ -1,0 +1,87 @@
+════════════════════════════════════════════════════════════════════════════
+  TAVSİYELER GERÇEKTEN KAZANDIRDI MI?
+  23.08.2026 00:37
+════════════════════════════════════════════════════════════════════════════
+  Tavsiye edilen HER hissenin bugünkü fiyatı ayrıca çekilir —
+  listeden düşmüş olsa bile. Hayatta kalma yanlılığı YOKTUR.
+
+  Toplam kayıt: 1,464
+  Olgunlaşmış (3+ gün): 1,195
+  Benzersiz hisse: 142
+
+  Güncel fiyatlar çekiliyor (listeden düşenler dahil)...
+    ... 25/142
+    ... 50/142
+    ... 75/142
+    ... 100/142
+    ... 125/142
+  142/142 hissenin güncel fiyatı alındı.
+
+  ÖLÇÜLEBİLEN TAVSİYE: 1,195/1,195  (%100)
+
+════════════════════════════════════════════════════════════════════════════
+  1) 'EN ÜSTTEKİ HİSSEYİ ALDIM' — gerçekte ne oldu?
+════════════════════════════════════════════════════════════════════════════
+  Her gün, her kaynakta EN YÜKSEK PUANLI hisse alınsaydı.
+
+  Seçim                             ortalama       medyan    kazanan
+────────────────────────────────────────────────────────────────────────────
+  EN ÜSTTEKİ (1 hisse)     n=  33  ort=% -3.18  medyan=% -1.41  kazanan=% 36  endeks üstü=%-6.12
+  İlk 3                    n=  99  ort=% +2.54  medyan=% +1.29  kazanan=% 54  endeks üstü=%-0.40
+  İlk 5                    n= 165  ort=% +2.09  medyan=% +1.94  kazanan=% 56  endeks üstü=%-0.85
+  Tüm liste                n=1195  ort=% +2.27  medyan=% +2.02  kazanan=% 61  endeks üstü=%-0.51
+
+════════════════════════════════════════════════════════════════════════════
+  2) KAYNAK BAZINDA — hangi liste daha iyi?
+════════════════════════════════════════════════════════════════════════════
+  Kaynak                                 n   ortalama  endeks üstü  kazanan
+────────────────────────────────────────────────────────────────────────────
+  Vade: Uzun (~6 ay)                   350     +2.39%       -0.23%      62%
+  Vade: Orta (~3 ay)                   328     +2.28%       -0.26%      60%
+  Vade: Kisa (~2 hafta)                292     +2.30%       -0.24%      62%
+  One Cikan Hisseler                   169     +2.11%       -1.03%      61%
+  Yukselebilecek (haftalik)             29     +0.64%       -4.70%      55%
+  Yukselebilecek (gunluk)               27     +2.85%       -2.49%      59%
+────────────────────────────────────────────────────────────────────────────
+  TÜM TAVSİYELER                      1195     +2.27%       -0.51%      61%
+
+════════════════════════════════════════════════════════════════════════════
+  3) EN İYİ VE EN KÖTÜ TAVSİYELER
+════════════════════════════════════════════════════════════════════════════
+  EN İYİ 8:
+    KTLEV   07.08  16 gün  % +45.71   Vade: Uzun (~6 ay)
+    KGYO    07.08  16 gün  % +44.94   Vade: Uzun (~6 ay)
+    BJKAS   13.08  10 gün  % +44.12   Vade: Kisa (~2 hafta)
+    BJKAS   13.08  10 gün  % +44.12   Vade: Orta (~3 ay)
+    CRFSA   07.08  16 gün  % +37.65   One Cikan Hisseler
+    CRFSA   10.08  13 gün  % +37.65   Vade: Kisa (~2 hafta)
+    CRFSA   10.08  13 gün  % +37.65   Vade: Orta (~3 ay)
+    CRFSA   10.08  13 gün  % +37.65   Vade: Uzun (~6 ay)
+
+  EN KÖTÜ 8:
+    ODINE   18.08   5 gün  % -36.75   Vade: Uzun (~6 ay)
+    ODINE   18.08   5 gün  % -36.75   One Cikan Hisseler
+    HEDEF   07.08  16 gün  % -46.98   Vade: Kisa (~2 hafta)
+    HEDEF   07.08  16 gün  % -46.98   Vade: Orta (~3 ay)
+    HEDEF   07.08  16 gün  % -46.98   One Cikan Hisseler
+    HEDEF   10.08  13 gün  % -46.98   Vade: Kisa (~2 hafta)
+    HEDEF   10.08  13 gün  % -46.98   Vade: Orta (~3 ay)
+    HEDEF   10.08  13 gün  % -46.98   Vade: Uzun (~6 ay)
+
+════════════════════════════════════════════════════════════════════════════
+  DEĞERLENDİRME
+════════════════════════════════════════════════════════════════════════════
+  Tavsiyeler endeksin %0.51 GERİSİNDE kalmış.
+  Yani bu tavsiyelere uymak yerine endeks fonu almak daha iyiydi.
+
+  'En üstteki hisse' stratejisi: ortalama %-3.18, endeks üstü %-6.12
+  → Sıralamanın ek faydası görünmüyor; en üstteki hisse
+    listenin geri kalanından belirgin şekilde iyi değil.
+
+  ⚠️ SINIRLAR
+  • Ortalama tutma süresi sadece 8 gün — çok kısa.
+    Bu sonuçlar bir eğilim gösterir, KANIT değildir.
+  • 0 hissenin fiyatı alınamadı, ölçüme giremedi.
+  • Komisyon/slipaj düşülmemiştir (gerçekte tur başına ~%0,5).
+  • Tek bir piyasa dönemi.
+════════════════════════════════════════════════════════════════════════════

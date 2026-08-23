@@ -1,0 +1,114 @@
+════════════════════════════════════════════════════════════════════════════
+  HAFTALIK KONTROL RAPORU
+  23.08.2026 23:44
+════════════════════════════════════════════════════════════════════════════
+
+────────────────────────────────────────────────────────────────────────────
+  ÖZET — önce bunu okuyun
+────────────────────────────────────────────────────────────────────────────
+  ⚠️ DİKKAT GEREKTİRENLER:
+     • Sanal portföy endeksin %7.6 gerisinde.
+     • Sanal portföyde 10 pozisyon var, sınır 5. Motor bir sonraki koşuda düzeltir.
+     • Tavsiyeler endeksin %0.5 gerisinde.
+     • Listenin EN ÜSTÜNDEKİ hisse en kötü performansı veriyor.
+     • Gerçek portföyünüzde 3 pozisyon çıkış sinyali veriyor: PGSUS, CIMSA, AKSEN
+
+  Ayrıntılar aşağıda. Sorularınız için bu dosyayı paylaşabilirsiniz.
+────────────────────────────────────────────────────────────────────────────
+
+════════════════════════════════════════════════════════════════════════════
+  1) SANAL PORTFÖY — endeksi yeniyor mu?
+════════════════════════════════════════════════════════════════════════════
+  Portföy   : %-1.60
+  BIST 100  : %+6.04   (13,688 → 14,515)
+  ENDEKS ÜSTÜ: %-7.64  ⚠️ GERİDE
+
+  Pozisyon: 10/5   Nakit: 197,311 ₺   Son karar: 2026-08-23
+  ⚠️ Pozisyon sayısı sınırın (5) ÜSTÜNDE — motor bir sonraki koşuda fazlasını satacak.
+
+  Hisse      Maliyet       Son    K/Z %   Gün
+  ───────────────────────────────────────────
+  TUPRS       313.25    406.75  +29.85%    17
+  ANELE       138.80    145.00   +4.47%     5
+  UFUK       1850.00   1840.00   -0.54%     5
+  INVES       814.00    830.00   +1.97%     5
+  RYGYO        42.08     43.00   +2.19%     5
+  ATATP       283.75    307.75   +8.46%     5
+  OZSUB        43.10     43.00   -0.23%     5
+  MTRKS        33.86     36.00   +6.32%     4
+  KRDMA        50.00     53.50   +7.00%     3
+  PASEU       202.30    202.30   +0.00%     2
+
+  Son 7 günde 23 işlem:
+    SAT             AKSA    [11g] takip eden stop tetiklendi (fiyat 11.44 < stop 1
+    AL              OZSUB         alım eşiği aşıldı (Puan: 78 >= 52)
+    SAT             TABGD   [12g] takas: MTRKS (Puan 75) bu pozisyondan 17 puan da
+    AL              MTRKS         alım eşiği aşıldı (Puan: 75 >= 52)
+    SAT             ISGYO   [23g] takas: KRDMA (Puan 76) bu pozisyondan 14 puan da
+    AL              KRDMA         alım eşiği aşıldı (Puan: 76 >= 52)
+    SAT             ETYAT   [3g]  takas: PASEU (Puan 76) bu pozisyondan 11 puan da
+    AL              PASEU         alım eşiği aşıldı (Puan: 76 >= 52)
+    SAT             KCAER   [26g] takas: ETYAT birikim skoru +0.433, bu pozisyonun
+    SAT             TKFEN   [26g] takas: AKMGY birikim skoru +0.411, bu pozisyonun
+
+════════════════════════════════════════════════════════════════════════════
+  2) TAVSİYE KALİTESİ — tavsiyeler kazandırdı mı?
+════════════════════════════════════════════════════════════════════════════
+  1,195 olgunlaşmış tavsiye · 142 hisse
+  Güncel fiyatlar çekiliyor (listeden düşenler DAHİL — yanlılık yok)...
+  142/142 fiyat alındı.
+
+  Seçim                      n   ortalama  endeks üstü  kazanan
+  ─────────────────────────────────────────────────────────────
+  EN ÜSTTEKİ (1)            33     -3.18%       -6.12%      36%
+  İlk 3                     99     +2.54%       -0.40%      54%
+  İlk 5                    165     +2.09%       -0.85%      56%
+  Tüm liste               1195     +2.27%       -0.51%      61%
+
+  ⚠️ EN ÜSTTEKİ hisse, listenin geri kalanından DAHA KÖTÜ.
+     Listenin en üstüne güvenmeyin; ilk 3-5 arasından seçmek daha iyi.
+
+  Kaynak                               n   ortalama  endeks üstü
+  ──────────────────────────────────────────────────────────────
+  Vade: Uzun (~6 ay)                 350     +2.39%       -0.23%
+  Vade: Orta (~3 ay)                 328     +2.28%       -0.26%
+  Vade: Kisa (~2 hafta)              292     +2.30%       -0.24%
+  One Cikan Hisseler                 169     +2.11%       -1.03%
+  Yukselebilecek (haftalik)           29     +0.64%       -4.70%
+  Yukselebilecek (gunluk)             27     +2.85%       -2.49%
+
+════════════════════════════════════════════════════════════════════════════
+  3) GERÇEK PORTFÖYÜNÜZ — çıkış sinyali var mı?
+════════════════════════════════════════════════════════════════════════════
+  Hisse   Karar       Alış    Fiyat    K/Z %     Stop   Pay %  Gün
+  ────────────────────────────────────────────────────────────────
+  PGSUS   SAT       184.31   149.50   -18.89   175.28   -14.7   17
+  CIMSA   SAT        55.12    45.64   -17.20    51.96   -12.2   17
+  AKSEN   SAT        94.25    82.60   -12.36    84.83    -2.6   16
+  ANSGR   TUT        28.70    28.50    -0.70    27.43     3.9   17
+  YKBNK   TUT        34.44    35.10     1.92    32.87     6.8   16
+
+  🔴 ÇIKIŞ SİNYALİ: PGSUS, CIMSA, AKSEN
+     PGSUS: takip eden stop tetiklendi: fiyat 149.50 ₺ < stop 175.28 ₺ — sinyal 12 işlem günüdür açık
+     CIMSA: takip eden stop tetiklendi: fiyat 45.64 ₺ < stop 51.96 ₺ — sinyal 12 işlem günüdür açık
+     AKSEN: takip eden stop tetiklendi: fiyat 82.60 ₺ < stop 84.83 ₺ — sinyal 2 işlem günüdür açık (stop tavanı devrede: alışın %10 altı)
+
+════════════════════════════════════════════════════════════════════════════
+  4) SİSTEM SAĞLIĞI
+════════════════════════════════════════════════════════════════════════════
+  ✓ Arka plan taraması         0 saat önce
+  ✓ Sanal portföy motoru       0 saat önce
+  ✓ Tavsiye kaydı              0 saat önce
+
+════════════════════════════════════════════════════════════════════════════
+  5) ÖĞRENME MOTORU
+════════════════════════════════════════════════════════════════════════════
+  Özellik anlık görüntüsü içeren karar: 376
+  En eski snapshot: 5 gün önce
+  ⏳ Hata analizi için ~15 gün daha veri gerekiyor
+     (10 günlük ufkun olgunlaşması + yeterli örnek).
+
+════════════════════════════════════════════════════════════════════════════
+  Bu rapor haftada bir otomatik üretilir (HAFTALIK_KONTROL.bat).
+  ⚠️ Sonuçlar kısa dönemlidir ve kanıt değil eğilim gösterir.
+════════════════════════════════════════════════════════════════════════════

@@ -1,0 +1,118 @@
+════════════════════════════════════════════════════════════════════════════
+  TAKAS VERİSİ — KAYNAK AVI
+  23.08.2026 23:09   Test hissesi: THYAO
+════════════════════════════════════════════════════════════════════════════
+  Amaç: hangi kaynağın GERÇEKTEN kullanılabilir takas verisi
+  verdiğini ölçmek. Tahmin değil, ölçüm.
+
+════════════════════════════════════════════════════════════════════════════
+  A) İŞ YATIRIM — mevcut kodun kullandığı kaynak
+════════════════════════════════════════════════════════════════════════════
+  Bu kaynak eskiden çalışıyordu, şimdi boş dönüyor. Sorun basit bir
+  istek biçimi meselesi olabilir — 4 varyant deneniyor.
+
+────────────────────────────────────────────────────────────────────────────
+  A1 · Mevcut kod (sonunda .json)
+  veri_katmani.yabanci_orani_gecmisi bunu kullanıyor
+  https://www.isyatirim.com.tr/_layouts/15/Isyatirim.Website/Common/Data.aspx/HisseTekil?hisse=THYAO&startdate=25-04-2026&
+  HTTP 200 · application/json; charset=utf-8 · 596 karakter
+  ✓ Geçerli JSON döndü.
+  Anahtarlar: ['ok', 'errorCode', 'errorDescription', 'transactionId']
+  ✗ JSON geldi ama VERİ SATIRI YOK (boş liste).
+    Tamamı: {"ok": false, "errorCode": "SYS0000", "errorDescription": "Failed to convert value of type 'java.lang.String' to required type 'java.time.LocalDate'; nested exception is org.springframework.core.convert.ConversionFailedException: Failed to convert fr
+
+────────────────────────────────────────────────────────────────────────────
+  A2 · '.json' EKSİZ
+  Sondaki .json bazı sürümlerde URL'yi bozuyor olabilir
+  https://www.isyatirim.com.tr/_layouts/15/Isyatirim.Website/Common/Data.aspx/HisseTekil?hisse=THYAO&startdate=25-04-2026&
+  HTTP 200 · application/json; charset=utf-8 · 56,082 karakter
+  ✓ Geçerli JSON döndü.
+  Anahtarlar: ['ok', 'errorCode', 'errorDescription', 'transactionId', 'value']
+  ✓ 79 satır veri.
+  Kolonlar (31):
+    HGDG_HS_KODU              HGDG_TARIH                HGDG_KAPANIS            
+    HGDG_AOF                  HGDG_MIN                  HGDG_MAX                
+    HGDG_HACIM                END_ENDEKS_KODU           END_TARIH               
+    END_SEANS                 END_DEGER                 DD_DOVIZ_KODU           
+    DD_DT_KODU                DD_TARIH                  DD_DEGER                
+    DOLAR_BAZLI_FIYAT         ENDEKS_BAZLI_FIYAT        DOLAR_HACIM             
+    SERMAYE                   HG_KAPANIS                HG_AOF                  
+    HG_MIN                    HG_MAX                    PD                      
+
+  ✗ Takas ile ilgili kolon yok — bu uç fiyat verisi veriyor olabilir.
+
+────────────────────────────────────────────────────────────────────────────
+  A3 · Referer + XHR başlıkları
+  Site doğrudan istekleri reddediyor olabilir
+  https://www.isyatirim.com.tr/_layouts/15/Isyatirim.Website/Common/Data.aspx/HisseTekil?hisse=THYAO&startdate=25-04-2026&
+  HTTP 200 · application/json; charset=utf-8 · 596 karakter
+  ✓ Geçerli JSON döndü.
+  Anahtarlar: ['ok', 'errorCode', 'errorDescription', 'transactionId']
+  ✗ JSON geldi ama VERİ SATIRI YOK (boş liste).
+    Tamamı: {"ok": false, "errorCode": "SYS0000", "errorDescription": "Failed to convert value of type 'java.lang.String' to required type 'java.time.LocalDate'; nested exception is org.springframework.core.convert.ConversionFailedException: Failed to convert fr
+
+────────────────────────────────────────────────────────────────────────────
+  A4 · Kısa tarih aralığı (20 gün)
+  Uzun aralık zaman aşımına düşüyor olabilir
+  https://www.isyatirim.com.tr/_layouts/15/Isyatirim.Website/Common/Data.aspx/HisseTekil?hisse=THYAO&startdate=03-08-2026&
+  HTTP 200 · application/json; charset=utf-8 · 596 karakter
+  ✓ Geçerli JSON döndü.
+  Anahtarlar: ['ok', 'errorCode', 'errorDescription', 'transactionId']
+  ✗ JSON geldi ama VERİ SATIRI YOK (boş liste).
+    Tamamı: {"ok": false, "errorCode": "SYS0000", "errorDescription": "Failed to convert value of type 'java.lang.String' to required type 'java.time.LocalDate'; nested exception is org.springframework.core.convert.ConversionFailedException: Failed to convert fr
+
+════════════════════════════════════════════════════════════════════════════
+  B) MKK / VAP — kurumsal platformlar
+════════════════════════════════════════════════════════════════════════════
+  MKK verisini kurumsal kanallarla paylaşıyor (FTP, entegrasyon,
+  e-posta). Aşağıdakiler erişilebilir mi, kayıt mı istiyor — ölçülüyor.
+
+────────────────────────────────────────────────────────────────────────────
+  B1 · MKK API Portal
+  Kayıt/anahtar gerekiyorsa giriş sayfası döner
+  https://apiportal.mkk.com.tr/
+  HTTP 200 · text/html; charset=UTF-8 · 7,369 karakter
+  ⚠ HTML sayfa döndü (JSON değil). İçerik JavaScript ile yükleniyor olabilir.
+    İlk 200 karakter: <!DOCTYPE html>
+<html class="no-js" lang="en" dir="ltr" data-beasties-container>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="Con
+
+────────────────────────────────────────────────────────────────────────────
+  B2 · VAP (Veri Analiz Platformu)
+  MKK'nın veri analiz platformu
+  https://www.vap.org.tr/
+  HTTP 200 · text/html; charset=UTF-8 · 92,756 karakter
+  ⚠ HTML döndü ve GİRİŞ/oturum kelimeleri içeriyor → kayıt gerekiyor olabilir.
+
+════════════════════════════════════════════════════════════════════════════
+  C) ALTERNATİF KAYNAKLAR
+════════════════════════════════════════════════════════════════════════════
+
+────────────────────────────────────────────────────────────────────────────
+  C1 · Halk Yatırım analiz
+  Yabancı takas oranları sayfası — erişilebilir mi?
+  https://analizim.halkyatirim.com.tr/Analysis/ForeignExchangeRates
+  HTTP 200 · text/html; charset=utf-8 · 56,663 karakter
+  ⚠ HTML döndü ve GİRİŞ/oturum kelimeleri içeriyor → kayıt gerekiyor olabilir.
+
+════════════════════════════════════════════════════════════════════════════
+  SONUÇ
+════════════════════════════════════════════════════════════════════════════
+  ❌ Hiçbir kaynak kullanılabilir takas verisi vermedi.
+
+  Bu durumda gerçekçi seçenekler:
+    1) Aracı kurumunuzun verdiği veri ekranı (Matriks/Foreks/İdeal)
+       — çoğu kurum müşterisine ücretsiz veriyor. Ekrandan bakılır,
+       yazılıma otomatik akmaz ama elle kontrol için yeterlidir.
+    2) Matriks API (gerçek API'si olan tek uygun seçenek) +
+       Borsa İstanbul veri lisansı.
+    3) MKK ile doğrudan iletişim: veri dağıtım sözleşmesi şartları.
+       (212) 334 57 00 · mkk.com.tr/iletisim-formu
+
+  NOT: Takas verisi olmadan da motorun birikim/dağıtım vekili
+  (CMF) ölçüldü ve BIST'te anlamlı çıktı — sanal portföy artık
+  onu kullanıyor. Yani takas yokluğu yolu tamamen kapatmıyor.
+════════════════════════════════════════════════════════════════════════════

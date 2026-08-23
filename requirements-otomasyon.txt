@@ -1,0 +1,17 @@
+# Bulutta (GitHub Actions) GÜNLÜK OTOMASYON için gereken MİNİMUM paketler.
+# ═══════════════════════════════════════════════════════════════════════════
+# NEDEN AYRI DOSYA: requirements.txt, arayüz (streamlit, plotly, matplotlib),
+# Telegram/AKD (telethon, pytesseract, pillow) ve makine öğrenmesi (xgboost,
+# scikit-learn) paketlerini de içerir. Bunların HİÇBİRİ arka plan taraması ve
+# sanal portföy motoru için gerekli değildir; bulutta kurmak her çalıştırmada
+# dakikalar ve gereksiz kota harcar.
+#
+# Bu dosya SADECE şu iki scriptin ihtiyacını karşılar:
+#   • arka_plan_tarama.py     (tüm BIST taraması + tavsiye kaydı)
+#   • gunluk_sanal_yatirim.py (sanal portföy günlük izleme/rebalans)
+pandas>=2.0
+numpy>=1.24
+requests>=2.31
+lxml>=5.0
+yfinance>=0.2.40
+borsapy

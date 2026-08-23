@@ -1,0 +1,58 @@
+[
+ {
+  "zaman": "2026-08-17T02:26:41",
+  "soru": "mogan için analiz nedir?",
+  "kullanilan_araclar": [
+   "hisse_ara",
+   "analiz"
+  ],
+  "arac_sayisi": 2,
+  "saglayici": "Groq",
+  "basarili": true,
+  "hata": null
+ },
+ {
+  "zaman": "2026-08-19T00:31:09",
+  "soru": "portföy tavsiyesi ver",
+  "kullanilan_araclar": [
+   "portfoy"
+  ],
+  "arac_sayisi": 1,
+  "saglayici": "NVIDIA",
+  "basarili": true,
+  "hata": null
+ },
+ {
+  "zaman": "2026-08-19T00:33:34",
+  "soru": "model bir porftföy öner bunların yerine",
+  "kullanilan_araclar": [
+   "filtre"
+  ],
+  "arac_sayisi": 1,
+  "saglayici": "NVIDIA",
+  "basarili": true,
+  "hata": null
+ },
+ {
+  "zaman": "2026-08-19T00:37:01",
+  "soru": "şimdi de bist100 den bir model çıkart",
+  "kullanilan_araclar": [
+   "filtre"
+  ],
+  "arac_sayisi": 1,
+  "saglayici": "NVIDIA",
+  "basarili": true,
+  "hata": null
+ },
+ {
+  "zaman": "2026-08-20T00:47:36",
+  "soru": "pgsus ve cimsa yerine ne öneriyorsun?",
+  "kullanilan_araclar": [
+   "filtre"
+  ],
+  "arac_sayisi": 1,
+  "saglayici": "NVIDIA",
+  "basarili": true,
+  "hata": null
+ }
+]

@@ -1,0 +1,32 @@
+[
+  {
+    "sembol": "PGSUS",
+    "adet": 9667.0,
+    "maliyet": 184.31,
+    "eklenme_tarihi": "2026-08-06T10:29:38.120481"
+  },
+  {
+    "sembol": "ANSGR",
+    "adet": 25110.0,
+    "maliyet": 28.7,
+    "eklenme_tarihi": "2026-08-06T10:29:38.120481"
+  },
+  {
+    "sembol": "CIMSA",
+    "adet": 15419.0,
+    "maliyet": 55.12,
+    "eklenme_tarihi": "2026-08-06T10:29:38.120481"
+  },
+  {
+    "sembol": "YKBNK",
+    "adet": 11627.0,
+    "maliyet": 34.44,
+    "eklenme_tarihi": "2026-08-07T13:55:51.294693"
+  },
+  {
+    "sembol": "AKSEN",
+    "adet": 742.0,
+    "maliyet": 94.25,
+    "eklenme_tarihi": "2026-08-07T13:55:51.294693"
+  }
+]

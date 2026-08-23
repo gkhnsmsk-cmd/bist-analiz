@@ -1,0 +1,29 @@
+# ═══════════════════════════════════════════════════════════════════════════
+# GitHub'a YÜKLENMEYECEK dosyalar
+# ÖNEMLİ: Buradaki ilk blok GÜVENLİKLE ilgilidir — API anahtarlarınız ve
+# Telegram oturumunuz asla depoya çıkmamalıdır. Depo "private" olsa bile.
+# ═══════════════════════════════════════════════════════════════════════════
+
+# ── Sırlar (ASLA yüklenmemeli) ──────────────────────────────────────────────
+.env
+telegram_ayarlar.json
+telegram_oturumu.session
+*.session
+*.session-journal
+
+# ── Yerel önbellek / geçici ─────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+.veri_cache/
+.kurulum_tamam
+.tesseract_denendi
+
+# ── Büyük/gereksiz ──────────────────────────────────────────────────────────
+*.jpg
+*.jpeg
+*.png
+
+# Yedek/gerçek anahtar içerebilecek dosyalar
+.env.yedek
+.env.*
+!.env.example

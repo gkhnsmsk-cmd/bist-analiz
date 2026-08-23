@@ -1,0 +1,99 @@
+# ═══════════════════════════════════════════════════════════════════════════
+# GÜNLÜK OTOMASYON — bilgisayar KAPALI olsa bile bulutta çalışır.
+# ═══════════════════════════════════════════════════════════════════════════
+# NE YAPAR (her iş günü, borsa kapandıktan sonra):
+#   1) arka_plan_tarama.py     → tüm BIST'i tarar, tavsiyeleri kaydeder
+#   2) gunluk_sanal_yatirim.py → sanal portföyü izler/rebalans eder
+#   3) Değişen JSON kayıtlarını depoya geri yazar (commit)
+#
+# NEDEN ÖNEMLİ: Yazılımın performansı ancak GERÇEK ZAMANDA verilmiş
+# tavsiyelerin sonucuna bakılarak ölçülebilir. Bunun için kayıtların HER GÜN
+# birikmesi şarttır. Bilgisayar kapalıyken yerelde hiçbir şey çalışmadığından
+# ölçüm defalarca kesintiye uğradı (7-13 Ağustos arası hiç kayıt yok).
+#
+# SIRLAR: Bu iş akışı .env / Telegram anahtarı GEREKTİRMEZ. Tarama ve sanal
+# portföy motoru yalnızca herkese açık fiyat kaynaklarını kullanır.
+
+name: Günlük BIST otomasyonu
+
+on:
+  schedule:
+    # UTC saatiyle yazılır. Türkiye = UTC+3 (yaz saati uygulanmaz).
+    # 16:00 UTC = 19:00 TR → BIST kapanışından (18:00) sonra.
+    # Pazartesi-Cuma. NOT: GitHub cron'u yoğunlukta 5-30 dk gecikebilir; bu
+    # bizim için sorun değil, veri gün sonu verisidir.
+    - cron: "0 16 * * 1-5"
+  # Elle de çalıştırılabilsin (Actions sekmesindeki "Run workflow" düğmesi).
+  workflow_dispatch:
+
+# Kayıtları depoya geri yazabilmek için yazma izni gerekir.
+permissions:
+  contents: write
+
+# Aynı anda iki çalıştırma olmasın — JSON dosyalarında çakışma yaratır.
+concurrency:
+  group: gunluk-otomasyon
+  cancel-in-progress: false
+
+jobs:
+  otomasyon:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+
+    steps:
+      - name: Depoyu indir
+        uses: actions/checkout@v4
+
+      - name: Python kur
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Paketleri kur
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements-otomasyon.txt
+
+      - name: Arka plan taraması (tüm BIST + tavsiye kaydı)
+        id: tarama
+        # continue-on-error: Veri kaynağı (Yahoo/İş Yatırım) geçici olarak
+        # yanıt vermezse TÜM iş akışı çökmesin; sanal portföy adımı yine denesin
+        # ve o günkü kısmi sonuç yine de kaydedilsin.
+        continue-on-error: true
+        run: python arka_plan_tarama.py
+
+      - name: Sanal portföy günlük izleme
+        id: sanal
+        continue-on-error: true
+        run: python gunluk_sanal_yatirim.py
+
+      - name: Sonuçları depoya kaydet
+        run: |
+          git config user.name  "bist-otomasyon"
+          git config user.email "bist-otomasyon@users.noreply.github.com"
+          # Sadece VERİ dosyaları — kod değişikliği commit edilmez.
+          git add -A -- '*.json' || true
+          if git diff --staged --quiet; then
+            echo "Değişen kayıt yok — commit atlanıyor."
+          else
+            git commit -m "Otomatik kayıt: $(date -u '+%Y-%m-%d %H:%M UTC')"
+            # Bu arada elle bir değişiklik push edilmiş olabilir; önce çekip
+            # üzerine bindir (rebase), sonra gönder.
+            git pull --rebase --autostash origin "${GITHUB_REF_NAME}" || true
+            git push origin "HEAD:${GITHUB_REF_NAME}"
+          fi
+
+      - name: Çalışma özeti
+        if: always()
+        run: |
+          {
+            echo "### Günlük otomasyon sonucu"
+            echo ""
+            echo "- Tarama adımı: ${{ steps.tarama.outcome }}"
+            echo "- Sanal portföy adımı: ${{ steps.sanal.outcome }}"
+            echo ""
+            if [ -f tavsiye_gecmisi.json ]; then
+              echo "- Toplam tavsiye kaydı: $(python -c "import json;print(len(json.load(open('tavsiye_gecmisi.json',encoding='utf-8'))))" 2>/dev/null || echo '?')"
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"

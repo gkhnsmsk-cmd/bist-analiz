@@ -1,0 +1,135 @@
+══════════════════════════════════════════════════════════════════════════
+  TAKAS VEKİL GÖSTERGELERİ TESTİ
+  23.08.2026 00:13
+══════════════════════════════════════════════════════════════════════════
+  Gerçek takas verisi yok. Bu test, takas analizinin ölçmeye çalıştığı
+  BİRİKİM/DAĞITIM kavramının fiyat-hacim vekilleriyle BIST'te
+  yakalanıp yakalanamadığını ölçer.
+
+  Kapsam TUM · 5 yıl · rebalans 21 gün · en iyi 10 · maliyet %0.5
+
+  Veri indiriliyor...
+  539/559 hisse geldi.
+  Endeks: 1250 gün.
+
+  Birikim/dağıtım göstergeleri hesaplanıyor...
+    ... 50/539 hisse
+    ... 100/539 hisse
+    ... 150/539 hisse
+    ... 200/539 hisse
+    ... 250/539 hisse
+    ... 300/539 hisse
+    ... 350/539 hisse
+    ... 400/539 hisse
+    ... 450/539 hisse
+    ... 500/539 hisse
+
+  22,732 gözlem (539 hisse, 903 tarih).  Ham veri: takas_vekil_veri.csv
+
+══════════════════════════════════════════════════════════════════════════
+  1) ÖNGÖRÜ GÜCÜ (Spearman korelasyon)
+══════════════════════════════════════════════════════════════════════════
+  |0,05| üstü zayıf ama anlamlı; |0,10| üstü BIST için iyi sayılır.
+  Karşılaştırma: motorun genel puanı bu testlerde +0,012 çıkmıştı.
+
+  Gösterge                 ham getiri   endeks üstü         n
+  ────────────────────────────────────────────────────────────
+  takas_puani                +0.0475      +0.0263    22,732
+  cmf                        +0.0791      +0.0559    20,266
+  mfi                        +0.0566      +0.0386    22,632
+  ad_egim                    +0.0215      +0.0220    22,732
+  obv_egim                   +0.0203      +0.0126    22,732
+  uyum_gucu                  +0.0340      +0.0322    22,732
+  yukselirken_birikim        +0.0549      +0.0385    12,247
+
+══════════════════════════════════════════════════════════════════════════
+  2) DESİL ANALİZİ — 'takas_puani' etkisi MONOTON mu?
+══════════════════════════════════════════════════════════════════════════
+  Etki gerçekse desiller boyunca düzenli artmalı. Sadece bir uçtan
+  geliyorsa tek bir aykırı gruptan kaynaklanıyor olabilir.
+
+    D 1  takas_puani=   31.45 → endeks üstü % -0.27   n=2,821
+    D 2  takas_puani=   36.22 → endeks üstü % +0.40   n=1,760
+    D 3  takas_puani=   40.00 → endeks üstü % +0.37   n=4,717
+    D 4  takas_puani=   44.09 → endeks üstü % +1.13   n=2,241
+    D 5  takas_puani=   48.34 → endeks üstü % +1.21   n=3,354
+    D 6  takas_puani=   53.53 → endeks üstü % +1.61   n=1,957
+    D 7  takas_puani=   58.49 → endeks üstü % +1.44   n=1,996
+    D 8  takas_puani=   63.15 → endeks üstü % +2.65   n=1,918
+    D 9  takas_puani=   69.38 → endeks üstü % +1.52   n=1,968
+
+  Düzenlilik: +0.880  ✓ monoton
+
+══════════════════════════════════════════════════════════════════════════
+  2) DESİL ANALİZİ — 'cmf' etkisi MONOTON mu?
+══════════════════════════════════════════════════════════════════════════
+  Etki gerçekse desiller boyunca düzenli artmalı. Sadece bir uçtan
+  geliyorsa tek bir aykırı gruptan kaynaklanıyor olabilir.
+
+    D 1  cmf=   -0.42 → endeks üstü % -1.49   n=2,027
+    D 2  cmf=   -0.29 → endeks üstü % -0.16   n=2,027
+    D 3  cmf=   -0.22 → endeks üstü % +0.24   n=2,026
+    D 4  cmf=   -0.17 → endeks üstü % +0.46   n=2,027
+    D 5  cmf=   -0.11 → endeks üstü % +1.07   n=2,026
+    D 6  cmf=   -0.06 → endeks üstü % +1.07   n=2,027
+    D 7  cmf=   -0.01 → endeks üstü % +2.35   n=2,026
+    D 8  cmf=    0.05 → endeks üstü % +1.77   n=2,027
+    D 9  cmf=    0.13 → endeks üstü % +1.58   n=2,026
+    D10  cmf=    0.29 → endeks üstü % +2.58   n=2,027
+
+  Düzenlilik: +0.926  ✓ monoton
+
+══════════════════════════════════════════════════════════════════════════
+  3) STRATEJİ TESTİ — her ay en iyi 10 hisse, 1 ay tut
+══════════════════════════════════════════════════════════════════════════
+  Maliyet %0.50/tur DÜŞÜLMÜŞTÜR. Sayılar ENDEKS ÜSTÜ getiridir.
+  p<0,05 değilse sonuç rastlantı olabilir — güvenilmez.
+
+  Strateji                            endeks üstü       t        p
+  ────────────────────────────────────────────────────────────────
+  Tüm hisseler (al-tut, maliyet yok)       +0.54%   +1.00   0.3207
+
+  En yüksek takas_puani                    +1.34%   +1.50   0.1368
+  En yüksek cmf                            +2.52%   +2.35   0.0216
+  En yüksek mfi                            +0.95%   +0.78   0.4366
+  En yüksek ad_egim                        +1.18%   +1.27   0.2078
+  En yüksek obv_egim                       +1.55%   +1.50   0.1383
+  En yüksek uyum_gucu                      -0.53%   -0.58   0.5635
+  En yüksek yukselirken_birikim            +1.51%   +1.60   0.1149
+
+  En DÜŞÜK takas_puani (kontrol)           -1.05%   -1.27   0.2093
+    (Bu NEGATİF çıkmalı — dağıtım kötüyse. Pozitifse gösterge ters çalışıyor.)
+
+══════════════════════════════════════════════════════════════════════════
+  4) WALK-FORWARD — sonuç TESADÜF mü, TUTARLI mı?
+══════════════════════════════════════════════════════════════════════════
+  Bir gösterge SADECE bir yarıda işe yarıyorsa KULLANILMAMALIDIR.
+
+  1. yarı: 05.09.2022 → 09.10.2024
+  2. yarı: 09.10.2024 → 22.07.2026
+
+  Gösterge                     1.yarı     2.yarı           karar
+  ────────────────────────────────────────────────────────────────
+  takas_puani                  +3.01%     +0.21%       ✓ TUTARLI
+  cmf                          +4.15%     +1.44%       ✓ TUTARLI
+  mfi                          +1.04%     +0.89%       ✓ TUTARLI
+  ad_egim                      +2.92%     -0.00%       ~ karışık
+  obv_egim                     +1.01%     +1.91%       ✓ TUTARLI
+  uyum_gucu                    -0.72%     -0.40%   ✗ işe yaramaz
+  yukselirken_birikim          +3.20%     +0.39%       ✓ TUTARLI
+
+══════════════════════════════════════════════════════════════════════════
+  NASIL OKUNMALI
+══════════════════════════════════════════════════════════════════════════
+  • Hiçbiri anlamlı değilse: birikim/dağıtım fiyat-hacim verisinden
+    çıkarılamıyor. Gerçek takas verisi hâlâ farklı bilgi taşıyabilir
+    (kim tuttuğu, yabancı payı) ama beklenti düşük tutulmalıdır.
+  • Bir gösterge tutarlı VE anlamlıysa: gerçek takas verisine
+    yatırım yapmak için sağlam gerekçe oluşur.
+  • 'takas_puani' zaten motorun içinde ve genel puana katkı veriyor.
+    İşe yaramıyorsa ağırlığı sorgulanmalıdır.
+
+  SINIRLAR: hayatta kalma yanlılığı (batan hisseler yok, sonuçlar
+  iyimser), tek dönem (2021-2026 yüksek enflasyon + güçlü yükseliş),
+  tavan/taban ve gerçek slipaj basitleştirilmiş.
+══════════════════════════════════════════════════════════════════════════

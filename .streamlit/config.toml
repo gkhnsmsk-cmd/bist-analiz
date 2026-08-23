@@ -1,0 +1,12 @@
+# Koyu tema ayarları.
+# NOT: Buraya [server] headless = true YAZMAYIN — o ayar Streamlit'e
+# "tarayıcıyı otomatik açma" der ve BASLAT.bat çalışsa bile site açılmaz.
+[theme]
+base = "dark"
+primaryColor = "#0ea5e9"
+backgroundColor = "#0e1117"
+secondaryBackgroundColor = "#161b22"
+textColor = "#e2e8f0"
+
+[browser]
+gatherUsageStats = false

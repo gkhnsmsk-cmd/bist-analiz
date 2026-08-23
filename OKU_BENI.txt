@@ -1,0 +1,345 @@
+═══════════════════════════════════════════════════════
+  BIST ANALİZ PLATFORMU — KULLANIM
+═══════════════════════════════════════════════════════
+
+NASIL ÇALIŞTIRILIR?
+  1. BASLAT.bat dosyasına ÇİFT TIKLAYIN (veya masaüstü kısayolunuza —
+     bkz. MASAUSTU_KISAYOLU_OLUSTUR.bat). Hepsi bu.
+  2. İlk açılışta gerekli paketler otomatik kurulur (2-5 dk, sadece 1 kez).
+  3. Tarayıcınızda panel otomatik açılır.
+  4. Kapatmak için açılan siyah pencereyi kapatın.
+
+  Not: Bilgisayarda Python yoksa BASLAT.bat onu da kurmaya çalışır
+  veya size indirme sayfasını açar ("Add Python to PATH" işaretleyin).
+
+NE YAPAR?
+  ⚖️ Piyasa Rejimi   : En üstte. BIST100 trendi + dolar bazlı BIST + USDTRY +
+                       fon akımlarından "risk açık/kapalı" tespiti yapar;
+                       riskli ortamda tüm hisse puanlarını otomatik kısar.
+  🔍 Hisse Araştır   : Hisse kodunu yaz → ARAŞTIR → 0-100 puan, AL/SAT kararı,
+                       kısa-orta-uzun vade + takas + fon/kurumsal sinyalleri,
+                       F/K, yabancı oranı, grafik, KAP haberleri, stop/hedef.
+                       Altında "🤝 AKD Analizi (Telegram/BOPT)": o hissede
+                       BUGÜN hangi aracı kurumun net alıcı/satıcı olduğu
+                       (Telegram üzerinden çekilir) gösterilir ve NİHAİ KARAR
+                       buna göre teknik puanla birlikte hesaplanır.
+  📈 Yükselebilecek  : Tarama evrenini TEKNİK puanlamadan (Kısa/Orta/Uzun vade
+     Hisseler           bileşenleri) geçirip her vadede ayrı bir karar üretir.
+                       (NOT: Bu sekme eskiden "geçmiş örüntü" — istatistiksel
+                       benzerlik — motorunu kullanıyordu; kullanıcı geri
+                       bildirimiyle yanıltıcı bulunduğu için tamamen
+                       kaldırıldı, artık saf teknik puana dayanır.)
+  🚀 Öne Çıkanlar    : Tüm BIST'i tarar, potansiyeli en yüksek hisseleri sıralar.
+                       Varsayılan taramada "Uzun" sütunu sadece MA200/2 yıllık
+                       trende, "Takas" sütunu sadece hacim tabanlı akış
+                       göstergelerine (CMF/MFI/OBV) dayanır — F/K, PD/DD ve
+                       gerçek yabancı takas oranı YOKTUR (hızlı olsun diye).
+                       "🔬 Temel oranları... dahil et" kutusunu işaretlerseniz
+                       her hisse için F/K, PD/DD ve gerçek yabancı takas oranı
+                       PARALEL olarak da çekilir; "Uzun" ve "Takas" puanları
+                       daha ayrıştırıcı/doğru olur ama tarama belirgin şekilde
+                       yavaşlar.
+  🤝 Takas Analizi   : Yabancı takas oranı + para giriş/çıkışı +
+                       sessiz toplama/dağıtım tespiti.
+  🏦 Fon & Kurumsal  : Yerli fonların hisse ağırlığı trendi (TEFAS) +
+                       hisse bazında uluslararası ETF sahipliği (BlackRock vb).
+  💼 Portföy & Tavsiye : SADECE BİLGİLENDİRME — hiçbir alım-satım emri
+                       gönderilmez veya simüle edilmez.
+                         • Portföyüm: hisse/lot/maliyet bilgilerinizi bir
+                           tabloya (Streamlit veri düzenleyici) girersiniz;
+                           "portfoy.json" dosyasında saklanır. Mynet Finans'tan
+                           canlı fiyatla anlık kâr/zarar hesaplanır.
+                         • Rebalans & Takas Sinyal Motoru: "PORTFÖYÜ ANALİZ ET
+                           VE TAVSİYE ÜRET" butonuna basınca her hissenin motor
+                           puanına göre net bir aksiyon üretilir: puan 35 altı
+                           → "KAYIP KES / ELDEN ÇIKAR (SAT)"; puan 45 altı ve
+                           izleme listenizde puanı 75 üstü güçlü bir aday varsa
+                           → "TAKAS TAVSİYESİ" (eldekini satıp adayı ekleme
+                           önerisi); puan 70 üstü → "TAŞIMAYA DEVAM ET / AĞIRLIK
+                           ARTIR (AL)". Tek hissede veya tek sektörde %30'dan
+                           fazla ağırlık varsa yoğunlaşma riski uyarısı eklenir
+                           (sektör eşlemesi kısmi/elle derlenmiştir, bkz.
+                           sektor_haritasi.py).
+                         • Opsiyonel LLM Yönetici Özeti: Groq (ücretsiz kotalı)
+                           /ChatGPT/Claude/Grok/DeepSeek'ten birini ".env"
+                           dosyasına anahtar girerek aktif ederseniz, motorun
+                           ürettiği öneriler 2-3 cümlelik kurumsal bir özete
+                           dönüştürülür. Anahtar girilmezse bu bölüm gösterilmez;
+                           motor önerileri yine de tam çalışır.
+  🧪 Sanal Portföy   : SANAL PARA ile otonom alım-satım TESTİ (gerçek emir
+     (Paper)            YOK). Varsayılan bütçe 1.000.000 ₺, hedef aylık %10
+                       (kurulum ekranından değiştirilebilir). Motor haftada
+                       bir (Cuma) kendi puanlama sistemine göre en iyi
+                       hisseleri puan ağırlıklı (maks %30 tek hisse, her
+                       zaman tam yatırımlı) seçip sanal AL/SAT yapar; diğer
+                       günler sadece izler, işlem yapmaz. Sanal komisyon
+                       (binde 1,5) düşülür ki sonuçlar gerçekçi olsun.
+                       Performans raporu DÜRÜSTTÜR: hedef tutturulamıyorsa
+                       bu açıkça "YAKALAYAMIYOR ⚠️" olarak gösterilir,
+                       gizlenmez. GUNLUK_SANAL_YATIRIM.bat ile Windows Görev
+                       Zamanlayıcısı'na eklenirse uygulamayı açmadan her gün
+                       kendi kendine çalışır (bkz. aşağıdaki otomasyon
+                       bölümü). Bu SADECE BİR TESTTİR — gerçek paraya
+                       geçmeden önce en az birkaç hafta/ay gözlemleyin.
+  📐 Backtest /       : Puanlama sisteminin (Kısa/Orta/Uzun/Takas ağırlıkları,
+     Doğrulama          72/62/52/40 AL-SAT eşikleri) GEÇMİŞ VERİDE gerçekten
+                       işe yarayıp yaramadığını ölçer. Her tarihsel gün için
+                       SADECE o güne kadar bilinen veriyle puan hesaplanır
+                       (gelecek bilgisi sızdırılmaz — "look-ahead bias" yok)
+                       ve puanın gerçekten ileriki getiriyi öngörüp
+                       öngörmediği (korelasyon, kova bazlı ortalama getiri,
+                       ilk yarı/ikinci yarı tutarlılık kontrolü) raporlanır.
+                       Tek hisse hızlı test uygulama içinden çalışır; BIST 30
+                       için de yapılabilir ama yavaştır. Daha geniş/çok yıllı
+                       backtest için "BACKTEST_CALISTIR.bat"ı çalıştırın —
+                       sonuç "backtest_sonuc.txt" ve "backtest_sonuc.csv"ye
+                       yazılır. NOT: Bu doğrulama sadece varsayılan teknik
+                       puanlamayı kapsar; F/K/PD-DD/gerçek yabancı takas
+                       oranının geçmiş değerlerine erişim olmadığından "🔬
+                       Temel oranları dahil et" seçeneği kapsam dışıdır.
+  📒 Tavsiye Geçmişi : Motorun GERÇEK ZAMANDA verdiği tavsiyeler otomatik olarak
+                       "tavsiye_gecmisi.json" dosyasına kaydedilir; bu sekme
+                       onları sonradan gerçek fiyatlarla puanlar. Backtest
+                       geçmişi yeniden oynatır, bu ise motorun sonucu
+                       BİLİNMEZKEN ne dediğini kaydeder — bu yüzden daha
+                       dürüst bir kanıttır (ama yavaş birikir).
+                       Kayıt yapan yerler: "Öne Çıkan Hisseler" taraması (ilk
+                       20 hisse), "Yükselebilecek Hisseler" (günlük+haftalık)
+                       ve GUNLUK_TARAMA.bat. Aynı gün aynı taramayı tekrar
+                       çalıştırmak MÜKERRER kayıt üretmez.
+                       Dürüstlük kuralları: (1) yeni verilmiş tavsiyenin uzun
+                       ufuk getirisi henüz OLUŞMAMIŞTIR — bu kayıtlar
+                       "olgunlaşmadı" diye ayrı gösterilir, ortalamaya
+                       KATILMAZ; (2) getiri, anlık fiyattan değil tavsiye
+                       tarihindeki KAPANIŞTAN kapanışa hesaplanır; (3) mutlak
+                       getirinin yanında ENDEKS ÜSTÜ getiri de raporlanır,
+                       çünkü piyasa yükselirken kazanmak marifet değildir.
+  ℹ️ Sistem Durumu   : Veri kaynaklarını tek tuşla test eder (Mynet dahil).
+
+RENKLİ GÖRSEL GÖSTERGE (yeşilden kırmızıya geçişli)
+  Puanlar artık sayı olarak okunmak zorunda değil. Her yerde üç durum vardır —
+  🟢 Olumlu (62+) · 🟡 Nötr (52-62) · 🔴 Olumsuz (52 altı) — ve renk bunlar
+  arasında YUMUŞAK geçer (41 ile 48 puan farklı tonda görünür). Eşikler,
+  karar metniyle (AL / İZLE-TUT / ZAYIF) birebir aynıdır; yani yeşil görünen
+  bir hisse asla "ZAYIF" diye etiketlenmez. Tablolarda ayrıca renkli dolgu
+  çubukları vardır. Renk körlüğü için yalnızca renge güvenilmez: çubuklarda
+  DOLU KARE SAYISI da bilgi taşır.
+
+İKİ MOTORUN UYUMU (Hisse Araştır'daki NİHAİ KARAR)
+  Bu uygulamada İKİ AYRI motor vardır ve farklı sorular sorarlar:
+    • Puanlama motoru: "Bugünkü teknik göstergeler ne kadar iyi?"
+    • AKD motoru     : "BUGÜN hangi aracı kurum net alıcı/satıcı oldu?"
+                        (Telegram/BOPT üzerinden çekilir, bkz. aşağıdaki
+                        "TELEGRAM AKD ENTEGRASYONU" bölümü)
+  İkisi çelişebilir (ör. teknik tablo zayıf ama kurumsal net alım güçlü).
+  NİHAİ KARAR bunu şöyle birleştirir:
+    ✅ İkisi de olumlu/olumsuz → aynı yönde güçlü karar
+    ⚠️ ÇELİŞKİLİ — BEKLE      → ikisi zıt yönde, temkinli davranılır
+    ⚪ Sadece teknik           → bu hisse için AKD verisi henüz çekilmemiş
+  (NOT: Bu bölüm eskiden "Örüntü motoru" — geçmiş istatistiksel benzerlik —
+  ile puanlama motorunun karşılaştırmasıydı; örüntü analizi kullanıcı
+  deneyiminde yanıltıcı bulunduğu için tamamen kaldırıldı, ikinci görüş
+  artık AKD sinyalinden geliyor.)
+
+SADE ÖZET KUTULARI
+  Her modülün sonucunun üstünde "📝 Sade Özet — bu ne anlama geliyor?" başlıklı
+  bir kutu vardır. Rakamları tekrar etmez, YORUMLAR: durumun ne olduğunu,
+  güçlü/zayıf tarafın hangisi olduğunu ve sonucun nasıl okunması gerektiğini
+  jargonsuz anlatır. Teknik ayrıntı (istatistikler, tablolar) kaybolmaz —
+  altta, gerektiğinde açılan bölümlerde durur. Özetler abartmaz: zayıf tarafı
+  ve belirsizliği de açıkça söyler, hiçbiri "al/sat" emri vermez.
+
+HİSSE ARAMA — KOD EZBERLEMEYE GEREK YOK
+  Hisse kutuları artık serbest metin değil, ARANABİLİR listedir: kod yerine
+  şirket adı yazarak da bulabilirsiniz ("ereğli" → EREGL, "türk hava" → THYAO).
+  Türkçe karakter ve şapkasız yazım da çalışır ("sise" ile "şişe" aynı sonucu
+  verir). Başlangıçta yalnızca yaygın şirketlerin adı gömülüdür; TÜM BIST'in
+  adlarını almak için "ℹ️ Sistem Durumu" sekmesindeki "Şirket Adlarını İndir /
+  Güncelle" düğmesini bir kez çalıştırın (sonuç hisse_adlari.json'a kaydedilir).
+  Adı bilinmeyen hisse sadece koduyla görünür — uydurma ad yazılmaz.
+
+VERİLER
+  Canlı/anlık fiyat: Mynet Finans (finans.mynet.com) — hızlı, API anahtarı
+  gerektirmez. Derinlemesine geçmiş (çok yıllı MA200 vb. göstergeler için):
+  Yahoo Finance → borsapy (TradingView) → İş Yatırım → Mynet (son çare).
+  Mynet'in tarihsel verisi sitede yalnızca kısa bir pencere olarak açık
+  şekilde sunulduğundan çok yıllı analiz için tek başına kullanılmaz; bu
+  yüzden zincirde son sırada, "hiç veri yoktan iyidir" mantığıyla yer alır.
+  API anahtarı/üyelik GEREKMEZ. Veriler ~15 dk gecikmeli olabilir.
+
+  Aracı kurum bazlı takas dağılımı (BofA vb.) Ocak 2025'ten beri Borsa
+  İstanbul lisansı gerektirdiğinden ücretsiz sunulamıyor; yerine yabancı
+  takas oranı + ETF sahipliği + fon akımları + para akışı analizi kullanılır.
+
+SORUN GİDERME
+  - "Veri bulunamadı" → internet bağlantısını ve hisse kodunu kontrol edin.
+  - Panel açılmadı → tarayıcıya elle yazın: http://localhost:8765
+  - Paket hatası → BASLAT.bat'ı tekrar çalıştırın.
+  - Köklü sorunda: klasördeki ".kurulum_tamam" dosyasını silin ve
+    BASLAT.bat'ı tekrar çalıştırın (paketleri yeniden kurar).
+  - "numpy ... Meson ... Unknown compiler" hatası → bilgisayarınızda Python'un
+    DENEYSEL "free-threaded (3.13t)" sürümü kurulu demektir; bu yazılımla
+    uyumlu değildir. Çözüm: python.org'dan STANDART Python 3.12'yi kurun
+    ("Add Python to PATH" işaretleyin), sonra BASLAT.bat'a tekrar tıklayın.
+    BASLAT.bat artık bu sürümü otomatik algılayıp sizi uyarıyor.
+
+OTOMATİK GÜNLÜK TAVSİYE (uygulamayı açmadan günlük özet almak için)
+  1. "izleme_listesi.txt" dosyasını (ilk çalıştırmada otomatik oluşur) açıp
+     izlemek istediğiniz hisse kodlarını yazın (her satıra bir tane).
+     Portföyünüzdeki hisseler zaten otomatik dahil edilir.
+  2. GUNLUK_TARAMA.bat dosyasına çift tıklayın → o günün tavsiyeleri ve
+     rebalans/takas önerileri hesaplanır, sonuç "gunluk_log.txt"ye eklenir.
+     HİÇBİR EMİR VERİLMEZ.
+  3. Her gün otomatik çalışsın isterseniz Windows Görev Zamanlayıcısı'na ekleyin:
+     Görev Zamanlayıcısı aç → "Temel Görev Oluştur" → Günlük → saat seçin
+     (BIST kapanışından sonrası önerilir, örn. 18:30) → Program başlat →
+     "GUNLUK_TARAMA.bat" dosyasını seçin (bu klasördeki).
+
+PORTFÖY & TAVSİYE SEKMESİ — SAĞLIK METRİKLERİ VE FIRSATLAR
+  "💼 Portföy & Tavsiye" sekmesinde artık Eylem Planı'nın altında "🩺 Portföy
+  Sağlık Metrikleri" kartları var: Ağırlıklı Motor Puanı (pozisyonlarınızın
+  değerle ağırlıklandırılmış ortalama puanı — portföyün genel karnesi),
+  Çeşitlendirme Skoru (100 = eşit dağılmış, düşük = tek hisseye yığılmış),
+  Yıllık Volatilite ve Maks. Düşüş (drawdown) — bunlar "portfoy_deger_gecmisi.json"
+  içinde biriken geçmişten hesaplanır, birkaç günlük kayıt gerektirir.
+  Sektör dağılımı artık pasta grafik olarak da gösteriliyor.
+  Ayrıca "🎯 Fırsatlar" bölümü: portföyünüzde OLMAYAN, motor puanı yüksek
+  hisseleri iki kaynaktan gösterir — izleme listenizden ve (varsa) arka plan
+  taraması önbelleğinden (tüm BIST). Elinizdeki zayıf pozisyon yoksa bile
+  "şuna bakmaya değer" fırsatlarını görürsünüz.
+
+SANAL PORTFÖY MOTORUNU OTOMATİK ÇALIŞTIRMA (paper trading, gerçek para yok)
+  Aynı şekilde "GUNLUK_SANAL_YATIRIM.bat" dosyasını Görev Zamanlayıcısı'na
+  ekleyin (BIST kapanışından sonrası önerilir). Bu script her gün sanal
+  portföyü izler/loglar; SADECE Cuma günleri gerçek sanal AL/SAT işlemi
+  yapar. Sonuçlar "sanal_yatirim_log.txt" dosyasına eklenir. Uygulamayı
+  açmadan da çalışır; ilerlemeyi "🧪 Sanal Portföy (Paper)" sekmesinden
+  veya bu log dosyasından takip edebilirsiniz.
+
+VADE SİSTEMİ — SİNYAL KISA / ORTA / UZUN OLARAK AYRI
+  "📈 Yükselebilecek Hisseler" sekmesinde tek bir "GÜÇLÜ AL" etiketi yerine
+  ÜÇ AYRI VADE için ayrı karar verilir:
+      KISA ≈ 2 hafta · ORTA ≈ 3 ay · UZUN ≈ 6 ay
+  Her vadedeki karar, O VADEYE ait TEKNİK puana (hizli_puan'ın Kısa/Orta/Uzun
+  bileşenlerine) dayanır — "Kısa: ZAYIF · Orta: AL · Uzun: GÜÇLÜ AL" gibi
+  okunabilir bir tablo çıkar; bir hissenin kısa vadede riskli, uzun vadede
+  olumlu olması bir çelişki değildir. Tavsiye kayıtları da vade bazında ayrı
+  tutulur, böylece hangi vadede daha isabetli olduğunu ayrı ayrı ölçebilirsiniz.
+  (NOT: Bu vadeler eskiden geçmiş örüntü/istatistiksel benzerlik sinyaliyle
+  teknik puanın birleşimiydi; örüntü kaldırıldığı için artık saf tekniktir.)
+
+TARAMA KAPSAMI — TÜM BIST (~560 HİSSE)
+  ÖNEMLİ DÜZELTME: Sembol listesi eskiden borsapy'den alınamazsa yalnızca
+  106 likit hisseden oluşan yedek listeye düşüyordu; kullanıcı "Tüm BIST"
+  taradığını sanırken küçük/orta ölçekli hisselerin tamamı kapsam dışı
+  kalıyordu. Artık liste birden fazla kaynaktan (borsapy + İş Yatırım + KAP +
+  disk önbelleği) alınıp BİRLEŞTİRİLİYOR ve kapsamlı bir yerleşik listeyle
+  tamamlanıyor. Kapsam artık ~560 hissenin altına düşemez.
+  Tarama başlarken "Kapsam: N hisse · sembol kaynağı: ..." satırında kaç
+  hissenin nereden geldiğini görebilirsiniz — bir daha sessizce 100 hisse
+  taranmaz. (BIST 30 / BIST 100 seçilirse doğal olarak o endeksin bileşenleri
+  kullanılır.)
+
+HER YERDE TIKLANABİLİR HİSSELER — LİSTEYİ HIZLI TARAMA
+  Uygulamadaki her hisse tablosunda bir SATIRA TIKLAMANIZ yeterli.
+  "🚀 Öne Çıkan Hisseler" ve "📈 Yükselebilecek Hisseler" sekmelerinde liste
+  SOLDA, analiz paneli SAĞDA durur: bir hisseye tıklarsınız, analiz sağda
+  açılır; sıradakine tıklarsınız, panel yerinde değişir. Sayfa aşağı kaymaz,
+  böylece listeyi hisse hisse hızlıca tarayabilirsiniz.
+  Diğer tablolarda (Portföy Analiz Matrisi, Aday Havuzu, Sanal Portföy
+  pozisyonları/işlem geçmişi, Tavsiye Geçmişi) analiz tablonun altında açılır.
+  "Fırsatlar" bölümündeki hisse adları da tıklanabilir butonlardır.
+
+  NEDEN HIZLI: Panel "hızlı önizleme" modunda çalışır — taramada zaten
+  indirilmiş fiyat verisini kullanır, HİÇ AĞ İSTEĞİ YAPMAZ. (Eskiden her
+  tıklama 4 ayrı ağ isteği yapıyor ve sayfayı 2 kez baştan çalıştırıyordu.)
+  Panelde nihai karar, puan, fiyat/getiriler, vade kartları ve mini fiyat
+  grafiği vardır. Temel oranlar (F/K, PD/DD) ve takas verisi ağ isteği
+  gerektirdiği için, onları istediğinizde panelin altındaki
+  "🔍 Tam analizi yükle" butonuna basarsınız; sonuç "🔍 Hisse Araştır"
+  sekmesinde açılır.
+
+ARKA PLAN TARAMASI — "ÖNE ÇIKAN" VE "YÜKSELEBİLECEK HİSSELER"İ ÖNCEDEN HAZIRLAMA
+  Bu iki sekme ~600 hissenin verisini indirip analiz ettiği için canlı tıklamada
+  onlarca saniye sürebilir. "ARKA_PLAN_TARAMA.bat" bu taramayı uygulamayı
+  açmadan çalıştırır ve sonucu "tarama_onbellek.json" dosyasına yazar.
+  Uygulama bu sekmeleri her açtığınızda önce önbelleği okur; taze ise (son 6
+  saat içinde hesaplanmış) SONUÇ ANINDA görünür, hiç beklemezsiniz. Bayatsa
+  turuncu bir uyarı görürsünüz, sekmedeki "canlı tara" butonuyla yine de anlık
+  hesaplatabilirsiniz.
+  Otomatik çalışsın isterseniz: Görev Zamanlayıcısı aç → "Temel Görev
+  Oluştur" → Günlük, günde 2 tetikleyici ekleyin (örn. 09:00 ve 18:00) →
+  Program başlat → "ARKA_PLAN_TARAMA.bat" dosyasını seçin. Log dosyası:
+  "arka_plan_tarama_log.txt".
+
+ÇOK YILLI BACKTEST'İ UYGULAMAYI AÇMADAN ÇALIŞTIRMA
+  "BACKTEST_CALISTIR.bat" dosyasına çift tıklayın. Varsayılan olarak BIST 100
+  kapsamında 5 yıllık geçmiş indirilip test edilir (yüzlerce hisse × binlerce
+  gün olduğundan birkaç dakika sürebilir). Kapsam/süreyi değiştirmek isterseniz
+  "backtest_calistir.py" dosyasının başındaki KAPSAM/YIL sabitlerini düzenleyin.
+
+TELEGRAM AKD ENTEGRASYONU (BOPT / @b0pt_bot) — OPSİYONEL, ELLE KURULUM
+  telegram_akd.py, kendi Telegram hesabınızla (Telegram'ın resmi, ücretsiz
+  "Telegram API"si üzerinden) @b0pt_bot'a otomatik "/akd SEMBOL" komutu
+  gönderip cevabı .veri_cache/akd_{SEMBOL}.json'a kaydeden bir modüldür.
+  Ana programın bir parçası değildir, isteğe bağlıdır.
+
+  ARTIK NELER VAR (bkz. AKD_Model_Egitim_Rehberi.md'deki plana göre kuruldu):
+    - telegram_akd.py: AKD görselini OCR ile SAYISAL veriye çevirir
+      (akd_gorsel_ayristir), kural tabanlı bir AL/SAT sinyali üretir
+      (akd_sinyal_uret — kullanıcının 3 kuralı: DİĞER alıcıda yoğunsa düşüş,
+      DİĞER satıcıda yoğunsa yükseliş, tek kurum konsantrasyonu yükseliş),
+      ve "bu hafta X kurumu %Y sattı" tarzı haber cümleleri üretir
+      (akd_haberler_uret).
+    - Hisse Araştır sekmesinde artık İSTİSNASIZ bir "🤝 AKD Analizi
+      (Telegram/BOPT)" kutusu var: önbellek varsa gösterir, yoksa "AKD
+      verisini şimdi çek" butonuyla tek tıkla canlı çeker.
+    - akd_veri_toplama.py: favori hisseler için GÜNLÜK AKD verisini toplayıp
+      akd_egitim_verisi.csv'ye ekler, bir gün sonra gerçek fiyat hareketiyle
+      geriye dönük etiketler (T+1 getiri). Görev Zamanlayıcı'ya günde 1 kez
+      (borsa kapanışından sonra) eklenmesi önerilir.
+    - akd_model.py: yeterli veri (en az ~30 etiketli gün, gerçekçi olarak
+      haftalar/aylar) birikince XGBoost ile bir tahmin modeli eğitir
+      (python akd_model.py). Yetersiz veri varken NET bir "henüz yeterli
+      veri yok" hatası verir — asla rastgele/güvenilmez tahmin üretmez.
+
+  SINIRLAMA: Veri bir GÖRSEL (tablo resmi) olarak gelir; OCR ile sayısala
+  çevrilir. Kurum isim doğruluğu, test edilen görsellerde %100'e çıkarıldı
+  (konum tabanlı hücre okuma + ensemble OCR yöntemi); ORAN/yüzde sütunu da
+  ~%100 güvenilir. Yine de OCR olduğundan nadir durumlarda bir isim
+  "bilinmiyor" kalabilir — bu durumda sessizce yanlış
+  etiketlenmez). Çekme işlemi Telegram hız sınırına takılmamak için SADECE
+  favorilerdeki/araştırdığınız hisseler için yapılır, ~560 hissenin tamamı
+  için OTOMATİK ÇALIŞTIRILMAMALIDIR. Doğruluğu teyit edilmemiş, bilgi
+  amaçlıdır — tek başına yatırım kararı vermeyin.
+
+  Kurulum (bir kere, elle):
+    1) https://my.telegram.org → kendi telefon numaranızla giriş → "API
+       development tools" → yeni uygulama oluşturun → api_id + api_hash alın.
+    2) telegram_ayarlar.ornek.json dosyasını telegram_ayarlar.json olarak
+       kopyalayın, api_id / api_hash / telefon alanlarını doldurun.
+    3) pip install telethon --break-system-packages
+    4) Komut satırından: python telegram_akd.py TERA
+       İlk seferde Telegram'dan gelen kodu (varsa 2FA şifrenizi) girmeniz
+       istenir — SADECE ilk seferde, sonra otomatik bağlanır.
+  Maliyet: Telegram API tamamen ücretsizdir (Telegram'ın kendi belgelerinde
+  de "free of charge" yazar); bu entegrasyonun hiçbir parası yoktur.
+  Hız sınırı: bota çok sık otomatik mesaj atmak geçici kısıtlamaya (flood
+  wait) yol açabilir; bu yüzden toplu_guncelle() komutlar arasına bilerek
+  bekleme koyar — SADECE izlenen birkaç hisse için kullanın, tüm BIST'i
+  otomatik taramaya çalışmayın.
+
+UYARI
+  Bu yazılım bilgilendirme amaçlıdır, YATIRIM TAVSİYESİ DEĞİLDİR. Hiçbir
+  alım-satım emri otomatik gönderilmez veya simüle edilmez. Üretilen puan,
+  tavsiye ve sinyaller sadece bilgi amaçlıdır; alım-satım kararını ve
+  işlemini her zaman siz, kendi aracı kurum hesabınızdan gerçekleştirirsiniz.
+  Sektör eşlemesi (sektor_haritasi.py) kısmi ve elle derlenmiştir; kurumsal
+  karar almadan önce hissenin gerçek sektörünü KAP/faaliyet raporundan teyit
+  edin. Yatırım kararlarınız tamamen kendi sorumluluğunuzdadır.
+
+ESKİ DOSYALAR
+  launch.py ve .env.example önceki yazılıma aittir, artık gerekli değildir;
+  isterseniz silebilirsiniz. (bist_platform_ui.html — sahte/simüle veri
+  kullanan eski TradingView prototipi — silindi.)
+═══════════════════════════════════════════════════════

@@ -1,0 +1,6 @@
+Traceback (most recent call last):
+  File "C:\Users\gkhns\YandexDisk\Yandex genel\lispler\YAZILIMLAR\Borsa yazýlýmý1\gunluk_tarama.py", line 24, in <module>
+    import veri_katmani as vk
+  File "C:\Users\gkhns\YandexDisk\Yandex genel\lispler\YAZILIMLAR\Borsa yazýlýmý1\veri_katmani.py", line 20, in <module>
+    import numpy as np
+ModuleNotFoundError: No module named 'numpy'
