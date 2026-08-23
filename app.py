@@ -409,6 +409,80 @@ div[data-baseweb="tab-panel"] {animation: icerik-gir .28s cubic-bezier(.22,.9,.3
    sekme var" şikayeti). Kaldırıldı — kaydırma çubukları artık SADECE gerçekten
    taşan yerlerde (ör. çok uzun bir sayfa) tarayıcının kendi varsayılan
    çubuğuyla görünür. */
+
+/* ═════════════════════════════════════════════════════════════════════════
+   MOBİL (iOS Safari, ~375-430px genişlik) — SADECE dar ekranda devreye
+   girer. Masaüstü görünümü yukarıdaki kurallarla değişmeden kalır; bu blok
+   ekleme/düzeltme niteliğindedir. Amaç: dokunma hedeflerini iOS İnsan
+   Arayüzü Kılavuzu'nun ~44px asgari ölçüsüne çıkarmak, çok küçük yazı
+   tiplerini okunur kılmak ve dar ekranda kenar boşluklarını azaltmak.
+   Kolonların alt alta dizilmesi zaten Streamlit'in kendi davranışı —
+   buna dokunulmuyor. ═════════════════════════════════════════════════════ */
+@media (max-width: 480px) {
+    /* Kenar boşlukları daralt — dar ekranda her piksel değerli */
+    .block-container {padding-left: .7rem; padding-right: .7rem; padding-top: .7rem;}
+
+    /* Butonlar: asgari 44px dokunma yüksekliği (iOS HIG) */
+    .stButton > button, .stDownloadButton > button {
+        min-height: 44px; padding-top: 10px; padding-bottom: 10px;
+        font-size: 1rem;
+    }
+
+    /* Sekmeler: dokunması kolay, taşmayan şerit */
+    div[data-baseweb="tab-list"] {overflow-x: auto; flex-wrap: nowrap;}
+    button[data-baseweb="tab"] {min-height: 44px; padding: 10px 12px; font-size: .9rem;}
+
+    /* Form alanları: metin girişi, sayı girişi, seçim kutuları */
+    .stTextInput input, .stNumberInput input, div[data-baseweb="select"] > div {
+        min-height: 44px; font-size: 1rem;
+    }
+    div[data-baseweb="select"] {min-height: 44px;}
+
+    /* iOS Safari, bir input'un hesaplanmış yazı boyutu 16px'in altındaysa
+       kullanıcı dokununca sayfayı otomatik yakınlaştırır (odak kaybolunca da
+       geri açmaz, kullanıcı elle uzaklaştırmak zorunda kalır). Yukarıdaki
+       1rem kuralı çoğu durumda yeterli ama emin olmak için tüm gerçek form
+       elemanlarına açık 16px atanıyor — SADECE bu dar-ekran bloğunda,
+       masaüstü görünümü etkilenmiyor. */
+    input, select, textarea {font-size: 16px !important;}
+
+    /* Checkbox/radio dokunma alanı büyütülsün */
+    .stCheckbox, .stRadio {min-height: 44px;}
+    .stCheckbox label, .stRadio label {min-height: 44px; display: flex; align-items: center;}
+
+    /* Expander başlıkları da rahat dokunulabilir olsun */
+    div[data-testid="stExpander"] summary {min-height: 44px; display: flex; align-items: center;}
+
+    /* Metrik kartları: dar ekranda biraz daha kompakt ama okunur */
+    div[data-testid="stMetricValue"] {font-size: 1.25rem;}
+    div[data-testid="stMetricLabel"] {font-size: .76rem;}
+    div[data-testid="stMetric"] {padding: 10px 10px;}
+
+    /* Çok küçük yazı tipleri (.68rem / .55rem / .7rem) dar ekranda göz
+       yormasın diye büyütülüyor */
+    .radyal-gosterge .rg-etiket {font-size: .72rem;}
+    .radyal-gosterge.kucuk .rg-etiket {font-size: .62rem;}
+    .vade-kart .ad {font-size: .76rem;}
+    .ust-oge {font-size: .82rem; padding: 6px 11px;}
+
+    /* Akıcı HTML tablolar: dar ekranda biraz daha küçük hücre dolgusu,
+       yatay kaydırma zaten .akici-tablo-sarici içinde mevcut */
+    .akici-tablo thead th, .akici-tablo tbody td {padding: 8px 9px;}
+    .akici-tablo {font-size: .84rem;}
+
+    /* Yerel st.dataframe/st.table zaten kendi iç yatay kaydırmasını
+       yapıyor; dar ekranda taşmayı önlemek için genişliği sınırla */
+    div[data-testid="stDataFrame"], div[data-testid="stTable"] {
+        max-width: 100%; overflow-x: auto;
+    }
+
+    /* Radyal gösterge dar ekranda gereğinden büyük olmasın */
+    .radyal-gosterge {width: clamp(110px, 30vw, 160px);}
+    .radyal-gosterge.kucuk {width: clamp(76px, 20vw, 100px);}
+
+    /* Başlık dar ekranda taşmasın */
+    h1 {font-size: 1.5rem;}
+}
 </style>
 """, unsafe_allow_html=True)
 
