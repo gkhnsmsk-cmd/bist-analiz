@@ -485,21 +485,31 @@ div[data-baseweb="tab-panel"] {animation: icerik-gir .28s cubic-bezier(.22,.9,.3
 }
 
 /* ═════════════════════════════════════════════════════════════════════════
-   YENİ NAVİGASYON — düz buton tabanlı ana/alt gezinme çubukları
+   NAVİGASYON — açılır/kapanır (hamburger) menü + alt gezinme çubukları
    (st.tabs()'in yerini aldı; bkz. app.py'de _nav_satiri() yorum bloğu).
-   `.st-key-<isim>` sınıfları st.container(key=...) tarafından üretilir. ══ */
+   `.st-key-<isim>` sınıfları st.container(key=...) tarafından üretilir.
 
-/* Genel görünüm — masaüstünde de sekmelerden daha "buton" hissi versin */
+   NEDEN position:fixed KULLANILMIYOR: İlk sürümde ana menü mobilde ekranın
+   altına `position: fixed` ile sabitlenmişti. Canlıda düzeni bozdu ("her şey
+   birbirine girdi") — Streamlit'in kendi iç sarmalayıcı div'leriyle (birden
+   çok iç içe flex/grid katmanı) fixed konumlandırma öngörülemez şekilde
+   çakıştı. Artık TÜM navigasyon normal sayfa akışının içinde; ana menü de
+   sadece bir ☰ düğmesine basılınca açılan sıradan bir bölüm (kapalıyken hiç
+   yer kaplamaz, sayfayı ASLA kaplamaz). Bu hem daha güvenli hem de kullanıcı
+   isteğiyle ("normalde kapalı kalsın") birebir örtüşüyor. ═══════════════ */
+
 .st-key-ana_nav_bar button, .st-key-tarama_alt_nav button, .st-key-portfoy_alt_nav button {
     font-weight: 650; letter-spacing: -.01em;
 }
-.st-key-ana_nav_bar {margin-bottom: .3rem;}
+.st-key-ana_nav_bar {margin: .4rem 0;}
 .st-key-tarama_alt_nav, .st-key-portfoy_alt_nav {margin-bottom: .6rem;}
 .st-key-tarama_alt_nav button, .st-key-portfoy_alt_nav button {font-size: .86rem;}
 
 /* Yüzen sohbet düğmesi — masaüstünde gizli (sohbet zaten sağda sabit
-   görünür), sadece dar ekranda belirir. */
-.sohbet-fab {display: none; position: fixed; right: 18px; bottom: 18px; z-index: 1000;
+   görünür), sadece dar ekranda belirir. Sabit alt çubuk artık olmadığı için
+   basitçe sağ-altta durur, başka bir öğeye göre konum ayarlamaz. */
+.sohbet-fab {display: none; position: fixed; right: 18px;
+             bottom: calc(18px + env(safe-area-inset-bottom)); z-index: 1000;
              width: 54px; height: 54px; border-radius: 50%; align-items: center;
              justify-content: center; font-size: 1.5rem; text-decoration: none;
              background: linear-gradient(135deg, rgba(14,165,233,.92), rgba(56,189,248,.78));
@@ -508,29 +518,14 @@ div[data-baseweb="tab-panel"] {animation: icerik-gir .28s cubic-bezier(.22,.9,.3
 .sohbet-fab:active {transform: scale(.94);}
 
 @media (max-width: 480px) {
-    /* ── ANA NAV: gerçek bir mobil uygulama "bottom nav bar"ına dönüşür ──
-       position:fixed ile ekranın altına sabitlenir; içerik onun ALTINDA
-       kalmasın diye .block-container'a telafi edici alt boşluk eklenir. */
-    .st-key-ana_nav_bar {
-        position: fixed; left: 0; right: 0; bottom: 0; z-index: 999;
-        margin: 0; padding: 6px 8px calc(6px + env(safe-area-inset-bottom));
-        background: rgba(10,14,23,.94); backdrop-filter: blur(16px);
-        border-top: 1px solid var(--cam-kenar);
-        box-shadow: 0 -8px 24px rgba(0,0,0,.35);
-    }
-    .st-key-ana_nav_bar button {min-height: 56px; font-size: .82rem; padding: 4px 2px;}
-    /* Sayfa içeriği sabit alt çubuğun ARKASINDA kalmasın */
-    .block-container {padding-bottom: 84px !important;}
-
-    /* Alt (ikincil) seçiciler sabitlenmez — sayfayla birlikte kayar, sadece
-       dokunma hedefi büyütülür ve şerit taşmadan sığar. */
+    /* ☰ menü açıkken de, alt sekme seçicilerinde de dokunma hedefi asgari
+       44px olsun (iOS HIG) — sabitleme YOK, sayfayla birlikte kayar. */
+    .st-key-ana_nav_bar button {min-height: 48px; font-size: .86rem; padding: 6px 4px;}
     .st-key-tarama_alt_nav button, .st-key-portfoy_alt_nav button {
         min-height: 46px; font-size: .74rem; padding: 4px 2px; white-space: normal;
         line-height: 1.15;
     }
-
-    /* Yüzen sohbet düğmesi: alt nav çubuğunun ÜSTÜNDE dursun */
-    .sohbet-fab {display: flex; bottom: calc(78px + env(safe-area-inset-bottom));}
+    .sohbet-fab {display: flex;}
 }
 </style>
 """, unsafe_allow_html=True)
@@ -1532,14 +1527,19 @@ _bekleyen_secimleri_isle()
 # eski st.tabs() modelinde tüm sekmelerin Python kodu HER rerun'da çalışıp
 # sadece görsel olarak gizleniyordu; şimdi sadece aktif sayfanın kodu çalışır.
 # Bu hem daha hızlı hem de mobilde pil/veri tasarrufu sağlar.
-def _nav_satiri(kap_anahtari: str, durum_anahtari: str, ogeler, varsayilan: str):
+def _nav_satiri(kap_anahtari: str, durum_anahtari: str, ogeler, varsayilan: str,
+                 secince_kapat: bool = False):
     """Sekme şeridi YERİNE geçen, düz buton tabanlı navigasyon sırası.
 
     ogeler: (deger, ikon, etiket) üçlülerinden oluşan liste. Tıklanan öğe
     `durum_anahtari` ile session_state'e yazılır ve sayfa yeniden çalıştırılır.
     Aktif öğe type="primary" ile (mevcut camgöbeği vurgu stiliyle) öne çıkar.
     `st.container(key=...)` sarmalayıcısı sayesinde CSS'te `.st-key-{kap_anahtari}`
-    ile hedeflenip mobilde sabit alt çubuğa, masaüstünde üst şeride dönüştürülür.
+    ile hedeflenir (bkz. yukarıdaki <style>, sadece dokunma hedefi büyütme —
+    ARTIK position:fixed KULLANILMIYOR, bkz. aşağıdaki NEDEN notu).
+
+    secince_kapat=True: bir öğeye tıklanınca açılır menüyü de kapatır
+    (_menu_acik=False) — ana menüde kullanılır, alt sekme seçicilerde değil.
     """
     if durum_anahtari not in st.session_state:
         st.session_state[durum_anahtari] = varsayilan
@@ -1552,6 +1552,8 @@ def _nav_satiri(kap_anahtari: str, durum_anahtari: str, ogeler, varsayilan: str)
                              use_container_width=True,
                              type="primary" if aktif else "secondary"):
                     st.session_state[durum_anahtari] = deger
+                    if secince_kapat:
+                        st.session_state["_menu_acik"] = False
                     st.rerun()
     return st.session_state[durum_anahtari]
 
@@ -1564,10 +1566,43 @@ else:
     _ana_kolon, _sohbet_kolonu = st.container(), None
 
 with _ana_kolon:
-    _sayfa = _nav_satiri("ana_nav_bar", "_sayfa_ana",
-        [("arastir", "🔍", "Araştır"), ("tarama", "📈", "Tarama"),
-         ("portfoy", "💼", "Portföy"), ("durum", "ℹ️", "Durum")],
-        varsayilan="arastir")
+    # ── AÇILIR/KAPANIR ANA MENÜ (hamburger) ─────────────────────────────────
+    # NEDEN DEĞİŞTİ: İlk sürümde ana menü mobilde `position: fixed` ile
+    # ekranın altına SÜREKLİ sabitlenmişti. Kullanıcı geri bildirimi: mobilde
+    # düzen bozuldu ("her şey birbirine girdi") VE menü sürekli sayfayı
+    # kaplıyordu ("butona basınca kaybolmuyor... normalde kapalı kalsın").
+    # ÇÖZÜM: position:fixed tamamen kaldırıldı (bozukluğun kaynağı muhtemelen
+    # buydu — Streamlit'in kendi düzen sarmalayıcılarıyla çakışıyordu). Menü
+    # artık normal sayfa akışının içinde, sadece bir ☰ düğmesine basılınca
+    # AÇILAN sıradan bir bölüm. Varsayılan KAPALI. Bir sayfa seçilince otomatik
+    # kapanır (secince_kapat=True) — kullanıcı her seferinde elle kapatmasın.
+    if "_menu_acik" not in st.session_state:
+        st.session_state["_menu_acik"] = False
+    if "_sayfa_ana" not in st.session_state:
+        st.session_state["_sayfa_ana"] = "arastir"
+
+    _sayfa_etiketleri = {"arastir": "🔍 Araştır", "tarama": "📈 Tarama",
+                         "portfoy": "💼 Portföy", "durum": "ℹ️ Durum"}
+    _mt1, _mt2 = st.columns([1, 3])
+    with _mt1:
+        _menu_yazi = "✕ Kapat" if st.session_state["_menu_acik"] else "☰ Menü"
+        if st.button(_menu_yazi, key="menu_ac_kapa_dugme", use_container_width=True):
+            st.session_state["_menu_acik"] = not st.session_state["_menu_acik"]
+            st.rerun()
+    with _mt2:
+        st.markdown(f"<div style='display:flex;align-items:center;height:100%;"
+                    f"font-weight:700;font-size:1.05rem;padding-left:4px'>"
+                    f"{_sayfa_etiketleri[st.session_state['_sayfa_ana']]}</div>",
+                    unsafe_allow_html=True)
+
+    if st.session_state["_menu_acik"]:
+        _sayfa = _nav_satiri("ana_nav_bar", "_sayfa_ana",
+            [("arastir", "🔍", "Araştır"), ("tarama", "📈", "Tarama"),
+             ("portfoy", "💼", "Portföy"), ("durum", "ℹ️", "Durum")],
+            varsayilan="arastir", secince_kapat=True)
+    else:
+        _sayfa = st.session_state["_sayfa_ana"]
+    st.divider()
 
     _alt_tarama = None
     if _sayfa == "tarama":
