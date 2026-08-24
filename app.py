@@ -505,6 +505,21 @@ div[data-baseweb="tab-panel"] {animation: icerik-gir .28s cubic-bezier(.22,.9,.3
 .st-key-tarama_alt_nav, .st-key-portfoy_alt_nav {margin-bottom: .6rem;}
 .st-key-tarama_alt_nav button, .st-key-portfoy_alt_nav button {font-size: .86rem;}
 
+/* ── ☰ Menü düğmesi + sayfa başlığı satırı: SOLDA küçük düğme, yanında
+   başlık — DAR EKRANDA BİLE alt alta düşmesin (Streamlit'in varsayılan
+   kolon-yığma davranışını burada bilinçli olarak eziyoruz). ────────────── */
+.st-key-menu_baslik_satiri > div[data-testid="stHorizontalBlock"] {
+    flex-direction: row !important; flex-wrap: nowrap !important;
+    align-items: center !important; gap: .5rem;
+}
+.st-key-menu_baslik_satiri div[data-testid="column"]:first-child {
+    flex: 0 0 auto !important; width: auto !important; min-width: 64px;
+}
+.st-key-menu_baslik_satiri div[data-testid="column"]:last-child {
+    flex: 1 1 auto !important; min-width: 0;
+}
+.st-key-menu_baslik_satiri button {white-space: nowrap;}
+
 /* Yüzen sohbet düğmesi — masaüstünde gizli (sohbet zaten sağda sabit
    görünür), sadece dar ekranda belirir. Sabit alt çubuk artık olmadığı için
    basitçe sağ-altta durur, başka bir öğeye göre konum ayarlamaz. */
@@ -1583,17 +1598,23 @@ with _ana_kolon:
 
     _sayfa_etiketleri = {"arastir": "🔍 Araştır", "tarama": "📈 Tarama",
                          "portfoy": "💼 Portföy", "durum": "ℹ️ Durum"}
-    _mt1, _mt2 = st.columns([1, 3])
-    with _mt1:
-        _menu_yazi = "✕ Kapat" if st.session_state["_menu_acik"] else "☰ Menü"
-        if st.button(_menu_yazi, key="menu_ac_kapa_dugme", use_container_width=True):
-            st.session_state["_menu_acik"] = not st.session_state["_menu_acik"]
-            st.rerun()
-    with _mt2:
-        st.markdown(f"<div style='display:flex;align-items:center;height:100%;"
-                    f"font-weight:700;font-size:1.05rem;padding-left:4px'>"
-                    f"{_sayfa_etiketleri[st.session_state['_sayfa_ana']]}</div>",
-                    unsafe_allow_html=True)
+    # ☰ düğmesi SOLDA, küçük/sabit genişlikte — kullanıcı isteği: "menüyü sol
+    # tarafa al". `.st-key-menu_baslik_satiri` CSS'i (yukarıdaki <style>) bu
+    # satırı DAR EKRANDA BİLE yan yana (satır DEĞİL sütun) tutar; aksi halde
+    # Streamlit kolonları mobilde otomatik alt alta diziyordu ve düğme sayfa
+    # başlığının ÜSTÜNE düşüyordu, "solda" değil.
+    with st.container(key="menu_baslik_satiri"):
+        _mt1, _mt2 = st.columns([1, 4])
+        with _mt1:
+            _menu_yazi = "✕" if st.session_state["_menu_acik"] else "☰ Menü"
+            if st.button(_menu_yazi, key="menu_ac_kapa_dugme", use_container_width=True):
+                st.session_state["_menu_acik"] = not st.session_state["_menu_acik"]
+                st.rerun()
+        with _mt2:
+            st.markdown(f"<div style='display:flex;align-items:center;height:100%;"
+                        f"font-weight:700;font-size:1.05rem;padding-left:4px'>"
+                        f"{_sayfa_etiketleri[st.session_state['_sayfa_ana']]}</div>",
+                        unsafe_allow_html=True)
 
     if st.session_state["_menu_acik"]:
         _sayfa = _nav_satiri("ana_nav_bar", "_sayfa_ana",
