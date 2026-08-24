@@ -508,14 +508,22 @@ div[data-baseweb="tab-panel"] {animation: icerik-gir .28s cubic-bezier(.22,.9,.3
 /* ── ☰ Menü düğmesi + sayfa başlığı satırı: SOLDA küçük düğme, yanında
    başlık — DAR EKRANDA BİLE alt alta düşmesin (Streamlit'in varsayılan
    kolon-yığma davranışını burada bilinçli olarak eziyoruz). ────────────── */
-.st-key-menu_baslik_satiri > div[data-testid="stHorizontalBlock"] {
+/* NOT (gerçek canlı DOM'da doğrulandı — bkz. iframe içi inceleme):
+   Streamlit kolon sarmalayıcısının data-testid değeri "column" DEĞİL,
+   "stColumn"; ayrıca stHorizontalBlock, .st-key-* konteynerinin DOĞRUDAN
+   çocuğu değil, arada bir stLayoutWrapper katmanı var. Bu yüzden İLK
+   sürümdeki seçiciler (`> div[data-testid="stHorizontalBlock"]` ve
+   `div[data-testid="column"]`) HİÇ EŞLEŞMİYORDU — "sol tarafa al" isteği
+   bu yüzden görünürde hiçbir etki yapmamıştı. Aşağıda torun (descendant)
+   seçici ve doğru testid adı kullanılıyor. */
+.st-key-menu_baslik_satiri div[data-testid="stHorizontalBlock"] {
     flex-direction: row !important; flex-wrap: nowrap !important;
     align-items: center !important; gap: .5rem;
 }
-.st-key-menu_baslik_satiri div[data-testid="column"]:first-child {
+.st-key-menu_baslik_satiri div[data-testid="stColumn"]:first-child {
     flex: 0 0 auto !important; width: auto !important; min-width: 64px;
 }
-.st-key-menu_baslik_satiri div[data-testid="column"]:last-child {
+.st-key-menu_baslik_satiri div[data-testid="stColumn"]:last-child {
     flex: 1 1 auto !important; min-width: 0;
 }
 .st-key-menu_baslik_satiri button {white-space: nowrap;}
