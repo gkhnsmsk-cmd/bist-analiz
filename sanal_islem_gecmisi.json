@@ -749,5 +749,18 @@
     "tutma_gunu": 5,
     "gerekce": "takas: AKMGY birikim skoru +0.411, bu pozisyonunki +0.081 (marj: 0.10)",
     "getiri_yuzde": -0.54
+  },
+  {
+    "tarih": "2026-08-24",
+    "sembol": "OZSUB",
+    "yon": "SAT",
+    "adet": 1439.908,
+    "fiyat": 42.0,
+    "tutar": 60476.13,
+    "komisyon": 90.71,
+    "puan": 66.8,
+    "tutma_gunu": 6,
+    "gerekce": "takas: EUKYO birikim skoru +0.433, bu pozisyonunki +0.309 (marj: 0.10)",
+    "getiri_yuzde": -2.55
   }
 ]
