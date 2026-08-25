@@ -2,54 +2,46 @@
   "baslangic_butce": 1000000.0,
   "baslangic_tarihi": "2026-07-28",
   "hedef_aylik_yuzde": 10.0,
-  "nakit": 341581.59185478877,
+  "nakit": 442554.22815022565,
   "pozisyonlar": [
-    {
-      "sembol": "TUPRS",
-      "adet": 270.5667499119901,
-      "maliyet": 313.25,
-      "eklenme_tarihi": "2026-08-06T15:23:37.227865",
-      "son_fiyat": 400.5,
-      "en_yuksek": 406.75
-    },
     {
       "sembol": "ANELE",
       "adet": 628.6720504015443,
       "maliyet": 138.8,
       "eklenme_tarihi": "2026-08-18T01:31:03.083919",
-      "son_fiyat": 148.89999389648438,
-      "en_yuksek": 148.9
+      "son_fiyat": 154.0,
+      "en_yuksek": 154.0
     },
     {
       "sembol": "INVES",
       "adet": 99.80229592168796,
       "maliyet": 814.0,
       "eklenme_tarihi": "2026-08-18T01:37:47.996679",
-      "son_fiyat": 841.0,
-      "en_yuksek": 841.0
+      "son_fiyat": 851.5,
+      "en_yuksek": 851.5
     },
     {
       "sembol": "RYGYO",
       "adet": 1930.5862376486216,
       "maliyet": 42.08,
       "eklenme_tarihi": "2026-08-18T01:37:47.996679",
-      "son_fiyat": 43.599998474121094,
-      "en_yuksek": 43.6
+      "son_fiyat": 44.15999984741211,
+      "en_yuksek": 44.16
     },
     {
       "sembol": "ATATP",
       "adet": 282.27262252864824,
       "maliyet": 283.75,
       "eklenme_tarihi": "2026-08-18T01:37:47.996679",
-      "son_fiyat": 318.0,
-      "en_yuksek": 322.5
+      "son_fiyat": 335.0,
+      "en_yuksek": 335.0
     },
     {
       "sembol": "MTRKS",
       "adet": 600.5700993793478,
       "maliyet": 33.86,
       "eklenme_tarihi": "2026-08-19T18:43:40.705214",
-      "son_fiyat": 34.779998779296875,
+      "son_fiyat": 33.540000915527344,
       "en_yuksek": 36.0
     },
     {
@@ -57,19 +49,19 @@
       "adet": 1787.683270741638,
       "maliyet": 50.0,
       "eklenme_tarihi": "2026-08-20T18:42:52.115402",
-      "son_fiyat": 54.25,
-      "en_yuksek": 54.25
+      "son_fiyat": 59.650001525878906,
+      "en_yuksek": 59.65
     },
     {
       "sembol": "PASEU",
       "adet": 344.05757635284283,
       "maliyet": 202.3,
       "eklenme_tarihi": "2026-08-21T18:42:34.360223",
-      "son_fiyat": 220.0,
-      "en_yuksek": 220.0
+      "son_fiyat": 232.0,
+      "en_yuksek": 232.0
     }
   ],
-  "son_rebalans_tarihi": "2026-08-24",
+  "son_rebalans_tarihi": "2026-08-25",
   "aktif": true,
   "stop_cikislari": {
     "AKSEN": {
