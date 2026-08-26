@@ -775,5 +775,18 @@
     "tutma_gunu": 19,
     "gerekce": "takas: ERSU birikim skoru +0.448, bu pozisyonunki +0.219 (marj: 0.10)",
     "getiri_yuzde": 19.31
+  },
+  {
+    "tarih": "2026-08-26",
+    "sembol": "ATATP",
+    "yon": "SAT",
+    "adet": 282.2726,
+    "fiyat": 307.0,
+    "tutar": 86657.7,
+    "komisyon": 129.99,
+    "puan": 71.0,
+    "tutma_gunu": 8,
+    "gerekce": "takas: ETYAT birikim skoru +0.416, bu pozisyonunki +0.126 (marj: 0.10)",
+    "getiri_yuzde": 8.19
   }
 ]
