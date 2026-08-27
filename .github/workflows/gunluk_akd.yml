@@ -1,0 +1,115 @@
+# ═══════════════════════════════════════════════════════════════════════════
+# GÜNLÜK AKD TOPLAMA — favori hisseler için Telegram (@b0pt_bot) üzerinden
+# AKD verisini bulutta otomatik çeker.
+# ═══════════════════════════════════════════════════════════════════════════
+# NEDEN AYRI VE GÜNLÜK OTOMASYONDAN SONRA ÇALIŞIYOR:
+#   - Bu iş, kullanıcının KENDİ Telegram hesabıyla (Telethon/MTProto) botla
+#     konuşuyor — flood-wait riskini azaltmak için ana taramadan (16:00 UTC)
+#     15 dk sonra, ayrı bir iş olarak çalışır.
+#   - OCR gerektirir (pytesseract + tesseract-ocr sistem paketi) — ana
+#     otomasyonun requirements-otomasyon.txt'sine bu ağır bağımlılığı
+#     eklememek için ayrı bir requirements dosyası (requirements-akd.txt)
+#     kullanılır.
+#
+# KURULUM — SIRLAR (Settings → Secrets and variables → Actions → New
+# repository secret). Bunları SEN eklemen gerekiyor, Claude senin adına
+# Telegram/GitHub hesabına giremez:
+#   TELEGRAM_AYARLAR_JSON  → telegram_ayarlar.json dosyanın TAM içeriği
+#                             (api_id/api_hash/telefon'u içeren JSON metni)
+#   TELEGRAM_SESSION_B64   → telegram_oturumu.session dosyanın base64 hâli.
+#                             PowerShell'de üretmek için (proje klasöründe):
+#                               [Convert]::ToBase64String(
+#                                 [IO.File]::ReadAllBytes("telegram_oturumu.session")
+#                               ) | Set-Clipboard
+#                             (panoya kopyalanır, doğrudan secret değerine yapıştır)
+#
+# RİSK NOTU: Bu iki secret, Telegram HESABINA erişim sağlar (şifre değil ama
+# oturum anlamına gelir). GitHub'ın "secret" alanları şifrelenir ve repo
+# loglarında/kodda GÖRÜNMEZ, ama yine de hassas veridir — bu repoyu asla
+# public yapma (zaten private olmalı).
+
+name: Günlük AKD toplama
+
+on:
+  schedule:
+    # 16:15 UTC = 19:15 TR — ana günlük otomasyondan (19:00 TR) 15 dk sonra,
+    # çakışmasın diye.
+    - cron: "15 16 * * 1-5"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: gunluk-akd
+  cancel-in-progress: false
+
+jobs:
+  akd:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Depoyu indir
+        uses: actions/checkout@v4
+
+      - name: Python kur
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Tesseract-OCR kur (sistem paketi)
+        run: sudo apt-get update && sudo apt-get install -y tesseract-ocr
+
+      - name: Paketleri kur
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements-akd.txt
+
+      - name: Telegram oturumunu geri yükle (secrets'tan)
+        env:
+          TELEGRAM_AYARLAR_JSON: ${{ secrets.TELEGRAM_AYARLAR_JSON }}
+          TELEGRAM_SESSION_B64: ${{ secrets.TELEGRAM_SESSION_B64 }}
+        run: |
+          if [ -z "$TELEGRAM_AYARLAR_JSON" ] || [ -z "$TELEGRAM_SESSION_B64" ]; then
+            echo "UYARI: TELEGRAM_AYARLAR_JSON / TELEGRAM_SESSION_B64 secret'ları henüz eklenmemiş — bu adım atlanacak, sonraki adımlar da hata verip sessizce duracak."
+            exit 0
+          fi
+          echo "$TELEGRAM_AYARLAR_JSON" > telegram_ayarlar.json
+          echo "$TELEGRAM_SESSION_B64" | base64 -d > telegram_oturumu.session
+
+      - name: AKD toplama (favoriler)
+        id: akd
+        continue-on-error: true
+        run: |
+          if [ ! -f telegram_ayarlar.json ]; then
+            echo "telegram_ayarlar.json yok (secret eklenmemiş) — AKD toplama atlanıyor."
+            exit 0
+          fi
+          python akd_veri_toplama.py
+
+      - name: Sonuçları depoya kaydet
+        run: |
+          git config user.name  "bist-otomasyon"
+          git config user.email "bist-otomasyon@users.noreply.github.com"
+          # DİKKAT: telegram_ayarlar.json / telegram_oturumu.session ASLA
+          # commit edilmez — .gitignore zaten engelliyor, burada SADECE
+          # üretilen veri dosyaları ekleniyor.
+          git add -A -- akd_egitim_verisi.csv 'docs/pusula/data/akd.json' || true
+          if git diff --staged --quiet; then
+            echo "Değişen kayıt yok — commit atlanıyor."
+          else
+            git commit -m "Günlük AKD toplama: $(date -u '+%Y-%m-%d %H:%M UTC')"
+            git pull --rebase --autostash origin "${GITHUB_REF_NAME}" || true
+            git push origin "HEAD:${GITHUB_REF_NAME}"
+          fi
+
+      - name: Çalışma özeti
+        if: always()
+        run: |
+          {
+            echo "### Günlük AKD toplama sonucu"
+            echo ""
+            echo "- AKD toplama adımı: ${{ steps.akd.outcome }}"
+          } >> "$GITHUB_STEP_SUMMARY"

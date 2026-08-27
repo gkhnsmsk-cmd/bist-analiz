@@ -1023,7 +1023,7 @@ function SparkGrafik({ veri }) {
   );
 }
 
-function DetayEkran({ hisse, onGeri, onYildiz, onPortfoyeEkle, zamanHam }) {
+function DetayEkran({ hisse, onGeri, onYildiz, onPortfoyeEkle, zamanHam, akdVerisi }) {
   const [eklendiGoster, setEklendiGoster] = useState(false);
   // Panel açık kaldıkça "X dakika önce" bayatlamasın diye 60 sn'de bir
   // yeniden hesaplat (sadece bir sayaç — gerçek veriyi yeniden çekmiyor).
@@ -1054,6 +1054,10 @@ function DetayEkran({ hisse, onGeri, onYildiz, onPortfoyeEkle, zamanHam }) {
   if (!hisse) return null;
   const taze = _goreliZaman(zamanHam);
   const canliTaze = canliFiyat ? _goreliZaman(canliFiyat.zaman) : null;
+  // AKD sadece favorilerde toplandığı için (bkz. akd_veri_toplama.py) çoğu
+  // hissede bulunmayabilir — o zaman kart hiç gösterilmez.
+  const akd = (akdVerisi || []).find(a => a.symbol === hisse.symbol);
+  const akdTaze = akd ? _goreliZaman(akd.zaman) : null;
 
   function portfoyeEkleTikla() {
     onPortfoyeEkle(hisse.symbol);
@@ -1121,6 +1125,42 @@ function DetayEkran({ hisse, onGeri, onYildiz, onPortfoyeEkle, zamanHam }) {
               </span>
             </div>
           </div>
+
+          {/* AKD (aracı kurum dağılımı) sinyali — sadece favoriler için,
+              Telegram'dan bulutta toplanır (bkz. akd_veri_toplama.py).
+              Veri yoksa (henüz toplanmadı / favori değil) kart HİÇ görünmez —
+              olmayan bir veriyi varmış gibi göstermemek için. */}
+          {akd && (
+            <div className="mt-3 bg-white rounded-2xl shadow-sm ring-1 ring-gray-100 p-4">
+              <div className="text-xs text-gray-400 uppercase tracking-wide mb-2">
+                AKD Sinyali (Aracı Kurum Dağılımı)
+              </div>
+              {akd.okunabildiMi === false ? (
+                <p className="text-sm text-gray-400">Veri çekildi ama tablo okunamadı.</p>
+              ) : (
+                <>
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm font-semibold text-gray-800">{akd.karar || '—'}</span>
+                    {akd.puan != null && (
+                      <span className="text-xs text-gray-400 tabular-nums">(puan {akd.puan > 0 ? '+' : ''}{akd.puan})</span>
+                    )}
+                  </div>
+                  {(akd.sebepler || []).length > 0 && (
+                    <ul className="mt-2 space-y-1">
+                      {akd.sebepler.map((s, i) => (
+                        <li key={i} className="text-xs text-gray-500">• {s}</li>
+                      ))}
+                    </ul>
+                  )}
+                </>
+              )}
+              {akdTaze && (
+                <div className="mt-2 text-[11px] text-gray-400">
+                  🕒 {akdTaze.goreli} · {akdTaze.tamTarih}
+                </div>
+              )}
+            </div>
+          )}
 
           {(hisse.puan != null || hisse.degisim3ay != null || hisse.hacim != null ||
             hisse.kisaPuan != null || hisse.donusGucu != null) && (
@@ -1201,6 +1241,7 @@ function App() {
   const [fonKurumsal, setFonKurumsal] = useState(null);
   const [sistemDurumu, setSistemDurumu] = useState(null);
   const [backtest, setBacktest] = useState(null);
+  const [akdVerisi, setAkdVerisi] = useState(null);
 
   // Gerçek veriyi çek — docs/pusula/data/*.json (bkz. pusula_veri_uret.py).
   // Üçü de bağımsız başarısız olabilir (ör. henüz üretilmemişse); biri
@@ -1248,6 +1289,13 @@ function App() {
 
     fetch('./data/backtest.json').then(r => r.ok ? r.json() : Promise.reject())
       .then(d => setBacktest(d))
+      .catch(() => {});
+
+    // AKD (aracı kurum dağılımı) — sadece favoriler için üretilir (Görev #53).
+    // Dosya henüz yoksa (otomasyon hiç çalışmadıysa/secret eklenmediyse)
+    // sessizce boş kalır, DetayEkran'da AKD kartı hiç görünmez.
+    fetch('./data/akd.json').then(r => r.ok ? r.json() : Promise.reject())
+      .then(d => setAkdVerisi(d.hisseler || []))
       .catch(() => {});
   }, []);
 
@@ -1310,6 +1358,7 @@ function App() {
           onYildiz={yildizToggle}
           onPortfoyeEkle={portfoyeEkle}
           zamanHam={taramaZamanHam}
+          akdVerisi={akdVerisi}
         />
       )}
     </div>

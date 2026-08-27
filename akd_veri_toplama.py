@@ -203,3 +203,12 @@ def calistir():
 
 if __name__ == "__main__":
     calistir()
+    # Pusula (docs/pusula/) verisini de tazele — bkz. arka_plan_tarama.py'deki
+    # aynı desen. Bu adım opsiyoneldir; başarısız olursa AKD toplama
+    # sonucunu etkilemez, sadece uyarı basılır.
+    try:
+        import pusula_veri_uret as pvu
+        pvu.akd_uret()
+        _log("Pusula AKD verisi güncellendi.")
+    except Exception as e:
+        _log(f"UYARI: Pusula AKD verisi güncellenemedi: {e}")

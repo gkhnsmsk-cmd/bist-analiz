@@ -208,6 +208,56 @@ def _dip_donusu_satirlari(tarama_df, adlar, ust_sinir: int = 40):
     return out
 
 
+# ── AKD (aracı kurum dağılımı) sinyalleri — Görev #53 ──────────────────
+# NEDEN VAR: Kullanıcı, Telegram'dan (kendi hesabıyla, botla) çekilen AKD
+# verisinin Pusula'da da görülebilmesini istedi. Pusula statik olduğu için
+# canlı "şimdi çek" butonu OLAMAZ (bkz. telegram_akd.py'nin Telethon/OCR
+# bağımlılığı — tarayıcıda çalışamaz). Bunun yerine: günlük otomasyon
+# (bulutta, favoriler için) .veri_cache/akd_{SEMBOL}.json dosyalarını
+# üretiyor, bu fonksiyon onları Pusula'nın okuyacağı düz akd.json'a çeviriyor.
+_AKD_CACHE_DIR = os.path.join(KLASOR, ".veri_cache")
+
+
+def akd_uret():
+    """.veri_cache/akd_*.json (favoriler için, telegram_akd.py'nin ürettiği)
+    -> akd.json (Pusula'nın okuyacağı sade biçim). Cache klasörü/dosyalar
+    yoksa (henüz hiç çekilmemişse) sessizce boş liste yazar — hata vermez."""
+    try:
+        import favoriler as fav
+        semboller = fav.getir()
+    except Exception:
+        semboller = []
+
+    hisseler = []
+    if os.path.isdir(_AKD_CACHE_DIR):
+        for sembol in semboller:
+            dosya = os.path.join(_AKD_CACHE_DIR, f"akd_{sembol.upper()}.json")
+            if not os.path.exists(dosya):
+                continue
+            try:
+                with open(dosya, encoding="utf-8") as f:
+                    icerik = json.load(f)
+            except Exception:
+                continue
+            sinyal = icerik.get("sinyal") or {}
+            hisseler.append({
+                "symbol": sembol.upper(),
+                "zaman": icerik.get("zaman"),
+                "karar": sinyal.get("karar"),
+                "puan": sinyal.get("puan"),
+                "sebepler": sinyal.get("sebepler") or [],
+                "digerAliciYuzde": sinyal.get("diger_alici_yuzde"),
+                "digerSaticiYuzde": sinyal.get("diger_satici_yuzde"),
+                "akdSpread": sinyal.get("akd_spread"),
+                # tablo yoksa (OCR başarısızsa) sinyal de yok — bu durumda
+                # kart "veri çekildi ama okunamadı" göstersin diye ayrı bayrak.
+                "okunabildiMi": bool(icerik.get("tablo") or icerik.get("sinyal")),
+            })
+
+    _yaz("akd.json", {"zaman": dt.datetime.now().isoformat(), "hisseler": hisseler})
+    return True
+
+
 def portfoy_uret():
     """sanal_portfoy.json -> portfoy.json (Pusula'nın okuyacağı sade biçim)."""
     yol = os.path.join(KLASOR, "sanal_portfoy.json")
@@ -452,12 +502,14 @@ def hepsi():
     d = fon_kurumsal_uret()
     e = sistem_durumu_uret()
     f = backtest_uret()
+    g = akd_uret()
     print("tarama/yukselecek/dip_donusu:", "OK" if a else "atlandı (dosya yok)")
     print("portfoy:", "OK" if b else "atlandı (dosya yok)")
     print("performans:", "OK" if c else "atlandı (dosya yok)")
     print("fon_kurumsal:", "OK" if d else "atlandı")
     print("sistem_durumu:", "OK" if e else "atlandı")
     print("backtest:", "OK" if f else "atlandı (dosya yok)")
+    print("akd:", "OK" if g else "atlandı")
 
 
 if __name__ == "__main__":

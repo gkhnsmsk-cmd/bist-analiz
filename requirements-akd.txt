@@ -1,0 +1,11 @@
+# Bulutta (GitHub Actions) GÜNLÜK AKD TOPLAMA için gereken paketler.
+# ═══════════════════════════════════════════════════════════════════════════
+# requirements-otomasyon.txt'den AYRI: bu iş Telegram (Telethon) ve OCR
+# (pytesseract + Pillow) gerektiriyor — ana günlük taramanın (arka_plan_tarama.py)
+# bu ağır bağımlılıklara ihtiyacı yok, o yüzden karıştırılmıyor.
+pandas>=2.0
+numpy>=1.24
+requests>=2.31
+telethon>=1.34
+pytesseract>=0.3.10
+pillow>=10.0
