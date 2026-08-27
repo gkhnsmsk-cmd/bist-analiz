@@ -103,6 +103,66 @@ async function tekFiyatCek(sembol) {
 // burada da sert bir tavan var.
 const MAKS_TOPLU_SEMBOL = 45;
 
+// ── GRAFİK MODU: hisse detay ekranındaki "Anlık / 1 Hafta / 1 Ay / 3 Ay /
+// 1 Yıl" çipleri için — kullanıcı isteği: "kullanıcı basınca ilgili detaylı
+// grafikleri kolayca tarayabilsin". Yahoo'nun chart uç noktası zaten
+// dönem+aralık (range/interval) parametrelerini destekliyor; biz sadece
+// Pusula'nın Türkçe dönem adlarını Yahoo'nun beklediği değerlere eşliyoruz.
+const DONEM_ESLESTIRME = {
+  anlik:  { range: "1d",  interval: "5m"  },
+  hafta:  { range: "5d",  interval: "60m" },
+  ay:     { range: "1mo", interval: "1d"  },
+  uc_ay:  { range: "3mo", interval: "1d"  },
+  yil:    { range: "1y",  interval: "1wk" },
+};
+
+async function grafikVeriCek(sembol, donem) {
+  const esleme = DONEM_ESLESTIRME[donem];
+  if (!esleme) return { hata: "geçersiz dönem" };
+  const yahooUrl =
+    `https://query1.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(sembol)}.IS` +
+    `?interval=${esleme.interval}&range=${esleme.range}`;
+
+  const onbellek = caches.default;
+  const onbellekIstegi = new Request(yahooUrl);
+  const onbellekYaniti = await onbellek.match(onbellekIstegi);
+  if (onbellekYaniti) {
+    try { return await onbellekYaniti.json(); } catch (e) { /* bozuk kayıt — tazesini çek */ }
+  }
+
+  try {
+    const yahooYaniti = await fetch(yahooUrl, {
+      headers: { "User-Agent": "Mozilla/5.0 (compatible; PusulaBot/1.0)" },
+    });
+    if (!yahooYaniti.ok) return { hata: `Yahoo Finance ${yahooYaniti.status} döndü` };
+    const veri = await yahooYaniti.json();
+    const sonuc = veri?.chart?.result?.[0];
+    if (!sonuc || !sonuc.meta) return { hata: "Bu sembol/dönem için veri bulunamadı" };
+    const zamanlar = sonuc.timestamp || [];
+    const kapanislar = sonuc.indicators?.quote?.[0]?.close || [];
+    // Yahoo bazı barlarda null döndürebilir (piyasa kapalıyken vb.) — bunları ele.
+    const noktalar = [];
+    for (let i = 0; i < zamanlar.length; i++) {
+      const k = kapanislar[i];
+      if (k != null) noktalar.push({ t: zamanlar[i], f: Math.round(k * 100) / 100 });
+    }
+    const sonucNesnesi = {
+      sembol, donem,
+      noktalar,
+      guncelFiyat: sonuc.meta.regularMarketPrice ?? null,
+    };
+    if (noktalar.length > 1) {
+      const yaniti = new Response(JSON.stringify(sonucNesnesi), {
+        headers: { "Content-Type": "application/json", "Cache-Control": `max-age=${ONBELLEK_SANIYE * 4}` },
+      });
+      onbellek.put(onbellekIstegi, yaniti.clone());
+    }
+    return sonucNesnesi;
+  } catch (e) {
+    return { hata: `Aracı fonksiyon hatası: ${e.message || e}` };
+  }
+}
+
 export default {
   async fetch(request) {
     // Tarayıcılar bazı isteklerden önce bir "izin var mı?" (preflight/OPTIONS)
@@ -133,6 +193,17 @@ export default {
         gecikmeNotu: "Yahoo Finance ücretsiz veri, genelde 15 dk'ya kadar gecikmeli olabilir.",
         fiyatlar,
       });
+    }
+
+    // GRAFİK MODU — hisse detay ekranındaki dönem çipleri için —
+    // ?sembol=ASTOR&grafik=hafta (anlik | hafta | ay | uc_ay | yil)
+    const grafikDonem = url.searchParams.get("grafik");
+    if (grafikDonem) {
+      const gSembol = (url.searchParams.get("sembol") || "").trim().toUpperCase();
+      if (!gSembol) return jsonYanit({ hata: "sembol parametresi gerekli" }, 400);
+      const g = await grafikVeriCek(gSembol, grafikDonem);
+      if (g.hata) return jsonYanit({ hata: g.hata, sembol: gSembol }, 502);
+      return jsonYanit(g);
     }
 
     // TEKLİ MOD (eski davranış, geriye dönük uyumluluk — hisse detay ekranı

@@ -42,6 +42,18 @@ def _adlar():
         return {}
 
 
+def _sektor(sembol: str) -> str:
+    """Kullanıcı isteği: hisse detay ekranında kısa şirket bilgisi (sektör)
+    gösterilsin. sektor_haritasi.py ağ erişimi gerektirmeyen, elle derlenmiş
+    kısmi bir eşleme — bulunamayan hisseler için "Diğer / Sınıflandırılmamış"
+    döner, uydurma bir sektör YAZILMAZ."""
+    try:
+        import sektor_haritasi as sh
+        return sh.sektor_bul(sembol)
+    except Exception:
+        return None
+
+
 def _karar_to_trend(karar_veya_sinyal: str) -> str:
     """Türkçe emoji+metin karar etiketini Pusula'nın rozet stiline eşler."""
     if not karar_veya_sinyal:
@@ -105,6 +117,7 @@ def tarama_uret():
             out.append({
                 "symbol": sembol,
                 "ad": adlar.get(sembol, sembol),
+                "sektor": _sektor(sembol),
                 "fiyat": float(r.get("Fiyat", 0) or 0),
                 "degisim1hafta": (float(r["1 Hafta %"]) if pd.notna(r.get("1 Hafta %")) else None),
                 "degisim1ay": float(r.get("1 Ay %", 0) or 0),
@@ -131,6 +144,7 @@ def tarama_uret():
             out.append({
                 "symbol": sembol,
                 "ad": adlar.get(sembol, sembol),
+                "sektor": _sektor(sembol),
                 "fiyat": float(r.get("Fiyat", 0) or 0),
                 "genelPuan": float(r.get("Genel Puan", 0) or 0),
                 "kisa": str(r.get("Kısa", "")),
@@ -189,6 +203,7 @@ def _dip_donusu_satirlari(tarama_df, adlar, ust_sinir: int = 40):
         out.append({
             "symbol": sembol,
             "ad": adlar.get(sembol, sembol),
+            "sektor": _sektor(sembol),
             "fiyat": float(r.get("Fiyat", 0) or 0),
             "kisaPuan": float(r.get("Kısa", 0) or 0),
             "ortaPuan": float(r.get("Orta", 0) or 0),

@@ -133,6 +133,23 @@ function _favorileriYaz(set) {
   try { localStorage.setItem(FAVORI_ANAHTAR, JSON.stringify([...set])); } catch (e) {}
 }
 
+/* ── Kullanıcı Portföyü (26.08.2026 kullanıcı isteği) ────────────────────
+   Sanal Portföy'den TAMAMEN AYRI: burası algoritmanın yönetmediği, kullanıcının
+   KENDİ gerçek/manuel takip ettiği hisselerini elle girip izleyebildiği bir
+   yer. Hiçbir otomasyon bu listeye dokunmaz, sadece kullanıcı ekler/siler.
+   Tarayıcının localStorage'ında saklanır (favoriler gibi) — sunucuya
+   gitmez, cihaza özeldir. */
+const KULLANICI_PORTFOY_ANAHTAR = 'pusula_kullanici_portfoy';
+function _kullaniciPortfoyOku() {
+  try {
+    const ham = localStorage.getItem(KULLANICI_PORTFOY_ANAHTAR);
+    return ham ? JSON.parse(ham) : [];
+  } catch (e) { return []; }
+}
+function _kullaniciPortfoyYaz(liste) {
+  try { localStorage.setItem(KULLANICI_PORTFOY_ANAHTAR, JSON.stringify(liste)); } catch (e) {}
+}
+
 /* ── Liste ekranlarında (Favoriler, Yükselecek Hisseler, Portföy) da anlık
    fiyat — kullanıcı isteği: "sadece tıklayınca değil, gösterilen hisselerin
    hepsinin anlık fiyatı sürekli yanıp sönmeli". Worker'ın toplu (?semboller=)
@@ -206,10 +223,10 @@ const TREND_STIL = {
 
 const TREND_FILTRELERI = ['Tümü', 'Güçlü Al', 'Al', 'Tut', 'Sat', 'Güçlü Sat'];
 
-function DegisimEtiketi({ deger }) {
+function DegisimEtiketi({ deger, kucuk }) {
   const pozitif = deger >= 0;
   return (
-    <span className={"font-semibold tabular-nums " + (pozitif ? "text-emerald-600" : "text-red-600")}>
+    <span className={"font-semibold tabular-nums " + (kucuk ? "text-[10px] " : "") + (pozitif ? "text-emerald-600" : "text-red-600")}>
       {pozitif ? "+" : ""}{deger.toFixed(1)}%
     </span>
   );
@@ -302,17 +319,26 @@ function YanNav({ aktif, setAktif }) {
 }
 
 /* ── Favoriler — yatay kayan chip kartlar (13 kart alt alta YIĞILMAZ) ── */
+/* Kullanıcı isteği: "favoriler 5'ten fazla gösterilmiyor, kartları küçült,
+   aynı anda ~10 görünsün, ama veri kaybı olmasın". Kod tarafında favori
+   sayısına bir üst sınır (slice/cap) YOKTU — tüm favoriler zaten
+   localStorage'da saklanıp render ediliyordu (_favorileriOku/_favorileriYaz).
+   Algılanan sorun kart genişliğiydi: 128px + boşluk yüzünden bir telefon
+   ekranında aynı anda ~2-3 kart sığıyor, geri kalanı yatay kaydırma
+   gerektiriyordu — kullanıcı bunu "sadece 5 tane var" sanmış olabilir. Kartı
+   küçültüp (128px → 84px), boşluğu daraltıp, rozet satırını kaldırarak aynı
+   anda görünen kart sayısını belirgin şekilde artırdık; HİÇBİR favori verisi
+   silinmedi/kırpılmadı — favoriler listesi olduğu gibi tam render ediliyor. */
 function FavoriKart({ h, onSec }) {
   const flashYon = useFlashOnChange(h.fiyat);
   return (
     <button
       onClick={() => onSec(h.symbol)}
-      className="snap-start shrink-0 w-[128px] bg-white rounded-2xl shadow-sm ring-1 ring-gray-100 p-3 text-left active:scale-[.97] transition-transform min-h-[44px]"
+      className="snap-start shrink-0 w-[84px] bg-white rounded-xl shadow-sm ring-1 ring-gray-100 px-2 py-2 text-left active:scale-[.97] transition-transform min-h-[44px]"
     >
-      <div className="font-bold text-gray-900">{h.symbol}</div>
-      <div className={"text-sm text-gray-500 mt-0.5 tabular-nums transition-colors " + _flashSinifi(flashYon)}>{h.fiyat.toFixed(2)} ₺</div>
-      <div className="mt-1"><DegisimEtiketi deger={h.degisim} /></div>
-      <div className="mt-2"><TrendRozeti trend={h.trend} /></div>
+      <div className="font-bold text-gray-900 text-xs truncate">{h.symbol}</div>
+      <div className={"text-xs text-gray-500 mt-0.5 tabular-nums transition-colors truncate " + _flashSinifi(flashYon)}>{h.fiyat.toFixed(2)} ₺</div>
+      <div className="mt-1"><DegisimEtiketi deger={h.degisim} kucuk /></div>
     </button>
   );
 }
@@ -323,7 +349,7 @@ function FavorilerSeridi({ hisseler, onSec }) {
     return <p className="text-sm text-gray-400 px-4">Henüz favori eklenmedi — bir hissenin ⭐ ikonuna dokunun.</p>;
   }
   return (
-    <div className="flex gap-3 overflow-x-auto no-scrollbar px-4 pb-1 -mx-0 snap-x snap-mandatory">
+    <div className="flex gap-1.5 overflow-x-auto no-scrollbar px-4 pb-1 -mx-0 snap-x snap-mandatory">
       {favoriler.map(h => <FavoriKart key={h.symbol} h={h} onSec={onSec} />)}
     </div>
   );
@@ -443,9 +469,11 @@ function AnaEkran({ hisseler, onSec, onYildiz, zaman, sistemDurumu }) {
       <TaramaBayatUyarisi durum={sistemDurumu} />
 
       <h2 className="px-4 text-sm font-semibold text-gray-500 uppercase tracking-wide mb-2">⭐ Favoriler</h2>
+      <p className="px-4 text-xs text-gray-400 -mt-1 mb-2">Takip ettiğin hisseler — bir karta ☆ ile ekleyip buradan hızlı göz atabilirsin.</p>
       <FavorilerSeridi hisseler={hisseler} onSec={onSec} />
 
       <h2 className="px-4 text-sm font-semibold text-gray-500 uppercase tracking-wide mt-6 mb-2">Piyasa Özeti</h2>
+      <p className="px-4 text-xs text-gray-400 -mt-1 mb-2">Tüm hisseler puana göre sıralı — detay için bir karta dokun.</p>
       <div className="px-4 flex flex-col gap-2 md:grid md:grid-cols-2 md:gap-3">
         {hisseler.map(h => <HisseSatiri key={h.symbol} h={h} onSec={onSec} onYildiz={onYildiz} />)}
       </div>
@@ -545,9 +573,9 @@ function TaramaEkran({ hisseler, onSec, onYildiz, fonKurumsal }) {
       <div className="px-4 pt-2 pb-3">
         <h1 className="text-2xl font-bold text-gray-900">Tarama</h1>
         <p className="text-sm text-gray-400">
-          {altSekme === 'one_cikan' ? filtreli.length + " hisse — filtreye göre" :
-           altSekme === 'takas' ? "Takas puanına göre sıralı (yabancı/kurumsal birikim vekili)" :
-           "Yerli fon (TEFAS) kurumsal ilgisi"}
+          {altSekme === 'one_cikan' ? filtreli.length + " hisse — motorun puanına göre en güçlüden zayıfa sıralı" :
+           altSekme === 'takas' ? "Yabancı/kurumsal para hangi hisseye giriyor? Yüksek takas puanı bir işaret — tek başına al/sat sinyali değil." :
+           "Yerli yatırım fonları (TEFAS) hangi hisseyi artırıyor/azaltıyor"}
         </p>
       </div>
 
@@ -997,7 +1025,7 @@ function PozisyonSatiri({ p }) {
   );
 }
 
-function PortfoyEkran({ hisseler, portfoy, setPortfoy, gercekPortfoy, performans, backtest }) {
+function PortfoyEkran({ hisseler, portfoy, setPortfoy, gercekPortfoy, performans, backtest, kullaniciPortfoy, setKullaniciPortfoy }) {
   const [altSekme, setAltSekme] = useState('pozisyonlar');
   const [formAcik, setFormAcik] = useState(false);
   const [ySembol, setYSembol] = useState(hisseler[0]?.symbol || '');
@@ -1033,7 +1061,12 @@ function PortfoyEkran({ hisseler, portfoy, setPortfoy, gercekPortfoy, performans
     <div className="pb-4">
       <div className="px-4 pt-2 pb-3">
         <h1 className="text-2xl font-bold text-gray-900">Sanal Portföy</h1>
-        <p className="text-sm text-gray-400">{satirlar.length} pozisyon · ⚠️ sanal, gerçek para kullanılmıyor</p>
+        <p className="text-sm text-gray-400">
+          {altSekme === 'pozisyonlar' ? satirlar.length + " pozisyon · algoritma kendi kararıyla al-sat yapıyor, ⚠️ gerçek para kullanılmıyor" :
+           altSekme === 'performans' ? "Sanal Portföy'ün zaman içindeki getirisi, benchmark ile karşılaştırmalı" :
+           altSekme === 'backtest' ? "Algoritma geçmiş verilerde denenirse nasıl sonuç verirdi?" :
+           "Senin kendi elle girdiğin, gerçek/takip ettiğin pozisyonlar — algoritma buna karışmaz"}
+        </p>
       </div>
 
       <div className="flex gap-2 px-4 pb-3">
@@ -1058,6 +1091,13 @@ function PortfoyEkran({ hisseler, portfoy, setPortfoy, gercekPortfoy, performans
         >
           🧪 Backtest
         </button>
+        <button
+          onClick={() => setAltSekme('kullanici')}
+          className={"flex-1 min-h-[40px] rounded-xl text-xs sm:text-sm font-semibold transition-colors " +
+                     (altSekme === 'kullanici' ? "bg-indigo-600 text-white" : "bg-white text-gray-600 ring-1 ring-gray-200")}
+        >
+          👤 Portföyüm
+        </button>
       </div>
 
       {altSekme === 'performans' ? (
@@ -1067,6 +1107,10 @@ function PortfoyEkran({ hisseler, portfoy, setPortfoy, gercekPortfoy, performans
       ) : altSekme === 'backtest' ? (
         <div className="px-4">
           <BacktestEkran backtest={backtest} />
+        </div>
+      ) : altSekme === 'kullanici' ? (
+        <div className="px-4">
+          <KullaniciPortfoyEkran hisseler={hisseler} kullaniciPortfoy={kullaniciPortfoy} setKullaniciPortfoy={setKullaniciPortfoy} />
         </div>
       ) : (
       <>
@@ -1138,6 +1182,130 @@ function PortfoyEkran({ hisseler, portfoy, setPortfoy, gercekPortfoy, performans
   );
 }
 
+/* ── Kullanıcı Portföyü — Sanal Portföy'den bağımsız, kullanıcının kendi
+   gerçek/manuel takip ettiği hisseleri. Algoritma buraya dokunmaz, sadece
+   kullanıcı ekler/siler. localStorage'da saklanır (bkz. App() içindeki
+   _kullaniciPortfoyOku/Yaz). */
+function KullaniciPortfoyEkran({ hisseler, kullaniciPortfoy, setKullaniciPortfoy }) {
+  const [formAcik, setFormAcik] = useState(false);
+  const [ySembol, setYSembol] = useState(hisseler[0]?.symbol || '');
+  const [yAdet, setYAdet] = useState('');
+  const [yMaliyet, setYMaliyet] = useState('');
+
+  const satirlar = useMemo(() => kullaniciPortfoy.map(p => {
+    const h = hisseler.find(x => x.symbol === p.symbol);
+    const guncelFiyat = h ? h.fiyat : (p.sonFiyat || p.maliyet);
+    const deger = guncelFiyat * p.adet;
+    const maliyetToplam = p.maliyet * p.adet;
+    const karZarar = deger - maliyetToplam;
+    const karZararYuzde = maliyetToplam ? (karZarar / maliyetToplam) * 100 : 0;
+    return { ...p, ad: h?.ad || p.ad || p.symbol, guncelFiyat, deger, karZarar, karZararYuzde };
+  }), [kullaniciPortfoy, hisseler]);
+
+  const toplamDeger = satirlar.reduce((s, x) => s + x.deger, 0);
+  const toplamMaliyet = satirlar.reduce((s, x) => s + x.maliyet * x.adet, 0);
+  const toplamKarZarar = toplamDeger - toplamMaliyet;
+  const toplamKarZararYuzde = toplamMaliyet ? (toplamKarZarar / toplamMaliyet) * 100 : 0;
+
+  function ekle() {
+    const adet = parseFloat(yAdet);
+    const maliyet = parseFloat(yMaliyet);
+    if (!ySembol || !adet || !maliyet || adet <= 0 || maliyet <= 0) return;
+    setKullaniciPortfoy(prev => [...prev.filter(p => p.symbol !== ySembol),
+      { symbol: ySembol, adet, maliyet, eklemeTarihi: new Date().toISOString() }]);
+    setYAdet(''); setYMaliyet(''); setFormAcik(false);
+  }
+  function sil(symbol) {
+    setKullaniciPortfoy(prev => prev.filter(p => p.symbol !== symbol));
+  }
+
+  return (
+    <div className="pb-2">
+      <p className="text-xs text-gray-400 mb-3">
+        Bu, senin kendi elle girdiğin/gerçek portföyün — Sanal Portföy'den bağımsız,
+        algoritma buna karışmaz. Sadece bu cihazda saklanır.
+      </p>
+
+      {satirlar.length === 0 ? (
+        <div className="bg-white rounded-2xl shadow-sm ring-1 ring-gray-100 p-4 text-sm text-gray-400 text-center">
+          Henüz hisse eklemedin. Aşağıdaki "+ Ekle" ile başla.
+        </div>
+      ) : (
+        <>
+          <div className="bg-white rounded-2xl shadow-sm ring-1 ring-gray-100 p-4 mb-3">
+            <div className="flex items-center justify-between">
+              <div>
+                <div className="text-xs text-gray-400 uppercase tracking-wide">Toplam Değer</div>
+                <div className="text-xl font-bold text-gray-900 tabular-nums">{toplamDeger.toLocaleString('tr-TR', {maximumFractionDigits: 2})} ₺</div>
+              </div>
+              <div className="text-right">
+                <div className="text-xs text-gray-400 uppercase tracking-wide">Kar/Zarar</div>
+                <div className={"text-xl font-bold tabular-nums " + (toplamKarZarar >= 0 ? "text-emerald-600" : "text-red-600")}>
+                  {toplamKarZarar >= 0 ? "+" : ""}{toplamKarZarar.toLocaleString('tr-TR', {maximumFractionDigits: 2})} ₺
+                  <span className="text-sm ml-1">({toplamKarZararYuzde >= 0 ? "+" : ""}{toplamKarZararYuzde.toFixed(1)}%)</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="flex flex-col gap-2">
+            {satirlar.map(p => (
+              <div key={p.symbol} className="bg-white rounded-2xl shadow-sm ring-1 ring-gray-100 p-3 flex items-center justify-between">
+                <div>
+                  <div className="font-bold text-gray-900">{p.symbol}</div>
+                  <div className="text-xs text-gray-400">{p.adet} adet · maliyet {p.maliyet.toLocaleString('tr-TR')} ₺</div>
+                </div>
+                <div className="text-right">
+                  <div className="font-semibold text-gray-900 tabular-nums">{p.deger.toLocaleString('tr-TR', {maximumFractionDigits: 2})} ₺</div>
+                  <div className={"text-xs font-semibold tabular-nums " + (p.karZarar >= 0 ? "text-emerald-600" : "text-red-600")}>
+                    {p.karZarar >= 0 ? "+" : ""}{p.karZararYuzde.toFixed(1)}%
+                  </div>
+                </div>
+                <button onClick={() => sil(p.symbol)}
+                        className="ml-3 min-h-[36px] min-w-[36px] flex items-center justify-center text-red-400 active:text-red-600">
+                  ✕
+                </button>
+              </div>
+            ))}
+          </div>
+        </>
+      )}
+
+      <div className="mt-4">
+        {!formAcik ? (
+          <button
+            onClick={() => setFormAcik(true)}
+            className="w-full min-h-[44px] rounded-2xl bg-indigo-600 text-white font-semibold active:bg-indigo-700 transition-colors"
+          >
+            + Ekle
+          </button>
+        ) : (
+          <div className="bg-white rounded-2xl shadow-sm ring-1 ring-gray-100 p-4 flex flex-col gap-3 pop-anim">
+            <select
+              value={ySembol}
+              onChange={e => setYSembol(e.target.value)}
+              className="w-full min-h-[44px] rounded-xl bg-gray-50 ring-1 ring-gray-200 px-3"
+            >
+              {hisseler.map(h => <option key={h.symbol} value={h.symbol}>{h.symbol} — {h.ad}</option>)}
+            </select>
+            <div className="flex gap-2">
+              <input type="number" inputMode="decimal" placeholder="Adet" value={yAdet}
+                     onChange={e => setYAdet(e.target.value)}
+                     className="w-1/2 min-h-[44px] rounded-xl bg-gray-50 ring-1 ring-gray-200 px-3" />
+              <input type="number" inputMode="decimal" placeholder="Maliyet (₺)" value={yMaliyet}
+                     onChange={e => setYMaliyet(e.target.value)}
+                     className="w-1/2 min-h-[44px] rounded-xl bg-gray-50 ring-1 ring-gray-200 px-3" />
+            </div>
+            <div className="flex gap-2">
+              <button onClick={() => setFormAcik(false)} className="flex-1 min-h-[44px] rounded-xl bg-gray-100 text-gray-600 font-semibold">İptal</button>
+              <button onClick={ekle} className="flex-1 min-h-[44px] rounded-xl bg-indigo-600 text-white font-semibold active:bg-indigo-700">Ekle</button>
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
 /* ── Hisse detay — TAM EKRAN overlay, alttan kayarak açılır ("push")
    NEDEN bottom nav'ı gizliyoruz: gerçek native app'lerde detay ekranı
    önceki ekranın ÜSTÜNE gelir (push navigation); alt sekmeler kaybolur,
@@ -1160,6 +1328,155 @@ function SparkGrafik({ veri }) {
     <svg viewBox={`0 0 ${genislik} ${yukseklik}`} className="w-full h-16 mt-3">
       <polyline points={yol} fill="none" stroke={artis ? "#059669" : "#dc2626"} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
+  );
+}
+
+// ── Detay ekranı için zenginleştirilmiş, dönem seçilebilir grafik ──────────
+// Kullanıcı isteği: "kullanıcı anlık haftalık vb basınca ilgili detaylı
+// grafikleri kolayca tarayabilsin". Çipler CANLI_FIYAT_API_URL üzerinden
+// worker'ın yeni ?grafik= modunu çağırır (bkz. cloudflare_worker_canli_fiyat.js
+// grafikVeriCek). Worker kurulmadıysa ya da istek başarısız olursa sessizce
+// eski, sade SparkGrafik'e (tarama verisindeki son 15 nokta) geri döner —
+// sayfa asla kırılmaz.
+const DONEM_CIPLERI = [
+  { anahtar: 'anlik', etiket: 'Anlık' },
+  { anahtar: 'hafta', etiket: '1 Hafta' },
+  { anahtar: 'ay', etiket: '1 Ay' },
+  { anahtar: 'uc_ay', etiket: '3 Ay' },
+  { anahtar: 'yil', etiket: '1 Yıl' },
+];
+
+// ── Destek / Direnç özeti — kullanıcı isteği: "kullanıcı karta tıklayınca
+// tavsiye niteliğinde destek direnç vb özet bir değerlendirme olsun".
+// Basit ama dürüst bir yaklaşım: son 3 aylık kapanış fiyatlarının en
+// düşük/en yüksek noktaları destek/direnç olarak alınır (klasik pivot analizi
+// değil — "bu aralıkta fiyat buradan buraya gitti" özeti). Worker kurulmadıysa
+// ya da veri gelmezse kart hiç gösterilmez.
+function DestekDirencOzet({ sembol, guncelFiyat }) {
+  const [veri, setVeri] = useState(null);
+
+  useEffect(() => {
+    setVeri(null);
+    if (!CANLI_FIYAT_API_URL || !sembol) return;
+    let iptal = false;
+    fetch(`${CANLI_FIYAT_API_URL}?sembol=${encodeURIComponent(sembol)}&grafik=uc_ay`)
+      .then(r => r.ok ? r.json() : Promise.reject())
+      .then(d => {
+        if (iptal || !d || d.hata || !Array.isArray(d.noktalar) || d.noktalar.length < 5) return;
+        const fiyatlar = d.noktalar.map(n => n.f);
+        setVeri({ destek: Math.min(...fiyatlar), direnc: Math.max(...fiyatlar) });
+      })
+      .catch(() => {});
+    return () => { iptal = true; };
+  }, [sembol]);
+
+  if (!veri || guncelFiyat == null) return null;
+  const { destek, direnc } = veri;
+  const araYuzde = direnc > destek ? ((guncelFiyat - destek) / (direnc - destek)) * 100 : 50;
+  let konumMetni;
+  if (araYuzde >= 85) konumMetni = "Direnç seviyesine yakın — aşım denemesi izlenebilir.";
+  else if (araYuzde <= 15) konumMetni = "Destek seviyesine yakın — kırılırsa aşağı risk artar.";
+  else konumMetni = "İki seviye arasında, orta bantta seyrediyor.";
+
+  return (
+    <div className="mt-3 bg-white rounded-2xl shadow-sm ring-1 ring-gray-100 p-4">
+      <div className="text-xs text-gray-400 uppercase tracking-wide mb-2">Destek / Direnç (son 3 ay)</div>
+      <div className="flex items-center gap-3 text-sm">
+        <div className="flex-1">
+          <div className="text-[11px] text-gray-400">Destek</div>
+          <div className="font-bold text-rose-600">{destek.toFixed(2)} ₺</div>
+        </div>
+        <div className="flex-1 h-1.5 rounded-full bg-gray-100 relative overflow-hidden">
+          <div className="absolute top-0 bottom-0 w-1 bg-indigo-600 rounded-full" style={{ left: `calc(${Math.min(100, Math.max(0, araYuzde))}% - 2px)` }} />
+        </div>
+        <div className="flex-1 text-right">
+          <div className="text-[11px] text-gray-400">Direnç</div>
+          <div className="font-bold text-emerald-600">{direnc.toFixed(2)} ₺</div>
+        </div>
+      </div>
+      <p className="text-xs text-gray-500 mt-2">{konumMetni}</p>
+    </div>
+  );
+}
+
+function DetayGrafik({ sembol, sparkYedek }) {
+  const [donem, setDonem] = useState('ay');
+  const [veri, setVeri] = useState(null);      // { noktalar: [{t,f}], ... } | null
+  const [yukleniyor, setYukleniyor] = useState(false);
+  const [hataVar, setHataVar] = useState(false);
+
+  useEffect(() => {
+    if (!CANLI_FIYAT_API_URL || !sembol) return;
+    let iptal = false;
+    setYukleniyor(true);
+    setHataVar(false);
+    fetch(`${CANLI_FIYAT_API_URL}?sembol=${encodeURIComponent(sembol)}&grafik=${donem}`)
+      .then(r => r.ok ? r.json() : Promise.reject())
+      .then(d => {
+        if (iptal) return;
+        if (!d || d.hata || !Array.isArray(d.noktalar) || d.noktalar.length < 2) {
+          setHataVar(true); setVeri(null);
+        } else {
+          setVeri(d);
+        }
+      })
+      .catch(() => { if (!iptal) { setHataVar(true); setVeri(null); } })
+      .finally(() => { if (!iptal) setYukleniyor(false); });
+    return () => { iptal = true; };
+  }, [sembol, donem]);
+
+  const noktalar = veri?.noktalar || null;
+  const fiyatDizisi = noktalar ? noktalar.map(n => n.f) : null;
+
+  function _tarihEtiketi(saniyeZaman) {
+    if (!saniyeZaman) return '';
+    const d = new Date(saniyeZaman * 1000);
+    if (donem === 'anlik' || donem === 'hafta') {
+      return d.toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' });
+    }
+    return d.toLocaleDateString('tr-TR', { day: '2-digit', month: '2-digit', year: donem === 'yil' ? '2-digit' : undefined });
+  }
+
+  return (
+    <div className="mt-6 bg-white rounded-2xl shadow-sm ring-1 ring-gray-100 p-4">
+      <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar">
+        {DONEM_CIPLERI.map(c => (
+          <button
+            key={c.anahtar}
+            onClick={() => setDonem(c.anahtar)}
+            className={"shrink-0 px-3 py-1.5 rounded-full text-xs font-semibold transition-colors " +
+                       (donem === c.anahtar ? "bg-indigo-600 text-white" : "bg-gray-100 text-gray-500")}
+          >
+            {c.etiket}
+          </button>
+        ))}
+      </div>
+
+      {yukleniyor ? (
+        <div className="h-24 flex items-center justify-center text-xs text-gray-400">Yükleniyor…</div>
+      ) : fiyatDizisi && fiyatDizisi.length >= 2 ? (
+        <>
+          <SparkGrafik veri={fiyatDizisi} />
+          <div className="flex justify-between text-[11px] text-gray-400 mt-1">
+            <span>{_tarihEtiketi(noktalar[0].t)}</span>
+            <span>{_tarihEtiketi(noktalar[noktalar.length - 1].t)}</span>
+          </div>
+        </>
+      ) : hataVar ? (
+        <div className="mt-2">
+          {sparkYedek && sparkYedek.length >= 2 ? (
+            <>
+              <SparkGrafik veri={sparkYedek} />
+              <p className="text-[11px] text-gray-400 mt-1">Bu dönem için canlı veri alınamadı — son taramadan gösteriliyor.</p>
+            </>
+          ) : (
+            <p className="text-xs text-gray-400 h-24 flex items-center justify-center">Bu dönem için veri yok.</p>
+          )}
+        </div>
+      ) : (
+        <div className="h-24 flex items-center justify-center text-xs text-gray-400">Veri yok.</div>
+      )}
+    </div>
   );
 }
 
@@ -1247,7 +1564,12 @@ function DetayEkran({ hisse, onGeri, onYildiz, onPortfoyeEkle, zamanHam, akdVeri
         </div>
 
         <div className="flex-1 overflow-y-auto px-4 py-5">
-          <div className="text-sm text-gray-400">{hisse.ad}</div>
+          <div className="text-sm text-gray-400">
+            {hisse.ad}
+            {hisse.sektor && hisse.sektor !== 'Diğer / Sınıflandırılmamış' && (
+              <span className="ml-1.5 text-xs text-gray-400 bg-gray-100 rounded-full px-2 py-0.5 align-middle">{hisse.sektor}</span>
+            )}
+          </div>
           <div
             className={
               "mt-1 inline-block px-1.5 -mx-1.5 text-4xl font-bold text-gray-900 tabular-nums transition-colors " +
@@ -1302,7 +1624,7 @@ function DetayEkran({ hisse, onGeri, onYildiz, onPortfoyeEkle, zamanHam, akdVeri
             </div>
           )}
 
-          <SparkGrafik veri={hisse.spark} />
+          <DetayGrafik sembol={hisse.symbol} sparkYedek={hisse.spark} />
 
           <div className="mt-6 bg-white rounded-2xl shadow-sm ring-1 ring-gray-100 p-4">
             <div className="text-xs text-gray-400 uppercase tracking-wide mb-2">Algoritma Kararı</div>
@@ -1315,6 +1637,8 @@ function DetayEkran({ hisse, onGeri, onYildiz, onPortfoyeEkle, zamanHam, akdVeri
               </span>
             </div>
           </div>
+
+          <DestekDirencOzet sembol={hisse.symbol} guncelFiyat={canliFiyat ? canliFiyat.fiyat : hisse.fiyat} />
 
           {/* AKD (aracı kurum dağılımı) sinyali — sadece favoriler için,
               Telegram'dan bulutta toplanır (bkz. akd_veri_toplama.py).
@@ -1426,6 +1750,15 @@ function App() {
   const [taramaZamanHam, setTaramaZamanHam] = useState(null); // ISO — detay ekranında "X dk önce" için
   const [detaySembol, setDetaySembol] = useState(null);
   const [portfoy, setPortfoy] = useState([]);
+  const [kullaniciPortfoy, _setKullaniciPortfoy] = useState(() => _kullaniciPortfoyOku());
+  // Her değişiklikte localStorage'a yaz — sayfa kapansa/yenilense de kaybolmasın.
+  function setKullaniciPortfoy(guncelleyici) {
+    _setKullaniciPortfoy(prev => {
+      const sonraki = typeof guncelleyici === 'function' ? guncelleyici(prev) : guncelleyici;
+      _kullaniciPortfoyYaz(sonraki);
+      return sonraki;
+    });
+  }
   const [gercekPortfoy, setGercekPortfoy] = useState(null);
   const [performans, setPerformans] = useState(null);
   const [fonKurumsal, setFonKurumsal] = useState(null);
@@ -1529,10 +1862,11 @@ function App() {
   const canliSemboller = useMemo(() => {
     const favSembol = hisseler.filter(h => h.favori).map(h => h.symbol);
     const portfoySembol = portfoy.map(p => p.symbol);
+    const kullaniciPortfoySembol = kullaniciPortfoy.map(p => p.symbol);
     const yukselecekSembol = yukselecek.slice(0, 40).map(h => h.symbol);
     const dipSembol = dipDonusu.slice(0, 40).map(h => h.symbol);
-    return [...new Set([...favSembol, ...portfoySembol, ...yukselecekSembol, ...dipSembol])];
-  }, [hisseler, portfoy, yukselecek, dipDonusu]);
+    return [...new Set([...favSembol, ...portfoySembol, ...kullaniciPortfoySembol, ...yukselecekSembol, ...dipSembol])];
+  }, [hisseler, portfoy, kullaniciPortfoy, yukselecek, dipDonusu]);
   const canliMap = useCanliFiyatlar(canliSemboller);
   const hisselerCanli = useMemo(
     () => hisseler.map(h => canliMap[h.symbol] ? { ...h, fiyat: canliMap[h.symbol].fiyat } : h),
@@ -1562,7 +1896,7 @@ function App() {
         {tab === 'tarama' && <TaramaEkran hisseler={hisselerCanli} onSec={setDetaySembol} onYildiz={yildizToggle} fonKurumsal={fonKurumsal} />}
         {tab === 'yukselecek' && <YukselecekEkran hisseler={yukselecekCanli} dipDonusu={dipDonusuCanli} onSec={setDetaySembol} zaman={taramaZaman} sistemDurumu={sistemDurumu} />}
         {tab === 'ara' && <AraEkran hisseler={hisselerCanli} onSec={setDetaySembol} onYildiz={yildizToggle} />}
-        {tab === 'portfoy' && <PortfoyEkran hisseler={hisselerCanli} portfoy={portfoy} setPortfoy={setPortfoy} gercekPortfoy={gercekPortfoy} performans={performans} backtest={backtest} />}
+        {tab === 'portfoy' && <PortfoyEkran hisseler={hisselerCanli} portfoy={portfoy} setPortfoy={setPortfoy} gercekPortfoy={gercekPortfoy} performans={performans} backtest={backtest} kullaniciPortfoy={kullaniciPortfoy} setKullaniciPortfoy={setKullaniciPortfoy} />}
       </div>
 
       {/* Masaüstünde YanNav zaten md:hidden olan AltNav'ın yerini alıyor;
