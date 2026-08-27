@@ -18,10 +18,12 @@ anlık veriyle yeniden hesaplatabilir.
 from __future__ import annotations
 
 import datetime as dt
+import json
 import os
 import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+KLASOR = os.path.dirname(os.path.abspath(__file__))
 
 import pandas as pd
 
@@ -103,6 +105,16 @@ def calistir():
 
     tob.yaz(tarama_tablo, vade_tablo, kapsam=KAPSAM)
     _log(f"Önbellek yazıldı: {tob.ONBELLEK_DOSYASI}")
+
+    # MA kırılım taraması (Task #19, kullanıcının paylaştığı örnek tabloya
+    # dayanır) — puanlamadan bağımsız, ayrı bilgi amaçlı liste.
+    try:
+        kirilim = am.ma_kirilim_taramasi(veriler)
+        with open(os.path.join(KLASOR, "ma_kirilim.json"), "w", encoding="utf-8") as f:
+            json.dump({"zaman": dt.datetime.now().isoformat(), **kirilim}, f, ensure_ascii=False)
+        _log("MA kırılım taraması yazıldı: ma_kirilim.json")
+    except Exception as e:
+        _log(f"UYARI: MA kırılım taraması başarısız ({e}) — atlandı.")
 
     # Tavsiyeleri kalıcı kaydet — app.py'deki canlı taramayla AYNI kayıt mantığı.
     #

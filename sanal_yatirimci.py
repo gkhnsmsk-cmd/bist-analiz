@@ -877,12 +877,49 @@ def gunluk_karar(am, fiyat_getirici, endeks_df, tarama_evreni: list,
     # almak da saçmadır — satış kuralı onu ertesi gün hemen satardı ve iki
     # kez komisyon ödenirdi. Yani 45, seçim ölçütü değil TUTARLILIK TABANIDIR.
     # ═══════════════════════════════════════════════════════════════════════
+    # SEKTÖR YOĞUNLAŞMA LİMİTİ (Task #13, 28.08.2026, kullanıcı raporu):
+    # MAKS_POZISYON=5 gibi az sayıda pozisyonla tek bir sektörde 3-4 pozisyon
+    # birikmesi, farkında olmadan tek bir makro riske (ör. bankacılık, enerji)
+    # aşırı maruz kalmak demektir — çeşitlendirme faydasını boşa çıkarır. Bu,
+    # skorlamaya dokunmaz; sadece ADAY HAVUZUNU daraltan, bağımsız bir kural.
+    # Sektör bulunamayan (None) hisseler kısıtlanmaz — sektör bilgisi eksikse
+    # yanlışlıkla eleme yapılmaz.
+    MAKS_AYNI_SEKTOR = 2   # 5 pozisyonluk portföyde aynı sektörden en fazla 2
+
+    def _mevcut_sektor_sayaci():
+        try:
+            import sektor_haritasi as sh
+        except Exception:
+            return {}
+        sayac = {}
+        for p in portfoy["pozisyonlar"]:
+            try:
+                s = sh.sektor_bul(p["sembol"])
+            except Exception:
+                s = None
+            if s and s != "Diğer / Sınıflandırılmamış":
+                sayac[s] = sayac.get(s, 0) + 1
+        return sayac
+
+    def _sektoru_dolu_mu(sembol, sayac):
+        try:
+            import sektor_haritasi as sh
+            s = sh.sektor_bul(sembol)
+        except Exception:
+            s = None
+        if not s or s == "Diğer / Sınıflandırılmamış":
+            return False
+        return sayac.get(s, 0) >= MAKS_AYNI_SEKTOR
+
+    _sektor_sayac = _mevcut_sektor_sayaci()
+
     adaylar = sorted((a for a in puanlanan
                       if a.get("secim_uygun")
                       and a.get("secim_skoru") is not None
                       and a["puan"] >= PUAN_SATIM_ESIGI
                       and a["sembol"] not in elde
                       and a["sembol"] not in bugun_satilanlar
+                      and not _sektoru_dolu_mu(a["sembol"], _sektor_sayac)
                       and _giris_serbest_mi(portfoy, a["sembol"], a["puan"], bugun)),
                      key=lambda x: -x["secim_skoru"])
     zayif_piyasa = len(adaylar) == 0 and len(portfoy["pozisyonlar"]) < MIN_POZISYON

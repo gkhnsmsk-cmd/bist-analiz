@@ -163,8 +163,59 @@ async function grafikVeriCek(sembol, donem) {
   }
 }
 
+// ═════════════════════════════════════════════════════════════════════════
+// SANAL PORTFÖY SIFIRLAMA — uygulama içi buton (Task #10, 28.08.2026)
+// ═════════════════════════════════════════════════════════════════════════
+// NEDEN BURADA: Pusula statik bir sayfa — kendi başına GitHub Actions'ı
+// tetikleyemez, bunun için bir GitHub PAT (Actions: write) gerekir ve bu PAT
+// ASLA tarayıcı koduna gömülemez (herkes görebilir, kötüye kullanabilir).
+// Worker bu PAT'i SUNUCU TARAFINDA (Cloudflare secret) tutar; tarayıcı sadece
+// kullanıcının kendi belirlediği bir ANAHTAR (passphrase) gönderir — bu da
+// ayrı bir Cloudflare secret'la karşılaştırılır. İki secret de env üzerinden
+// gelir, KODDA YAZILI DEĞİLDİR:
+//   wrangler secret put SIFIRLA_ANAHTARI      (kullanıcının kendi seçtiği parola)
+//   wrangler secret put GITHUB_ACTIONS_PAT    (Actions: write izinli fine-grained PAT)
+// Bu iki secret ayarlanmadan bu uç nokta HER ZAMAN 501 döner — yanlışlıkla
+// açık bırakılmış bir "herkes tetikleyebilir" uç noktası olmaz.
+async function sanalPortfoySifirla(request, env) {
+  if (!env.SIFIRLA_ANAHTARI || !env.GITHUB_ACTIONS_PAT) {
+    return jsonYanit({ hata: "Sıfırlama uç noktası henüz kurulmadı (secret eksik)." }, 501);
+  }
+  let govde;
+  try {
+    govde = await request.json();
+  } catch {
+    return jsonYanit({ hata: "Geçersiz istek gövdesi (JSON bekleniyor)." }, 400);
+  }
+  if (!govde || govde.anahtar !== env.SIFIRLA_ANAHTARI) {
+    return jsonYanit({ hata: "Anahtar yanlış." }, 403);
+  }
+  try {
+    const yanit = await fetch(
+      "https://api.github.com/repos/gkhnsmsk-cmd/bist-analiz/actions/workflows/sanal_portfoy_sifirla.yml/dispatches",
+      {
+        method: "POST",
+        headers: {
+          "Authorization": `Bearer ${env.GITHUB_ACTIONS_PAT}`,
+          "Accept": "application/vnd.github+json",
+          "User-Agent": "pusula-sifirla-worker",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ ref: "main", inputs: { confirm: "SIFIRLA" } }),
+      }
+    );
+    if (yanit.status === 204) {
+      return jsonYanit({ tamam: true, mesaj: "Sıfırlama tetiklendi — birkaç dakika içinde tamamlanır." });
+    }
+    const metin = await yanit.text();
+    return jsonYanit({ hata: `GitHub API hatası (${yanit.status}): ${metin.slice(0, 300)}` }, 502);
+  } catch (e) {
+    return jsonYanit({ hata: `İstek başarısız: ${e.message || e}` }, 502);
+  }
+}
+
 export default {
-  async fetch(request) {
+  async fetch(request, env) {
     // Tarayıcılar bazı isteklerden önce bir "izin var mı?" (preflight/OPTIONS)
     // sorusu sorar — buna da CORS başlıklarıyla cevap vermemiz gerekir.
     if (request.method === "OPTIONS") {
@@ -172,6 +223,10 @@ export default {
     }
 
     const url = new URL(request.url);
+
+    if (url.pathname === "/sifirla" && request.method === "POST") {
+      return sanalPortfoySifirla(request, env);
+    }
 
     // TOPLU MOD — liste ekranlarında (Favoriler, Yükselecek Hisseler,
     // Portföy) her satırın anlık fiyatını TEK istekte çekmek için eklendi
@@ -231,7 +286,7 @@ function corsBasliklari() {
     // ama "*" başkasının da bu ücretsiz aracıyı kullanabileceği anlamına
     // gelir (zararsız — sadece halka açık fiyat verisi döndürüyor).
     "Access-Control-Allow-Origin": "*",
-    "Access-Control-Allow-Methods": "GET, OPTIONS",
+    "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
     "Access-Control-Allow-Headers": "Content-Type",
     "Cache-Control": "no-store",
   };

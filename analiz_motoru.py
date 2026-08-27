@@ -23,6 +23,64 @@ def rsi(close, n=14):
     return 100 - 100 / (1 + rs)
 
 
+# ─────────────────────────────────────────────────────────────────────────────
+# STOCHASTIC RSI (Task #17, kullanıcının paylaştığı strateji notuna dayanır —
+# Chande & Kroll, 1994). RSI'nin kendi min-max aralığına göre normalize
+# edilmiş hâli; RSI'dan daha hassas/erken sinyal üretir ama bu yüzden daha
+# GÜRÜLTÜLÜ'dür. NOT: kaynak belgenin kendi uyarısı — "StochRSI tek başına
+# çok fazla yanlış sinyal üretir". Bu yüzden bileşik puana KARIŞTIRILMADI;
+# sadece ayrı, bilgi amaçlı bir sinyal olarak sunulur (bkz. stoch_rsi_sinyali).
+# ─────────────────────────────────────────────────────────────────────────────
+def stoch_rsi(close, rsi_n=14, stoch_n=14, k_smooth=3, d_smooth=3):
+    """Dönüş: (%K, %D) — ikisi de 0-100 arası pandas Series."""
+    r = rsi(close, rsi_n)
+    en_dusuk = r.rolling(stoch_n).min()
+    en_yuksek = r.rolling(stoch_n).max()
+    aralik = (en_yuksek - en_dusuk).replace(0, np.nan)
+    ham = 100 * (r - en_dusuk) / aralik
+    k = ham.rolling(k_smooth).mean()
+    d = k.rolling(d_smooth).mean()
+    return k, d
+
+
+def stoch_rsi_sinyali(df: pd.DataFrame) -> dict:
+    """Son gün için StochRSI %K/%D kesişim sinyali.
+
+    Dönüş: {"k": float|None, "d": float|None, "sinyal": "AL"|"SAT"|None,
+            "aciklama": str}
+    "AL": %K, %D'yi aşağıdan yukarı kesti VE kesişim 20 altında oldu
+          (aşırı satım bölgesinden dönüş — kaynak belgenin "özellikle 20
+          altında güçlü al" kuralı).
+    "SAT": tersi, 80 üstünde.
+    Bu SADECE bilgi amaçlıdır — puanlamaya dahil edilmez (bkz. yukarıdaki not).
+    """
+    bos = {"k": None, "d": None, "sinyal": None, "aciklama": "veri yetersiz"}
+    if df is None or len(df) < 40 or "Close" not in getattr(df, "columns", []):
+        return bos
+    try:
+        k, d = stoch_rsi(df["Close"])
+        if len(k.dropna()) < 2 or len(d.dropna()) < 2:
+            return bos
+        k_son, k_onceki = float(k.iloc[-1]), float(k.iloc[-2])
+        d_son, d_onceki = float(d.iloc[-1]), float(d.iloc[-2])
+        if any(np.isnan(x) for x in (k_son, k_onceki, d_son, d_onceki)):
+            return bos
+        sinyal, aciklama = None, "kesişim yok"
+        if k_onceki <= d_onceki and k_son > d_son:
+            if k_son < 20:
+                sinyal, aciklama = "AL", f"StochRSI aşırı satımdan (%K {k_son:.0f}) yukarı kesişim"
+            else:
+                aciklama = f"StochRSI yukarı kesişim ama aşırı satım bölgesi dışında (%K {k_son:.0f})"
+        elif k_onceki >= d_onceki and k_son < d_son:
+            if k_son > 80:
+                sinyal, aciklama = "SAT", f"StochRSI aşırı alımdan (%K {k_son:.0f}) aşağı kesişim"
+            else:
+                aciklama = f"StochRSI aşağı kesişim ama aşırı alım bölgesi dışında (%K {k_son:.0f})"
+        return {"k": round(k_son, 1), "d": round(d_son, 1), "sinyal": sinyal, "aciklama": aciklama}
+    except Exception:
+        return bos
+
+
 def macd(close, hizli=12, yavas=26, sinyal=9):
     m = ema(close, hizli) - ema(close, yavas)
     s = ema(m, sinyal)
@@ -324,7 +382,9 @@ def orta_vade(df, endeks_df=None) -> tuple:
         elif e < -0.15:
             p -= 8; _ekle(sinyaller, "Eğim", "SAT", "Son 3 ayın fiyat eğimi belirgin negatif")
 
-    # Göreceli güç (XU100'e karşı)
+    # Göreceli güç (XU100'e karşı) — Task #16, 28.08.2026: ağırlık ±10/±5/-8'den
+    # ±14/±7/-11'e çıkarıldı (kompozit skor içinde çok zayıf kalıyordu).
+    # ⚠️ DOĞRULANMADI — bkz. rejim_duzeltmesi üzerindeki not, aynı uyarı geçerli.
     if endeks_df is not None and len(endeks_df) > 70:
         try:
             ort = c.tail(63); end = endeks_df["Close"].reindex(ort.index).ffill()
@@ -332,13 +392,13 @@ def orta_vade(df, endeks_df=None) -> tuple:
             endeks_g = end.iloc[-1] / end.iloc[0] - 1
             fark = 100 * (hisse_g - endeks_g)
             if fark > 10:
-                p += 10; _ekle(sinyaller, "Göreceli Güç", "AL",
+                p += 14; _ekle(sinyaller, "Göreceli Güç", "AL",
                                f"Son 3 ayda BIST100'den %{fark:.0f} daha iyi performans")
             elif fark > 3:
-                p += 5; _ekle(sinyaller, "Göreceli Güç", "AL",
+                p += 7; _ekle(sinyaller, "Göreceli Güç", "AL",
                               f"BIST100'den %{fark:.0f} daha güçlü")
             elif fark < -10:
-                p -= 8; _ekle(sinyaller, "Göreceli Güç", "SAT",
+                p -= 11; _ekle(sinyaller, "Göreceli Güç", "SAT",
                               f"BIST100'ün %{abs(fark):.0f} gerisinde")
         except Exception:
             pass
@@ -608,10 +668,21 @@ def piyasa_rejimi(xu100_df, usdtry_df, tefas_s=None) -> dict:
     return {"puan": p, "durum": durum, "emoji": emoji, "sinyaller": sinyaller}
 
 
+# REJİM DÜZELTMESİ AĞIRLIĞI — 28.08.2026, Task #16 (kullanıcı raporu):
+# ±8 puanlık eski kapasite, 100 puanlık kompozit skor içinde çok zayıf
+# kalıyordu — pratikte "rejim filtresi var ama etkisi yok gibi" sonucu
+# veriyordu. ±14'e çıkarıldı. ⚠️ DOĞRULANMADI: bu sandboxta ağ erişimi
+# olmadığı için gerçek BIST verisiyle backtest ÇALIŞTIRILAMADI. Değeri
+# değiştirmeden önce BACKTEST_CALISTIR.bat ile eski (0.16) / yeni (0.28)
+# çarpanı karşılaştırıp korelasyon ve kova monotonikliğinin gerçekten
+# iyileştiğini KANITLA doğrulayın — aksi halde geri alın.
+REJIM_DUZELTME_CARPANI = 0.28   # eski: 0.16 (±8 puan) → yeni: ±14 puan
+
+
 def rejim_duzeltmesi(genel_puan: float, rejim_puani: float) -> tuple:
     """Riskli piyasa ortamında hisse puanlarını kısar, güçlü ortamda hafif destekler.
     Dönüş: (düzeltilmiş puan, düzeltme miktarı)"""
-    duzeltme = (rejim_puani - 50.0) * 0.16   # ±8 puana kadar
+    duzeltme = (rejim_puani - 50.0) * REJIM_DUZELTME_CARPANI
     yeni = float(np.clip(genel_puan + duzeltme, 0, 100))
     return yeni, round(duzeltme, 1)
 
@@ -732,6 +803,7 @@ def vade_taramasi(veri_sozlugu: dict, ust_sinir: int = 40, endeks_df=None,
             if satir.get("Puan") is None:
                 continue
             secim = secim_skoru(df)
+            stoch = stoch_rsi_sinyali(df)
             kayit = {
                 "Hisse": sembol,
                 "Kısa": vade_karari(satir.get("Kısa")),
@@ -750,6 +822,9 @@ def vade_taramasi(veri_sozlugu: dict, ust_sinir: int = 40, endeks_df=None,
                 "CMF": secim.get("cmf"),
                 "MA200Ustunde": bool(secim.get("ma200_ustunde")),
                 "Dogrulanmis": bool(secim.get("uygun") and (secim.get("cmf") or 0) > 0),
+                # StochRSI — bilgi amaçlı, puana KARIŞMAZ (bkz. stoch_rsi_sinyali notu).
+                "StochRsiSinyal": stoch.get("sinyal"),
+                "StochRsiAciklama": stoch.get("aciklama"),
             }
             sonuclar.append(kayit)
         except Exception:
@@ -767,6 +842,63 @@ def vade_taramasi(veri_sozlugu: dict, ust_sinir: int = 40, endeks_df=None,
     tablo = tablo.head(ust_sinir).reset_index(drop=True)
     tablo.index += 1
     return tablo
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# MA KIRILIM TARAMASI — "ortalamalarını yukarı yönde kıranlar" (28.08.2026)
+# ─────────────────────────────────────────────────────────────────────────────
+# NEDEN VAR: Kullanıcının paylaştığı bir örnek tablo (BIST100, dış kaynak)
+# fiyatın/kısa ortalamanın kendi hareketli ortalamasını YENİ kırdığı hisseleri
+# listeliyor. Bu, mevcut puanlama sisteminden BAĞIMSIZ, saf bir "momentum
+# başlangıcı" taraması — ne öngörü gücü test edilmiş ne de puanlamaya dahil
+# edilmiştir; SADECE bilgi amaçlı ayrı bir liste olarak sunulur. Ham sinyal
+# tek başına yanıltıcı olabilir (bkz. OKU_BENI.txt'deki örüntü uyarısı) — bu
+# yüzden puanlamaya KARIŞTIRILMAZ, ayrı bir "Kırılımlar" görünümü olarak durur.
+MA_KIRILIM_PENCERELERI = (5, 10, 22, 50)
+MA_KIRILIM_CIFTLERI = ((5, 10), (10, 22))
+
+
+def ma_kirilim_taramasi(veri_sozlugu: dict, min_hacim_milyon_tl: float = 5.0) -> dict:
+    """Fiyatın/kısa ortalamanın kendi n-günlük ortalamasını DÜN'e göre BUGÜN
+    yukarı yönde yeni kırdığı hisseleri kategori başına listeler.
+
+    Dönüş: {"fiyatKiriyor": {5: [sembol,...], 10: [...], 22: [...], 50: [...]},
+            "maKiriyor": {"5_10": [...], "10_22": [...]}}
+    Sadece BUGÜN oluşan (dünkü kapanışta henüz gerçekleşmemiş) kırılımlar
+    sayılır — birkaç gündür zaten üstünde olan hisseler burada YOKTUR (o,
+    "trend" bilgisidir, "kırılım" değil).
+    """
+    fiyat_kiriyor = {n: [] for n in MA_KIRILIM_PENCERELERI}
+    ma_kiriyor = {f"{a}_{b}": [] for a, b in MA_KIRILIM_CIFTLERI}
+
+    for sembol, df in veri_sozlugu.items():
+        try:
+            if df is None or df.empty or "Close" not in df.columns or len(df) < 55:
+                continue
+            ort_hacim_tl = float((df["Close"] * df["Volume"]).tail(20).mean()) / 1e6
+            if ort_hacim_tl < min_hacim_milyon_tl:
+                continue
+            c = df["Close"]
+            son, onceki = float(c.iloc[-1]), float(c.iloc[-2])
+
+            for n in MA_KIRILIM_PENCERELERI:
+                m = sma(c, n)
+                if len(m) < 2 or np.isnan(m.iloc[-1]) or np.isnan(m.iloc[-2]):
+                    continue
+                if onceki <= float(m.iloc[-2]) and son > float(m.iloc[-1]):
+                    fiyat_kiriyor[n].append(sembol)
+
+            for a, b in MA_KIRILIM_CIFTLERI:
+                ma_a, ma_b = sma(c, a), sma(c, b)
+                if len(ma_a) < 2 or any(np.isnan(x) for x in
+                                        (ma_a.iloc[-1], ma_a.iloc[-2], ma_b.iloc[-1], ma_b.iloc[-2])):
+                    continue
+                if float(ma_a.iloc[-2]) <= float(ma_b.iloc[-2]) and float(ma_a.iloc[-1]) > float(ma_b.iloc[-1]):
+                    ma_kiriyor[f"{a}_{b}"].append(sembol)
+        except Exception:
+            continue
+
+    return {"fiyatKiriyor": fiyat_kiriyor, "maKiriyor": ma_kiriyor}
 
 
 # ─────────────────────────────────────────────────────────────────────────────

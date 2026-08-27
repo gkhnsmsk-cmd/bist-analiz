@@ -383,8 +383,8 @@ function HisseSatiri({ h, onSec, onYildiz }) {
         {h.favori ? '⭐' : '☆'}
       </button>
       <div className="flex-1 min-w-0">
-        <div className="font-bold text-gray-900">{h.symbol}</div>
-        <div className="text-xs text-gray-400 truncate">{h.ad}</div>
+        <div className="font-bold text-gray-900 truncate">{h.ad}</div>
+        <div className="text-xs text-gray-400">{h.symbol}</div>
       </div>
       <div className="text-right shrink-0">
         <div className={"font-semibold text-gray-900 tabular-nums transition-colors " + _flashSinifi(flashYon)}>{h.fiyat.toFixed(2)} ₺</div>
@@ -504,8 +504,8 @@ function TakasSatiri({ h, onSec, onYildiz }) {
         {h.favori ? '⭐' : '☆'}
       </button>
       <div className="flex-1 min-w-0">
-        <div className="font-bold text-gray-900">{h.symbol}</div>
-        <div className="text-xs text-gray-400 truncate">{h.ad}</div>
+        <div className="font-bold text-gray-900 truncate">{h.ad}</div>
+        <div className="text-xs text-gray-400">{h.symbol}</div>
       </div>
       <div className="text-right shrink-0">
         <div className="text-[11px] text-gray-400 uppercase tracking-wide">Takas Puan</div>
@@ -653,8 +653,8 @@ function YukselecekSatiri({ h, onSec }) {
     >
       <div className="flex items-center justify-between gap-3">
         <div className="min-w-0">
-          <div className="font-bold text-gray-900">{h.symbol}</div>
-          <div className="text-xs text-gray-400 truncate">{h.ad}</div>
+          <div className="font-bold text-gray-900 truncate">{h.ad}</div>
+          <div className="text-xs text-gray-400">{h.symbol}</div>
         </div>
         <div className="text-right shrink-0">
           <div className={"font-semibold text-gray-900 tabular-nums transition-colors " + _flashSinifi(flashYon)}>{h.fiyat.toFixed(2)} ₺</div>
@@ -678,6 +678,12 @@ function YukselecekSatiri({ h, onSec }) {
           ✅ Doğrulanmış sinyal — MA200 üstünde + para akışı pozitif (CMF {h.cmf != null ? h.cmf.toFixed(3) : '—'})
         </div>
       )}
+      {/* StochRSI — bilgi amaçlı ek sinyal, puanı etkilemez (bkz. Task #17). */}
+      {h.stochRsiSinyal === 'AL' && (
+        <div className="mt-1.5 text-xs font-semibold text-sky-700 bg-sky-50 rounded-lg px-2.5 py-1.5">
+          🌀 {h.stochRsiAciklama}
+        </div>
+      )}
     </div>
   );
 }
@@ -697,8 +703,8 @@ function DipDonusuSatiri({ h, onSec }) {
     >
       <div className="flex items-center justify-between gap-3">
         <div className="min-w-0">
-          <div className="font-bold text-gray-900">{h.symbol}</div>
-          <div className="text-xs text-gray-400 truncate">{h.ad}</div>
+          <div className="font-bold text-gray-900 truncate">{h.ad}</div>
+          <div className="text-xs text-gray-400">{h.symbol}</div>
         </div>
         <div className="text-right shrink-0">
           <div className={"font-semibold text-gray-900 tabular-nums transition-colors " + _flashSinifi(flashYon)}>{h.fiyat.toFixed(2)} ₺</div>
@@ -728,7 +734,54 @@ function DipDonusuSatiri({ h, onSec }) {
   );
 }
 
-function YukselecekEkran({ hisseler, dipDonusu, onSec, zaman, sistemDurumu }) {
+/* MA Kırılım Taraması (Task #19) — puanlamadan bağımsız, salt bilgi amaçlı.
+   Kaynak: analiz_motoru.ma_kirilim_taramasi -> ma_kirilim.json. */
+const MA_KIRILIM_ETIKET = {
+  fiyat_5: 'Fiyat 5g ort. kırdı', fiyat_10: 'Fiyat 10g ort. kırdı',
+  fiyat_22: 'Fiyat 22g ort. kırdı', fiyat_50: 'Fiyat 50g ort. kırdı',
+  ma_5_10: '5g ort., 10g ort.\'yu kırdı', ma_10_22: '10g ort., 22g ort.\'yu kırdı',
+};
+function KirilimGrubu({ baslik, liste, onSec }) {
+  if (!liste || liste.length === 0) return null;
+  return (
+    <div className="bg-white rounded-2xl shadow-sm ring-1 ring-gray-100 p-3 mb-2">
+      <div className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1.5">{baslik} ({liste.length})</div>
+      <div className="flex flex-wrap gap-1.5">
+        {liste.map(h => (
+          <button key={h.symbol} onClick={() => onSec(h.symbol)}
+            className="text-xs font-semibold text-indigo-700 bg-indigo-50 rounded-lg px-2 py-1 hover:bg-indigo-100">
+            {h.symbol}
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+}
+function KirilimEkran({ kirilim, onSec }) {
+  if (!kirilim) {
+    return <p className="text-sm text-gray-400 py-8 text-center px-4">Henüz kırılım taraması üretilmedi.</p>;
+  }
+  const f = kirilim.fiyatKiriyor || {}, m = kirilim.maKiriyor || {};
+  return (
+    <div className="px-4">
+      <p className="text-xs text-gray-400 leading-relaxed mb-3">
+        Fiyatın/ortalamanın kendi hareketli ortalamasını BUGÜN yukarı yönde yeni kırdığı hisseler.
+        Puanlamadan bağımsız, ham bir momentum-başlangıcı bilgisidir — tek başına al/sat kararı değildir.
+      </p>
+      <KirilimGrubu baslik={MA_KIRILIM_ETIKET.fiyat_5} liste={f['5']} onSec={onSec} />
+      <KirilimGrubu baslik={MA_KIRILIM_ETIKET.fiyat_10} liste={f['10']} onSec={onSec} />
+      <KirilimGrubu baslik={MA_KIRILIM_ETIKET.fiyat_22} liste={f['22']} onSec={onSec} />
+      <KirilimGrubu baslik={MA_KIRILIM_ETIKET.fiyat_50} liste={f['50']} onSec={onSec} />
+      <KirilimGrubu baslik={MA_KIRILIM_ETIKET.ma_5_10} liste={m['5_10']} onSec={onSec} />
+      <KirilimGrubu baslik={MA_KIRILIM_ETIKET.ma_10_22} liste={m['10_22']} onSec={onSec} />
+      {Object.values(f).every(v => !v || v.length === 0) && Object.values(m).every(v => !v || v.length === 0) && (
+        <p className="text-sm text-gray-400 py-6 text-center">Bugün kırılım kriterine uyan hisse yok.</p>
+      )}
+    </div>
+  );
+}
+
+function YukselecekEkran({ hisseler, dipDonusu, kirilim, onSec, zaman, sistemDurumu }) {
   const [altSekme, setAltSekme] = useState('yukselecek');
   // Backend (analiz_motoru.vade_taramasi) doğrulanmış adayları (MA200 üstü +
   // CMF pozitif) zaten üste koyup gönderiyor — burada TEKRAR sadece genelPuan'a
@@ -746,12 +799,14 @@ function YukselecekEkran({ hisseler, dipDonusu, onSec, zaman, sistemDurumu }) {
     <div className="pb-4">
       <div className="px-4 pt-2 pb-3">
         <h1 className="text-2xl font-bold text-gray-900">
-          {altSekme === 'yukselecek' ? 'Yükselebilecek Hisseler' : 'Düşeni Kıran Hisseler'}
+          {altSekme === 'yukselecek' ? 'Yükselebilecek Hisseler' : altSekme === 'dip' ? 'Düşeni Kıran Hisseler' : 'Ortalama Kırılımları'}
         </h1>
         <p className="text-sm text-gray-400">
           {altSekme === 'yukselecek'
             ? siralı.length + " aday · doğrulanmış sinyali olanlar en üstte, sonra Genel Puan'a göre"
-            : dipSirali.length + " aday · düşmüş ama kısa vadede dönüş sinyali veren hisseler"}
+            : altSekme === 'dip'
+            ? dipSirali.length + " aday · düşmüş ama kısa vadede dönüş sinyali veren hisseler"
+            : "puanlamadan bağımsız, bugün oluşan ortalama kırılımları"}
           {zaman ? " · tarama: " + zaman : ""}
         </p>
         {altSekme === 'yukselecek' && (
@@ -779,6 +834,13 @@ function YukselecekEkran({ hisseler, dipDonusu, onSec, zaman, sistemDurumu }) {
         >
           🔄 Dipten Dönenler
         </button>
+        <button
+          onClick={() => setAltSekme('kirilim')}
+          className={"flex-1 min-h-[40px] rounded-xl text-sm font-semibold transition-colors " +
+                     (altSekme === 'kirilim' ? "bg-indigo-600 text-white" : "bg-white text-gray-600 ring-1 ring-gray-200")}
+        >
+          ⚡ Kırılımlar
+        </button>
       </div>
 
       {altSekme === 'yukselecek' ? (
@@ -787,12 +849,14 @@ function YukselecekEkran({ hisseler, dipDonusu, onSec, zaman, sistemDurumu }) {
             ? <p className="text-sm text-gray-400 py-6 text-center col-span-2">Henüz tarama verisi yok.</p>
             : siralı.map(h => <YukselecekSatiri key={h.symbol} h={h} onSec={onSec} />)}
         </div>
-      ) : (
+      ) : altSekme === 'dip' ? (
         <div className="px-4 flex flex-col gap-2 md:grid md:grid-cols-2 md:gap-3">
           {dipSirali.length === 0
             ? <p className="text-sm text-gray-400 py-6 text-center col-span-2">Şu an dip dönüşü kriterine uyan hisse yok.</p>
             : dipSirali.map(h => <DipDonusuSatiri key={h.symbol} h={h} onSec={onSec} />)}
         </div>
+      ) : (
+        <KirilimEkran kirilim={kirilim} onSec={onSec} />
       )}
     </div>
   );
@@ -1078,21 +1142,49 @@ function BacktestEkran({ backtest, ogrenme }) {
 
       {kovalar.length > 0 && (
         <>
-          <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mt-5 mb-2">Puan Kovalarına Göre İleri Getiri</h2>
-          <div className="flex flex-col gap-2">
-            {kovalar.map((k, i) => (
-              <div key={i} className="bg-white rounded-xl shadow-sm ring-1 ring-gray-100 px-3 py-2">
-                <div className="flex items-center justify-between">
-                  <span className="text-sm font-semibold text-gray-800">{k.etiket}</span>
-                  <span className="text-[11px] text-gray-400">({k.aralik}) n={k.n.toLocaleString('tr-TR')}</span>
+          <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mt-5 mb-2">Puan Kovalarına Göre İleri Getiri (10 gün)</h2>
+          {/* Basit çubuk görünüm (Task #12, 28.08.2026 — kullanıcı isteği:
+              "puan kovalarına göre getiri okumak çok zor, daha basit ama
+              detaylı bir görünüm olsun"). Çubuk uzunluğu |getiri10g|'ye
+              orantılı; kovalar arasında monoton bir artış YOKSA (bkz. altındaki
+              korelasyon notu) bu görsel de bunu açıkça gösterir — gizlenmez. */}
+          <div className="bg-white rounded-2xl shadow-sm ring-1 ring-gray-100 p-3">
+            {(() => {
+              const maks = Math.max(1, ...kovalar.map(k => Math.abs(k.getiri10g)));
+              return kovalar.map((k, i) => (
+                <div key={i} className={i > 0 ? "mt-2.5" : ""}>
+                  <div className="flex items-center justify-between text-xs mb-0.5">
+                    <span className="font-semibold text-gray-700">{k.etiket} <span className="text-gray-400 font-normal">({k.aralik})</span></span>
+                    <span className={"font-bold tabular-nums " + (k.getiri10g >= 0 ? "text-emerald-600" : "text-red-600")}>
+                      {k.getiri10g >= 0 ? "+" : ""}{k.getiri10g}%
+                    </span>
+                  </div>
+                  <div className="h-2.5 bg-gray-100 rounded-full overflow-hidden">
+                    <div
+                      className={"h-full rounded-full " + (k.getiri10g >= 0 ? "bg-emerald-500" : "bg-red-500")}
+                      style={{ width: (Math.abs(k.getiri10g) / maks * 100) + "%" }}
+                    />
+                  </div>
+                  <div className="text-[10px] text-gray-400 mt-0.5">n={k.n.toLocaleString('tr-TR')} · %{k.pozOran10g} pozitif kapandı</div>
                 </div>
-                <div className="flex gap-4 mt-1 text-xs">
-                  <span className="text-gray-500">5g <b className={k.getiri5g >= 0 ? "text-emerald-600" : "text-red-600"}>{k.getiri5g >= 0 ? "+" : ""}{k.getiri5g}%</b> (%{k.pozOran5g} pozitif)</span>
-                  <span className="text-gray-500">20g <b className={k.getiri20g >= 0 ? "text-emerald-600" : "text-red-600"}>{k.getiri20g >= 0 ? "+" : ""}{k.getiri20g}%</b> (%{k.pozOran20g} pozitif)</span>
-                </div>
-              </div>
-            ))}
+              ));
+            })()}
           </div>
+
+          <details className="mt-2">
+            <summary className="text-xs text-indigo-600 font-semibold cursor-pointer">5g / 20g ufuklarını da göster</summary>
+            <div className="flex flex-col gap-2 mt-2">
+              {kovalar.map((k, i) => (
+                <div key={i} className="bg-white rounded-xl shadow-sm ring-1 ring-gray-100 px-3 py-2">
+                  <div className="text-sm font-semibold text-gray-800">{k.etiket} <span className="text-[11px] text-gray-400 font-normal">({k.aralik})</span></div>
+                  <div className="flex gap-4 mt-1 text-xs">
+                    <span className="text-gray-500">5g <b className={k.getiri5g >= 0 ? "text-emerald-600" : "text-red-600"}>{k.getiri5g >= 0 ? "+" : ""}{k.getiri5g}%</b> (%{k.pozOran5g} pozitif)</span>
+                    <span className="text-gray-500">20g <b className={k.getiri20g >= 0 ? "text-emerald-600" : "text-red-600"}>{k.getiri20g >= 0 ? "+" : ""}{k.getiri20g}%</b> (%{k.pozOran20g} pozitif)</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </details>
         </>
       )}
 
@@ -1114,10 +1206,27 @@ function BacktestEkran({ backtest, ogrenme }) {
 
 /* Portföydeki her pozisyon satırı — güncel değeri anlık fiyata göre değişince
    yanıp söner (kullanıcı isteği: "bu pozisyon da anlık değişmeli"). */
-function PozisyonSatiri({ p }) {
+// Kar/zarar yüzdesine göre kısa, somut bir yorum üretir (Task #11c — kullanıcı
+// isteği: "portföyde kar zarar vb. daha detaylı yorumlar bilgiler yer almalı").
+function _karZararYorumu(yuzde) {
+  if (yuzde == null || !isFinite(yuzde)) return null;
+  if (yuzde >= 15) return { metin: "Güçlü kârda — kâr realizasyonunu düşünebilirsin.", renk: "text-emerald-700 bg-emerald-50" };
+  if (yuzde >= 5) return { metin: "Kârda, sağlıklı seyrediyor.", renk: "text-emerald-700 bg-emerald-50" };
+  if (yuzde >= -5) return { metin: "Başabaş civarında — henüz belirgin bir yön yok.", renk: "text-gray-600 bg-gray-50" };
+  if (yuzde >= -15) return { metin: "Zararda — yakından izlemekte fayda var.", renk: "text-amber-700 bg-amber-50" };
+  return { metin: "Belirgin zararda — pozisyonu gözden geçirmeyi düşün.", renk: "text-red-700 bg-red-50" };
+}
+
+function PozisyonSatiri({ p, onSec }) {
   const flashYon = useFlashOnChange(p.guncelFiyat);
+  const yorum = _karZararYorumu(p.karZararYuzde);
   return (
-    <div className="bg-white rounded-2xl shadow-sm ring-1 ring-gray-100 px-4 py-3">
+    <div
+      role="button" tabIndex={0}
+      onClick={() => onSec && onSec(p.symbol)}
+      onKeyDown={(e) => { if (e.key === 'Enter' && onSec) onSec(p.symbol); }}
+      className="bg-white rounded-2xl shadow-sm ring-1 ring-gray-100 px-4 py-3 active:bg-gray-50 transition-colors cursor-pointer"
+    >
       <div className="flex items-center justify-between">
         <div>
           <div className="font-bold text-gray-900">{p.symbol}</div>
@@ -1132,11 +1241,78 @@ function PozisyonSatiri({ p }) {
           </div>
         </div>
       </div>
+      {yorum && (
+        <div className={"mt-2 rounded-lg px-2.5 py-1.5 text-xs " + yorum.renk}>{yorum.metin}</div>
+      )}
     </div>
   );
 }
 
-function PortfoyEkran({ hisseler, portfoy, gercekPortfoy, performans, backtest, ogrenme, kullaniciPortfoy, setKullaniciPortfoy }) {
+/* Sanal Portföy sıfırlama butonu (Task #10, 28.08.2026). Worker'daki
+   /sifirla ucuna POST atar — GitHub PAT'i asla bu koda gömülmez, sadece
+   kullanıcının kendi belirlediği bir anahtar (passphrase) gönderilir; worker
+   tarafında bu anahtar bir Cloudflare secret'la karşılaştırılır (bkz.
+   cloudflare_worker_canli_fiyat.js). Anahtar henüz kurulmadıysa worker 501
+   döner — bu durumda eski yol (GitHub Actions sekmesinden elle) hâlâ geçerli. */
+function SifirlaButonu() {
+  const [durum, setDurum] = useState('bos');   // bos | onayBekliyor | gonderiliyor | tamam | hata
+  const [mesaj, setMesaj] = useState('');
+
+  async function tikla() {
+    if (durum !== 'onayBekliyor') { setDurum('onayBekliyor'); return; }
+    if (!CANLI_FIYAT_API_URL) {
+      setDurum('hata'); setMesaj('Worker adresi ayarlı değil.'); return;
+    }
+    const anahtar = window.prompt(
+      'Portföyü sıfırlamak GERİ ALINAMAZ. Onaylamak için sıfırlama anahtarını gir:'
+    );
+    if (!anahtar) { setDurum('bos'); return; }
+    setDurum('gonderiliyor');
+    try {
+      const yanit = await fetch(`${CANLI_FIYAT_API_URL}/sifirla`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ anahtar }),
+      });
+      const veri = await yanit.json().catch(() => ({}));
+      if (yanit.ok && veri.tamam) {
+        setDurum('tamam'); setMesaj(veri.mesaj || 'Tetiklendi.');
+      } else {
+        setDurum('hata');
+        setMesaj(veri.hata || `İstek başarısız (${yanit.status}).`);
+      }
+    } catch (e) {
+      setDurum('hata'); setMesaj('Bağlantı hatası: ' + (e.message || e));
+    }
+  }
+
+  return (
+    <div className="mt-3">
+      <button
+        onClick={tikla}
+        disabled={durum === 'gonderiliyor' || durum === 'tamam'}
+        className={"w-full min-h-[40px] rounded-xl text-xs font-semibold transition-colors " +
+                   (durum === 'onayBekliyor' ? "bg-red-600 text-white" : "bg-white text-red-600 ring-1 ring-red-200") +
+                   (durum === 'gonderiliyor' || durum === 'tamam' ? " opacity-60" : "")}
+      >
+        {durum === 'gonderiliyor' ? '⏳ Gönderiliyor...'
+          : durum === 'tamam' ? '✅ Tetiklendi'
+          : durum === 'onayBekliyor' ? '⚠️ Emin misin? Tekrar dokun'
+          : '🔄 Portföyü Sıfırla'}
+      </button>
+      {mesaj && (
+        <p className={"text-[11px] mt-1.5 leading-relaxed " + (durum === 'hata' ? "text-red-500" : "text-gray-400")}>
+          {mesaj}
+          {durum === 'hata' && (
+            <> — alternatif: GitHub'da repo → "Actions" → "Sanal Portföy Sıfırlama" → Run workflow.</>
+          )}
+        </p>
+      )}
+    </div>
+  );
+}
+
+function PortfoyEkran({ hisseler, portfoy, gercekPortfoy, performans, backtest, ogrenme, kullaniciPortfoy, setKullaniciPortfoy, onSec }) {
   const [altSekme, setAltSekme] = useState('pozisyonlar');
 
   const satirlar = useMemo(() => portfoy.map(p => {
@@ -1209,7 +1385,7 @@ function PortfoyEkran({ hisseler, portfoy, gercekPortfoy, performans, backtest, 
         </div>
       ) : altSekme === 'kullanici' ? (
         <div className="px-4">
-          <KullaniciPortfoyEkran hisseler={hisseler} kullaniciPortfoy={kullaniciPortfoy} setKullaniciPortfoy={setKullaniciPortfoy} />
+          <KullaniciPortfoyEkran hisseler={hisseler} kullaniciPortfoy={kullaniciPortfoy} setKullaniciPortfoy={setKullaniciPortfoy} onSec={onSec} />
         </div>
       ) : (
       <>
@@ -1240,7 +1416,7 @@ function PortfoyEkran({ hisseler, portfoy, gercekPortfoy, performans, backtest, 
       </div>
 
       <div className="px-4 flex flex-col gap-2 mt-4">
-        {satirlar.map(p => <PozisyonSatiri key={p.symbol} p={p} />)}
+        {satirlar.map(p => <PozisyonSatiri key={p.symbol} p={p} onSec={onSec} />)}
       </div>
 
       <div className="px-4 mt-4">
@@ -1250,9 +1426,9 @@ function PortfoyEkran({ hisseler, portfoy, gercekPortfoy, performans, backtest, 
             Bu portföye elle pozisyon ekleyip çıkaramazsın — al/sat, nakde geçme ve
             zamanlama kararlarını tamamen algoritma kendi başına verir; bu, motorun
             kendi haline bırakıldığında ne yaptığının bir testidir. Tek kontrolün,
-            portföyü baştan başlatmak (nakit + pozisyonsuz): repodaki "Actions" sekmesi
-            → "Sanal Portföy Sıfırlama" → Run workflow. Bu işlem geri alınamaz.
+            portföyü baştan başlatmak (nakit + pozisyonsuz). Bu işlem geri alınamaz.
           </p>
+          <SifirlaButonu />
         </div>
       </div>
       </>
@@ -1265,7 +1441,7 @@ function PortfoyEkran({ hisseler, portfoy, gercekPortfoy, performans, backtest, 
    gerçek/manuel takip ettiği hisseleri. Algoritma buraya dokunmaz, sadece
    kullanıcı ekler/siler. localStorage'da saklanır (bkz. App() içindeki
    _kullaniciPortfoyOku/Yaz). */
-function KullaniciPortfoyEkran({ hisseler, kullaniciPortfoy, setKullaniciPortfoy }) {
+function KullaniciPortfoyEkran({ hisseler, kullaniciPortfoy, setKullaniciPortfoy, onSec }) {
   const [formAcik, setFormAcik] = useState(false);
   const [ySembol, setYSembol] = useState(hisseler[0]?.symbol || '');
   const [yAdet, setYAdet] = useState('');
@@ -1397,7 +1573,12 @@ function KullaniciPortfoyEkran({ hisseler, kullaniciPortfoy, setKullaniciPortfoy
               return (
                 <div key={p.symbol} className="bg-white rounded-2xl shadow-sm ring-1 ring-gray-100 p-3">
                   <div className="flex items-center justify-between">
-                    <div>
+                    <div
+                      role="button" tabIndex={0}
+                      onClick={() => onSec && onSec(p.symbol)}
+                      onKeyDown={(e) => { if (e.key === 'Enter' && onSec) onSec(p.symbol); }}
+                      className="cursor-pointer min-w-0"
+                    >
                       <div className="font-bold text-gray-900">{p.symbol}</div>
                       <div className="text-xs text-gray-400">{p.adet} adet · maliyet {p.maliyet.toLocaleString('tr-TR')} ₺</div>
                     </div>
@@ -1416,6 +1597,9 @@ function KullaniciPortfoyEkran({ hisseler, kullaniciPortfoy, setKullaniciPortfoy
                       ✕
                     </button>
                   </div>
+                  {(() => { const y = _karZararYorumu(p.karZararYuzde); return y && (
+                    <div className={"mt-2 rounded-lg px-2.5 py-1.5 text-xs " + y.renk}>{y.metin}</div>
+                  ); })()}
                   {tavsiye && (
                     <div className={"mt-2 rounded-lg px-2.5 py-1.5 text-xs " + renkSinifi[tavsiye.renk]}>
                       {tavsiye.metin}
@@ -1927,6 +2111,7 @@ function App() {
   const [backtest, setBacktest] = useState(null);
   const [akdVerisi, setAkdVerisi] = useState(null);
   const [ogrenme, setOgrenme] = useState(null);
+  const [kirilim, setKirilim] = useState(null);
 
   // Gerçek veriyi çek — docs/pusula/data/*.json (bkz. pusula_veri_uret.py).
   // Üçü de bağımsız başarısız olabilir (ör. henüz üretilmemişse); biri
@@ -1981,6 +2166,10 @@ function App() {
     // çalışmadıysa) sessizce boş kalır.
     fetch('./data/ogrenme.json').then(r => r.ok ? r.json() : Promise.reject())
       .then(d => setOgrenme(d))
+      .catch(() => {});
+
+    fetch('./data/ma_kirilim.json').then(r => r.ok ? r.json() : Promise.reject())
+      .then(d => setKirilim(d))
       .catch(() => {});
 
     // AKD (aracı kurum dağılımı) — sadece favoriler için üretilir (Görev #53).
@@ -2067,9 +2256,9 @@ function App() {
         )}
         {tab === 'ana' && <AnaEkran hisseler={hisselerCanli} onSec={setDetaySembol} onYildiz={yildizToggle} zaman={taramaZaman} sistemDurumu={sistemDurumu} />}
         {tab === 'tarama' && <TaramaEkran hisseler={hisselerCanli} onSec={setDetaySembol} onYildiz={yildizToggle} fonKurumsal={fonKurumsal} />}
-        {tab === 'yukselecek' && <YukselecekEkran hisseler={yukselecekCanli} dipDonusu={dipDonusuCanli} onSec={setDetaySembol} zaman={taramaZaman} sistemDurumu={sistemDurumu} />}
+        {tab === 'yukselecek' && <YukselecekEkran hisseler={yukselecekCanli} dipDonusu={dipDonusuCanli} kirilim={kirilim} onSec={setDetaySembol} zaman={taramaZaman} sistemDurumu={sistemDurumu} />}
         {tab === 'ara' && <AraEkran hisseler={hisselerCanli} onSec={setDetaySembol} onYildiz={yildizToggle} />}
-        {tab === 'portfoy' && <PortfoyEkran hisseler={hisselerCanli} portfoy={portfoy} gercekPortfoy={gercekPortfoy} performans={performans} backtest={backtest} ogrenme={ogrenme} kullaniciPortfoy={kullaniciPortfoy} setKullaniciPortfoy={setKullaniciPortfoy} />}
+        {tab === 'portfoy' && <PortfoyEkran hisseler={hisselerCanli} portfoy={portfoy} gercekPortfoy={gercekPortfoy} performans={performans} backtest={backtest} ogrenme={ogrenme} kullaniciPortfoy={kullaniciPortfoy} setKullaniciPortfoy={setKullaniciPortfoy} onSec={setDetaySembol} />}
       </div>
 
       {/* Masaüstünde YanNav zaten md:hidden olan AltNav'ın yerini alıyor;

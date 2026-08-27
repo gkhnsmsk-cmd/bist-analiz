@@ -13,7 +13,13 @@
 # NE YAPAR:
 #   1) backtest_calistir.py → backtest_sonuc.txt / backtest_sonuc.csv üretir
 #   2) pusula_veri_uret.backtest_uret() → bunu docs/pusula/data/backtest.json'a çevirir
-#   3) Sonuçları depoya kaydeder (commit + push)
+#   3) ogrenme_motoru.ogrenme_dongusu() → ogrenme_hata_log.json üretir/tazeler
+#      (Task #12, 28.08.2026: önceden bu SADECE kullanıcı yerelde
+#      HAFTALIK_KONTROL.bat çalıştırırsa güncelleniyordu — artık bulutta da
+#      otomatik tazeleniyor, kullanıcı hiçbir şey çalıştırmasa bile Pusula'daki
+#      "🎓 Öğrenme Motoru" kartı güncel kalır.)
+#   4) pusula_veri_uret.ogrenme_uret() → bunu docs/pusula/data/ogrenme.json'a çevirir
+#   5) Sonuçları depoya kaydeder (commit + push)
 
 name: Haftalık backtest
 
@@ -62,11 +68,21 @@ jobs:
         if: steps.backtest.outcome == 'success'
         run: python -c "import pusula_veri_uret as pvu; pvu.backtest_uret()"
 
+      - name: Öğrenme motoru — hata analizi + aday öneriler
+        id: ogrenme
+        continue-on-error: true
+        run: python -c "import ogrenme_motoru as om; om.ogrenme_dongusu()"
+
+      - name: Öğrenme motoru verisini Pusula'ya çevir
+        if: steps.ogrenme.outcome == 'success'
+        run: python -c "import pusula_veri_uret as pvu; pvu.ogrenme_uret()"
+
       - name: Sonuçları depoya kaydet
         run: |
           git config user.name  "bist-otomasyon"
           git config user.email "bist-otomasyon@users.noreply.github.com"
-          git add -A -- backtest_sonuc.txt backtest_sonuc.csv 'docs/pusula/data/backtest.json' || true
+          git add -A -- backtest_sonuc.txt backtest_sonuc.csv 'docs/pusula/data/backtest.json' \
+                         ogrenme_hata_log.json 'docs/pusula/data/ogrenme.json' || true
           if git diff --staged --quiet; then
             echo "Değişen kayıt yok — commit atlanıyor."
           else
@@ -82,4 +98,5 @@ jobs:
             echo "### Haftalık backtest sonucu"
             echo ""
             echo "- Backtest adımı: ${{ steps.backtest.outcome }}"
+            echo "- Öğrenme motoru adımı: ${{ steps.ogrenme.outcome }}"
           } >> "$GITHUB_STEP_SUMMARY"

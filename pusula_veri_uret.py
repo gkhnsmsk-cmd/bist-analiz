@@ -162,6 +162,9 @@ def tarama_uret():
                 # önceliklendirme sebebidir.
                 "dogrulanmis": bool(r.get("Dogrulanmis", False)),
                 "cmf": (float(r["CMF"]) if pd.notna(r.get("CMF")) else None),
+                # StochRSI (Task #17) — bilgi amaçlı, puanı etkilemez.
+                "stochRsiSinyal": (str(r["StochRsiSinyal"]) if pd.notna(r.get("StochRsiSinyal")) else None),
+                "stochRsiAciklama": (str(r["StochRsiAciklama"]) if pd.notna(r.get("StochRsiAciklama")) else None),
             })
         return out
 
@@ -560,6 +563,36 @@ def ogrenme_uret():
     return True
 
 
+def ma_kirilim_uret():
+    """ma_kirilim.json (ham sembol listeleri) -> ma_kirilim.json (Pusula'da
+    isim/sektör eklenmiş, fetch() ile okunabilir hâli). Bkz. Task #19 —
+    kullanıcının paylaştığı örnek tabloya dayanan, puanlamadan bağımsız,
+    salt bilgi amaçlı bir "kırılım" listesi."""
+    yol = os.path.join(KLASOR, "ma_kirilim.json")
+    if not os.path.exists(yol):
+        return False
+    try:
+        with open(yol, encoding="utf-8") as f:
+            ham = json.load(f)
+    except Exception as e:
+        print("ma_kirilim.json okunamadı:", e)
+        return False
+
+    adlar = _adlar()
+
+    def _zenginlestir(semboller):
+        return [{"symbol": s, "ad": adlar.get(s, s)} for s in (semboller or [])]
+
+    fiyat = ham.get("fiyatKiriyor") or {}
+    ma = ham.get("maKiriyor") or {}
+    _yaz("ma_kirilim.json", {
+        "zaman": ham.get("zaman"),
+        "fiyatKiriyor": {k: _zenginlestir(v) for k, v in fiyat.items()},
+        "maKiriyor": {k: _zenginlestir(v) for k, v in ma.items()},
+    })
+    return True
+
+
 def hepsi():
     a = tarama_uret()
     b = portfoy_uret()
@@ -569,6 +602,7 @@ def hepsi():
     f = backtest_uret()
     g = akd_uret()
     h = ogrenme_uret()
+    i = ma_kirilim_uret()
     print("tarama/yukselecek/dip_donusu:", "OK" if a else "atlandı (dosya yok)")
     print("portfoy:", "OK" if b else "atlandı (dosya yok)")
     print("performans:", "OK" if c else "atlandı (dosya yok)")
@@ -577,6 +611,7 @@ def hepsi():
     print("backtest:", "OK" if f else "atlandı (dosya yok)")
     print("akd:", "OK" if g else "atlandı")
     print("ogrenme:", "OK" if h else "atlandı (dosya yok)")
+    print("ma_kirilim:", "OK" if i else "atlandı (dosya yok)")
 
 
 if __name__ == "__main__":
