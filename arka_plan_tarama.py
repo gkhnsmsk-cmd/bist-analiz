@@ -155,6 +155,7 @@ if __name__ == "__main__":
     try:
         import pusula_veri_uret as pvu
         pvu.tarama_uret()
+        pvu.performans_uret()
         _log("Pusula verisi güncellendi.")
     except Exception as e:
         _log(f"UYARI: Pusula verisi güncellenemedi: {e}")

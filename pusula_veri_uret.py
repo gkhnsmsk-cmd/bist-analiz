@@ -234,11 +234,78 @@ def portfoy_uret():
     return True
 
 
+def performans_uret():
+    """sanal_deger_gecmisi.json + tavsiye_gecmisi.json -> performans.json.
+
+    NEDEN CANLI HESAPLAMIYORUZ: tavsiye_kaydi.performans_hesapla() her tavsiye
+    için GÜNCEL fiyat indirmesi gerektirir (yüzlerce sembol) — bu, her
+    otomasyon çalışmasında ekstra dakikalarca sürer. Onun yerine ZATEN
+    biriken iki hafif kaynağı kullanıyoruz: sanal portföyün günlük değer
+    geçmişi (gerçek, ölçülmüş getiri) ve son tavsiye kayıtları (liste
+    halinde, performans hesabı olmadan) — ikisi de anında, ağ isteği
+    olmadan üretilir.
+    """
+    deger_yolu = os.path.join(KLASOR, "sanal_deger_gecmisi.json")
+    tavsiye_yolu = os.path.join(KLASOR, "tavsiye_gecmisi.json")
+
+    esitegri = []
+    if os.path.exists(deger_yolu):
+        try:
+            with open(deger_yolu, encoding="utf-8") as f:
+                gecmis = json.load(f)
+            esitegri = [{
+                "tarih": g.get("tarih"),
+                "deger": g.get("toplam_deger", 0),
+                "endeks": g.get("endeks"),
+            } for g in gecmis]
+        except Exception as e:
+            print("sanal_deger_gecmisi.json okunamadı:", e)
+
+    son_tavsiyeler = []
+    toplam_tavsiye = 0
+    if os.path.exists(tavsiye_yolu):
+        try:
+            with open(tavsiye_yolu, encoding="utf-8") as f:
+                tavsiyeler = json.load(f)
+            toplam_tavsiye = len(tavsiyeler)
+            for t in sorted(tavsiyeler, key=lambda x: x.get("kayit_zamani") or "", reverse=True)[:20]:
+                son_tavsiyeler.append({
+                    "tarih": t.get("tarih"),
+                    "sembol": t.get("sembol"),
+                    "kaynak": t.get("kaynak"),
+                    "sinyal": t.get("sinyal"),
+                    "fiyat": t.get("kayit_anindaki_fiyat"),
+                })
+        except Exception as e:
+            print("tavsiye_gecmisi.json okunamadı:", e)
+
+    # Başlangıca göre getiri yüzdesi — endeks karşılaştırmalı, dürüst bakış.
+    getiri_yuzde = None
+    endeks_getiri_yuzde = None
+    if len(esitegri) >= 2:
+        ilk, son = esitegri[0], esitegri[-1]
+        if ilk.get("deger"):
+            getiri_yuzde = 100 * (son["deger"] / ilk["deger"] - 1)
+        if ilk.get("endeks") and son.get("endeks"):
+            endeks_getiri_yuzde = 100 * (son["endeks"] / ilk["endeks"] - 1)
+
+    _yaz("performans.json", {
+        "esitegri": esitegri,
+        "getiriYuzde": getiri_yuzde,
+        "endeksGetiriYuzde": endeks_getiri_yuzde,
+        "sonTavsiyeler": son_tavsiyeler,
+        "toplamTavsiyeSayisi": toplam_tavsiye,
+    })
+    return True
+
+
 def hepsi():
     a = tarama_uret()
     b = portfoy_uret()
-    print("tarama/yukselecek:", "OK" if a else "atlandı (dosya yok)")
+    c = performans_uret()
+    print("tarama/yukselecek/dip_donusu:", "OK" if a else "atlandı (dosya yok)")
     print("portfoy:", "OK" if b else "atlandı (dosya yok)")
+    print("performans:", "OK" if c else "atlandı (dosya yok)")
 
 
 if __name__ == "__main__":
