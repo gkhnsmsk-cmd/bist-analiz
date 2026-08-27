@@ -141,7 +141,7 @@ function _favorileriYaz(set) {
    bkz. cloudflare_worker_canli_fiyat.js). CANLI_FIYAT_API_URL boşsa (worker
    kurulmadıysa) hiçbir şey yapmaz — liste her zaman son taramadan gelen
    fiyatı göstermeye devam eder. */
-const CANLI_LISTE_YENILEME_MS = 5000;
+const CANLI_LISTE_YENILEME_MS = 15000;
 function useCanliFiyatlar(semboller) {
   const [canliMap, setCanliMap] = useState({});
   // semboller dizisi her render'da yeni referans olabilir (useMemo olmadan

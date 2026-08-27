@@ -33,11 +33,36 @@
 // bedava — bu kullanım için fazlasıyla yeterli, ödeme bilgisi gerekmez.
 // ═══════════════════════════════════════════════════════════════════════════
 
+// ── Kenar (edge) önbellek: Yahoo'yu her istek için değil, sembol başına en
+// fazla ~25 saniyede bir çağır. NEDEN EKLENDİ: Yahoo Finance, kimliksiz
+// (auth'suz) bu uç noktaya kısa sürede çok sayıda istek gelince 429 (rate
+// limit) döndürmeye başlıyor — birden fazla tarayıcı sekmesi/kullanıcı aynı
+// anda 5 saniyede bir 40+ sembol için toplu istek attığında bu eşiğe çok
+// hızlı ulaşılıyor. Cloudflare'ın paylaşımlı edge Cache API'si sayesinde
+// AYNI sembol için farklı kullanıcılardan/sekmelerden gelen istekler tek bir
+// Yahoo çağrısını paylaşır — Yahoo'ya giden toplam istek hacmi büyük ölçüde
+// azalır ve 429'lar önlenir.
+const ONBELLEK_SANIYE = 25;
+
 // ── Tek sembol için Yahoo'dan çek (chart API — ücretsiz, auth gerektirmez) ──
 async function tekFiyatCek(sembol) {
   const yahooUrl =
     `https://query1.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(sembol)}.IS` +
     `?interval=1m&range=1d`;
+
+  const onbellek = caches.default;
+  // Cache API bir Request/Response nesnesi ister; Yahoo URL'sini anahtar
+  // olarak kullanıyoruz (gerçek isteğe hiç çıkmadan önbellekten dönebiliriz).
+  const onbellekIstegi = new Request(yahooUrl);
+  const onbellekYaniti = await onbellek.match(onbellekIstegi);
+  if (onbellekYaniti) {
+    try {
+      return await onbellekYaniti.json();
+    } catch (e) {
+      // bozuk önbellek kaydı — yok say, Yahoo'dan tazesini çek
+    }
+  }
+
   try {
     const yahooYaniti = await fetch(yahooUrl, {
       headers: { "User-Agent": "Mozilla/5.0 (compatible; PusulaBot/1.0)" },
@@ -47,7 +72,7 @@ async function tekFiyatCek(sembol) {
     const sonuc = veri?.chart?.result?.[0];
     if (!sonuc || !sonuc.meta) return { hata: "Bu sembol için veri bulunamadı" };
     const meta = sonuc.meta;
-    return {
+    const sonucNesnesi = {
       fiyat: meta.regularMarketPrice ?? null,
       oncekiKapanis: meta.chartPreviousClose ?? meta.previousClose ?? null,
       zaman: meta.regularMarketTime
@@ -55,6 +80,17 @@ async function tekFiyatCek(sembol) {
         : null,
       piyasaDurumu: meta.marketState || null, // "REGULAR" / "CLOSED" / "PRE" / "POST"
     };
+
+    // Sadece BAŞARILI sonuçları önbelleğe al (hatalı/429 yanıtları önbelleğe
+    // alırsak, geçici bir hatayı ONBELLEK_SANIYE boyunca donduruk kalırız).
+    if (sonucNesnesi.fiyat != null) {
+      const yaniti = new Response(JSON.stringify(sonucNesnesi), {
+        headers: { "Content-Type": "application/json", "Cache-Control": `max-age=${ONBELLEK_SANIYE}` },
+      });
+      // Worker'ı erken bitirmemesi için bekletmeden arka planda yaz.
+      onbellek.put(onbellekIstegi, yaniti.clone());
+    }
+    return sonucNesnesi;
   } catch (e) {
     return { hata: `Aracı fonksiyon hatası: ${e.message || e}` };
   }
