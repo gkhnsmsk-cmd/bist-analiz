@@ -374,13 +374,22 @@ def fon_kurumsal_uret():
     except Exception as e:
         print("veri_katmani içe aktarılamadı:", e)
         return False
+    # ÖNEMLİ DÜZELTME: Bu fonksiyon TEFAS verisi alınamadığında (ağ hatası,
+    # boş seri — örn. hafta sonu/tatil, ya da sandbox'ta ağ kısıtlaması)
+    # daha önce dosyayı HİÇ YAZMIYORDU (return False) — bu, Pusula'nın
+    # './data/fon_kurumsal.json' isteğinin her seferinde 404 vermesine yol
+    # açtı (konsolda kalıcı hata — kullanıcı bunu fark edip bildirdi).
+    # Diğer tüm _uret() fonksiyonları gibi artık HER DURUMDA bir dosya
+    # yazıyor — veri yoksa boş liste ile, "veri henüz yok" durumu Pusula'da
+    # sessizce ele alınabilsin diye.
     try:
         seri = vk.tefas_hisse_trendi(6)
     except Exception as e:
         print("TEFAS trendi alınamadı:", e)
-        return False
+        seri = None
     if seri is None or len(seri) == 0:
-        return False
+        _yaz("fon_kurumsal.json", {"zaman": dt.datetime.now().isoformat(), "tefasTrend": []})
+        return True
     tefas_trend = [{"tarih": str(t.date()) if hasattr(t, "date") else str(t), "deger": float(v)}
                    for t, v in seri.items()]
     _yaz("fon_kurumsal.json", {
