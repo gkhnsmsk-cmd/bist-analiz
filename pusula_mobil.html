@@ -64,6 +64,23 @@ const MOCK_HISSELER = [
    (pusula_veri_uret.py) 'degisim1ay' üretir — gerçek anlık günlük değişim
    önbellekte yok, bu yüzden rozetler 1 aylık değişimi gösterir; ekran
    başlıklarında bu açıkça belirtilir (aşağıya bkz.). */
+/* "Bu veri ne kadar taze?" — kullanıcı isteği: hisseye tıklayınca ne zaman
+   güncellendiğini (X dakika/saat/gün önce + tam tarih-saat) görebilsin.
+   ISO zaman damgasını göreli metne çevirir; null/parse edilemezse null döner
+   (çağıran taraf o zaman hiçbir şey göstermez, "Invalid Date" YAZDIRMAZ). */
+function _goreliZaman(isoZaman) {
+  if (!isoZaman) return null;
+  const t = new Date(isoZaman);
+  if (isNaN(t.getTime())) return null;
+  const farkSn = Math.max(0, (Date.now() - t.getTime()) / 1000);
+  let goreli;
+  if (farkSn < 60) goreli = 'az önce';
+  else if (farkSn < 3600) goreli = `${Math.floor(farkSn / 60)} dakika önce`;
+  else if (farkSn < 86400) goreli = `${Math.floor(farkSn / 3600)} saat önce`;
+  else goreli = `${Math.floor(farkSn / 86400)} gün önce`;
+  return { goreli, tamTarih: t.toLocaleString('tr-TR') };
+}
+
 function _apiHisseUyarla(x, favoriSet) {
   return {
     symbol: x.symbol,
@@ -996,9 +1013,17 @@ function SparkGrafik({ veri }) {
   );
 }
 
-function DetayEkran({ hisse, onGeri, onYildiz, onPortfoyeEkle }) {
+function DetayEkran({ hisse, onGeri, onYildiz, onPortfoyeEkle, zamanHam }) {
   const [eklendiGoster, setEklendiGoster] = useState(false);
+  // Panel açık kaldıkça "X dakika önce" bayatlamasın diye 60 sn'de bir
+  // yeniden hesaplat (sadece bir sayaç — gerçek veriyi yeniden çekmiyor).
+  const [, setTik] = useState(0);
+  useEffect(() => {
+    const id = setInterval(() => setTik(t => t + 1), 60000);
+    return () => clearInterval(id);
+  }, []);
   if (!hisse) return null;
+  const taze = _goreliZaman(zamanHam);
 
   function portfoyeEkleTikla() {
     onPortfoyeEkle(hisse.symbol);
@@ -1034,6 +1059,14 @@ function DetayEkran({ hisse, onGeri, onYildiz, onPortfoyeEkle }) {
             <span className="text-gray-300">·</span>
             <TrendRozeti trend={hisse.trend} buyuk />
           </div>
+          {/* Veri tazeliği — kullanıcı isteği: "kaç dk önce" + tam tarih/saat.
+              taze === null ise (henüz yüklenmediyse/parse edilemediyse) HİÇBİR
+              ŞEY gösterme; yanlış/sahte bir tazelik iddiası vermemek için. */}
+          {taze && (
+            <div className="mt-1.5 text-xs text-gray-400">
+              🕒 Veri {taze.goreli} güncellendi · {taze.tamTarih}
+            </div>
+          )}
 
           <SparkGrafik veri={hisse.spark} />
 
@@ -1120,6 +1153,7 @@ function App() {
   const [yukselecek, setYukselecek] = useState([]);
   const [dipDonusu, setDipDonusu] = useState([]);
   const [taramaZaman, setTaramaZaman] = useState(null);
+  const [taramaZamanHam, setTaramaZamanHam] = useState(null); // ISO — detay ekranında "X dk önce" için
   const [detaySembol, setDetaySembol] = useState(null);
   const [portfoy, setPortfoy] = useState([]);
   const [gercekPortfoy, setGercekPortfoy] = useState(null);
@@ -1138,6 +1172,7 @@ function App() {
       .then(d => {
         setHisseler((d.hisseler || []).map(x => _apiHisseUyarla(x, favSet)));
         setTaramaZaman(d.zaman ? new Date(d.zaman).toLocaleString('tr-TR') : null);
+        setTaramaZamanHam(d.zaman || null);
       })
       .catch(() => {}); // MOCK_HISSELER'de kalır
 
@@ -1234,6 +1269,7 @@ function App() {
           onGeri={() => setDetaySembol(null)}
           onYildiz={yildizToggle}
           onPortfoyeEkle={portfoyeEkle}
+          zamanHam={taramaZamanHam}
         />
       )}
     </div>
