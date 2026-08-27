@@ -1218,10 +1218,10 @@ def hizli_puan(df: pd.DataFrame, endeks_df: pd.DataFrame = None,
             "Fiyat": None, "1 Ay %": None, "3 Ay %": None, "Hacim(M₺)": None,
         }
     baglam = trend_baglami(df)
-    kp, _ = kisa_vade(df, baglam)
-    op, _ = orta_vade(df, endeks_df)
-    tp, _ = takas_analizi(df, temel or {}, yabanci_s)
-    up, _ = uzun_vade(df, temel or {})
+    kp, kp_sinyaller = kisa_vade(df, baglam)
+    op, op_sinyaller = orta_vade(df, endeks_df)
+    tp, tp_sinyaller = takas_analizi(df, temel or {}, yabanci_s)
+    up, up_sinyaller = uzun_vade(df, temel or {})
     genel = (AGIRLIKLAR["kisa"] * kp + AGIRLIKLAR["orta"] * op +
              AGIRLIKLAR["uzun"] * up + AGIRLIKLAR["takas"] * tp)
     # Aşırı uzama cezası — tam_analiz ile AYNI sırada uygulanmalıdır
@@ -1254,6 +1254,17 @@ def hizli_puan(df: pd.DataFrame, endeks_df: pd.DataFrame = None,
     if ayrinti:
         sonuc["_uzama"] = uzama
         sonuc["_erken"] = erken
+        # Görev #128: "gösterge tek başına vs. trend/hacim teyitli" sorusunu
+        # ampirik olarak test edebilmek için, ÖNCEDEN her hesaplandığı halde
+        # atılan (kp/op/tp/up'ın ikinci elemanı, kısa_vade vb. içindeki
+        # _ekle() çağrılarıyla dolan) sinyal listelerini burada topluyoruz.
+        # trend_baglami().yon (yukselis/dusus/yatay) ile birlikte kaydedilirse,
+        # backtest_motoru "AL sinyali + yukselis trendi" ile "AL sinyali +
+        # dusus/yatay trendi" satırlarını ayrı ayrı gruplayıp getiriyle
+        # karşılaştırabilir — YENİ analiz kodu yazmadan, ekstra hesap
+        # maliyeti olmadan (sinyaller zaten hesaplanmıştı, sadece atılmıyor).
+        sonuc["_sinyaller"] = kp_sinyaller + op_sinyaller + tp_sinyaller + up_sinyaller
+        sonuc["_trendYonu"] = baglam.get("yon")
     return sonuc
 
 

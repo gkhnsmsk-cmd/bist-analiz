@@ -33,6 +33,8 @@ seçeneğiyle zenginleştirilmiş puanlama bu backtestin kapsamı DIŞINDADIR.
 """
 from __future__ import annotations
 
+import json
+
 import numpy as np
 import pandas as pd
 
@@ -205,6 +207,24 @@ def backtest_tek_hisse(sembol: str, df: pd.DataFrame, endeks_df: pd.DataFrame = 
             hacim_mtl = None
         likit = (hacim_mtl is not None and hacim_mtl >= MIN_HACIM_MILYON_TL)
 
+        # ── GÖSTERGE ENSTRÜMANTASYONU (Görev #128) ───────────────────────
+        # "Bir gösterge tek başına mı, yoksa ana trendle TEYİTLİ olduğunda mı
+        # daha isabetli?" sorusunu ampirik ölçebilmek için, hizli_puan'ın
+        # ayrinti=True ile açığa çıkardığı ham sinyal listesini ve o günün
+        # trend yönünü kompakt JSON olarak kaydediyoruz. Satır başına küçük
+        # bir ek yük (birkaç yüz bayt) — CSV'yi büyütür ama yeni bir backtest
+        # koşusu gerektirmeden, sonradan Python'da parse edilip
+        # "AL sinyali + trend teyitli" vs "AL sinyali + trend teyitsiz"
+        # şeklinde gruplanıp getiriyle karşılaştırılabilir.
+        _sinyaller = sonuc.get("_sinyaller") or []
+        _trend_yonu = sonuc.get("_trendYonu")
+        try:
+            _sinyaller_json = json.dumps(
+                [{"e": s["etiket"], "y": s["yon"]} for s in _sinyaller],
+                ensure_ascii=False, separators=(",", ":"))
+        except Exception:
+            _sinyaller_json = None
+
         satir = {"sembol": sembol, "tarih": df.index[i],
                  "puan": sonuc["Puan"], "karar": sonuc["Karar"],
                  "puan_eski": min(100.0, sonuc["Puan"] + _ceza),
@@ -214,7 +234,9 @@ def backtest_tek_hisse(sembol: str, df: pd.DataFrame, endeks_df: pd.DataFrame = 
                  # islenebilir=False → o gün gerçekte ALINAMAZDI. Raporlar bu
                  # satırları ayrıca eleyerek "gerçekçi" sonucu hesaplar.
                  "islenebilir": bool(likit and not tavanda and not tabanda),
-                 "tavanda": bool(tavanda)}
+                 "tavanda": bool(tavanda),
+                 "trend_yonu": _trend_yonu,
+                 "sinyaller_json": _sinyaller_json}
 
         gecersiz = False
         for ileri in ileri_gunler:
