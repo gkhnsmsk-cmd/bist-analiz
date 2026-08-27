@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover" />
+<title>Pusula — BIST Mobil</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+<script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<style>
+  html, body { margin: 0; overscroll-behavior-y: none; background: #f9fafb; }
+  * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
+  input, select, textarea, button { font-size: 16px; } /* iOS otomatik yakınlaştırmayı engeller */
+  .no-scrollbar::-webkit-scrollbar { display: none; }
+  .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+  @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes popIn { from { opacity: 0; transform: translateY(6px) scale(.97); } to { opacity: 1; transform: none; } }
+  .detay-anim { animation: slideUp .24s cubic-bezier(.22,.9,.35,1); }
+  .fade-anim { animation: fadeIn .18s ease; }
+  .pop-anim { animation: popIn .18s cubic-bezier(.22,.9,.35,1); }
+  .safe-bottom { padding-bottom: env(safe-area-inset-bottom, 0px); }
+  .safe-top { padding-top: env(safe-area-inset-top, 0px); }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel" data-presets="react">
+const { useState, useMemo } = React;
+
+/* ═══════════════════════════════════════════════════════════════════════
+   PUSULA — BIST mobil arayüzü (React SPA, Streamlit'in yerini alır)
+   ───────────────────────────────────────────────────────────────────────
+   NEDEN BU DOSYA VAR: Streamlit her dokunuşta sayfayı Python tarafında
+   baştan çiziyor (rerun) — bu, mobilde ekran geçişlerinin "anlık" değil
+   "yenileniyor" hissi vermesinin, iç içe kaydırma kutularının ve menünün
+   içerik altında kaybolmasının kök nedeniydi. CSS yamalarıyla düzelmiyor,
+   çünkü mimari sorun. Bu dosya YERİNE geçen bağımsız bir SPA: ekran
+   geçişleri saf React state ile (Python'a hiç gidilmeden) anında olur.
+
+   ŞİMDİLİK: Veri MOCK (23.08.2026 tarama görüntüsünü taklit ediyor).
+   SONRAKİ ADIM: Bu katman aynı Python motoruna (app.py'deki analiz_motoru,
+   veri_katmani vb.) bir API üzerinden bağlanacak — arayüz mimarisi
+   değişmeyecek, sadece MOCK_HISSELER dizisi gerçek bir fetch() çağrısıyla
+   değişecek. Bkz. dosya sonundaki "SONRAKİ ADIM" notu.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+const MOCK_HISSELER = [
+  { symbol: 'PGSUS', ad: 'Pegasus Hava Taşımacılığı', fiyat: 985.50, degisim: 3.2, trend: 'Güçlü Al', favori: true },
+  { symbol: 'ASTOR', ad: 'Astor Enerji',               fiyat: 112.40, degisim: -1.1, trend: 'Tut',      favori: true },
+  { symbol: 'THYAO', ad: 'Türk Hava Yolları',           fiyat: 315.25, degisim: 1.8, trend: 'Al',        favori: true },
+  { symbol: 'TUPRS', ad: 'Tüpraş',                      fiyat: 178.90, degisim: -2.4, trend: 'Sat',       favori: false },
+  { symbol: 'GARAN', ad: 'Garanti BBVA',                fiyat: 142.10, degisim: 0.6, trend: 'Al',        favori: false },
+  { symbol: 'AKBNK', ad: 'Akbank',                      fiyat: 98.35,  degisim: -0.4, trend: 'Tut',      favori: false },
+  { symbol: 'ASELS', ad: 'Aselsan',                     fiyat: 210.75, degisim: 4.1, trend: 'Güçlü Al',  favori: false },
+  { symbol: 'BIMAS', ad: 'BİM Mağazalar',               fiyat: 645.00, degisim: -3.7, trend: 'Güçlü Sat', favori: false },
+  { symbol: 'EREGL', ad: 'Ereğli Demir Çelik',          fiyat: 56.20,  degisim: 1.2, trend: 'Al',        favori: false },
+  { symbol: 'KCHOL', ad: 'Koç Holding',                 fiyat: 298.60, degisim: 0.2, trend: 'Tut',       favori: false },
+];
+
+const TREND_STIL = {
+  'Güçlü Al': 'bg-emerald-100 text-emerald-700 ring-1 ring-emerald-200',
+  'Al':       'bg-green-100 text-green-700 ring-1 ring-green-200',
+  'Tut':      'bg-amber-100 text-amber-700 ring-1 ring-amber-200',
+  'Sat':      'bg-red-100 text-red-700 ring-1 ring-red-200',
+  'Güçlü Sat':'bg-red-200 text-red-800 ring-1 ring-red-300',
+};
+
+const TREND_FILTRELERI = ['Tümü', 'Güçlü Al', 'Al', 'Tut', 'Sat', 'Güçlü Sat'];
+
+function DegisimEtiketi({ deger }) {
+  const pozitif = deger >= 0;
+  return (
+    <span className={"font-semibold tabular-nums " + (pozitif ? "text-emerald-600" : "text-red-600")}>
+      {pozitif ? "+" : ""}{deger.toFixed(1)}%
+    </span>
+  );
+}
+
+function TrendRozeti({ trend, buyuk }) {
+  const boyut = buyuk ? "text-sm px-3 py-1.5" : "text-xs px-2.5 py-1";
+  return (
+    <span className={"inline-block rounded-full font-semibold whitespace-nowrap " + boyut + " " + (TREND_STIL[trend] || "bg-gray-100 text-gray-600")}>
+      {trend}
+    </span>
+  );
+}
+
+/* NAVİGASYON ÖGELERİ — hem alt (mobil) hem yan (masaüstü) menü aynı listeyi
+   kullanır, tek kaynak (iki ayrı yerde elle senkron tutmaya gerek kalmaz). */
+const NAV_OGELERI = [
+  { key: 'ana', ikon: '🏠', etiket: 'Ana' },
+  { key: 'tarama', ikon: '🔎', etiket: 'Tarama' },
+  { key: 'portfoy', ikon: '💼', etiket: 'Portföy' },
+  { key: 'ara', ikon: '🔍', etiket: 'Ara' },
+];
+
+/* ── Alt navigasyon — SADECE MOBİLDE (md ve üstünde gizli, yerini sol
+   sabit menü alır). Detay ekranı açıkken o da gizlenir. ─────────────── */
+function AltNav({ aktif, setAktif }) {
+  return (
+    <nav className="md:hidden fixed inset-x-0 bottom-0 z-40 bg-white/95 backdrop-blur border-t border-gray-200 safe-bottom">
+      <div className="max-w-md mx-auto grid grid-cols-4">
+        {NAV_OGELERI.map(o => (
+          <button
+            key={o.key}
+            onClick={() => setAktif(o.key)}
+            className={"flex flex-col items-center justify-center gap-0.5 py-2 min-h-[56px] active:bg-gray-100 transition-colors " +
+                       (aktif === o.key ? "text-indigo-600" : "text-gray-400")}
+          >
+            <span className="text-xl leading-none">{o.ikon}</span>
+            <span className="text-[11px] font-medium leading-none">{o.etiket}</span>
+          </button>
+        ))}
+      </div>
+    </nav>
+  );
+}
+
+/* ── Yan navigasyon — SADECE MASAÜSTÜNDE (md ve üstü). PC'de de aynı
+   akıcı SPA davranışı istendiği için mobildeki bottom-nav'ın birebir
+   masaüstü karşılığı: sabit, her zaman görünür, Python'a gitmeden
+   anında sekme değiştirir. Detay ekranı açıkken de görünür kalır —
+   masaüstünde detay bir MODAL olarak açılır (bkz. DetayEkran), o yüzden
+   arkadaki menüyü gizlemeye gerek yok. ───────────────────────────────── */
+function YanNav({ aktif, setAktif }) {
+  return (
+    <nav className="hidden md:flex md:flex-col md:fixed md:inset-y-0 md:left-0 md:w-56 md:border-r md:border-gray-200 md:bg-white md:z-40">
+      <div className="px-5 pt-6 pb-4">
+        <div className="text-xl font-bold text-gray-900">🧭 Pusula</div>
+        <div className="text-xs text-gray-400 mt-0.5">BIST mobil &amp; masaüstü</div>
+      </div>
+      <div className="flex flex-col gap-1 px-3">
+        {NAV_OGELERI.map(o => (
+          <button
+            key={o.key}
+            onClick={() => setAktif(o.key)}
+            className={"flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold transition-colors text-left " +
+                       (aktif === o.key ? "bg-indigo-50 text-indigo-700" : "text-gray-500 hover:bg-gray-50")}
+          >
+            <span className="text-lg leading-none">{o.ikon}</span>
+            {o.etiket}
+          </button>
+        ))}
+      </div>
+    </nav>
+  );
+}
+
+/* ── Favoriler — yatay kayan chip kartlar (13 kart alt alta YIĞILMAZ) ── */
+function FavorilerSeridi({ hisseler, onSec }) {
+  const favoriler = hisseler.filter(h => h.favori);
+  if (favoriler.length === 0) {
+    return <p className="text-sm text-gray-400 px-4">Henüz favori eklenmedi — bir hissenin ⭐ ikonuna dokunun.</p>;
+  }
+  return (
+    <div className="flex gap-3 overflow-x-auto no-scrollbar px-4 pb-1 -mx-0 snap-x snap-mandatory">
+      {favoriler.map(h => (
+        <button
+          key={h.symbol}
+          onClick={() => onSec(h.symbol)}
+          className="snap-start shrink-0 w-[128px] bg-white rounded-2xl shadow-sm ring-1 ring-gray-100 p-3 text-left active:scale-[.97] transition-transform min-h-[44px]"
+        >
+          <div className="font-bold text-gray-900">{h.symbol}</div>
+          <div className="text-sm text-gray-500 mt-0.5">{h.fiyat.toFixed(2)} ₺</div>
+          <div className="mt-1"><DegisimEtiketi deger={h.degisim} /></div>
+          <div className="mt-2"><TrendRozeti trend={h.trend} /></div>
+        </button>
+      ))}
+    </div>
+  );
+}
+
+/* ── Piyasa özeti — dikey liste satırı (tek dikey kaydırma) ──────────── */
+function HisseSatiri({ h, onSec, onYildiz }) {
+  // NEDEN <div role="button"> (gerçek <button> DEĞİL): yıldız da bir
+  // <button>; HTML'de <button> içine <button> KONULAMAZ (jsdom testinde
+  // "cannot appear as a descendant" uyarısıyla yakalandı — geçersiz iç içe
+  // buton gerçek tarayıcılarda dokunma davranışını tutarsız yapabilirdi).
+  return (
+    <div
+      role="button"
+      tabIndex={0}
+      onClick={() => onSec(h.symbol)}
+      onKeyDown={(e) => { if (e.key === 'Enter') onSec(h.symbol); }}
+      className="w-full flex items-center gap-3 bg-white rounded-2xl shadow-sm ring-1 ring-gray-100 px-4 py-3 min-h-[44px] active:bg-gray-50 transition-colors text-left cursor-pointer"
+    >
+      <button
+        onClick={(e) => { e.stopPropagation(); onYildiz(h.symbol); }}
+        className="text-xl w-11 h-11 -ml-1 flex items-center justify-center shrink-0"
+        aria-label="Favori"
+      >
+        {h.favori ? '⭐' : '☆'}
+      </button>
+      <div className="flex-1 min-w-0">
+        <div className="font-bold text-gray-900">{h.symbol}</div>
+        <div className="text-xs text-gray-400 truncate">{h.ad}</div>
+      </div>
+      <div className="text-right shrink-0">
+        <div className="font-semibold text-gray-900 tabular-nums">{h.fiyat.toFixed(2)} ₺</div>
+        <DegisimEtiketi deger={h.degisim} />
+      </div>
+      <TrendRozeti trend={h.trend} />
+    </div>
+  );
+}
+
+/* ── Ekran 1: Ana ─────────────────────────────────────────────────────── */
+function AnaEkran({ hisseler, onSec, onYildiz }) {
+  return (
+    <div className="pb-4">
+      <div className="px-4 pt-2 pb-3">
+        <h1 className="text-2xl font-bold text-gray-900">Pusula</h1>
+        <p className="text-sm text-gray-400">BIST anlık özet — 23.08.2026 tarama görüntüsü</p>
+      </div>
+
+      <h2 className="px-4 text-sm font-semibold text-gray-500 uppercase tracking-wide mb-2">⭐ Favoriler</h2>
+      <FavorilerSeridi hisseler={hisseler} onSec={onSec} />
+
+      <h2 className="px-4 text-sm font-semibold text-gray-500 uppercase tracking-wide mt-6 mb-2">Piyasa Özeti</h2>
+      <div className="px-4 flex flex-col gap-2 md:grid md:grid-cols-2 md:gap-3">
+        {hisseler.map(h => <HisseSatiri key={h.symbol} h={h} onSec={onSec} onYildiz={onYildiz} />)}
+      </div>
+    </div>
+  );
+}
+
+/* ── Ekran 2: Tarama — trend filtreli liste ──────────────────────────── */
+function TaramaEkran({ hisseler, onSec, onYildiz }) {
+  const [filtre, setFiltre] = useState('Tümü');
+  const filtreli = useMemo(
+    () => filtre === 'Tümü' ? hisseler : hisseler.filter(h => h.trend === filtre),
+    [hisseler, filtre]
+  );
+  return (
+    <div className="pb-4">
+      <div className="px-4 pt-2 pb-3">
+        <h1 className="text-2xl font-bold text-gray-900">Tarama</h1>
+        <p className="text-sm text-gray-400">{filtreli.length} hisse — filtreye göre</p>
+      </div>
+      <div className="flex gap-2 overflow-x-auto no-scrollbar px-4 pb-1">
+        {TREND_FILTRELERI.map(f => (
+          <button
+            key={f}
+            onClick={() => setFiltre(f)}
+            className={"shrink-0 min-h-[44px] px-4 rounded-full text-sm font-semibold transition-colors " +
+                       (filtre === f ? "bg-indigo-600 text-white" : "bg-white text-gray-600 ring-1 ring-gray-200")}
+          >
+            {f}
+          </button>
+        ))}
+      </div>
+      <div className="px-4 flex flex-col gap-2 md:grid md:grid-cols-2 md:gap-3 mt-3">
+        {filtreli.length === 0
+          ? <p className="text-sm text-gray-400 py-6 text-center col-span-2">Bu filtreye uyan hisse yok.</p>
+          : filtreli.map(h => <HisseSatiri key={h.symbol} h={h} onSec={onSec} onYildiz={onYildiz} />)}
+      </div>
+    </div>
+  );
+}
+
+/* ── Ekran 3: Ara ─────────────────────────────────────────────────────── */
+function AraEkran({ hisseler, onSec, onYildiz }) {
+  const [metin, setMetin] = useState('');
+  const sonuclar = useMemo(() => {
+    const q = metin.trim().toLowerCase();
+    if (!q) return [];
+    return hisseler.filter(h => h.symbol.toLowerCase().includes(q) || h.ad.toLowerCase().includes(q));
+  }, [hisseler, metin]);
+  return (
+    <div className="pb-4">
+      <div className="px-4 pt-2 pb-3">
+        <h1 className="text-2xl font-bold text-gray-900">Ara</h1>
+        <p className="text-sm text-gray-400">Kod veya şirket adı yazın (ör. "thy", "garanti")</p>
+      </div>
+      <div className="px-4">
+        <input
+          value={metin}
+          onChange={e => setMetin(e.target.value)}
+          placeholder="Hisse ara…"
+          className="w-full min-h-[44px] rounded-2xl bg-white ring-1 ring-gray-200 px-4 focus:outline-none focus:ring-2 focus:ring-indigo-400"
+        />
+      </div>
+      <div className="px-4 flex flex-col gap-2 md:grid md:grid-cols-2 md:gap-3 mt-3">
+        {metin && sonuclar.length === 0 && (
+          <p className="text-sm text-gray-400 py-6 text-center col-span-2">"{metin}" için sonuç yok.</p>
+        )}
+        {sonuclar.map(h => <HisseSatiri key={h.symbol} h={h} onSec={onSec} onYildiz={onYildiz} />)}
+      </div>
+    </div>
+  );
+}
+
+/* ── Ekran 4: Portföy ─────────────────────────────────────────────────── */
+function PortfoyEkran({ hisseler, portfoy, setPortfoy }) {
+  const [formAcik, setFormAcik] = useState(false);
+  const [ySembol, setYSembol] = useState(hisseler[0]?.symbol || '');
+  const [yAdet, setYAdet] = useState('');
+  const [yMaliyet, setYMaliyet] = useState('');
+
+  const satirlar = useMemo(() => portfoy.map(p => {
+    const h = hisseler.find(x => x.symbol === p.symbol);
+    const guncelFiyat = h ? h.fiyat : p.maliyet;
+    const deger = guncelFiyat * p.adet;
+    const maliyetToplam = p.maliyet * p.adet;
+    const karZarar = deger - maliyetToplam;
+    const karZararYuzde = maliyetToplam ? (karZarar / maliyetToplam) * 100 : 0;
+    return { ...p, ad: h?.ad || p.symbol, guncelFiyat, deger, karZarar, karZararYuzde };
+  }), [portfoy, hisseler]);
+
+  const toplamDeger = satirlar.reduce((s, x) => s + x.deger, 0);
+  const toplamKarZarar = satirlar.reduce((s, x) => s + x.karZarar, 0);
+
+  function ekle() {
+    const adet = parseFloat(yAdet);
+    const maliyet = parseFloat(yMaliyet);
+    if (!ySembol || !adet || !maliyet || adet <= 0 || maliyet <= 0) return;
+    setPortfoy(prev => [...prev.filter(p => p.symbol !== ySembol), { symbol: ySembol, adet, maliyet }]);
+    setYAdet(''); setYMaliyet(''); setFormAcik(false);
+  }
+
+  return (
+    <div className="pb-4">
+      <div className="px-4 pt-2 pb-3">
+        <h1 className="text-2xl font-bold text-gray-900">Portföy</h1>
+        <p className="text-sm text-gray-400">{satirlar.length} pozisyon</p>
+      </div>
+
+      <div className="px-4">
+        <div className="bg-white rounded-2xl shadow-sm ring-1 ring-gray-100 p-4 flex items-center justify-between">
+          <div>
+            <div className="text-xs text-gray-400 uppercase tracking-wide">Toplam Değer</div>
+            <div className="text-xl font-bold text-gray-900 tabular-nums">{toplamDeger.toLocaleString('tr-TR', {maximumFractionDigits: 2})} ₺</div>
+          </div>
+          <div className="text-right">
+            <div className="text-xs text-gray-400 uppercase tracking-wide">Kâr / Zarar</div>
+            <div className={"text-xl font-bold tabular-nums " + (toplamKarZarar >= 0 ? "text-emerald-600" : "text-red-600")}>
+              {toplamKarZarar >= 0 ? "+" : ""}{toplamKarZarar.toLocaleString('tr-TR', {maximumFractionDigits: 2})} ₺
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="px-4 flex flex-col gap-2 mt-4">
+        {satirlar.map(p => (
+          <div key={p.symbol} className="bg-white rounded-2xl shadow-sm ring-1 ring-gray-100 px-4 py-3">
+            <div className="flex items-center justify-between">
+              <div>
+                <div className="font-bold text-gray-900">{p.symbol}</div>
+                <div className="text-xs text-gray-400">{p.adet} adet · maliyet {p.maliyet.toFixed(2)} ₺</div>
+              </div>
+              <div className="text-right">
+                <div className="font-semibold text-gray-900 tabular-nums">{p.deger.toLocaleString('tr-TR', {maximumFractionDigits: 2})} ₺</div>
+                <div className={"text-sm font-semibold tabular-nums " + (p.karZarar >= 0 ? "text-emerald-600" : "text-red-600")}>
+                  {p.karZarar >= 0 ? "+" : ""}{p.karZararYuzde.toFixed(1)}%
+                </div>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <div className="px-4 mt-4">
+        {!formAcik ? (
+          <button
+            onClick={() => setFormAcik(true)}
+            className="w-full min-h-[44px] rounded-2xl bg-indigo-600 text-white font-semibold active:bg-indigo-700 transition-colors"
+          >
+            + Ekle
+          </button>
+        ) : (
+          <div className="bg-white rounded-2xl shadow-sm ring-1 ring-gray-100 p-4 flex flex-col gap-3 pop-anim">
+            <select
+              value={ySembol}
+              onChange={e => setYSembol(e.target.value)}
+              className="w-full min-h-[44px] rounded-xl bg-gray-50 ring-1 ring-gray-200 px-3"
+            >
+              {hisseler.map(h => <option key={h.symbol} value={h.symbol}>{h.symbol} — {h.ad}</option>)}
+            </select>
+            <div className="flex gap-2">
+              <input type="number" inputMode="decimal" placeholder="Adet" value={yAdet}
+                     onChange={e => setYAdet(e.target.value)}
+                     className="w-1/2 min-h-[44px] rounded-xl bg-gray-50 ring-1 ring-gray-200 px-3" />
+              <input type="number" inputMode="decimal" placeholder="Maliyet (₺)" value={yMaliyet}
+                     onChange={e => setYMaliyet(e.target.value)}
+                     className="w-1/2 min-h-[44px] rounded-xl bg-gray-50 ring-1 ring-gray-200 px-3" />
+            </div>
+            <div className="flex gap-2">
+              <button onClick={() => setFormAcik(false)} className="flex-1 min-h-[44px] rounded-xl bg-gray-100 text-gray-600 font-semibold">İptal</button>
+              <button onClick={ekle} className="flex-1 min-h-[44px] rounded-xl bg-indigo-600 text-white font-semibold active:bg-indigo-700">Ekle</button>
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+/* ── Hisse detay — TAM EKRAN overlay, alttan kayarak açılır ("push")
+   NEDEN bottom nav'ı gizliyoruz: gerçek native app'lerde detay ekranı
+   önceki ekranın ÜSTÜNE gelir (push navigation); alt sekmeler kaybolur,
+   sadece "‹ Geri" ile dönülür. Bu Streamlit'te YAPILAMAYAN bir şeydi. ─── */
+function DetayEkran({ hisse, onGeri, onYildiz, onPortfoyeEkle }) {
+  const [eklendiGoster, setEklendiGoster] = useState(false);
+  if (!hisse) return null;
+
+  function portfoyeEkleTikla() {
+    onPortfoyeEkle(hisse.symbol);
+    setEklendiGoster(true);
+    setTimeout(() => setEklendiGoster(false), 1600);
+  }
+
+  // NEDEN İKİ KATMANLI SARMALAYICI: mobilde tam ekran ("push" — bkz. yukarı),
+  // masaüstünde ORTALANMIŞ bir MODAL kartı (arkada karartılmış arka plan,
+  // dışına tıklayınca kapanır). Aynı bileşen, tek CSS ile iki farklı "native"
+  // his veriyor — PC'de de aynı akıcı SPA davranışı isteniyordu.
+  return (
+    <div
+      className="fixed inset-0 z-50 detay-anim md:bg-black/40 md:flex md:items-center md:justify-center md:p-6"
+      onClick={(e) => { if (e.target === e.currentTarget) onGeri(); }}
+    >
+      <div className="h-full md:h-auto md:max-h-[85vh] md:w-full md:max-w-xl bg-gray-50 flex flex-col md:rounded-3xl md:shadow-2xl md:overflow-hidden">
+        <div className="safe-top bg-white border-b border-gray-100 px-2 py-2 flex items-center gap-2 shrink-0">
+          <button onClick={onGeri} className="min-h-[44px] min-w-[44px] flex items-center justify-center text-2xl text-gray-700 active:bg-gray-100 rounded-xl">
+            ‹
+          </button>
+          <div className="font-bold text-gray-900 flex-1">{hisse.symbol}</div>
+          <button onClick={() => onYildiz(hisse.symbol)} className="min-h-[44px] min-w-[44px] flex items-center justify-center text-2xl">
+            {hisse.favori ? '⭐' : '☆'}
+          </button>
+        </div>
+
+        <div className="flex-1 overflow-y-auto px-4 py-5">
+          <div className="text-sm text-gray-400">{hisse.ad}</div>
+          <div className="mt-1 text-4xl font-bold text-gray-900 tabular-nums">{hisse.fiyat.toFixed(2)} ₺</div>
+          <div className="mt-2 flex items-center gap-2">
+            <DegisimEtiketi deger={hisse.degisim} />
+            <span className="text-gray-300">·</span>
+            <TrendRozeti trend={hisse.trend} buyuk />
+          </div>
+
+          <div className="mt-6 bg-white rounded-2xl shadow-sm ring-1 ring-gray-100 p-4">
+            <div className="text-xs text-gray-400 uppercase tracking-wide mb-2">Algoritma Kararı</div>
+            <div className="flex items-center gap-3">
+              <TrendRozeti trend={hisse.trend} buyuk />
+              <span className="text-sm text-gray-500">
+                {hisse.trend.includes('Al') ? 'Trend ve puanlama pozitif yönde.' :
+                 hisse.trend === 'Tut' ? 'Belirgin bir sinyal yok, bekle-gör.' :
+                 'Trend ve puanlama negatif yönde.'}
+              </span>
+            </div>
+          </div>
+
+          <p className="mt-6 text-xs text-gray-400 leading-relaxed">
+            Bu ekran şu an mock (23.08.2026 tarama görüntüsü) veri gösteriyor.
+            Gerçek sürümde bu değerler doğrudan Python analiz motorundan
+            (analiz_motoru.py) bir API üzerinden gelecek — arayüz aynı kalacak.
+          </p>
+        </div>
+
+        <div className="shrink-0 px-4 pb-4 pt-2 safe-bottom relative">
+          {eklendiGoster && (
+            <div className="absolute -top-10 left-4 right-4 text-center text-sm font-semibold text-emerald-700 bg-emerald-50 ring-1 ring-emerald-200 rounded-xl py-2 fade-anim">
+              ✓ Portföye eklendi
+            </div>
+          )}
+          <button
+            onClick={portfoyeEkleTikla}
+            className="w-full min-h-[52px] rounded-2xl bg-indigo-600 text-white font-bold text-base active:bg-indigo-700 transition-colors"
+          >
+            Portföye Ekle
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ── Kök bileşen ──────────────────────────────────────────────────────── */
+function App() {
+  const [tab, setTab] = useState('ana');
+  const [hisseler, setHisseler] = useState(MOCK_HISSELER);
+  const [detaySembol, setDetaySembol] = useState(null);
+  const [portfoy, setPortfoy] = useState([
+    { symbol: 'THYAO', adet: 50, maliyet: 280.00 },
+    { symbol: 'GARAN', adet: 100, maliyet: 150.00 },
+  ]);
+
+  function yildizToggle(symbol) {
+    setHisseler(prev => prev.map(h => h.symbol === symbol ? { ...h, favori: !h.favori } : h));
+  }
+
+  function portfoyeEkle(symbol) {
+    setPortfoy(prev => {
+      if (prev.some(p => p.symbol === symbol)) return prev;
+      const h = hisseler.find(x => x.symbol === symbol);
+      return [...prev, { symbol, adet: 10, maliyet: h ? h.fiyat : 0 }];
+    });
+  }
+
+  const secilenHisse = detaySembol ? hisseler.find(h => h.symbol === detaySembol) : null;
+
+  return (
+    <div className="min-h-screen bg-gray-50">
+      {/* Masaüstü: sabit sol menü (mobilde gizli, bkz. YanNav içindeki
+         md:flex). Kullanıcı isteği: "pc'de de aynı akıcı arayüzü istiyorum"
+         — aynı state/aynı SPA, sadece PC'de menü sol tarafa taşınıyor. */}
+      <YanNav aktif={tab} setAktif={setTab} />
+
+      <div className="max-w-md md:max-w-3xl md:ml-56 mx-auto md:mx-0 md:px-8 pb-20 md:pb-10 md:pt-6 safe-top">
+        {tab === 'ana' && <AnaEkran hisseler={hisseler} onSec={setDetaySembol} onYildiz={yildizToggle} />}
+        {tab === 'tarama' && <TaramaEkran hisseler={hisseler} onSec={setDetaySembol} onYildiz={yildizToggle} />}
+        {tab === 'ara' && <AraEkran hisseler={hisseler} onSec={setDetaySembol} onYildiz={yildizToggle} />}
+        {tab === 'portfoy' && <PortfoyEkran hisseler={hisseler} portfoy={portfoy} setPortfoy={setPortfoy} />}
+      </div>
+
+      {/* Masaüstünde YanNav zaten md:hidden olan AltNav'ın yerini alıyor;
+         mobilde ise detay ekranı açıkken alt nav'ı DOM'da tutmaya gerek yok
+         (detay tam ekran zaten üstünü kaplıyor) — orijinal davranış korundu. */}
+      {!secilenHisse && <AltNav aktif={tab} setAktif={setTab} />}
+
+      {secilenHisse && (
+        <DetayEkran
+          hisse={secilenHisse}
+          onGeri={() => setDetaySembol(null)}
+          onYildiz={yildizToggle}
+          onPortfoyeEkle={portfoyeEkle}
+        />
+      )}
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+
+/* ═══════════════════════════════════════════════════════════════════════
+   SONRAKİ ADIM (gerçek veriye bağlama):
+   1) app.py tarafında basit bir JSON endpoint'i (ör. FastAPI/Flask ile
+      /api/tarama) analiz_motoru.py + veri_katmani.py çıktısını döndürsün.
+   2) Bu dosyada MOCK_HISSELER dizisini kaldırıp, App() içinde
+      useEffect(() => { fetch('/api/tarama').then(...).then(setHisseler) }, [])
+      ile gerçek veriyi çekin. Bileşenlerin HİÇBİRİ değişmez — sadece veri
+      kaynağı mock diziden gerçek API'ye geçer.
+   3) Portföy ekle/çıkar işlemleri de aynı şekilde bir /api/portfoy
+      endpoint'ine POST edilerek kalıcı hale getirilebilir.
+   ═══════════════════════════════════════════════════════════════════════ */
+</script>
+</body>
+</html>
