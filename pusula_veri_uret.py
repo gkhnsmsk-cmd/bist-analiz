@@ -197,6 +197,13 @@ def _dip_donusu_satirlari(tarama_df, adlar, ust_sinir: int = 40):
             "hacim": float(r.get("Hacim(M₺)", 0) or 0),
             "trend": "Al" if r.get("Kısa", 0) >= 65 else "Tut",
             "spark": [float(x) for x in trend_dizisi][-15:],
+            # Ek güvenlik teyidi — bkz. analiz_motoru.dip_guvenlik_kontrolu.
+            # None ise (henüz veri birikmedi) UI "teyit bekleniyor" gösterir.
+            "guvenliDonus": (bool(r["GuvenliDonus"]) if "GuvenliDonus" in r.index
+                              and pd.notna(r.get("GuvenliDonus")) else None),
+            "guvenlikNedeni": (str(r.get("GuvenlikNedeni"))
+                               if "GuvenlikNedeni" in r.index and pd.notna(r.get("GuvenlikNedeni"))
+                               else None),
         })
     return out
 

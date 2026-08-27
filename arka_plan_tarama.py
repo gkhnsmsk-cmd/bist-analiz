@@ -51,6 +51,16 @@ def _tarama_calistir(veriler: dict, endeks, rejim=None) -> pd.DataFrame:
             if satir["Puan"] is None:
                 continue
             satir["Hisse"] = s
+            # Dipten dönüş güvenlik teyidi (CMF + hacim + ardışık yükseliş) —
+            # sadece "düşeni kıran hisseler" göstergesinde rozet olarak
+            # kullanılıyor, henüz sert filtre değil (bkz. analiz_motoru.py).
+            try:
+                g = am.dip_guvenlik_kontrolu(df)
+                satir["GuvenliDonus"] = g.get("guvenliDonus")
+                satir["GuvenlikNedeni"] = g.get("neden")
+            except Exception:
+                satir["GuvenliDonus"] = None
+                satir["GuvenlikNedeni"] = None
             sonuclar.append(satir)
         except Exception:
             continue
@@ -58,7 +68,8 @@ def _tarama_calistir(veriler: dict, endeks, rejim=None) -> pd.DataFrame:
         return pd.DataFrame()
     tablo = pd.DataFrame(sonuclar)
     kolonlar = ["Hisse", "Puan", "Karar", "Kısa", "Orta", "Uzun", "Takas",
-                "Fiyat", "1 Ay %", "3 Ay %", "Hacim(M₺)"]
+                "Fiyat", "1 Ay %", "3 Ay %", "Hacim(M₺)",
+                "GuvenliDonus", "GuvenlikNedeni"]
     tablo = tablo[kolonlar].sort_values("Puan", ascending=False).reset_index(drop=True)
     tablo.index += 1
     return tablo

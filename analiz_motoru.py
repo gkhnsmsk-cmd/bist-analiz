@@ -1290,6 +1290,80 @@ def hizli_puan(df: pd.DataFrame, endeks_df: pd.DataFrame = None,
 SECIM_MIN_GECMIS = 210          # MA200 + pay için gereken asgari gün
 
 
+# ═══════════════════════════════════════════════════════════════════════════
+# DİPTEN DÖNÜŞ GÜVENLİK KONTROLÜ — "düşeni kıran hisseler" göstergesi
+# ═══════════════════════════════════════════════════════════════════════════
+# NEDEN VAR: Dip dönüşü filtresi (bkz. pusula_veri_uret._dip_donusu_satirlari)
+# sadece Kısa/Orta/Uzun PUAN farkına bakıyor — bu, "fiyat 2-3 gün toparladı"
+# demek, ama bunun GERÇEK bir dönüş mü yoksa düşüşün içindeki bir "ölü kedi
+# sıçraması" (dead cat bounce) mı olduğunu ayırt etmiyor.
+#
+# NEDEN GOLDEN CROSS KULLANILMADI: MA50'nin MA200'ü yukarı kesmesi çok GEÇ
+# kalan bir teyittir — bu gösterge özellikle ERKEN/sürpriz dönüşleri
+# yakalamak için var; golden cross'u beklemek, o zamana kadar zaten hareketin
+# büyük kısmının kaçırılması anlamına gelir ve göstergenin amacını boşa
+# çıkarır.
+#
+# BUNUN YERİNE İKİ KANITLANMIŞ FİLTRE KULLANILDI (bu depoda backtest'le
+# doğrulanmış tek şeyler bunlar — bkz. secim_skoru() ve takas_kaynak_avi):
+#   1) CMF (para akışı) pozitife DÖNMÜŞ mü — CMF, bu projede tek başına en
+#      güçlü öngörü gücüne sahip gösterge (korelasyon ~0.079, genel puanın
+#      ~6 katı). Negatiften pozitife dönüş = birikim başlamış olabilir.
+#   2) Hacim teyidi — toparlanma DÜŞÜK hacimle mi (güvenilmez, ilgisiz)
+#      yoksa ortalamanın belirgin üzerinde hacimle mi (katılım var) oluyor.
+# Art arda 3 günlük kapanış şartı da eklendi: TEK günlük sıçramayı "dönüş"
+# saymamak için (whipsaw/tuzak riskini azaltır).
+#
+# ÖNEMLİ: Bu HENÜZ sert bir filtre (eleme) değil — sadece rozet/uyarı olarak
+# gösteriliyor. Sandbox'ta ağ erişimi olmadığı için gerçek veriyle
+# doğrulanamadı; gerçek sonuçlar birkaç hafta biriktikten sonra backtest'e
+# eklenip sert filtreye çevrilip çevrilmeyeceğine KANITLA karar verilecek.
+# ═══════════════════════════════════════════════════════════════════════════
+
+def dip_guvenlik_kontrolu(df: pd.DataFrame) -> dict:
+    """Dip dönüşü adaylarına ek güvenlik/teyit bilgisi.
+
+    Dönüş: {"cmfDonus": bool|None, "hacimTeyit": bool|None,
+            "ardArdaYukselis": bool|None, "guvenliDonus": bool|None,
+            "neden": str}
+    Veri yetersizse tüm alanlar None ve neden açıklanır — ÇAĞIRAN taraf
+    bunu "eleme" olarak değil "bilgi yok" olarak yorumlamalı.
+    """
+    bos = {"cmfDonus": None, "hacimTeyit": None, "ardArdaYukselis": None,
+           "guvenliDonus": None, "neden": "veri yetersiz"}
+    if df is None or len(df) < 40:
+        return bos
+    if not {"High", "Low", "Close", "Volume"}.issubset(getattr(df, "columns", [])):
+        return bos
+    try:
+        c = df["Close"]
+        cmf_s = cmf(df, n=20)
+        if len(cmf_s.dropna()) < 6:
+            return bos
+        cmf_son = float(cmf_s.iloc[-1])
+        cmf_5g_once = float(cmf_s.iloc[-6])
+        cmf_donus = bool(np.isfinite(cmf_son) and np.isfinite(cmf_5g_once)
+                          and cmf_son > 0 and cmf_5g_once <= cmf_son - 0.02)
+
+        hacim_oran = float(df["Volume"].tail(5).mean() / max(df["Volume"].tail(60).mean(), 1))
+        hacim_teyit = bool(np.isfinite(hacim_oran) and hacim_oran >= 1.15)
+
+        son3 = c.tail(4).values
+        ard_arda = bool(len(son3) == 4 and son3[3] > son3[2] > son3[1])
+
+        guvenli = bool(cmf_donus and hacim_teyit and ard_arda)
+        parcalar = []
+        parcalar.append("para akışı dönüyor" if cmf_donus else "para akışı henüz dönmedi")
+        parcalar.append("hacim teyitli" if hacim_teyit else "hacim teyidi yok")
+        parcalar.append("art arda yükseliyor" if ard_arda else "tek günlük sıçrama olabilir")
+        neden = ", ".join(parcalar)
+        return {"cmfDonus": cmf_donus, "hacimTeyit": hacim_teyit,
+                "ardArdaYukselis": ard_arda, "guvenliDonus": guvenli,
+                "neden": neden}
+    except Exception as e:
+        return {**bos, "neden": f"hata: {type(e).__name__}"}
+
+
 def secim_skoru(df: pd.DataFrame) -> dict:
     """Sanal portföyün ALIM seçimi için skor.
 
