@@ -20,6 +20,13 @@
   .detay-anim { animation: slideUp .24s cubic-bezier(.22,.9,.35,1); }
   .fade-anim { animation: fadeIn .18s ease; }
   .pop-anim { animation: popIn .18s cubic-bezier(.22,.9,.35,1); }
+  /* "Anlık" fiyat güncellenince döviz.com tarzı yanıp-sönme (flash) —
+     yükseldiyse yeşile, düştüyse kırmızıya kısa bir parlama yapıp normale
+     döner. Sadece renk/arka plan animasyonu, metin sıçramaz (layout shift yok). */
+  @keyframes flashYesil { 0% { background-color: rgba(16,185,129,.28); } 100% { background-color: transparent; } }
+  @keyframes flashKirmizi { 0% { background-color: rgba(239,68,68,.28); } 100% { background-color: transparent; } }
+  .fiyat-flash-yukari { animation: flashYesil 900ms ease-out; border-radius: .5rem; }
+  .fiyat-flash-asagi { animation: flashKirmizi 900ms ease-out; border-radius: .5rem; }
   .safe-bottom { padding-bottom: env(safe-area-inset-bottom, 0px); }
   .safe-top { padding-top: env(safe-area-inset-top, 0px); }
 </style>
@@ -27,7 +34,13 @@
 <body>
 <div id="root"></div>
 <script type="text/babel" data-presets="react">
-const { useState, useMemo, useEffect } = React;
+const { useState, useMemo, useEffect, useRef } = React;
+
+// Anlık fiyat sorgulama sıklığı — döviz.com tarzı "yanıp sönen" his için
+// yeterince sık, ama Cloudflare Worker'ın ücretsiz kotasını (günde 100.000
+// istek) zorlamayacak kadar seyrek. Panel açık olduğu sürece çalışır,
+// kapanınca durur.
+const CANLI_FIYAT_YENILEME_MS = 5000;
 
 /* ═══════════════════════════════════════════════════════════════════════
    PUSULA — BIST mobil arayüzü (React SPA, Streamlit'in yerini alır)
@@ -1033,22 +1046,43 @@ function DetayEkran({ hisse, onGeri, onYildiz, onPortfoyeEkle, zamanHam, akdVeri
     return () => clearInterval(id);
   }, []);
   // Anlık fiyat — CANLI_FIYAT_API_URL doluysa (aracı fonksiyon kurulduysa)
-  // panel açılınca bir kere sorar. Kurulmadıysa ya da istek başarısız
-  // olursa (worker henüz yok, ağ hatası, hafta sonu vb.) SESSİZCE hiçbir şey
-  // göstermez — sayfa asla kırılmaz, her zaman son taramadan gelen fiyat
-  // görünür durumda kalır.
+  // panel AÇIK KALDIKÇA her birkaç saniyede bir sorar (döviz.com tarzı
+  // "yanıp sönen" ticker hissi için — kullanıcı isteği). Kurulmadıysa ya da
+  // istek başarısız olursa (worker henüz yok, ağ hatası, hafta sonu vb.)
+  // SESSİZCE hiçbir şey göstermez — sayfa asla kırılmaz, her zaman son
+  // taramadan gelen fiyat görünür durumda kalır.
   const [canliFiyat, setCanliFiyat] = useState(null);
+  // flashYonu: 'yukari' | 'asagi' | null — sadece fiyat GERÇEKTEN değişince
+  // (aynı sayı tekrar gelirse flash TEKRARLANMAZ) kısa bir animasyon tetikler.
+  const [flashYonu, setFlashYonu] = useState(null);
+  const oncekiFiyatRef = useRef(null);
   useEffect(() => {
     setCanliFiyat(null);
+    setFlashYonu(null);
+    oncekiFiyatRef.current = null;
     if (!CANLI_FIYAT_API_URL || !hisse) return;
     let iptal = false;
-    fetch(`${CANLI_FIYAT_API_URL}?sembol=${encodeURIComponent(hisse.symbol)}`)
-      .then(r => r.ok ? r.json() : Promise.reject())
-      .then(d => {
-        if (!iptal && d && d.fiyat != null) setCanliFiyat(d);
-      })
-      .catch(() => {}); // sessizce yok say — mevcut fiyat gösterime devam eder
-    return () => { iptal = true; };
+
+    function sorgula() {
+      fetch(`${CANLI_FIYAT_API_URL}?sembol=${encodeURIComponent(hisse.symbol)}`)
+        .then(r => r.ok ? r.json() : Promise.reject())
+        .then(d => {
+          if (iptal || !d || d.fiyat == null) return;
+          const onceki = oncekiFiyatRef.current;
+          if (onceki != null && d.fiyat !== onceki) {
+            const yon = d.fiyat > onceki ? 'yukari' : 'asagi';
+            setFlashYonu(yon);
+            setTimeout(() => { if (!iptal) setFlashYonu(null); }, 900);
+          }
+          oncekiFiyatRef.current = d.fiyat;
+          setCanliFiyat(d);
+        })
+        .catch(() => {}); // sessizce yok say — mevcut fiyat gösterime devam eder
+    }
+
+    sorgula(); // ilk sorgu hemen
+    const id = setInterval(sorgula, CANLI_FIYAT_YENILEME_MS);
+    return () => { iptal = true; clearInterval(id); };
   }, [hisse && hisse.symbol]);
 
   if (!hisse) return null;
@@ -1087,14 +1121,24 @@ function DetayEkran({ hisse, onGeri, onYildiz, onPortfoyeEkle, zamanHam, akdVeri
 
         <div className="flex-1 overflow-y-auto px-4 py-5">
           <div className="text-sm text-gray-400">{hisse.ad}</div>
-          <div className="mt-1 text-4xl font-bold text-gray-900 tabular-nums">
+          <div
+            className={
+              "mt-1 inline-block px-1.5 -mx-1.5 text-4xl font-bold text-gray-900 tabular-nums transition-colors " +
+              (flashYonu === 'yukari' ? 'fiyat-flash-yukari' : flashYonu === 'asagi' ? 'fiyat-flash-asagi' : '')
+            }
+          >
             {(canliFiyat ? canliFiyat.fiyat : hisse.fiyat).toFixed(2)} ₺
           </div>
           {/* Anlık fiyat bulunduysa rozet göster (aracı fonksiyon kuruluysa) —
-              kullanıcı hangi fiyatı gördüğünü net anlasın. */}
+              yeşil nokta CANLI_FIYAT_YENILEME_MS aralığında nabız gibi atar,
+              kullanıcı verinin gerçekten periyodik yenilendiğini görsün. */}
           {canliFiyat && (
-            <div className="mt-0.5 inline-flex items-center gap-1 text-xs font-semibold text-emerald-700 bg-emerald-50 rounded-full px-2 py-0.5">
-              🟢 Anlık{canliTaze ? ` · ${canliTaze.goreli}` : ''}
+            <div className="mt-0.5 inline-flex items-center gap-1.5 text-xs font-semibold text-emerald-700 bg-emerald-50 rounded-full px-2 py-0.5">
+              <span className="relative flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+              </span>
+              Anlık{canliTaze ? ` · ${canliTaze.goreli}` : ''}
             </div>
           )}
           <div className="mt-2 flex items-center gap-2">
