@@ -569,30 +569,80 @@ function YukselecekEkran({ hisseler, dipDonusu, onSec, zaman }) {
 }
 
 /* ── Ekran 3: Ara ─────────────────────────────────────────────────────── */
+/* Kod bilmeden de bulunsun diye: harfe göre gözat + en çok işlem görenler.
+   Kullanıcı "sadece kısa kod olmasın" dedi — arama kutusu hâlâ kod/ad
+   yazmayı destekler ama artık BOŞKEN de bir şeyler gösterir, ayrıca A-Z
+   harf şeridiyle tıklayarak da gözatılabilir. */
 function AraEkran({ hisseler, onSec, onYildiz }) {
   const [metin, setMetin] = useState('');
+  const [harf, setHarf] = useState(null);
+
+  const harfler = useMemo(() => {
+    const s = new Set();
+    hisseler.forEach(h => { if (h.symbol) s.add(h.symbol[0].toUpperCase()); });
+    return Array.from(s).sort();
+  }, [hisseler]);
+
+  const enCokIslemGoren = useMemo(() => {
+    return [...hisseler].sort((a, b) => (b.hacim || 0) - (a.hacim || 0)).slice(0, 20);
+  }, [hisseler]);
+
   const sonuclar = useMemo(() => {
     const q = metin.trim().toLowerCase();
-    if (!q) return [];
-    return hisseler.filter(h => h.symbol.toLowerCase().includes(q) || h.ad.toLowerCase().includes(q));
-  }, [hisseler, metin]);
+    if (q) {
+      return hisseler.filter(h => h.symbol.toLowerCase().includes(q) || h.ad.toLowerCase().includes(q));
+    }
+    if (harf) {
+      return hisseler.filter(h => h.symbol.toUpperCase().startsWith(harf))
+        .sort((a, b) => a.symbol.localeCompare(b.symbol));
+    }
+    return enCokIslemGoren;
+  }, [hisseler, metin, harf, enCokIslemGoren]);
+
+  const bosDurum = !metin && !harf;
+
   return (
     <div className="pb-4">
       <div className="px-4 pt-2 pb-3">
         <h1 className="text-2xl font-bold text-gray-900">Ara</h1>
-        <p className="text-sm text-gray-400">Kod veya şirket adı yazın (ör. "thy", "garanti")</p>
+        <p className="text-sm text-gray-400">Kod ya da şirket adı yazın, ya da harfe/listeye göz atın — kodu bilmenize gerek yok</p>
       </div>
       <div className="px-4">
         <input
           value={metin}
-          onChange={e => setMetin(e.target.value)}
-          placeholder="Hisse ara…"
+          onChange={e => { setMetin(e.target.value); if (e.target.value) setHarf(null); }}
+          placeholder="Hisse ara… (ör. thy, garanti)"
           className="w-full min-h-[44px] rounded-2xl bg-white ring-1 ring-gray-200 px-4 focus:outline-none focus:ring-2 focus:ring-indigo-400"
         />
       </div>
+      {!metin && (
+        <div className="px-4 mt-3 flex flex-wrap gap-1.5">
+          <button
+            onClick={() => setHarf(null)}
+            className={`px-2.5 py-1 rounded-lg text-xs font-semibold ${!harf ? 'bg-indigo-600 text-white' : 'bg-white ring-1 ring-gray-200 text-gray-500'}`}
+          >
+            En çok işlem gören
+          </button>
+          {harfler.map(hf => (
+            <button
+              key={hf}
+              onClick={() => setHarf(hf)}
+              className={`w-7 h-7 rounded-lg text-xs font-semibold ${harf === hf ? 'bg-indigo-600 text-white' : 'bg-white ring-1 ring-gray-200 text-gray-500'}`}
+            >
+              {hf}
+            </button>
+          ))}
+        </div>
+      )}
       <div className="px-4 flex flex-col gap-2 md:grid md:grid-cols-2 md:gap-3 mt-3">
+        {bosDurum && (
+          <p className="text-xs text-gray-400 col-span-2 -mb-1">📈 En çok işlem gören 20 hisse (aşağıdan da bir harf seçebilirsiniz)</p>
+        )}
         {metin && sonuclar.length === 0 && (
           <p className="text-sm text-gray-400 py-6 text-center col-span-2">"{metin}" için sonuç yok.</p>
+        )}
+        {harf && sonuclar.length === 0 && (
+          <p className="text-sm text-gray-400 py-6 text-center col-span-2">"{harf}" ile başlayan hisse yok.</p>
         )}
         {sonuclar.map(h => <HisseSatiri key={h.symbol} h={h} onSec={onSec} onYildiz={onYildiz} />)}
       </div>
