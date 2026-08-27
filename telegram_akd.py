@@ -64,7 +64,7 @@ CACHE_DIR.mkdir(exist_ok=True)
 BOT_KULLANICI_ADI = "b0pt_bot"
 VARSAYILAN_KOMUT_SABLONU = "/akd {sembol}"
 VARSAYILAN_BEKLEME_SN = 3.0
-CEVAP_ZAMAN_ASIMI_SN = 15.0
+CEVAP_ZAMAN_ASIMI_SN = 30.0  # bot önce bekleme mesajı yolluyor, asıl veri birkaç sn sonra gelir
 
 
 def _tesseract_yolunu_ayarla():
@@ -636,12 +636,29 @@ async def _akd_getir_async(sembol: str, komut_sablonu: str = VARSAYILAN_KOMUT_SA
         gonderilen = await client.send_message(bot, komut)
 
         # Botun cevabını bekle: gönderdiğimiz mesajdan SONRAKİ ilk mesajı yakala.
+        #
+        # ÖNEMLİ DÜZELTME (gerçek TERA testinde bulundu): Bot komuta hemen bir
+        # ARA/BEKLEME mesajıyla cevap veriyor ("⏳ TERA AKD verisi alınıyor...")
+        # — bunun ne görseli ne de butonu var, sadece metin. Eski kod bu ara
+        # mesajı "asıl cevap" sanıp orada duruyordu, gerçek veri (görsel) hiç
+        # gelmemiş gibi davranıyordu. /takas akışında bu zaten doğru ele
+        # alınıyordu ("hazırlan" filtresi) — aynı mantık burada da uygulandı:
+        # metni "alını/hazırlan/işlen/yükleni" gibi bekleme kelimeleriyle
+        # başlayan/eşleşen mesajları ATLA, GERÇEK cevabı (görsel VEYA buton
+        # VEYA bekleme kelimesi geçmeyen metin) bekle.
+        _BEKLEME_KALIBI = re.compile(
+            r"alını|hazırlan|işlen|yükleni|getiril", re.IGNORECASE)
         cevap_mesaji = None
         for _ in range(int(CEVAP_ZAMAN_ASIMI_SN / 0.5)):
             await asyncio.sleep(0.5)
             son_mesajlar = await client.get_messages(bot, limit=5)
             for m in son_mesajlar:
-                if m.id > gonderilen.id and (m.text or m.buttons):
+                if m.id <= gonderilen.id:
+                    continue
+                if m.media or m.buttons:
+                    cevap_mesaji = m
+                    break
+                if m.text and not _BEKLEME_KALIBI.search(m.text):
                     cevap_mesaji = m
                     break
             if cevap_mesaji:
@@ -649,7 +666,9 @@ async def _akd_getir_async(sembol: str, komut_sablonu: str = VARSAYILAN_KOMUT_SA
 
         if not cevap_mesaji:
             raise TimeoutError(
-                f"{sembol}: bot {CEVAP_ZAMAN_ASIMI_SN:.0f} sn içinde cevap vermedi."
+                f"{sembol}: bot {CEVAP_ZAMAN_ASIMI_SN:.0f} sn içinde (bekleme "
+                "mesajı dışında) cevap vermedi. Bot yavaş olabilir — "
+                "CEVAP_ZAMAN_ASIMI_SN değerini artırmayı deneyin."
             )
 
         buton_etiketleri = [b.text for satir in (cevap_mesaji.buttons or []) for b in satir]
