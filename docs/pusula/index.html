@@ -70,6 +70,10 @@ function _apiHisseUyarla(x, favoriSet) {
     ad: x.ad || x.symbol,
     fiyat: x.fiyat || 0,
     degisim: x.degisim1ay || 0,
+    degisim3ay: x.degisim3ay,
+    puan: x.puan,
+    karar: x.karar,
+    hacim: x.hacim,
     trend: x.trend || 'Tut',
     favori: favoriSet.has(x.symbol),
   };
@@ -731,12 +735,50 @@ function DetayEkran({ hisse, onGeri, onYildiz, onPortfoyeEkle }) {
             <div className="flex items-center gap-3">
               <TrendRozeti trend={hisse.trend} buyuk />
               <span className="text-sm text-gray-500">
-                {hisse.trend.includes('Al') ? 'Trend ve puanlama pozitif yönde.' :
+                {hisse.karar || (hisse.trend.includes('Al') ? 'Trend ve puanlama pozitif yönde.' :
                  hisse.trend === 'Tut' ? 'Belirgin bir sinyal yok, bekle-gör.' :
-                 'Trend ve puanlama negatif yönde.'}
+                 'Trend ve puanlama negatif yönde.')}
               </span>
             </div>
           </div>
+
+          {(hisse.puan != null || hisse.degisim3ay != null || hisse.hacim != null ||
+            hisse.kisaPuan != null || hisse.donusGucu != null) && (
+            <div className="mt-3 grid grid-cols-2 gap-3">
+              {hisse.puan != null && (
+                <div className="bg-white rounded-2xl shadow-sm ring-1 ring-gray-100 p-3">
+                  <div className="text-[11px] text-gray-400 uppercase tracking-wide">Genel Puan</div>
+                  <div className="text-lg font-bold text-indigo-600 tabular-nums">{hisse.puan.toFixed(0)}</div>
+                </div>
+              )}
+              {hisse.kisaPuan != null && (
+                <div className="bg-white rounded-2xl shadow-sm ring-1 ring-gray-100 p-3">
+                  <div className="text-[11px] text-gray-400 uppercase tracking-wide">Kısa Vade Puan</div>
+                  <div className="text-lg font-bold text-indigo-600 tabular-nums">{hisse.kisaPuan.toFixed(0)}</div>
+                </div>
+              )}
+              {hisse.degisim3ay != null && (
+                <div className="bg-white rounded-2xl shadow-sm ring-1 ring-gray-100 p-3">
+                  <div className="text-[11px] text-gray-400 uppercase tracking-wide">3 Aylık Değişim</div>
+                  <div className={"text-lg font-bold tabular-nums " + (hisse.degisim3ay >= 0 ? "text-emerald-600" : "text-red-600")}>
+                    {hisse.degisim3ay >= 0 ? "+" : ""}{hisse.degisim3ay.toFixed(1)}%
+                  </div>
+                </div>
+              )}
+              {hisse.donusGucu != null && (
+                <div className="bg-white rounded-2xl shadow-sm ring-1 ring-gray-100 p-3">
+                  <div className="text-[11px] text-gray-400 uppercase tracking-wide">Dönüş Gücü</div>
+                  <div className="text-lg font-bold text-emerald-600 tabular-nums">+{hisse.donusGucu.toFixed(0)}</div>
+                </div>
+              )}
+              {hisse.hacim != null && (
+                <div className="bg-white rounded-2xl shadow-sm ring-1 ring-gray-100 p-3 col-span-2">
+                  <div className="text-[11px] text-gray-400 uppercase tracking-wide">Günlük Hacim</div>
+                  <div className="text-lg font-bold text-gray-900 tabular-nums">{hisse.hacim.toLocaleString('tr-TR', {maximumFractionDigits: 1})} M₺</div>
+                </div>
+              )}
+            </div>
+          )}
 
           <p className="mt-6 text-xs text-gray-400 leading-relaxed">
             Fiyat ve trend, en son arka plan taramasından (analiz_motoru.py)
