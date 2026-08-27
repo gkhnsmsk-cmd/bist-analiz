@@ -10,6 +10,7 @@ telegram_ayarlar.json
 telegram_oturumu.session
 *.session
 *.session-journal
+.github_pat.txt
 
 # ── Yerel önbellek / geçici ─────────────────────────────────────────────────
 __pycache__/
