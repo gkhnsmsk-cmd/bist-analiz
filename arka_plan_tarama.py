@@ -68,7 +68,7 @@ def _tarama_calistir(veriler: dict, endeks, rejim=None) -> pd.DataFrame:
         return pd.DataFrame()
     tablo = pd.DataFrame(sonuclar)
     kolonlar = ["Hisse", "Puan", "Karar", "Kısa", "Orta", "Uzun", "Takas",
-                "Fiyat", "1 Ay %", "3 Ay %", "Hacim(M₺)",
+                "Fiyat", "1 Hafta %", "1 Ay %", "3 Ay %", "1 Yıl %", "Hacim(M₺)",
                 "GuvenliDonus", "GuvenlikNedeni"]
     tablo = tablo[kolonlar].sort_values("Puan", ascending=False).reset_index(drop=True)
     tablo.index += 1

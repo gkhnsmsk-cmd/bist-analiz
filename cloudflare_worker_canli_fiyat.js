@@ -33,6 +33,40 @@
 // bedava — bu kullanım için fazlasıyla yeterli, ödeme bilgisi gerekmez.
 // ═══════════════════════════════════════════════════════════════════════════
 
+// ── Tek sembol için Yahoo'dan çek (chart API — ücretsiz, auth gerektirmez) ──
+async function tekFiyatCek(sembol) {
+  const yahooUrl =
+    `https://query1.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(sembol)}.IS` +
+    `?interval=1m&range=1d`;
+  try {
+    const yahooYaniti = await fetch(yahooUrl, {
+      headers: { "User-Agent": "Mozilla/5.0 (compatible; PusulaBot/1.0)" },
+    });
+    if (!yahooYaniti.ok) return { hata: `Yahoo Finance ${yahooYaniti.status} döndü` };
+    const veri = await yahooYaniti.json();
+    const sonuc = veri?.chart?.result?.[0];
+    if (!sonuc || !sonuc.meta) return { hata: "Bu sembol için veri bulunamadı" };
+    const meta = sonuc.meta;
+    return {
+      fiyat: meta.regularMarketPrice ?? null,
+      oncekiKapanis: meta.chartPreviousClose ?? meta.previousClose ?? null,
+      zaman: meta.regularMarketTime
+        ? new Date(meta.regularMarketTime * 1000).toISOString()
+        : null,
+      piyasaDurumu: meta.marketState || null, // "REGULAR" / "CLOSED" / "PRE" / "POST"
+    };
+  } catch (e) {
+    return { hata: `Aracı fonksiyon hatası: ${e.message || e}` };
+  }
+}
+
+// Cloudflare Workers ücretsiz katmanda TEK bir istekte en fazla 50 "alt
+// istek" (subrequest) atılabilir — bu yüzden toplu (batch) modda sembol
+// sayısı bu sınırın altında tutulmalı. Liste ekranları (Favoriler,
+// Yükselecek Hisseler, Portföy) zaten 40'ı geçmiyor; güvenlik payı için
+// burada da sert bir tavan var.
+const MAKS_TOPLU_SEMBOL = 45;
+
 export default {
   async fetch(request) {
     // Tarayıcılar bazı isteklerden önce bir "izin var mı?" (preflight/OPTIONS)
@@ -42,43 +76,44 @@ export default {
     }
 
     const url = new URL(request.url);
+
+    // TOPLU MOD — liste ekranlarında (Favoriler, Yükselecek Hisseler,
+    // Portföy) her satırın anlık fiyatını TEK istekte çekmek için eklendi
+    // (kullanıcı isteği: "sadece tıklayınca değil, listede de yanıp
+    // sönmeli"). ?semboller=ASTOR,THYAO,PGSUS gibi virgülle ayrılmış liste.
+    const topluParam = url.searchParams.get("semboller");
+    if (topluParam) {
+      const semboller = [...new Set(
+        topluParam.split(",").map(s => s.trim().toUpperCase()).filter(Boolean)
+      )].slice(0, MAKS_TOPLU_SEMBOL);
+      if (semboller.length === 0) {
+        return jsonYanit({ hata: "semboller parametresi boş" }, 400);
+      }
+      const sonuclar = await Promise.all(semboller.map(async s => [s, await tekFiyatCek(s)]));
+      const fiyatlar = {};
+      for (const [s, r] of sonuclar) fiyatlar[s] = r;
+      return jsonYanit({
+        zaman: new Date().toISOString(),
+        gecikmeNotu: "Yahoo Finance ücretsiz veri, genelde 15 dk'ya kadar gecikmeli olabilir.",
+        fiyatlar,
+      });
+    }
+
+    // TEKLİ MOD (eski davranış, geriye dönük uyumluluk — hisse detay ekranı
+    // hâlâ bunu kullanıyor) — ?sembol=ASTOR
     const sembol = (url.searchParams.get("sembol") || "").trim().toUpperCase();
     if (!sembol) {
-      return jsonYanit({ hata: "sembol parametresi gerekli, örn. ?sembol=ASTOR" }, 400);
-    }
-
-    // BIST hisseleri Yahoo Finance'te ".IS" soneki ile aranır (örn. ASTOR.IS).
-    const yahooUrl =
-      `https://query1.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(sembol)}.IS` +
-      `?interval=1m&range=1d`;
-
-    try {
-      const yahooYaniti = await fetch(yahooUrl, {
-        headers: { "User-Agent": "Mozilla/5.0 (compatible; PusulaBot/1.0)" },
-      });
-      if (!yahooYaniti.ok) {
-        return jsonYanit({ hata: `Yahoo Finance ${yahooYaniti.status} döndü` }, 502);
-      }
-      const veri = await yahooYaniti.json();
-      const sonuc = veri?.chart?.result?.[0];
-      if (!sonuc || !sonuc.meta) {
-        return jsonYanit({ hata: "Bu sembol için veri bulunamadı", sembol }, 404);
-      }
-
-      const meta = sonuc.meta;
       return jsonYanit({
-        sembol,
-        fiyat: meta.regularMarketPrice ?? null,
-        oncekiKapanis: meta.chartPreviousClose ?? meta.previousClose ?? null,
-        zaman: meta.regularMarketTime
-          ? new Date(meta.regularMarketTime * 1000).toISOString()
-          : null,
-        piyasaDurumu: meta.marketState || null, // "REGULAR" / "CLOSED" / "PRE" / "POST"
-        gecikmeNotu: "Yahoo Finance ücretsiz veri, genelde 15 dk'ya kadar gecikmeli olabilir.",
-      });
-    } catch (e) {
-      return jsonYanit({ hata: `Aracı fonksiyon hatası: ${e.message || e}` }, 500);
+        hata: "sembol (tekli) veya semboller (toplu, virgüllü) parametresi gerekli",
+      }, 400);
     }
+    const r = await tekFiyatCek(sembol);
+    if (r.hata) return jsonYanit({ hata: r.hata, sembol }, r.hata.includes("bulunamadı") ? 404 : 502);
+    return jsonYanit({
+      sembol,
+      ...r,
+      gecikmeNotu: "Yahoo Finance ücretsiz veri, genelde 15 dk'ya kadar gecikmeli olabilir.",
+    });
   },
 };
 

@@ -1215,7 +1215,8 @@ def hizli_puan(df: pd.DataFrame, endeks_df: pd.DataFrame = None,
             "Puan": None, "Karar": "⚫ VERİ YOK",
             "Kısa": None, "Orta": None, "Uzun": None, "Takas": None,
             "Şişkinlik": None, "Giriş": None,
-            "Fiyat": None, "1 Ay %": None, "3 Ay %": None, "Hacim(M₺)": None,
+            "Fiyat": None, "1 Hafta %": None, "1 Ay %": None, "3 Ay %": None,
+            "1 Yıl %": None, "Hacim(M₺)": None,
         }
     baglam = trend_baglami(df)
     kp, kp_sinyaller = kisa_vade(df, baglam)
@@ -1241,8 +1242,13 @@ def hizli_puan(df: pd.DataFrame, endeks_df: pd.DataFrame = None,
         "Şişkinlik": round(uzama["skor"]),
         "Giriş": round(erken["skor"]),
         "Fiyat": round(float(c.iloc[-1]), 2),
+        # 1 Hafta / 1 Yıl: Pusula'nın hisse detay ekranında "anlık, haftalık,
+        # aylık, yıllık değişim" tablosu için eklendi — kullanıcı isteği.
+        # ~5 iş günü = 1 hafta, ~252 iş günü = 1 yıl (BIST işlem günleri).
+        "1 Hafta %": round(100 * (c.iloc[-1] / c.iloc[-6] - 1), 1) if len(c) > 6 else None,
         "1 Ay %": round(100 * (c.iloc[-1] / c.iloc[-22] - 1), 1) if len(c) > 22 else None,
         "3 Ay %": round(100 * (c.iloc[-1] / c.iloc[-66] - 1), 1) if len(c) > 66 else None,
+        "1 Yıl %": round(100 * (c.iloc[-1] / c.iloc[-252] - 1), 1) if len(c) > 252 else None,
         "Hacim(M₺)": round(float((df["Close"] * df["Volume"]).tail(20).mean()) / 1e6, 1),
     }
     # ayrinti=True: iç hesapları da döndür. SADECE backtest gibi toplu
