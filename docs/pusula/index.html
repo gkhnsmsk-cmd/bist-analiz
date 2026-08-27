@@ -330,22 +330,86 @@ function YukselecekSatiri({ h, onSec }) {
   );
 }
 
-function YukselecekEkran({ hisseler, onSec, zaman }) {
+/* ── Düşeni Kıran Hisseler (dip dönüşü) — bkz. pusula_veri_uret.py:
+   _dip_donusu_satirlari. "3 ay % çok negatif AMA kısa vade puanı zaten
+   toparlanmaya başlamış" mantığıyla seçilen sürpriz adaylar. ────────────── */
+function DipDonusuSatiri({ h, onSec }) {
+  return (
+    <div
+      role="button"
+      tabIndex={0}
+      onClick={() => onSec(h.symbol)}
+      onKeyDown={(e) => { if (e.key === 'Enter') onSec(h.symbol); }}
+      className="w-full bg-white rounded-2xl shadow-sm ring-1 ring-gray-100 px-4 py-3 min-h-[44px] active:bg-gray-50 transition-colors cursor-pointer"
+    >
+      <div className="flex items-center justify-between gap-3">
+        <div className="min-w-0">
+          <div className="font-bold text-gray-900">{h.symbol}</div>
+          <div className="text-xs text-gray-400 truncate">{h.ad}</div>
+        </div>
+        <div className="text-right shrink-0">
+          <div className="font-semibold text-gray-900 tabular-nums">{h.fiyat.toFixed(2)} ₺</div>
+          <div className="text-xs text-gray-400">3 ay <span className="font-semibold text-red-600">{h.degisim3ay.toFixed(1)}%</span></div>
+        </div>
+      </div>
+      <div className="mt-2 flex items-center gap-3 text-xs">
+        <span className="text-gray-400">1 ay <span className={"font-semibold " + (h.degisim1ay >= 0 ? "text-emerald-600" : "text-red-600")}>{h.degisim1ay >= 0 ? "+" : ""}{h.degisim1ay.toFixed(1)}%</span></span>
+        <span className="text-gray-300">·</span>
+        <span className="text-gray-400">Kısa puan <span className="font-semibold text-indigo-600">{h.kisaPuan.toFixed(0)}</span></span>
+        <span className="text-gray-300">·</span>
+        <span className="text-gray-400">Dönüş gücü <span className="font-semibold text-emerald-600">+{h.donusGucu.toFixed(0)}</span></span>
+      </div>
+    </div>
+  );
+}
+
+function YukselecekEkran({ hisseler, dipDonusu, onSec, zaman }) {
+  const [altSekme, setAltSekme] = useState('yukselecek');
   const siralı = useMemo(() => [...hisseler].sort((a, b) => b.genelPuan - a.genelPuan), [hisseler]);
+  const dipSirali = useMemo(() => [...dipDonusu].sort((a, b) => b.donusGucu - a.donusGucu), [dipDonusu]);
   return (
     <div className="pb-4">
       <div className="px-4 pt-2 pb-3">
-        <h1 className="text-2xl font-bold text-gray-900">Yükselebilecek Hisseler</h1>
+        <h1 className="text-2xl font-bold text-gray-900">
+          {altSekme === 'yukselecek' ? 'Yükselebilecek Hisseler' : 'Düşeni Kıran Hisseler'}
+        </h1>
         <p className="text-sm text-gray-400">
-          {siralı.length} aday · Kısa/Orta/Uzun vade sinyaline göre en yüksek Genel Puan
+          {altSekme === 'yukselecek'
+            ? siralı.length + " aday · Kısa/Orta/Uzun vade sinyaline göre en yüksek Genel Puan"
+            : dipSirali.length + " aday · düşmüş ama kısa vadede dönüş sinyali veren hisseler"}
           {zaman ? " · tarama: " + zaman : ""}
         </p>
       </div>
-      <div className="px-4 flex flex-col gap-2 md:grid md:grid-cols-2 md:gap-3">
-        {siralı.length === 0
-          ? <p className="text-sm text-gray-400 py-6 text-center col-span-2">Henüz tarama verisi yok.</p>
-          : siralı.map(h => <YukselecekSatiri key={h.symbol} h={h} onSec={onSec} />)}
+      <div className="flex gap-2 px-4 pb-3">
+        <button
+          onClick={() => setAltSekme('yukselecek')}
+          className={"flex-1 min-h-[40px] rounded-xl text-sm font-semibold transition-colors " +
+                     (altSekme === 'yukselecek' ? "bg-indigo-600 text-white" : "bg-white text-gray-600 ring-1 ring-gray-200")}
+        >
+          📈 Yükselebilecek
+        </button>
+        <button
+          onClick={() => setAltSekme('dip')}
+          className={"flex-1 min-h-[40px] rounded-xl text-sm font-semibold transition-colors " +
+                     (altSekme === 'dip' ? "bg-indigo-600 text-white" : "bg-white text-gray-600 ring-1 ring-gray-200")}
+        >
+          🔄 Dipten Dönenler
+        </button>
       </div>
+
+      {altSekme === 'yukselecek' ? (
+        <div className="px-4 flex flex-col gap-2 md:grid md:grid-cols-2 md:gap-3">
+          {siralı.length === 0
+            ? <p className="text-sm text-gray-400 py-6 text-center col-span-2">Henüz tarama verisi yok.</p>
+            : siralı.map(h => <YukselecekSatiri key={h.symbol} h={h} onSec={onSec} />)}
+        </div>
+      ) : (
+        <div className="px-4 flex flex-col gap-2 md:grid md:grid-cols-2 md:gap-3">
+          {dipSirali.length === 0
+            ? <p className="text-sm text-gray-400 py-6 text-center col-span-2">Şu an dip dönüşü kriterine uyan hisse yok.</p>
+            : dipSirali.map(h => <DipDonusuSatiri key={h.symbol} h={h} onSec={onSec} />)}
+        </div>
+      )}
     </div>
   );
 }
@@ -593,6 +657,7 @@ function App() {
   const [yukleniyor, setYukleniyor] = useState(true);
   const [hisseler, setHisseler] = useState(MOCK_HISSELER);
   const [yukselecek, setYukselecek] = useState([]);
+  const [dipDonusu, setDipDonusu] = useState([]);
   const [taramaZaman, setTaramaZaman] = useState(null);
   const [detaySembol, setDetaySembol] = useState(null);
   const [portfoy, setPortfoy] = useState([]);
@@ -613,6 +678,10 @@ function App() {
 
     fetch('./data/yukselecek.json').then(r => r.ok ? r.json() : Promise.reject())
       .then(d => setYukselecek(d.hisseler || []))
+      .catch(() => {});
+
+    fetch('./data/dip_donusu.json').then(r => r.ok ? r.json() : Promise.reject())
+      .then(d => setDipDonusu(d.hisseler || []))
       .catch(() => {});
 
     fetch('./data/portfoy.json').then(r => r.ok ? r.json() : Promise.reject())
@@ -642,12 +711,17 @@ function App() {
     });
   }
 
-  // Detay ekranı hem "Ana/Tarama/Ara" listesindeki hem de "Yükselecek"
-  // listesindeki bir hisse için açılabilir — iki kaynağı birleştirip arıyoruz.
+  // Detay ekranı "Ana/Tarama/Ara", "Yükselecek" veya "Dipten Dönenler"
+  // listesindeki bir hisse için açılabilir — üç kaynağı birleştirip arıyoruz.
+  function _digerListedenBul(symbol) {
+    const y = yukselecek.find(h => h.symbol === symbol);
+    if (y) return { ...y, degisim: y.degisim1ay, favori: hisseler.some(h => h.symbol === symbol && h.favori) };
+    const d = dipDonusu.find(h => h.symbol === symbol);
+    if (d) return { ...d, degisim: d.degisim1ay, favori: hisseler.some(h => h.symbol === symbol && h.favori) };
+    return null;
+  }
   const secilenHisse = detaySembol
-    ? (hisseler.find(h => h.symbol === detaySembol) ||
-       (() => { const y = yukselecek.find(h => h.symbol === detaySembol);
-                return y ? { ...y, favori: hisseler.some(h => h.symbol === y.symbol && h.favori) } : null; })())
+    ? (hisseler.find(h => h.symbol === detaySembol) || _digerListedenBul(detaySembol))
     : null;
 
   return (
@@ -663,7 +737,7 @@ function App() {
         )}
         {tab === 'ana' && <AnaEkran hisseler={hisseler} onSec={setDetaySembol} onYildiz={yildizToggle} zaman={taramaZaman} />}
         {tab === 'tarama' && <TaramaEkran hisseler={hisseler} onSec={setDetaySembol} onYildiz={yildizToggle} />}
-        {tab === 'yukselecek' && <YukselecekEkran hisseler={yukselecek} onSec={setDetaySembol} zaman={taramaZaman} />}
+        {tab === 'yukselecek' && <YukselecekEkran hisseler={yukselecek} dipDonusu={dipDonusu} onSec={setDetaySembol} zaman={taramaZaman} />}
         {tab === 'ara' && <AraEkran hisseler={hisseler} onSec={setDetaySembol} onYildiz={yildizToggle} />}
         {tab === 'portfoy' && <PortfoyEkran hisseler={hisseler} portfoy={portfoy} setPortfoy={setPortfoy} gercekPortfoy={gercekPortfoy} />}
       </div>

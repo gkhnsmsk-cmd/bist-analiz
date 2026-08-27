@@ -141,7 +141,61 @@ def tarama_uret():
 
     _yaz("tarama.json", {"zaman": zaman, "hisseler": _tarama_satirlari(tarama_df)})
     _yaz("yukselecek.json", {"zaman": zaman, "hisseler": _vade_satirlari(vade_df)})
+    _yaz("dip_donusu.json", {"zaman": zaman, "hisseler": _dip_donusu_satirlari(tarama_df, adlar)})
     return True
+
+
+# ── "Düşeni Kıran Hisseler" (dip dönüşü) ────────────────────────────────
+# NEDEN AYRI BİR ANALİZ MOTORU YOK: tarama_onbellek.json:"tarama" tablosu
+# (TÜM BIST, ~421 hisse) zaten her hisse için Kısa/Orta/Uzun vade PUANLARINI
+# (0-100) içeriyor — bunlar analiz_motoru.kisa_vade/orta_vade/uzun_vade'nin
+# çıktısı. "Düşen ama dönüşe geçen" hisse, matematiksel olarak şudur: orta/
+# uzun vade puanı hâlâ zayıf (geçmiş düşüşü yansıtıyor) AMA kısa vade puanı
+# belirgin biçimde yükselmiş (RSI/MACD gibi kısa vadeli göstergeler dönüş
+# sinyali veriyor) — yani "dönüş gücü" = Kısa − min(Orta, Uzun). Bu, YENİ bir
+# gösterge ama var olan puanlardan türetildiği için yeni bir tarama/indirme
+# gerektirmez, anında hesaplanır.
+_DIP_MIN_3AY_DUSUS = -8.0    # en az %8 düşmüş olmalı ("düşeni" koşulu)
+_DIP_MIN_KISA_PUAN = 55.0   # kısa vade puanı zaten toparlanmaya başlamış olmalı
+_DIP_MIN_DONUS_GUCU = 10.0  # kısa vade ile orta/uzun arasındaki makas
+
+
+def _dip_donusu_satirlari(tarama_df, adlar, ust_sinir: int = 40):
+    if tarama_df is None or len(tarama_df) == 0:
+        return []
+    df = tarama_df.copy()
+    gerekli = {"Kısa", "Orta", "Uzun", "3 Ay %"}
+    if not gerekli.issubset(df.columns):
+        return []
+    df["min_orta_uzun"] = df[["Orta", "Uzun"]].min(axis=1)
+    df["donus_gucu"] = df["Kısa"] - df["min_orta_uzun"]
+    aday = df[
+        (df["3 Ay %"] <= _DIP_MIN_3AY_DUSUS)
+        & (df["Kısa"] >= _DIP_MIN_KISA_PUAN)
+        & (df["donus_gucu"] >= _DIP_MIN_DONUS_GUCU)
+    ].sort_values("donus_gucu", ascending=False).head(ust_sinir)
+
+    out = []
+    for _, r in aday.iterrows():
+        sembol = str(r.get("Hisse", ""))
+        trend_dizisi = r.get("Trend")
+        if not isinstance(trend_dizisi, list):
+            trend_dizisi = []
+        out.append({
+            "symbol": sembol,
+            "ad": adlar.get(sembol, sembol),
+            "fiyat": float(r.get("Fiyat", 0) or 0),
+            "kisaPuan": float(r.get("Kısa", 0) or 0),
+            "ortaPuan": float(r.get("Orta", 0) or 0),
+            "uzunPuan": float(r.get("Uzun", 0) or 0),
+            "donusGucu": float(r.get("donus_gucu", 0) or 0),
+            "degisim1ay": float(r.get("1 Ay %", 0) or 0),
+            "degisim3ay": float(r.get("3 Ay %", 0) or 0),
+            "hacim": float(r.get("Hacim(M₺)", 0) or 0),
+            "trend": "Al" if r.get("Kısa", 0) >= 65 else "Tut",
+            "spark": [float(x) for x in trend_dizisi][-15:],
+        })
+    return out
 
 
 def portfoy_uret():
