@@ -155,6 +155,13 @@ def tarama_uret():
                 "degisim3ay": float(r.get("3 Ay %", 0) or 0),
                 "hacim": float(r.get("Hacim(M₺)", 0) or 0),
                 "spark": [float(x) for x in trend_dizisi][-15:],
+                # Kullanıcı isteği (28.08.2026): liste başındaki hisseler daha
+                # güvenilir olmalı. "dogrulanmis" = MA200 üstünde + CMF (para
+                # akışı) pozitif — depoda walk-forward doğrulanmış TEK sinyal
+                # (bkz. analiz_motoru.secim_skoru). Garanti değildir, sadece
+                # önceliklendirme sebebidir.
+                "dogrulanmis": bool(r.get("Dogrulanmis", False)),
+                "cmf": (float(r["CMF"]) if pd.notna(r.get("CMF")) else None),
             })
         return out
 
@@ -521,6 +528,38 @@ def backtest_uret():
     return True
 
 
+def ogrenme_uret():
+    """ogrenme_hata_log.json -> ogrenme.json — öğrenme motorunun (ogrenme_motoru.py)
+    ürettiği hata sınıflandırması + aday-öneri raporunu Pusula'da görünür hale
+    getirir.
+
+    NEDEN CANLI ÇALIŞTIRMIYORUZ: ogrenme_dongusu() olgunlaşmış tüm tavsiye
+    kayıtlarını işleyip istatistik çıkarır — haftalik_kontrol.py bunu zaten
+    haftada bir (HAFTALIK_KONTROL.bat ile) üretiyor (bkz. o dosyanın
+    "ÖĞRENME MOTORU" bölümü, om.ogrenme_dongusu() çağrısı). Burada sadece o
+    çıktı okunup Pusula'nın fetch() ile okuyabileceği düz JSON'a taşınıyor.
+    Motor hiçbir kuralı kendiliğinden değiştirmez — sadece "şunu backtest'te
+    denemeye değer" diyen ADAY öneriler üretir (bkz. ogrenme_motoru.py
+    başındaki tasarım kararı notu); nihai karar hep insanda kalır.
+    """
+    yol = os.path.join(KLASOR, "ogrenme_hata_log.json")
+    if not os.path.exists(yol):
+        return False
+    try:
+        with open(yol, encoding="utf-8") as f:
+            veri = json.load(f)
+    except Exception as e:
+        print("ogrenme_hata_log.json okunamadı:", e)
+        return False
+
+    _yaz("ogrenme.json", {
+        "guncelleme": veri.get("guncelleme"),
+        "ufuk": veri.get("ufuk"),
+        "hipotez": veri.get("hipotez") or {},
+    })
+    return True
+
+
 def hepsi():
     a = tarama_uret()
     b = portfoy_uret()
@@ -529,6 +568,7 @@ def hepsi():
     e = sistem_durumu_uret()
     f = backtest_uret()
     g = akd_uret()
+    h = ogrenme_uret()
     print("tarama/yukselecek/dip_donusu:", "OK" if a else "atlandı (dosya yok)")
     print("portfoy:", "OK" if b else "atlandı (dosya yok)")
     print("performans:", "OK" if c else "atlandı (dosya yok)")
@@ -536,6 +576,7 @@ def hepsi():
     print("sistem_durumu:", "OK" if e else "atlandı")
     print("backtest:", "OK" if f else "atlandı (dosya yok)")
     print("akd:", "OK" if g else "atlandı")
+    print("ogrenme:", "OK" if h else "atlandı (dosya yok)")
 
 
 if __name__ == "__main__":

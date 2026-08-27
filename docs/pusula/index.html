@@ -61,13 +61,13 @@ const CANLI_FIYAT_YENILEME_MS = 5000;
    henüz commit'lenmemişse) sayfa MOCK_HISSELER'e düşer ki boş kalmasın. */
 
 const MOCK_HISSELER = [
-  { symbol: 'PGSUS', ad: 'Pegasus Hava Taşımacılığı', fiyat: 985.50, degisim: 3.2, trend: 'Güçlü Al', favori: true },
+  { symbol: 'PGSUS', ad: 'Pegasus Hava Taşımacılığı', fiyat: 985.50, degisim: 3.2, trend: 'Al', favori: true },
   { symbol: 'ASTOR', ad: 'Astor Enerji',               fiyat: 112.40, degisim: -1.1, trend: 'Tut',      favori: true },
   { symbol: 'THYAO', ad: 'Türk Hava Yolları',           fiyat: 315.25, degisim: 1.8, trend: 'Al',        favori: true },
   { symbol: 'TUPRS', ad: 'Tüpraş',                      fiyat: 178.90, degisim: -2.4, trend: 'Sat',       favori: false },
   { symbol: 'GARAN', ad: 'Garanti BBVA',                fiyat: 142.10, degisim: 0.6, trend: 'Al',        favori: false },
   { symbol: 'AKBNK', ad: 'Akbank',                      fiyat: 98.35,  degisim: -0.4, trend: 'Tut',      favori: false },
-  { symbol: 'ASELS', ad: 'Aselsan',                     fiyat: 210.75, degisim: 4.1, trend: 'Güçlü Al',  favori: false },
+  { symbol: 'ASELS', ad: 'Aselsan',                     fiyat: 210.75, degisim: 4.1, trend: 'Al',  favori: false },
   { symbol: 'BIMAS', ad: 'BİM Mağazalar',               fiyat: 645.00, degisim: -3.7, trend: 'Güçlü Sat', favori: false },
   { symbol: 'EREGL', ad: 'Ereğli Demir Çelik',          fiyat: 56.20,  degisim: 1.2, trend: 'Al',        favori: false },
   { symbol: 'KCHOL', ad: 'Koç Holding',                 fiyat: 298.60, degisim: 0.2, trend: 'Tut',       favori: false },
@@ -213,15 +213,20 @@ function _flashSinifi(yon) {
   return yon === 'yukari' ? 'fiyat-flash-yukari' : yon === 'asagi' ? 'fiyat-flash-asagi' : '';
 }
 
+// NOT (28.08.2026): "Güçlü Al" ayrıcalıklı etiketi kaldırıldı — backtest'te bu
+// kova AL kovasından daha kötü performans gösteriyordu (bkz. analiz_motoru.py
+// karar_ver() üzerindeki not). Yeni üretilen veri artık "Güçlü Al" döndürmüyor;
+// bu satır SADECE eski/önbelleğe alınmış kayıtlarla uyumluluk için duruyor —
+// öyle bir etiket görülürse 'Al' ile aynı, öne çıkarılmamış stille gösterilir.
 const TREND_STIL = {
-  'Güçlü Al': 'bg-emerald-100 text-emerald-700 ring-1 ring-emerald-200',
+  'Güçlü Al': 'bg-green-100 text-green-700 ring-1 ring-green-200',
   'Al':       'bg-green-100 text-green-700 ring-1 ring-green-200',
   'Tut':      'bg-amber-100 text-amber-700 ring-1 ring-amber-200',
   'Sat':      'bg-red-100 text-red-700 ring-1 ring-red-200',
   'Güçlü Sat':'bg-red-200 text-red-800 ring-1 ring-red-300',
 };
 
-const TREND_FILTRELERI = ['Tümü', 'Güçlü Al', 'Al', 'Tut', 'Sat', 'Güçlü Sat'];
+const TREND_FILTRELERI = ['Tümü', 'Al', 'Tut', 'Sat', 'Güçlü Sat'];
 
 function DegisimEtiketi({ deger, kucuk }) {
   const pozitif = deger >= 0;
@@ -664,6 +669,15 @@ function YukselecekSatiri({ h, onSec }) {
         <span className="text-[10px] text-gray-400 uppercase tracking-wide ml-1 mr-0.5">Uzun</span>
         <VadeRozeti metin={h.uzun} />
       </div>
+      {/* Doğrulanmış = MA200 üstünde + para akışı (CMF) pozitif — depoda
+          walk-forward doğrulanmış TEK sinyal (bkz. analiz_motoru.secim_skoru).
+          Garanti değil, sadece listenin üst sırasına neden bu hissenin
+          geldiğinin açıklaması. */}
+      {h.dogrulanmis && (
+        <div className="mt-2 text-xs font-semibold text-emerald-700 bg-emerald-50 rounded-lg px-2.5 py-1.5">
+          ✅ Doğrulanmış sinyal — MA200 üstünde + para akışı pozitif (CMF {h.cmf != null ? h.cmf.toFixed(3) : '—'})
+        </div>
+      )}
     </div>
   );
 }
@@ -716,7 +730,17 @@ function DipDonusuSatiri({ h, onSec }) {
 
 function YukselecekEkran({ hisseler, dipDonusu, onSec, zaman, sistemDurumu }) {
   const [altSekme, setAltSekme] = useState('yukselecek');
-  const siralı = useMemo(() => [...hisseler].sort((a, b) => b.genelPuan - a.genelPuan), [hisseler]);
+  // Backend (analiz_motoru.vade_taramasi) doğrulanmış adayları (MA200 üstü +
+  // CMF pozitif) zaten üste koyup gönderiyor — burada TEKRAR sadece genelPuan'a
+  // göre sıralarsak bu öncelik bozulurdu. Aynı iki aşamalı mantığı frontend'de
+  // de uyguluyoruz: doğrulanmış üstte (CMF azalan), diğerleri altta (Genel
+  // Puan azalan).
+  const siralı = useMemo(() => {
+    const dogrulanmis = hisseler.filter(h => h.dogrulanmis).sort((a, b) => (b.cmf ?? -Infinity) - (a.cmf ?? -Infinity));
+    const digerleri = hisseler.filter(h => !h.dogrulanmis).sort((a, b) => b.genelPuan - a.genelPuan);
+    return [...dogrulanmis, ...digerleri];
+  }, [hisseler]);
+  const dogrulanmisSayisi = useMemo(() => hisseler.filter(h => h.dogrulanmis).length, [hisseler]);
   const dipSirali = useMemo(() => [...dipDonusu].sort((a, b) => b.donusGucu - a.donusGucu), [dipDonusu]);
   return (
     <div className="pb-4">
@@ -726,10 +750,18 @@ function YukselecekEkran({ hisseler, dipDonusu, onSec, zaman, sistemDurumu }) {
         </h1>
         <p className="text-sm text-gray-400">
           {altSekme === 'yukselecek'
-            ? siralı.length + " aday · Kısa/Orta/Uzun vade sinyaline göre en yüksek Genel Puan"
+            ? siralı.length + " aday · doğrulanmış sinyali olanlar en üstte, sonra Genel Puan'a göre"
             : dipSirali.length + " aday · düşmüş ama kısa vadede dönüş sinyali veren hisseler"}
           {zaman ? " · tarama: " + zaman : ""}
         </p>
+        {altSekme === 'yukselecek' && (
+          <p className="text-xs text-gray-400 mt-1 leading-relaxed">
+            {dogrulanmisSayisi > 0
+              ? `✅ ${dogrulanmisSayisi} hissede doğrulanmış sinyal var (MA200 üstü + para akışı pozitif) — bunlar listenin en üstünde.`
+              : "Şu an doğrulanmış sinyalli aday yok — liste Genel Puan'a göre sıralı."}
+            {" "}Bu bir garanti değildir, sadece depoda test edilmiş tek göstergeye göre önceliklendirmedir; piyasa riski her zaman vardır.
+          </p>
+        )}
       </div>
       <TaramaBayatUyarisi durum={sistemDurumu} />
       <div className="flex gap-2 px-4 pb-3">
@@ -945,9 +977,86 @@ function PerformansEkran({ performans }) {
    yıl sürdüğü için) — burada gösterilen sonuç kullanıcı en son ne zaman
    çalıştırdıysa o tarihe ait bir ANLIK GÖRÜNTÜ. Dürüstlük ilkesi: pozitif
    VEYA negatif sonuç fark etmeksizin olduğu gibi gösterilir. ──────────── */
-function BacktestEkran({ backtest }) {
+/* Öğrenme motorunun (ogrenme_motoru.py) ürettiği hata sınıflandırması +
+   ADAY öneri raporu. Kullanıcı isteği: "backtest'te tavsiyeler kötü çıkıyorsa
+   bundan ders çıkartmalı" — bu kart, motorun geçmiş tavsiyelerdeki hatalardan
+   çıkardığı istatistiksel bulguları gösterir. ÖNEMLİ: bu bulgular sadece
+   ÖNERİdir, hiçbir puanlama kuralı otomatik değişmez (bkz. ogrenme_motoru.py
+   başındaki tasarım kararı). */
+function OgrenmeKarti({ ogrenme }) {
+  const h = ogrenme?.hipotez;
+  if (!h || h.durum === 'veri yok') {
+    return (
+      <div className="bg-gray-50 rounded-2xl ring-1 ring-gray-200 p-4 mt-4">
+        <div className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">🎓 Öğrenme Motoru</div>
+        <p className="text-xs text-gray-500 leading-relaxed">
+          {h?.mesaj || "Henüz yeterli olgunlaşmış tavsiye yok — bilgisayarında HAFTALIK_KONTROL.bat çalıştıkça bu bölüm dolmaya başlayacak."}
+        </p>
+      </div>
+    );
+  }
+  const bulgular = (h.bulgular || []).filter(b => b.ornek_sayisi > 0);
+  return (
+    <div className="mt-4">
+      <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-2">🎓 Öğrenme Motoru — geçmiş hatalardan ders</h2>
+      <div className="bg-white rounded-2xl shadow-sm ring-1 ring-gray-100 p-4">
+        <p className="text-xs text-gray-500 leading-relaxed">
+          {(ogrenme.ufuk || 10)} günlük ufukta olgunlaşan <b>{h.toplam_olgun_karar}</b> tavsiye incelendi.
+          Genel başarı oranı <b className={h.genel_basari_orani >= 50 ? "text-emerald-600" : "text-red-600"}>%{h.genel_basari_orani}</b>
+          {" "}(güven aralığı %{h.genel_basari_guven_araligi?.[0]}–%{h.genel_basari_guven_araligi?.[1]}),
+          ortalama getiri <b className={h.ortalama_getiri >= 0 ? "text-emerald-600" : "text-red-600"}>{h.ortalama_getiri >= 0 ? "+" : ""}{h.ortalama_getiri}%</b>.
+        </p>
+        {!h.yeterli_veri_mi && (
+          <p className="text-[11px] text-amber-600 mt-2 leading-relaxed">⚠️ Örneklem henüz küçük — bulgular tesadüf olabilir, karar vermek için kullanma.</p>
+        )}
+      </div>
+
+      {bulgular.length > 0 && (
+        <div className="flex flex-col gap-2 mt-2">
+          {bulgular.map((b, i) => {
+            const fark = b.fark_puan;
+            const renk = fark == null ? "gray" : fark < -10 ? "red" : fark < 0 ? "amber" : "emerald";
+            const renkSinifi = {
+              red: "ring-red-200 bg-red-50", amber: "ring-amber-200 bg-amber-50",
+              emerald: "ring-emerald-200 bg-emerald-50", gray: "ring-gray-200 bg-gray-50",
+            }[renk];
+            return (
+              <div key={i} className={"rounded-xl ring-1 p-3 " + renkSinifi}>
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-semibold text-gray-800">{b.aciklama}</span>
+                  <span className="text-[10px] text-gray-400">n={b.ornek_sayisi}</span>
+                </div>
+                <div className="text-[11px] text-gray-500 mt-1">
+                  Başarı %{b.basari_orani} [{b.guven_araligi?.[0]}–{b.guven_araligi?.[1]}] · ort. getiri {b.ortalama_getiri >= 0 ? "+" : ""}{b.ortalama_getiri}%
+                  {b.fark_puan != null && <> · koşulsuz gruba göre {b.fark_puan >= 0 ? "+" : ""}{b.fark_puan} puan fark</>}
+                </div>
+                {b.aday_oneri && (
+                  <div className="text-[11px] text-gray-700 mt-1.5 leading-relaxed">💡 {b.aday_oneri}</div>
+                )}
+                {b.not && (
+                  <div className="text-[11px] text-gray-400 mt-1.5 leading-relaxed">{b.not}</div>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      )}
+
+      {(h.uyarilar || []).map((u, i) => (
+        <p key={i} className="text-[11px] text-gray-400 mt-2 leading-relaxed">⚠️ {u}</p>
+      ))}
+    </div>
+  );
+}
+
+function BacktestEkran({ backtest, ogrenme }) {
   if (!backtest) {
-    return <p className="text-sm text-gray-400 py-8 text-center">Henüz backtest sonucu üretilmedi. Bilgisayarında BACKTEST_CALISTIR.bat'ı çalıştırdığında burada görünecek.</p>;
+    return (
+      <div>
+        <p className="text-sm text-gray-400 py-8 text-center">Henüz backtest sonucu üretilmedi. Bilgisayarında BACKTEST_CALISTIR.bat'ı çalıştırdığında burada görünecek.</p>
+        <OgrenmeKarti ogrenme={ogrenme} />
+      </div>
+    );
   }
   const kovalar = backtest.kovalar || [];
   return (
@@ -997,6 +1106,8 @@ function BacktestEkran({ backtest }) {
         <summary className="text-xs text-indigo-600 font-semibold cursor-pointer">Tam raporu göster (ham metin)</summary>
         <pre className="text-[11px] text-gray-500 whitespace-pre-wrap bg-white rounded-xl ring-1 ring-gray-100 p-3 mt-2 leading-relaxed">{backtest.hamMetin}</pre>
       </details>
+
+      <OgrenmeKarti ogrenme={ogrenme} />
     </div>
   );
 }
@@ -1025,7 +1136,7 @@ function PozisyonSatiri({ p }) {
   );
 }
 
-function PortfoyEkran({ hisseler, portfoy, gercekPortfoy, performans, backtest, kullaniciPortfoy, setKullaniciPortfoy }) {
+function PortfoyEkran({ hisseler, portfoy, gercekPortfoy, performans, backtest, ogrenme, kullaniciPortfoy, setKullaniciPortfoy }) {
   const [altSekme, setAltSekme] = useState('pozisyonlar');
 
   const satirlar = useMemo(() => portfoy.map(p => {
@@ -1094,7 +1205,7 @@ function PortfoyEkran({ hisseler, portfoy, gercekPortfoy, performans, backtest, 
         </div>
       ) : altSekme === 'backtest' ? (
         <div className="px-4">
-          <BacktestEkran backtest={backtest} />
+          <BacktestEkran backtest={backtest} ogrenme={ogrenme} />
         </div>
       ) : altSekme === 'kullanici' ? (
         <div className="px-4">
@@ -1815,6 +1926,7 @@ function App() {
   const [sistemDurumu, setSistemDurumu] = useState(null);
   const [backtest, setBacktest] = useState(null);
   const [akdVerisi, setAkdVerisi] = useState(null);
+  const [ogrenme, setOgrenme] = useState(null);
 
   // Gerçek veriyi çek — docs/pusula/data/*.json (bkz. pusula_veri_uret.py).
   // Üçü de bağımsız başarısız olabilir (ör. henüz üretilmemişse); biri
@@ -1862,6 +1974,13 @@ function App() {
 
     fetch('./data/backtest.json').then(r => r.ok ? r.json() : Promise.reject())
       .then(d => setBacktest(d))
+      .catch(() => {});
+
+    // Öğrenme motoru — geçmiş tavsiyelerin hatalarından çıkarılan ADAY öneriler
+    // (bkz. ogrenme_motoru.py). Henüz üretilmemişse (haftalık kontrol hiç
+    // çalışmadıysa) sessizce boş kalır.
+    fetch('./data/ogrenme.json').then(r => r.ok ? r.json() : Promise.reject())
+      .then(d => setOgrenme(d))
       .catch(() => {});
 
     // AKD (aracı kurum dağılımı) — sadece favoriler için üretilir (Görev #53).
@@ -1950,7 +2069,7 @@ function App() {
         {tab === 'tarama' && <TaramaEkran hisseler={hisselerCanli} onSec={setDetaySembol} onYildiz={yildizToggle} fonKurumsal={fonKurumsal} />}
         {tab === 'yukselecek' && <YukselecekEkran hisseler={yukselecekCanli} dipDonusu={dipDonusuCanli} onSec={setDetaySembol} zaman={taramaZaman} sistemDurumu={sistemDurumu} />}
         {tab === 'ara' && <AraEkran hisseler={hisselerCanli} onSec={setDetaySembol} onYildiz={yildizToggle} />}
-        {tab === 'portfoy' && <PortfoyEkran hisseler={hisselerCanli} portfoy={portfoy} gercekPortfoy={gercekPortfoy} performans={performans} backtest={backtest} kullaniciPortfoy={kullaniciPortfoy} setKullaniciPortfoy={setKullaniciPortfoy} />}
+        {tab === 'portfoy' && <PortfoyEkran hisseler={hisselerCanli} portfoy={portfoy} gercekPortfoy={gercekPortfoy} performans={performans} backtest={backtest} ogrenme={ogrenme} kullaniciPortfoy={kullaniciPortfoy} setKullaniciPortfoy={setKullaniciPortfoy} />}
       </div>
 
       {/* Masaüstünde YanNav zaten md:hidden olan AltNav'ın yerini alıyor;

@@ -624,7 +624,15 @@ AGIRLIKLAR_FON = {"kisa": 0.22, "orta": 0.28, "uzun": 0.18, "takas": 0.22, "fon"
 
 
 def karar_ver(puan: float) -> tuple:
-    if puan >= 72:  return "GÜÇLÜ AL", "🟢"
+    # NOT (28.08.2026, kullanıcı raporu + kodun kendi 15.08.2026 backtest
+    # notuyla doğrulandı): "GÜÇLÜ AL" (72+) kovası, 5 yıllık backtest'te
+    # AL (62-72) kovasından DAHA KÖTÜ ileri getiri üretiyor (+%0.67 vs
+    # +%2.83, korelasyon skorun kendisiyle ~+0.012 — pratikte yok). Yani
+    # 72+ eşiğinin "daha güvenilir/güçlü" bir sinyal olduğunu iddia etmenin
+    # veride karşılığı yok. Ayrıcalıklı "GÜÇLÜ AL" etiketi bu yüzden
+    # kaldırıldı — 62 ve üzeri tek bir "AL" kovasında toplanıyor. Ham puan
+    # yine de her yerde gösterilmeye devam ediyor (kullanıcı isterse kendi
+    # eşiğini uygulayabilir), sadece yazılım buna fazladan güven atfetmiyor.
     if puan >= 62:  return "AL", "🟢"
     if puan >= 52:  return "İZLE / TUT", "🟡"
     if puan >= 40:  return "ZAYIF / BEKLE", "🟠"
@@ -635,8 +643,7 @@ def vade_karari(puan) -> str:
     """Tek bir vade puanını (0-100) kısa bir karar metnine çevirir."""
     if puan is None:
         return "⚪ Veri yok"
-    if puan >= 70:
-        return "🟢 GÜÇLÜ AL"
+    # bkz. karar_ver() üzerindeki not — "GÜÇLÜ AL" ayrıcalığı kaldırıldı.
     if puan >= 60:
         return "🟢 AL"
     if puan >= 50:
@@ -647,8 +654,9 @@ def vade_karari(puan) -> str:
 
 
 def vade_taramasi(veri_sozlugu: dict, ust_sinir: int = 40, endeks_df=None,
-                   ilerleme=None, min_hacim_milyon_tl: float = 5.0) -> pd.DataFrame:
-    """TEKNİK tabanlı Kısa/Orta/Uzun vade taraması.
+                   ilerleme=None, min_hacim_milyon_tl: float = 5.0,
+                   rejim: dict = None) -> pd.DataFrame:
+    """TEKNİK tabanlı Kısa/Orta/Uzun vade taraması — "Yükselebilecek Hisseler".
 
     ═══════════════════════════════════════════════════════════════════════════
     NEDEN BÖYLE: Bu fonksiyon, eskiden oruntu_motoru.vade_taramasi'nın yaptığı
@@ -659,7 +667,31 @@ def vade_taramasi(veri_sozlugu: dict, ust_sinir: int = 40, endeks_df=None,
     doğrudan fiyat/hacim/trend göstergelerine dayanır ve "geçmişte benzer
     durumlar şöyle olmuştu" gibi istatistiksel bir varsayım içermez.
 
-    Dönüş: Genel Puan'a göre azalan sıralı DataFrame.
+    ═══════════════════════════════════════════════════════════════════════════
+    28.08.2026 DEĞİŞİKLİĞİ — kullanıcı isteği: "Yükselebilecek Hisseler"
+    listesindeki İLK sıradaki hisseler gönül rahatlığıyla alınabilmeli.
+    Ancak backtest (94.144 nokta) "Genel Puan" ile ileri getiri arasındaki
+    korelasyonun ~+0,012 (yok denecek kadar az) olduğunu, hatta en yüksek
+    puanlı hissenin sıralamanın geri kalanından SİSTEMATİK OLARAK daha kötü
+    performans verdiğini gösterdi (bkz. analiz_motoru.py'deki 15.08.2026
+    notu ve secim_skoru() üzerindeki CMF notu). Bu yüzden liste artık SADECE
+    "Genel Puan"a göre sıralanmıyor:
+      1) rejim verilirse (piyasa riskli mi?) Genel Puan buna göre düzeltilir
+         — hizli_puan/tam_analiz ile TUTARLI olsun diye (önceden bu tarama
+         rejimi hiç görmüyordu — ayrı bir tutarsızlıktı, burada giderildi).
+      2) Her aday için secim_skoru() (CMF + MA200 filtresi) hesaplanır. Bu,
+         bu depoda AYRI ve DAHA SIKI bir çalışmayla (22.732 gözlem, walk-
+         forward doğrulanmış, korelasyon ~+0,079 — genel puanın ~6 katı)
+         doğrulanmış TEK göstergedir; sanal portföyün gerçek alım kararında
+         zaten bu kullanılıyor. "Doğrulanmış" (MA200 üstünde + CMF pozitif)
+         adaylar listenin EN ÜSTÜNE, CMF'ye göre azalan sırayla konur; kalan
+         adaylar altında (eskisi gibi Genel Puan'a göre) sıralanır.
+    ÖNEMLİ DÜRÜSTLÜK NOTU: Bu, "1 hafta sonunda kesin artıda kapanır" GARANTİSİ
+    DEĞİLDİR — piyasa riski her zaman vardır. Yapılan şey, listenin başını,
+    depodaki TEK istatistiksel olarak doğrulanmış sinyale göre önceliklendirmek.
+
+    Dönüş: Doğrulanmış adaylar üstte (CMF azalan), sonra Genel Puan'a göre
+    azalan sıralı DataFrame.
     """
     sonuclar = []
     toplam = len(veri_sozlugu)
@@ -696,9 +728,10 @@ def vade_taramasi(veri_sozlugu: dict, ust_sinir: int = 40, endeks_df=None,
             ort_hacim_tl = float((df["Close"] * df["Volume"]).tail(20).mean()) / 1e6
             if ort_hacim_tl < min_hacim_milyon_tl:
                 continue
-            satir = hizli_puan(df, endeks_df)
+            satir = hizli_puan(df, endeks_df, rejim=rejim)
             if satir.get("Puan") is None:
                 continue
+            secim = secim_skoru(df)
             kayit = {
                 "Hisse": sembol,
                 "Kısa": vade_karari(satir.get("Kısa")),
@@ -713,6 +746,10 @@ def vade_taramasi(veri_sozlugu: dict, ust_sinir: int = 40, endeks_df=None,
                 "1 Ay %": satir.get("1 Ay %"),
                 "3 Ay %": satir.get("3 Ay %"),
                 "Hacim(M₺)": satir.get("Hacim(M₺)"),
+                # Doğrulanmış sinyal — bkz. fonksiyon başındaki 28.08.2026 notu.
+                "CMF": secim.get("cmf"),
+                "MA200Ustunde": bool(secim.get("ma200_ustunde")),
+                "Dogrulanmis": bool(secim.get("uygun") and (secim.get("cmf") or 0) > 0),
             }
             sonuclar.append(kayit)
         except Exception:
@@ -720,7 +757,13 @@ def vade_taramasi(veri_sozlugu: dict, ust_sinir: int = 40, endeks_df=None,
 
     if not sonuclar:
         return pd.DataFrame()
-    tablo = pd.DataFrame(sonuclar).sort_values("Genel Puan", ascending=False)
+    tablo = pd.DataFrame(sonuclar)
+    # Doğrulanmış adaylar üstte (CMF'ye göre azalan), diğerleri altta (eskisi
+    # gibi Genel Puan'a göre azalan) — iki grup AYRI sıralanıp birleştirilir,
+    # yoksa doğrulanmamış grubun CMF'ye göre karışması niyeti bozar.
+    dogrulanmis = tablo[tablo["Dogrulanmis"]].sort_values("CMF", ascending=False)
+    digerleri = tablo[~tablo["Dogrulanmis"]].sort_values("Genel Puan", ascending=False)
+    tablo = pd.concat([dogrulanmis, digerleri]).reset_index(drop=True)
     tablo = tablo.head(ust_sinir).reset_index(drop=True)
     tablo.index += 1
     return tablo

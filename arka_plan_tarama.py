@@ -97,7 +97,7 @@ def calistir():
     _log(f"Puanlama taraması bitti: {len(tarama_tablo)} hisse puanlandı.")
 
     _log("Vade taraması (Kısa/Orta/Uzun, teknik puan tabanlı) çalışıyor...")
-    vade_tablo = am.vade_taramasi(veriler, ust_sinir=40, endeks_df=endeks)
+    vade_tablo = am.vade_taramasi(veriler, ust_sinir=40, endeks_df=endeks, rejim=rejim)
     vade_tablo = tob.trend_ekle(vade_tablo, veriler)
     _log(f"Vade taraması bitti: {len(vade_tablo)} hisse üç vadede değerlendirildi.")
 
