@@ -47,7 +47,10 @@ concurrency:
 jobs:
   akd:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    # Favoriler listesi 30 sembole çıktı (kullanıcı isteğiyle) — her sembol
+    # bot cevabı + OCR için ~10-30 sn sürebiliyor, aralarda 4 sn bekleme var.
+    # Geniş pay bırakıldı.
+    timeout-minutes: 45
 
     steps:
       - name: Depoyu indir
