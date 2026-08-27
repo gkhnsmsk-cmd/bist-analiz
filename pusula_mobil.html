@@ -87,18 +87,22 @@ function TrendRozeti({ trend, buyuk }) {
   );
 }
 
-/* ── Alt navigasyon — SABİT, her zaman görünür (detay ekranı hariç) ──── */
+/* NAVİGASYON ÖGELERİ — hem alt (mobil) hem yan (masaüstü) menü aynı listeyi
+   kullanır, tek kaynak (iki ayrı yerde elle senkron tutmaya gerek kalmaz). */
+const NAV_OGELERI = [
+  { key: 'ana', ikon: '🏠', etiket: 'Ana' },
+  { key: 'tarama', ikon: '🔎', etiket: 'Tarama' },
+  { key: 'portfoy', ikon: '💼', etiket: 'Portföy' },
+  { key: 'ara', ikon: '🔍', etiket: 'Ara' },
+];
+
+/* ── Alt navigasyon — SADECE MOBİLDE (md ve üstünde gizli, yerini sol
+   sabit menü alır). Detay ekranı açıkken o da gizlenir. ─────────────── */
 function AltNav({ aktif, setAktif }) {
-  const ogeler = [
-    { key: 'ana', ikon: '🏠', etiket: 'Ana' },
-    { key: 'tarama', ikon: '🔎', etiket: 'Tarama' },
-    { key: 'portfoy', ikon: '💼', etiket: 'Portföy' },
-    { key: 'ara', ikon: '🔍', etiket: 'Ara' },
-  ];
   return (
-    <nav className="fixed inset-x-0 bottom-0 z-40 bg-white/95 backdrop-blur border-t border-gray-200 safe-bottom">
+    <nav className="md:hidden fixed inset-x-0 bottom-0 z-40 bg-white/95 backdrop-blur border-t border-gray-200 safe-bottom">
       <div className="max-w-md mx-auto grid grid-cols-4">
-        {ogeler.map(o => (
+        {NAV_OGELERI.map(o => (
           <button
             key={o.key}
             onClick={() => setAktif(o.key)}
@@ -107,6 +111,36 @@ function AltNav({ aktif, setAktif }) {
           >
             <span className="text-xl leading-none">{o.ikon}</span>
             <span className="text-[11px] font-medium leading-none">{o.etiket}</span>
+          </button>
+        ))}
+      </div>
+    </nav>
+  );
+}
+
+/* ── Yan navigasyon — SADECE MASAÜSTÜNDE (md ve üstü). PC'de de aynı
+   akıcı SPA davranışı istendiği için mobildeki bottom-nav'ın birebir
+   masaüstü karşılığı: sabit, her zaman görünür, Python'a gitmeden
+   anında sekme değiştirir. Detay ekranı açıkken de görünür kalır —
+   masaüstünde detay bir MODAL olarak açılır (bkz. DetayEkran), o yüzden
+   arkadaki menüyü gizlemeye gerek yok. ───────────────────────────────── */
+function YanNav({ aktif, setAktif }) {
+  return (
+    <nav className="hidden md:flex md:flex-col md:fixed md:inset-y-0 md:left-0 md:w-56 md:border-r md:border-gray-200 md:bg-white md:z-40">
+      <div className="px-5 pt-6 pb-4">
+        <div className="text-xl font-bold text-gray-900">🧭 Pusula</div>
+        <div className="text-xs text-gray-400 mt-0.5">BIST mobil &amp; masaüstü</div>
+      </div>
+      <div className="flex flex-col gap-1 px-3">
+        {NAV_OGELERI.map(o => (
+          <button
+            key={o.key}
+            onClick={() => setAktif(o.key)}
+            className={"flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold transition-colors text-left " +
+                       (aktif === o.key ? "bg-indigo-50 text-indigo-700" : "text-gray-500 hover:bg-gray-50")}
+          >
+            <span className="text-lg leading-none">{o.ikon}</span>
+            {o.etiket}
           </button>
         ))}
       </div>
@@ -185,7 +219,7 @@ function AnaEkran({ hisseler, onSec, onYildiz }) {
       <FavorilerSeridi hisseler={hisseler} onSec={onSec} />
 
       <h2 className="px-4 text-sm font-semibold text-gray-500 uppercase tracking-wide mt-6 mb-2">Piyasa Özeti</h2>
-      <div className="px-4 flex flex-col gap-2">
+      <div className="px-4 flex flex-col gap-2 md:grid md:grid-cols-2 md:gap-3">
         {hisseler.map(h => <HisseSatiri key={h.symbol} h={h} onSec={onSec} onYildiz={onYildiz} />)}
       </div>
     </div>
@@ -217,9 +251,9 @@ function TaramaEkran({ hisseler, onSec, onYildiz }) {
           </button>
         ))}
       </div>
-      <div className="px-4 flex flex-col gap-2 mt-3">
+      <div className="px-4 flex flex-col gap-2 md:grid md:grid-cols-2 md:gap-3 mt-3">
         {filtreli.length === 0
-          ? <p className="text-sm text-gray-400 py-6 text-center">Bu filtreye uyan hisse yok.</p>
+          ? <p className="text-sm text-gray-400 py-6 text-center col-span-2">Bu filtreye uyan hisse yok.</p>
           : filtreli.map(h => <HisseSatiri key={h.symbol} h={h} onSec={onSec} onYildiz={onYildiz} />)}
       </div>
     </div>
@@ -248,9 +282,9 @@ function AraEkran({ hisseler, onSec, onYildiz }) {
           className="w-full min-h-[44px] rounded-2xl bg-white ring-1 ring-gray-200 px-4 focus:outline-none focus:ring-2 focus:ring-indigo-400"
         />
       </div>
-      <div className="px-4 flex flex-col gap-2 mt-3">
+      <div className="px-4 flex flex-col gap-2 md:grid md:grid-cols-2 md:gap-3 mt-3">
         {metin && sonuclar.length === 0 && (
-          <p className="text-sm text-gray-400 py-6 text-center">"{metin}" için sonuç yok.</p>
+          <p className="text-sm text-gray-400 py-6 text-center col-span-2">"{metin}" için sonuç yok.</p>
         )}
         {sonuclar.map(h => <HisseSatiri key={h.symbol} h={h} onSec={onSec} onYildiz={onYildiz} />)}
       </div>
@@ -377,58 +411,67 @@ function DetayEkran({ hisse, onGeri, onYildiz, onPortfoyeEkle }) {
     setTimeout(() => setEklendiGoster(false), 1600);
   }
 
+  // NEDEN İKİ KATMANLI SARMALAYICI: mobilde tam ekran ("push" — bkz. yukarı),
+  // masaüstünde ORTALANMIŞ bir MODAL kartı (arkada karartılmış arka plan,
+  // dışına tıklayınca kapanır). Aynı bileşen, tek CSS ile iki farklı "native"
+  // his veriyor — PC'de de aynı akıcı SPA davranışı isteniyordu.
   return (
-    <div className="fixed inset-0 z-50 bg-gray-50 detay-anim flex flex-col">
-      <div className="safe-top bg-white border-b border-gray-100 px-2 py-2 flex items-center gap-2 shrink-0">
-        <button onClick={onGeri} className="min-h-[44px] min-w-[44px] flex items-center justify-center text-2xl text-gray-700 active:bg-gray-100 rounded-xl">
-          ‹
-        </button>
-        <div className="font-bold text-gray-900 flex-1">{hisse.symbol}</div>
-        <button onClick={() => onYildiz(hisse.symbol)} className="min-h-[44px] min-w-[44px] flex items-center justify-center text-2xl">
-          {hisse.favori ? '⭐' : '☆'}
-        </button>
-      </div>
-
-      <div className="flex-1 overflow-y-auto px-4 py-5">
-        <div className="text-sm text-gray-400">{hisse.ad}</div>
-        <div className="mt-1 text-4xl font-bold text-gray-900 tabular-nums">{hisse.fiyat.toFixed(2)} ₺</div>
-        <div className="mt-2 flex items-center gap-2">
-          <DegisimEtiketi deger={hisse.degisim} />
-          <span className="text-gray-300">·</span>
-          <TrendRozeti trend={hisse.trend} buyuk />
+    <div
+      className="fixed inset-0 z-50 detay-anim md:bg-black/40 md:flex md:items-center md:justify-center md:p-6"
+      onClick={(e) => { if (e.target === e.currentTarget) onGeri(); }}
+    >
+      <div className="h-full md:h-auto md:max-h-[85vh] md:w-full md:max-w-xl bg-gray-50 flex flex-col md:rounded-3xl md:shadow-2xl md:overflow-hidden">
+        <div className="safe-top bg-white border-b border-gray-100 px-2 py-2 flex items-center gap-2 shrink-0">
+          <button onClick={onGeri} className="min-h-[44px] min-w-[44px] flex items-center justify-center text-2xl text-gray-700 active:bg-gray-100 rounded-xl">
+            ‹
+          </button>
+          <div className="font-bold text-gray-900 flex-1">{hisse.symbol}</div>
+          <button onClick={() => onYildiz(hisse.symbol)} className="min-h-[44px] min-w-[44px] flex items-center justify-center text-2xl">
+            {hisse.favori ? '⭐' : '☆'}
+          </button>
         </div>
 
-        <div className="mt-6 bg-white rounded-2xl shadow-sm ring-1 ring-gray-100 p-4">
-          <div className="text-xs text-gray-400 uppercase tracking-wide mb-2">Algoritma Kararı</div>
-          <div className="flex items-center gap-3">
+        <div className="flex-1 overflow-y-auto px-4 py-5">
+          <div className="text-sm text-gray-400">{hisse.ad}</div>
+          <div className="mt-1 text-4xl font-bold text-gray-900 tabular-nums">{hisse.fiyat.toFixed(2)} ₺</div>
+          <div className="mt-2 flex items-center gap-2">
+            <DegisimEtiketi deger={hisse.degisim} />
+            <span className="text-gray-300">·</span>
             <TrendRozeti trend={hisse.trend} buyuk />
-            <span className="text-sm text-gray-500">
-              {hisse.trend.includes('Al') ? 'Trend ve puanlama pozitif yönde.' :
-               hisse.trend === 'Tut' ? 'Belirgin bir sinyal yok, bekle-gör.' :
-               'Trend ve puanlama negatif yönde.'}
-            </span>
           </div>
+
+          <div className="mt-6 bg-white rounded-2xl shadow-sm ring-1 ring-gray-100 p-4">
+            <div className="text-xs text-gray-400 uppercase tracking-wide mb-2">Algoritma Kararı</div>
+            <div className="flex items-center gap-3">
+              <TrendRozeti trend={hisse.trend} buyuk />
+              <span className="text-sm text-gray-500">
+                {hisse.trend.includes('Al') ? 'Trend ve puanlama pozitif yönde.' :
+                 hisse.trend === 'Tut' ? 'Belirgin bir sinyal yok, bekle-gör.' :
+                 'Trend ve puanlama negatif yönde.'}
+              </span>
+            </div>
+          </div>
+
+          <p className="mt-6 text-xs text-gray-400 leading-relaxed">
+            Bu ekran şu an mock (23.08.2026 tarama görüntüsü) veri gösteriyor.
+            Gerçek sürümde bu değerler doğrudan Python analiz motorundan
+            (analiz_motoru.py) bir API üzerinden gelecek — arayüz aynı kalacak.
+          </p>
         </div>
 
-        <p className="mt-6 text-xs text-gray-400 leading-relaxed">
-          Bu ekran şu an mock (23.08.2026 tarama görüntüsü) veri gösteriyor.
-          Gerçek sürümde bu değerler doğrudan Python analiz motorundan
-          (analiz_motoru.py) bir API üzerinden gelecek — arayüz aynı kalacak.
-        </p>
-      </div>
-
-      <div className="shrink-0 px-4 pb-4 pt-2 safe-bottom relative">
-        {eklendiGoster && (
-          <div className="absolute -top-10 left-4 right-4 text-center text-sm font-semibold text-emerald-700 bg-emerald-50 ring-1 ring-emerald-200 rounded-xl py-2 fade-anim">
-            ✓ Portföye eklendi
-          </div>
-        )}
-        <button
-          onClick={portfoyeEkleTikla}
-          className="w-full min-h-[52px] rounded-2xl bg-indigo-600 text-white font-bold text-base active:bg-indigo-700 transition-colors"
-        >
-          Portföye Ekle
-        </button>
+        <div className="shrink-0 px-4 pb-4 pt-2 safe-bottom relative">
+          {eklendiGoster && (
+            <div className="absolute -top-10 left-4 right-4 text-center text-sm font-semibold text-emerald-700 bg-emerald-50 ring-1 ring-emerald-200 rounded-xl py-2 fade-anim">
+              ✓ Portföye eklendi
+            </div>
+          )}
+          <button
+            onClick={portfoyeEkleTikla}
+            className="w-full min-h-[52px] rounded-2xl bg-indigo-600 text-white font-bold text-base active:bg-indigo-700 transition-colors"
+          >
+            Portföye Ekle
+          </button>
+        </div>
       </div>
     </div>
   );
@@ -460,13 +503,21 @@ function App() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <div className="max-w-md mx-auto pb-20 safe-top">
+      {/* Masaüstü: sabit sol menü (mobilde gizli, bkz. YanNav içindeki
+         md:flex). Kullanıcı isteği: "pc'de de aynı akıcı arayüzü istiyorum"
+         — aynı state/aynı SPA, sadece PC'de menü sol tarafa taşınıyor. */}
+      <YanNav aktif={tab} setAktif={setTab} />
+
+      <div className="max-w-md md:max-w-3xl md:ml-56 mx-auto md:mx-0 md:px-8 pb-20 md:pb-10 md:pt-6 safe-top">
         {tab === 'ana' && <AnaEkran hisseler={hisseler} onSec={setDetaySembol} onYildiz={yildizToggle} />}
         {tab === 'tarama' && <TaramaEkran hisseler={hisseler} onSec={setDetaySembol} onYildiz={yildizToggle} />}
         {tab === 'ara' && <AraEkran hisseler={hisseler} onSec={setDetaySembol} onYildiz={yildizToggle} />}
         {tab === 'portfoy' && <PortfoyEkran hisseler={hisseler} portfoy={portfoy} setPortfoy={setPortfoy} />}
       </div>
 
+      {/* Masaüstünde YanNav zaten md:hidden olan AltNav'ın yerini alıyor;
+         mobilde ise detay ekranı açıkken alt nav'ı DOM'da tutmaya gerek yok
+         (detay tam ekran zaten üstünü kaplıyor) — orijinal davranış korundu. */}
       {!secilenHisse && <AltNav aktif={tab} setAktif={setTab} />}
 
       {secilenHisse && (
