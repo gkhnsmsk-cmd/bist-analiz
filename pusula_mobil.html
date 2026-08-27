@@ -27,7 +27,7 @@
 <body>
 <div id="root"></div>
 <script type="text/babel" data-presets="react">
-const { useState, useMemo } = React;
+const { useState, useMemo, useEffect } = React;
 
 /* ═══════════════════════════════════════════════════════════════════════
    PUSULA — BIST mobil arayüzü (React SPA, Streamlit'in yerini alır)
@@ -39,12 +39,13 @@ const { useState, useMemo } = React;
    çünkü mimari sorun. Bu dosya YERİNE geçen bağımsız bir SPA: ekran
    geçişleri saf React state ile (Python'a hiç gidilmeden) anında olur.
 
-   ŞİMDİLİK: Veri MOCK (23.08.2026 tarama görüntüsünü taklit ediyor).
-   SONRAKİ ADIM: Bu katman aynı Python motoruna (app.py'deki analiz_motoru,
-   veri_katmani vb.) bir API üzerinden bağlanacak — arayüz mimarisi
-   değişmeyecek, sadece MOCK_HISSELER dizisi gerçek bir fetch() çağrısıyla
-   değişecek. Bkz. dosya sonundaki "SONRAKİ ADIM" notu.
-   ═══════════════════════════════════════════════════════════════════════ */
+   VERİ KAYNAĞI (MOCK DEĞİL): Bu sayfa docs/pusula/data/*.json dosyalarını
+   fetch() ile okur. O dosyalar pusula_veri_uret.py tarafından
+   tarama_onbellek.json (Öne Çıkan + Yükselebilecek taramaları) ve
+   sanal_portfoy.json'dan üretilir — arka_plan_tarama.py ve
+   gunluk_sanal_yatirim.py her çalıştığında (Görev Zamanlayıcı / GitHub
+   Actions) otomatik tazelenir. Ağ isteği başarısız olursa (ör. dosyalar
+   henüz commit'lenmemişse) sayfa MOCK_HISSELER'e düşer ki boş kalmasın. */
 
 const MOCK_HISSELER = [
   { symbol: 'PGSUS', ad: 'Pegasus Hava Taşımacılığı', fiyat: 985.50, degisim: 3.2, trend: 'Güçlü Al', favori: true },
@@ -58,6 +59,32 @@ const MOCK_HISSELER = [
   { symbol: 'EREGL', ad: 'Ereğli Demir Çelik',          fiyat: 56.20,  degisim: 1.2, trend: 'Al',        favori: false },
   { symbol: 'KCHOL', ad: 'Koç Holding',                 fiyat: 298.60, degisim: 0.2, trend: 'Tut',       favori: false },
 ];
+
+/* Gerçek veriyi Pusula'nın beklediği alan adlarına çevirir. Kaynak
+   (pusula_veri_uret.py) 'degisim1ay' üretir — gerçek anlık günlük değişim
+   önbellekte yok, bu yüzden rozetler 1 aylık değişimi gösterir; ekran
+   başlıklarında bu açıkça belirtilir (aşağıya bkz.). */
+function _apiHisseUyarla(x, favoriSet) {
+  return {
+    symbol: x.symbol,
+    ad: x.ad || x.symbol,
+    fiyat: x.fiyat || 0,
+    degisim: x.degisim1ay || 0,
+    trend: x.trend || 'Tut',
+    favori: favoriSet.has(x.symbol),
+  };
+}
+
+const FAVORI_ANAHTAR = 'pusula_favoriler';
+function _favorileriOku() {
+  try {
+    const ham = localStorage.getItem(FAVORI_ANAHTAR);
+    return ham ? new Set(JSON.parse(ham)) : new Set(['PGSUS', 'ASTOR', 'THYAO']);
+  } catch (e) { return new Set(['PGSUS', 'ASTOR', 'THYAO']); }
+}
+function _favorileriYaz(set) {
+  try { localStorage.setItem(FAVORI_ANAHTAR, JSON.stringify([...set])); } catch (e) {}
+}
 
 const TREND_STIL = {
   'Güçlü Al': 'bg-emerald-100 text-emerald-700 ring-1 ring-emerald-200',
@@ -92,6 +119,7 @@ function TrendRozeti({ trend, buyuk }) {
 const NAV_OGELERI = [
   { key: 'ana', ikon: '🏠', etiket: 'Ana' },
   { key: 'tarama', ikon: '🔎', etiket: 'Tarama' },
+  { key: 'yukselecek', ikon: '📈', etiket: 'Yükselecek' },
   { key: 'portfoy', ikon: '💼', etiket: 'Portföy' },
   { key: 'ara', ikon: '🔍', etiket: 'Ara' },
 ];
@@ -101,7 +129,7 @@ const NAV_OGELERI = [
 function AltNav({ aktif, setAktif }) {
   return (
     <nav className="md:hidden fixed inset-x-0 bottom-0 z-40 bg-white/95 backdrop-blur border-t border-gray-200 safe-bottom">
-      <div className="max-w-md mx-auto grid grid-cols-4">
+      <div className="max-w-md mx-auto grid grid-cols-5">
         {NAV_OGELERI.map(o => (
           <button
             key={o.key}
@@ -207,12 +235,12 @@ function HisseSatiri({ h, onSec, onYildiz }) {
 }
 
 /* ── Ekran 1: Ana ─────────────────────────────────────────────────────── */
-function AnaEkran({ hisseler, onSec, onYildiz }) {
+function AnaEkran({ hisseler, onSec, onYildiz, zaman }) {
   return (
     <div className="pb-4">
       <div className="px-4 pt-2 pb-3">
         <h1 className="text-2xl font-bold text-gray-900">Pusula</h1>
-        <p className="text-sm text-gray-400">BIST anlık özet — 23.08.2026 tarama görüntüsü</p>
+        <p className="text-sm text-gray-400">BIST özet{zaman ? " — tarama: " + zaman : ""} · değişim = 1 aylık</p>
       </div>
 
       <h2 className="px-4 text-sm font-semibold text-gray-500 uppercase tracking-wide mb-2">⭐ Favoriler</h2>
@@ -260,6 +288,68 @@ function TaramaEkran({ hisseler, onSec, onYildiz }) {
   );
 }
 
+/* ── Ekran: Yükselebilecek Hisseler — Kısa/Orta/Uzun vade sinyalleri ─────
+   Kaynak: tarama_onbellek.json:"yukselecek_vade" (arka_plan_tarama.py günde
+   1-2 kez tüm BIST'i tarayıp yazıyor). Genel Puan, üç vadenin ağırlıklı
+   ortalamasıdır — yüksek puan, üç vadede de tutarlı pozitif sinyal demektir. */
+function VadeRozeti({ metin }) {
+  const pozitif = (metin || '').includes('🟢');
+  const notr = (metin || '').includes('🟡') || (metin || '').toUpperCase().includes('NÖTR');
+  const stil = pozitif ? 'bg-emerald-50 text-emerald-700' : notr ? 'bg-amber-50 text-amber-700' : 'bg-red-50 text-red-700';
+  return <span className={"text-[11px] font-semibold px-2 py-0.5 rounded-lg whitespace-nowrap " + stil}>{metin || '—'}</span>;
+}
+
+function YukselecekSatiri({ h, onSec }) {
+  return (
+    <div
+      role="button"
+      tabIndex={0}
+      onClick={() => onSec(h.symbol)}
+      onKeyDown={(e) => { if (e.key === 'Enter') onSec(h.symbol); }}
+      className="w-full bg-white rounded-2xl shadow-sm ring-1 ring-gray-100 px-4 py-3 min-h-[44px] active:bg-gray-50 transition-colors cursor-pointer"
+    >
+      <div className="flex items-center justify-between gap-3">
+        <div className="min-w-0">
+          <div className="font-bold text-gray-900">{h.symbol}</div>
+          <div className="text-xs text-gray-400 truncate">{h.ad}</div>
+        </div>
+        <div className="text-right shrink-0">
+          <div className="font-semibold text-gray-900 tabular-nums">{h.fiyat.toFixed(2)} ₺</div>
+          <div className="text-xs text-gray-400">Genel Puan <span className="font-bold text-indigo-600">{h.genelPuan.toFixed(0)}</span></div>
+        </div>
+      </div>
+      <div className="mt-2 flex items-center gap-1.5 flex-wrap">
+        <span className="text-[10px] text-gray-400 uppercase tracking-wide mr-0.5">Kısa</span>
+        <VadeRozeti metin={h.kisa} />
+        <span className="text-[10px] text-gray-400 uppercase tracking-wide ml-1 mr-0.5">Orta</span>
+        <VadeRozeti metin={h.orta} />
+        <span className="text-[10px] text-gray-400 uppercase tracking-wide ml-1 mr-0.5">Uzun</span>
+        <VadeRozeti metin={h.uzun} />
+      </div>
+    </div>
+  );
+}
+
+function YukselecekEkran({ hisseler, onSec, zaman }) {
+  const siralı = useMemo(() => [...hisseler].sort((a, b) => b.genelPuan - a.genelPuan), [hisseler]);
+  return (
+    <div className="pb-4">
+      <div className="px-4 pt-2 pb-3">
+        <h1 className="text-2xl font-bold text-gray-900">Yükselebilecek Hisseler</h1>
+        <p className="text-sm text-gray-400">
+          {siralı.length} aday · Kısa/Orta/Uzun vade sinyaline göre en yüksek Genel Puan
+          {zaman ? " · tarama: " + zaman : ""}
+        </p>
+      </div>
+      <div className="px-4 flex flex-col gap-2 md:grid md:grid-cols-2 md:gap-3">
+        {siralı.length === 0
+          ? <p className="text-sm text-gray-400 py-6 text-center col-span-2">Henüz tarama verisi yok.</p>
+          : siralı.map(h => <YukselecekSatiri key={h.symbol} h={h} onSec={onSec} />)}
+      </div>
+    </div>
+  );
+}
+
 /* ── Ekran 3: Ara ─────────────────────────────────────────────────────── */
 function AraEkran({ hisseler, onSec, onYildiz }) {
   const [metin, setMetin] = useState('');
@@ -292,8 +382,13 @@ function AraEkran({ hisseler, onSec, onYildiz }) {
   );
 }
 
-/* ── Ekran 4: Portföy ─────────────────────────────────────────────────── */
-function PortfoyEkran({ hisseler, portfoy, setPortfoy }) {
+/* ── Ekran 4: Portföy — GERÇEK sanal portföy verisi (sanal_portfoy.json)
+   Kaynak: gunluk_sanal_yatirim.py her çalıştığında (haftalık rebalans +
+   günlük stop kontrolü) pozisyonları günceller, pusula_veri_uret.py da
+   sonucu buraya taşır. 'nakit' ve 'baslangicButce' gerçek portföy
+   durumundan gelir; elle ekle/çıkar bu üstüne DENEME amaçlı yapılır (sadece
+   tarayıcıda kalır, gerçek portföyü etkilemez). ───────────────────────── */
+function PortfoyEkran({ hisseler, portfoy, setPortfoy, gercekPortfoy }) {
   const [formAcik, setFormAcik] = useState(false);
   const [ySembol, setYSembol] = useState(hisseler[0]?.symbol || '');
   const [yAdet, setYAdet] = useState('');
@@ -301,16 +396,20 @@ function PortfoyEkran({ hisseler, portfoy, setPortfoy }) {
 
   const satirlar = useMemo(() => portfoy.map(p => {
     const h = hisseler.find(x => x.symbol === p.symbol);
-    const guncelFiyat = h ? h.fiyat : p.maliyet;
+    const guncelFiyat = h ? h.fiyat : (p.sonFiyat || p.maliyet);
     const deger = guncelFiyat * p.adet;
     const maliyetToplam = p.maliyet * p.adet;
     const karZarar = deger - maliyetToplam;
     const karZararYuzde = maliyetToplam ? (karZarar / maliyetToplam) * 100 : 0;
-    return { ...p, ad: h?.ad || p.symbol, guncelFiyat, deger, karZarar, karZararYuzde };
+    return { ...p, ad: h?.ad || p.ad || p.symbol, guncelFiyat, deger, karZarar, karZararYuzde };
   }), [portfoy, hisseler]);
 
-  const toplamDeger = satirlar.reduce((s, x) => s + x.deger, 0);
+  const toplamPozisyonDegeri = satirlar.reduce((s, x) => s + x.deger, 0);
+  const nakit = gercekPortfoy?.nakit ?? 0;
+  const toplamDeger = toplamPozisyonDegeri + nakit;
   const toplamKarZarar = satirlar.reduce((s, x) => s + x.karZarar, 0);
+  const baslangicButce = gercekPortfoy?.baslangicButce || 0;
+  const genelGetiriYuzde = baslangicButce ? ((toplamDeger - baslangicButce) / baslangicButce) * 100 : null;
 
   function ekle() {
     const adet = parseFloat(yAdet);
@@ -323,21 +422,32 @@ function PortfoyEkran({ hisseler, portfoy, setPortfoy }) {
   return (
     <div className="pb-4">
       <div className="px-4 pt-2 pb-3">
-        <h1 className="text-2xl font-bold text-gray-900">Portföy</h1>
-        <p className="text-sm text-gray-400">{satirlar.length} pozisyon</p>
+        <h1 className="text-2xl font-bold text-gray-900">Sanal Portföy</h1>
+        <p className="text-sm text-gray-400">{satirlar.length} pozisyon · ⚠️ sanal, gerçek para kullanılmıyor</p>
       </div>
 
       <div className="px-4">
-        <div className="bg-white rounded-2xl shadow-sm ring-1 ring-gray-100 p-4 flex items-center justify-between">
-          <div>
-            <div className="text-xs text-gray-400 uppercase tracking-wide">Toplam Değer</div>
-            <div className="text-xl font-bold text-gray-900 tabular-nums">{toplamDeger.toLocaleString('tr-TR', {maximumFractionDigits: 2})} ₺</div>
-          </div>
-          <div className="text-right">
-            <div className="text-xs text-gray-400 uppercase tracking-wide">Kâr / Zarar</div>
-            <div className={"text-xl font-bold tabular-nums " + (toplamKarZarar >= 0 ? "text-emerald-600" : "text-red-600")}>
-              {toplamKarZarar >= 0 ? "+" : ""}{toplamKarZarar.toLocaleString('tr-TR', {maximumFractionDigits: 2})} ₺
+        <div className="bg-white rounded-2xl shadow-sm ring-1 ring-gray-100 p-4">
+          <div className="flex items-center justify-between">
+            <div>
+              <div className="text-xs text-gray-400 uppercase tracking-wide">Toplam Değer</div>
+              <div className="text-xl font-bold text-gray-900 tabular-nums">{toplamDeger.toLocaleString('tr-TR', {maximumFractionDigits: 2})} ₺</div>
+              {genelGetiriYuzde !== null && (
+                <div className={"text-xs font-semibold tabular-nums " + (genelGetiriYuzde >= 0 ? "text-emerald-600" : "text-red-600")}>
+                  başlangıca göre {genelGetiriYuzde >= 0 ? "+" : ""}{genelGetiriYuzde.toFixed(1)}%
+                </div>
+              )}
             </div>
+            <div className="text-right">
+              <div className="text-xs text-gray-400 uppercase tracking-wide">Pozisyon K/Z</div>
+              <div className={"text-xl font-bold tabular-nums " + (toplamKarZarar >= 0 ? "text-emerald-600" : "text-red-600")}>
+                {toplamKarZarar >= 0 ? "+" : ""}{toplamKarZarar.toLocaleString('tr-TR', {maximumFractionDigits: 2})} ₺
+              </div>
+            </div>
+          </div>
+          <div className="mt-3 pt-3 border-t border-gray-100 flex items-center justify-between text-sm">
+            <span className="text-gray-400">Nakit</span>
+            <span className="font-semibold text-gray-700 tabular-nums">{nakit.toLocaleString('tr-TR', {maximumFractionDigits: 2})} ₺</span>
           </div>
         </div>
       </div>
@@ -348,7 +458,7 @@ function PortfoyEkran({ hisseler, portfoy, setPortfoy }) {
             <div className="flex items-center justify-between">
               <div>
                 <div className="font-bold text-gray-900">{p.symbol}</div>
-                <div className="text-xs text-gray-400">{p.adet} adet · maliyet {p.maliyet.toFixed(2)} ₺</div>
+                <div className="text-xs text-gray-400">{p.adet.toFixed(2)} adet · maliyet {p.maliyet.toFixed(2)} ₺</div>
               </div>
               <div className="text-right">
                 <div className="font-semibold text-gray-900 tabular-nums">{p.deger.toLocaleString('tr-TR', {maximumFractionDigits: 2})} ₺</div>
@@ -453,9 +563,9 @@ function DetayEkran({ hisse, onGeri, onYildiz, onPortfoyeEkle }) {
           </div>
 
           <p className="mt-6 text-xs text-gray-400 leading-relaxed">
-            Bu ekran şu an mock (23.08.2026 tarama görüntüsü) veri gösteriyor.
-            Gerçek sürümde bu değerler doğrudan Python analiz motorundan
-            (analiz_motoru.py) bir API üzerinden gelecek — arayüz aynı kalacak.
+            Fiyat ve trend, en son arka plan taramasından (analiz_motoru.py)
+            gelir. Yüzde değişim şu an 1 aylık; günlük değişim önbellekte
+            henüz tutulmuyor.
           </p>
         </div>
 
@@ -480,26 +590,65 @@ function DetayEkran({ hisse, onGeri, onYildiz, onPortfoyeEkle }) {
 /* ── Kök bileşen ──────────────────────────────────────────────────────── */
 function App() {
   const [tab, setTab] = useState('ana');
+  const [yukleniyor, setYukleniyor] = useState(true);
   const [hisseler, setHisseler] = useState(MOCK_HISSELER);
+  const [yukselecek, setYukselecek] = useState([]);
+  const [taramaZaman, setTaramaZaman] = useState(null);
   const [detaySembol, setDetaySembol] = useState(null);
-  const [portfoy, setPortfoy] = useState([
-    { symbol: 'THYAO', adet: 50, maliyet: 280.00 },
-    { symbol: 'GARAN', adet: 100, maliyet: 150.00 },
-  ]);
+  const [portfoy, setPortfoy] = useState([]);
+  const [gercekPortfoy, setGercekPortfoy] = useState(null);
+
+  // Gerçek veriyi çek — docs/pusula/data/*.json (bkz. pusula_veri_uret.py).
+  // Üçü de bağımsız başarısız olabilir (ör. henüz üretilmemişse); biri
+  // başarısız olursa diğerleri yine de yüklenir, sayfa çökmez.
+  useEffect(() => {
+    const favSet = _favorileriOku();
+
+    fetch('./data/tarama.json').then(r => r.ok ? r.json() : Promise.reject())
+      .then(d => {
+        setHisseler((d.hisseler || []).map(x => _apiHisseUyarla(x, favSet)));
+        setTaramaZaman(d.zaman ? new Date(d.zaman).toLocaleString('tr-TR') : null);
+      })
+      .catch(() => {}); // MOCK_HISSELER'de kalır
+
+    fetch('./data/yukselecek.json').then(r => r.ok ? r.json() : Promise.reject())
+      .then(d => setYukselecek(d.hisseler || []))
+      .catch(() => {});
+
+    fetch('./data/portfoy.json').then(r => r.ok ? r.json() : Promise.reject())
+      .then(d => {
+        setGercekPortfoy(d);
+        setPortfoy((d.pozisyonlar || []).map(p => ({
+          symbol: p.symbol, ad: p.ad, adet: p.adet, maliyet: p.maliyet, sonFiyat: p.sonFiyat,
+        })));
+      })
+      .catch(() => {})
+      .finally(() => setYukleniyor(false));
+  }, []);
 
   function yildizToggle(symbol) {
-    setHisseler(prev => prev.map(h => h.symbol === symbol ? { ...h, favori: !h.favori } : h));
+    setHisseler(prev => {
+      const sonraki = prev.map(h => h.symbol === symbol ? { ...h, favori: !h.favori } : h);
+      _favorileriYaz(new Set(sonraki.filter(h => h.favori).map(h => h.symbol)));
+      return sonraki;
+    });
   }
 
   function portfoyeEkle(symbol) {
     setPortfoy(prev => {
       if (prev.some(p => p.symbol === symbol)) return prev;
-      const h = hisseler.find(x => x.symbol === symbol);
+      const h = hisseler.find(x => x.symbol === symbol) || yukselecek.find(x => x.symbol === symbol);
       return [...prev, { symbol, adet: 10, maliyet: h ? h.fiyat : 0 }];
     });
   }
 
-  const secilenHisse = detaySembol ? hisseler.find(h => h.symbol === detaySembol) : null;
+  // Detay ekranı hem "Ana/Tarama/Ara" listesindeki hem de "Yükselecek"
+  // listesindeki bir hisse için açılabilir — iki kaynağı birleştirip arıyoruz.
+  const secilenHisse = detaySembol
+    ? (hisseler.find(h => h.symbol === detaySembol) ||
+       (() => { const y = yukselecek.find(h => h.symbol === detaySembol);
+                return y ? { ...y, favori: hisseler.some(h => h.symbol === y.symbol && h.favori) } : null; })())
+    : null;
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -509,10 +658,14 @@ function App() {
       <YanNav aktif={tab} setAktif={setTab} />
 
       <div className="max-w-md md:max-w-3xl md:ml-56 mx-auto md:mx-0 md:px-8 pb-20 md:pb-10 md:pt-6 safe-top">
-        {tab === 'ana' && <AnaEkran hisseler={hisseler} onSec={setDetaySembol} onYildiz={yildizToggle} />}
+        {yukleniyor && (
+          <p className="px-4 pt-3 text-xs text-gray-400">Gerçek veri yükleniyor…</p>
+        )}
+        {tab === 'ana' && <AnaEkran hisseler={hisseler} onSec={setDetaySembol} onYildiz={yildizToggle} zaman={taramaZaman} />}
         {tab === 'tarama' && <TaramaEkran hisseler={hisseler} onSec={setDetaySembol} onYildiz={yildizToggle} />}
+        {tab === 'yukselecek' && <YukselecekEkran hisseler={yukselecek} onSec={setDetaySembol} zaman={taramaZaman} />}
         {tab === 'ara' && <AraEkran hisseler={hisseler} onSec={setDetaySembol} onYildiz={yildizToggle} />}
-        {tab === 'portfoy' && <PortfoyEkran hisseler={hisseler} portfoy={portfoy} setPortfoy={setPortfoy} />}
+        {tab === 'portfoy' && <PortfoyEkran hisseler={hisseler} portfoy={portfoy} setPortfoy={setPortfoy} gercekPortfoy={gercekPortfoy} />}
       </div>
 
       {/* Masaüstünde YanNav zaten md:hidden olan AltNav'ın yerini alıyor;
@@ -535,15 +688,17 @@ function App() {
 ReactDOM.createRoot(document.getElementById('root')).render(<App />);
 
 /* ═══════════════════════════════════════════════════════════════════════
-   SONRAKİ ADIM (gerçek veriye bağlama):
-   1) app.py tarafında basit bir JSON endpoint'i (ör. FastAPI/Flask ile
-      /api/tarama) analiz_motoru.py + veri_katmani.py çıktısını döndürsün.
-   2) Bu dosyada MOCK_HISSELER dizisini kaldırıp, App() içinde
-      useEffect(() => { fetch('/api/tarama').then(...).then(setHisseler) }, [])
-      ile gerçek veriyi çekin. Bileşenlerin HİÇBİRİ değişmez — sadece veri
-      kaynağı mock diziden gerçek API'ye geçer.
-   3) Portföy ekle/çıkar işlemleri de aynı şekilde bir /api/portfoy
-      endpoint'ine POST edilerek kalıcı hale getirilebilir.
+   VERİ ZİNCİRİ (gerçek, mock değil):
+   arka_plan_tarama.py / gunluk_sanal_yatirim.py (Görev Zamanlayıcı veya
+   GitHub Actions ile günde 1-2 kez) → tarama_onbellek.json / sanal_portfoy.json
+   → pusula_veri_uret.py → docs/pusula/data/*.json → bu sayfa fetch() ile okur.
+
+   KALAN SINIRLAMA: docs/pusula/data/portfoy.json içindeki elle ekle/çıkar
+   işlemleri sadece tarayıcı state'inde yaşar (kalıcı değildir, sayfa
+   yenilenince kaybolur) — gerçek sanal portföyü değiştirmek için hâlâ
+   Streamlit uygulaması (app.py) kullanılmalı. Bunu kalıcı yapmak isterse
+   kullanıcı, bir yazma API'si (ör. Cloudflare Worker + GitHub API commit)
+   eklenebilir; şu an salt-okunur bir görünüm tercih edildi.
    ═══════════════════════════════════════════════════════════════════════ */
 </script>
 </body>

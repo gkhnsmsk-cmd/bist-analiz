@@ -150,3 +150,11 @@ def calistir():
 
 if __name__ == "__main__":
     calistir()
+    # Pusula (docs/pusula/ — GitHub Pages statik SPA) verisi bu taramanın
+    # sonucuna bağımlı; tarama bitince otomatik tazelenir (bkz. pusula_veri_uret.py).
+    try:
+        import pusula_veri_uret as pvu
+        pvu.tarama_uret()
+        _log("Pusula verisi güncellendi.")
+    except Exception as e:
+        _log(f"UYARI: Pusula verisi güncellenemedi: {e}")

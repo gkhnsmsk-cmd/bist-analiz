@@ -201,3 +201,11 @@ def calistir():
 
 if __name__ == "__main__":
     calistir()
+    # Pusula (docs/pusula/ — GitHub Pages statik SPA) sanal portföy ekranı
+    # bu dosyanın çıktısına bağımlı; günlük izleme bitince otomatik tazelenir.
+    try:
+        import pusula_veri_uret as pvu
+        pvu.portfoy_uret()
+        print("Pusula portföy verisi güncellendi.")
+    except Exception as e:
+        print(f"UYARI: Pusula portföy verisi güncellenemedi: {e}")
