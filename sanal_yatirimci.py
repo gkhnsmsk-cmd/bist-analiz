@@ -887,6 +887,46 @@ def gunluk_karar(am, fiyat_getirici, endeks_df, tarama_evreni: list,
                      key=lambda x: -x["secim_skoru"])
     zayif_piyasa = len(adaylar) == 0 and len(portfoy["pozisyonlar"]) < MIN_POZISYON
 
+    # 4a-0) KAPASİTE AŞIMINI KOŞULSUZ DÜZELT (27.08.2026'da eklendi)
+    # ═══════════════════════════════════════════════════════════════════════
+    # NEDEN: MAKS_POZISYON 23.08.2026'da ~10'dan 5'e düşürüldü (daha
+    # yoğunlaşmış strateji) ama o anda portföyde zaten MAKS_POZISYON'dan
+    # fazla pozisyon vardı. Aşağıdaki fırsatçı TAKAS bloğu (4a) SADECE "daha
+    # iyi bir aday var mı" sorusuna bakar (SECIM_DEGISIM_MARJI şartı) — bu
+    # koşul bir gün sağlanmazsa fazlalık pozisyon o gün HİÇ satılmaz ve
+    # gözlemlenen gerçek sonuç bu oldu: nakit haftalarca ~500.000 ₺'de
+    # askıda kaldı, çünkü 4b'deki "boş yer" hesap (MAKS_POZISYON - mevcut
+    # pozisyon sayısı) cap'in ÜZERİNDEYKEN hep negatif/sıfır çıkıyordu.
+    # Kapasite aşımı, "daha iyi aday var mı" sorusundan BAĞIMSIZ, koşulsuz
+    # olarak düzeltilmeli: cap'in üstündeyken en zayıf puanlı pozisyon(lar)
+    # satılır (aday şartı aranmaz) — böylece portföy TEK koşuda cap'e iner
+    # ve boşalan nakit hemen altındaki 4b bloğunda yeniden yatırılabilir.
+    while len(portfoy["pozisyonlar"]) > MAKS_POZISYON:
+        elde_puanli = [(p, puan_haritasi.get(p["sembol"]))
+                       for p in portfoy["pozisyonlar"]]
+        elde_puanli = [(p, s) for p, s in elde_puanli if s is not None]
+        if not elde_puanli:
+            break                    # puanı çözülemeyen pozisyon(lar) var — zorla satma
+        zayif_p, zayif_puan = min(elde_puanli, key=lambda t: t[1])
+        f = fiyat_haritasi.get(zayif_p["sembol"])
+        if f is None:
+            break
+        tutar = f * zayif_p["adet"]
+        komisyon = tutar * KOMISYON_ORANI
+        portfoy["nakit"] += tutar - komisyon
+        islemler.append({
+            "tarih": bugun.isoformat(), "sembol": zayif_p["sembol"], "yon": "SAT",
+            "adet": round(zayif_p["adet"], 4), "fiyat": round(f, 2),
+            "tutar": round(tutar, 2), "komisyon": round(komisyon, 2),
+            "puan": zayif_puan, "tutma_gunu": _tutma_gunu(zayif_p),
+            "gerekce": (f"kapasite aşımı düzeltmesi: portföy MAKS_POZISYON "
+                        f"({MAKS_POZISYON}) sınırının üzerindeydi, en zayıf "
+                        f"puanlı pozisyon (Puan {zayif_puan:.0f}) satıldı"),
+            "getiri_yuzde": round(100 * (f / zayif_p["maliyet"] - 1), 2) if zayif_p.get("maliyet") else None,
+        })
+        portfoy["pozisyonlar"] = [x for x in portfoy["pozisyonlar"]
+                                  if x["sembol"] != zayif_p["sembol"]]
+
     # 4a) TAKAS — portföy doluyken belirgin şekilde daha iyi aday varsa
     while adaylar and len(portfoy["pozisyonlar"]) >= MAKS_POZISYON:
         elde_puanli = [(p, puan_haritasi.get(p["sembol"]))
