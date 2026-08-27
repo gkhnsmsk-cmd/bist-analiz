@@ -158,6 +158,7 @@ if __name__ == "__main__":
         pvu.performans_uret()
         pvu.fon_kurumsal_uret()
         pvu.sistem_durumu_uret()
+        pvu.backtest_uret()
         _log("Pusula verisi güncellendi.")
     except Exception as e:
         _log(f"UYARI: Pusula verisi güncellenemedi: {e}")

@@ -692,7 +692,68 @@ function PerformansEkran({ performans }) {
   );
 }
 
-function PortfoyEkran({ hisseler, portfoy, setPortfoy, gercekPortfoy, performans }) {
+/* ── Backtest / Doğrulama — elle çalıştırılan BACKTEST_CALISTIR.bat'ın
+   sonucu (backtest_sonuc.txt). Günlük otomasyona DAHİL DEĞİL (TÜM BIST × 5
+   yıl sürdüğü için) — burada gösterilen sonuç kullanıcı en son ne zaman
+   çalıştırdıysa o tarihe ait bir ANLIK GÖRÜNTÜ. Dürüstlük ilkesi: pozitif
+   VEYA negatif sonuç fark etmeksizin olduğu gibi gösterilir. ──────────── */
+function BacktestEkran({ backtest }) {
+  if (!backtest) {
+    return <p className="text-sm text-gray-400 py-8 text-center">Henüz backtest sonucu üretilmedi. Bilgisayarında BACKTEST_CALISTIR.bat'ı çalıştırdığında burada görünecek.</p>;
+  }
+  const kovalar = backtest.kovalar || [];
+  return (
+    <div>
+      <div className="bg-white rounded-2xl shadow-sm ring-1 ring-gray-100 p-4">
+        <div className="text-xs text-gray-400 uppercase tracking-wide">Son Çalıştırma</div>
+        <div className="text-sm font-semibold text-gray-800 mt-0.5">{backtest.calistirmaZamani || '—'}</div>
+        <div className="text-xs text-gray-400 mt-1">
+          {backtest.kapsam} · {backtest.yil} yıl · {backtest.hisseSayisi} hisse · {(backtest.toplamNokta || 0).toLocaleString('tr-TR')} puanlama noktası
+        </div>
+        {backtest.korelasyon10g != null && (
+          <div className="mt-3 pt-3 border-t border-gray-100">
+            <div className="text-xs text-gray-400 uppercase tracking-wide">10 Günlük Korelasyon</div>
+            <div className="text-lg font-bold text-gray-900 tabular-nums">{backtest.korelasyon10g >= 0 ? "+" : ""}{backtest.korelasyon10g.toFixed(3)}</div>
+            <p className="text-xs text-gray-500 mt-1 leading-relaxed">{backtest.korelasyonYorumu}</p>
+          </div>
+        )}
+      </div>
+
+      {kovalar.length > 0 && (
+        <>
+          <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mt-5 mb-2">Puan Kovalarına Göre İleri Getiri</h2>
+          <div className="flex flex-col gap-2">
+            {kovalar.map((k, i) => (
+              <div key={i} className="bg-white rounded-xl shadow-sm ring-1 ring-gray-100 px-3 py-2">
+                <div className="flex items-center justify-between">
+                  <span className="text-sm font-semibold text-gray-800">{k.etiket}</span>
+                  <span className="text-[11px] text-gray-400">({k.aralik}) n={k.n.toLocaleString('tr-TR')}</span>
+                </div>
+                <div className="flex gap-4 mt-1 text-xs">
+                  <span className="text-gray-500">5g <b className={k.getiri5g >= 0 ? "text-emerald-600" : "text-red-600"}>{k.getiri5g >= 0 ? "+" : ""}{k.getiri5g}%</b> (%{k.pozOran5g} pozitif)</span>
+                  <span className="text-gray-500">20g <b className={k.getiri20g >= 0 ? "text-emerald-600" : "text-red-600"}>{k.getiri20g >= 0 ? "+" : ""}{k.getiri20g}%</b> (%{k.pozOran20g} pozitif)</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </>
+      )}
+
+      {(backtest.walkForwardIlkYari != null) && (
+        <p className="text-xs text-gray-400 mt-4 leading-relaxed">
+          Walk-forward kontrolü — ilk yarı korelasyon: {backtest.walkForwardIlkYari.toFixed(3)}, ikinci yarı: {backtest.walkForwardIkinciYari.toFixed(3)}.
+        </p>
+      )}
+
+      <details className="mt-4">
+        <summary className="text-xs text-indigo-600 font-semibold cursor-pointer">Tam raporu göster (ham metin)</summary>
+        <pre className="text-[11px] text-gray-500 whitespace-pre-wrap bg-white rounded-xl ring-1 ring-gray-100 p-3 mt-2 leading-relaxed">{backtest.hamMetin}</pre>
+      </details>
+    </div>
+  );
+}
+
+function PortfoyEkran({ hisseler, portfoy, setPortfoy, gercekPortfoy, performans, backtest }) {
   const [altSekme, setAltSekme] = useState('pozisyonlar');
   const [formAcik, setFormAcik] = useState(false);
   const [ySembol, setYSembol] = useState(hisseler[0]?.symbol || '');
@@ -734,23 +795,34 @@ function PortfoyEkran({ hisseler, portfoy, setPortfoy, gercekPortfoy, performans
       <div className="flex gap-2 px-4 pb-3">
         <button
           onClick={() => setAltSekme('pozisyonlar')}
-          className={"flex-1 min-h-[40px] rounded-xl text-sm font-semibold transition-colors " +
+          className={"flex-1 min-h-[40px] rounded-xl text-xs sm:text-sm font-semibold transition-colors " +
                      (altSekme === 'pozisyonlar' ? "bg-indigo-600 text-white" : "bg-white text-gray-600 ring-1 ring-gray-200")}
         >
           💼 Pozisyonlar
         </button>
         <button
           onClick={() => setAltSekme('performans')}
-          className={"flex-1 min-h-[40px] rounded-xl text-sm font-semibold transition-colors " +
+          className={"flex-1 min-h-[40px] rounded-xl text-xs sm:text-sm font-semibold transition-colors " +
                      (altSekme === 'performans' ? "bg-indigo-600 text-white" : "bg-white text-gray-600 ring-1 ring-gray-200")}
         >
           📊 Performans
+        </button>
+        <button
+          onClick={() => setAltSekme('backtest')}
+          className={"flex-1 min-h-[40px] rounded-xl text-xs sm:text-sm font-semibold transition-colors " +
+                     (altSekme === 'backtest' ? "bg-indigo-600 text-white" : "bg-white text-gray-600 ring-1 ring-gray-200")}
+        >
+          🧪 Backtest
         </button>
       </div>
 
       {altSekme === 'performans' ? (
         <div className="px-4">
           <PerformansEkran performans={performans} />
+        </div>
+      ) : altSekme === 'backtest' ? (
+        <div className="px-4">
+          <BacktestEkran backtest={backtest} />
         </div>
       ) : (
       <>
@@ -992,6 +1064,7 @@ function App() {
   const [performans, setPerformans] = useState(null);
   const [fonKurumsal, setFonKurumsal] = useState(null);
   const [sistemDurumu, setSistemDurumu] = useState(null);
+  const [backtest, setBacktest] = useState(null);
 
   // Gerçek veriyi çek — docs/pusula/data/*.json (bkz. pusula_veri_uret.py).
   // Üçü de bağımsız başarısız olabilir (ör. henüz üretilmemişse); biri
@@ -1034,6 +1107,10 @@ function App() {
 
     fetch('./data/sistem_durumu.json').then(r => r.ok ? r.json() : Promise.reject())
       .then(d => setSistemDurumu(d))
+      .catch(() => {});
+
+    fetch('./data/backtest.json').then(r => r.ok ? r.json() : Promise.reject())
+      .then(d => setBacktest(d))
       .catch(() => {});
   }, []);
 
@@ -1081,7 +1158,7 @@ function App() {
         {tab === 'tarama' && <TaramaEkran hisseler={hisseler} onSec={setDetaySembol} onYildiz={yildizToggle} fonKurumsal={fonKurumsal} />}
         {tab === 'yukselecek' && <YukselecekEkran hisseler={yukselecek} dipDonusu={dipDonusu} onSec={setDetaySembol} zaman={taramaZaman} />}
         {tab === 'ara' && <AraEkran hisseler={hisseler} onSec={setDetaySembol} onYildiz={yildizToggle} />}
-        {tab === 'portfoy' && <PortfoyEkran hisseler={hisseler} portfoy={portfoy} setPortfoy={setPortfoy} gercekPortfoy={gercekPortfoy} performans={performans} />}
+        {tab === 'portfoy' && <PortfoyEkran hisseler={hisseler} portfoy={portfoy} setPortfoy={setPortfoy} gercekPortfoy={gercekPortfoy} performans={performans} backtest={backtest} />}
       </div>
 
       {/* Masaüstünde YanNav zaten md:hidden olan AltNav'ın yerini alıyor;

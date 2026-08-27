@@ -26,6 +26,7 @@ import datetime as dt
 import io
 import json
 import os
+import re
 
 import pandas as pd
 
@@ -375,17 +376,81 @@ def sistem_durumu_uret():
     return True
 
 
+def backtest_uret():
+    """backtest_sonuc.txt -> backtest.json (okunabilir özet + ham metin).
+
+    NEDEN CANLI ÇALIŞTIRMIYORUZ: backtest_calistir.py TÜM BIST × 5 yıllık
+    veriyi indirip puanlıyor — bu tek başına birkaç dakika/onlarca dakika
+    sürebilir (bkz. dosyanın kendi docstring'i). Bu yüzden günlük otomasyona
+    EKLENMEDİ; kullanıcı BACKTEST_CALISTIR.bat'ı elle (haftada/ayda bir)
+    çalıştırdığında üretilen backtest_sonuc.txt buradan okunup Pusula'ya
+    taşınır — otomasyonu yavaşlatmadan en güncel elle-üretilmiş sonucu gösterir.
+    """
+    yol = os.path.join(KLASOR, "backtest_sonuc.txt")
+    if not os.path.exists(yol):
+        return False
+    try:
+        with open(yol, encoding="utf-8") as f:
+            metin = f.read()
+    except Exception as e:
+        print("backtest_sonuc.txt okunamadı:", e)
+        return False
+
+    veri = {"hamMetin": metin}
+
+    m = re.search(r"Çalıştırma zamanı:\s*(.+)", metin)
+    if m: veri["calistirmaZamani"] = m.group(1).strip()
+    m = re.search(r"Kapsam:\s*(\S+)\s*·\s*Geçmiş:\s*([\d.]+)\s*yıl", metin)
+    if m: veri["kapsam"] = m.group(1); veri["yil"] = float(m.group(2))
+    m = re.search(r"Hisse sayısı:\s*(\d+)", metin)
+    if m: veri["hisseSayisi"] = int(m.group(1))
+    m = re.search(r"Toplam\s+(\d+)\s+tarihsel puanlama noktası", metin)
+    if m: veri["toplamNokta"] = int(m.group(1))
+
+    kovalar = []
+    # Örnek satır: "  🟢 AL (62-72) (n=19821): 5g ort=%+1.53 (pozitif oran %53) 10g ort=%+2.83 (pozitif oran %54) 20g ort=%+5.30 (pozitif oran %55)"
+    desen = re.compile(
+        r"(?P<emoji>[🔴🟠🟡🟢])\s*(?P<etiket>[^(]+)\((?P<aralik>[^)]+)\)\s*\(n=(?P<n>\d+)\):\s*"
+        r"5g ort=%(?P<g5>[+\-\d.]+)\s*\(pozitif oran %(?P<p5>\d+)\)\s*"
+        r"10g ort=%(?P<g10>[+\-\d.]+)\s*\(pozitif oran %(?P<p10>\d+)\)\s*"
+        r"20g ort=%(?P<g20>[+\-\d.]+)\s*\(pozitif oran %(?P<p20>\d+)\)"
+    )
+    for mm in desen.finditer(metin):
+        d = mm.groupdict()
+        kovalar.append({
+            "etiket": d["emoji"] + " " + d["etiket"].strip(),
+            "aralik": d["aralik"].strip(),
+            "n": int(d["n"]),
+            "getiri5g": float(d["g5"]), "pozOran5g": int(d["p5"]),
+            "getiri10g": float(d["g10"]), "pozOran10g": int(d["p10"]),
+            "getiri20g": float(d["g20"]), "pozOran20g": int(d["p20"]),
+        })
+    veri["kovalar"] = kovalar
+
+    SAYI = r"[+\-]?\d+\.\d+"
+    m = re.search(r"10 günlük ufukta korelasyon:\s*(" + SAYI + r")\s*→\s*(.+?)(?:\n|$)", metin)
+    if m: veri["korelasyon10g"] = float(m.group(1)); veri["korelasyonYorumu"] = m.group(2).strip()
+
+    m = re.search(r"ilk yarı korelasyon:\s*(" + SAYI + r"),\s*ikinci yarı korelasyon:\s*(" + SAYI + r")", metin)
+    if m: veri["walkForwardIlkYari"] = float(m.group(1)); veri["walkForwardIkinciYari"] = float(m.group(2))
+
+    _yaz("backtest.json", veri)
+    return True
+
+
 def hepsi():
     a = tarama_uret()
     b = portfoy_uret()
     c = performans_uret()
     d = fon_kurumsal_uret()
     e = sistem_durumu_uret()
+    f = backtest_uret()
     print("tarama/yukselecek/dip_donusu:", "OK" if a else "atlandı (dosya yok)")
     print("portfoy:", "OK" if b else "atlandı (dosya yok)")
     print("performans:", "OK" if c else "atlandı (dosya yok)")
     print("fon_kurumsal:", "OK" if d else "atlandı")
     print("sistem_durumu:", "OK" if e else "atlandı")
+    print("backtest:", "OK" if f else "atlandı (dosya yok)")
 
 
 if __name__ == "__main__":
