@@ -98,6 +98,16 @@ function _apiHisseUyarla(x, favoriSet) {
 }
 
 const FAVORI_ANAHTAR = 'pusula_favoriler';
+
+/* Kullanıcı isteği: hisseye tıklayınca ANLIK fiyat da görülsün. Pusula
+   statik bir sayfa olduğu için Yahoo Finance'e doğrudan istek atamıyoruz
+   (CORS engelli) — bu yüzden küçük, ücretsiz bir aracı fonksiyon (Cloudflare
+   Worker) kullanıyoruz; bkz. cloudflare_worker_canli_fiyat.js.
+   BOŞ BIRAKILIRSA (henüz kurulmadıysa) özellik SESSİZCE devre dışı kalır —
+   DetayEkran normal (son taramadan gelen) fiyatı göstermeye devam eder,
+   hiçbir hata/kırık ekran çıkmaz. Worker kurulunca buraya adresi yapıştır:
+   örn. 'https://pusula-canli-fiyat.KULLANICI-ADIN.workers.dev' */
+const CANLI_FIYAT_API_URL = '';
 function _favorileriOku() {
   try {
     const ham = localStorage.getItem(FAVORI_ANAHTAR);
@@ -1022,8 +1032,28 @@ function DetayEkran({ hisse, onGeri, onYildiz, onPortfoyeEkle, zamanHam }) {
     const id = setInterval(() => setTik(t => t + 1), 60000);
     return () => clearInterval(id);
   }, []);
+  // Anlık fiyat — CANLI_FIYAT_API_URL doluysa (aracı fonksiyon kurulduysa)
+  // panel açılınca bir kere sorar. Kurulmadıysa ya da istek başarısız
+  // olursa (worker henüz yok, ağ hatası, hafta sonu vb.) SESSİZCE hiçbir şey
+  // göstermez — sayfa asla kırılmaz, her zaman son taramadan gelen fiyat
+  // görünür durumda kalır.
+  const [canliFiyat, setCanliFiyat] = useState(null);
+  useEffect(() => {
+    setCanliFiyat(null);
+    if (!CANLI_FIYAT_API_URL || !hisse) return;
+    let iptal = false;
+    fetch(`${CANLI_FIYAT_API_URL}?sembol=${encodeURIComponent(hisse.symbol)}`)
+      .then(r => r.ok ? r.json() : Promise.reject())
+      .then(d => {
+        if (!iptal && d && d.fiyat != null) setCanliFiyat(d);
+      })
+      .catch(() => {}); // sessizce yok say — mevcut fiyat gösterime devam eder
+    return () => { iptal = true; };
+  }, [hisse && hisse.symbol]);
+
   if (!hisse) return null;
   const taze = _goreliZaman(zamanHam);
+  const canliTaze = canliFiyat ? _goreliZaman(canliFiyat.zaman) : null;
 
   function portfoyeEkleTikla() {
     onPortfoyeEkle(hisse.symbol);
@@ -1053,18 +1083,28 @@ function DetayEkran({ hisse, onGeri, onYildiz, onPortfoyeEkle, zamanHam }) {
 
         <div className="flex-1 overflow-y-auto px-4 py-5">
           <div className="text-sm text-gray-400">{hisse.ad}</div>
-          <div className="mt-1 text-4xl font-bold text-gray-900 tabular-nums">{hisse.fiyat.toFixed(2)} ₺</div>
+          <div className="mt-1 text-4xl font-bold text-gray-900 tabular-nums">
+            {(canliFiyat ? canliFiyat.fiyat : hisse.fiyat).toFixed(2)} ₺
+          </div>
+          {/* Anlık fiyat bulunduysa rozet göster (aracı fonksiyon kuruluysa) —
+              kullanıcı hangi fiyatı gördüğünü net anlasın. */}
+          {canliFiyat && (
+            <div className="mt-0.5 inline-flex items-center gap-1 text-xs font-semibold text-emerald-700 bg-emerald-50 rounded-full px-2 py-0.5">
+              🟢 Anlık{canliTaze ? ` · ${canliTaze.goreli}` : ''}
+            </div>
+          )}
           <div className="mt-2 flex items-center gap-2">
             <DegisimEtiketi deger={hisse.degisim} />
             <span className="text-gray-300">·</span>
             <TrendRozeti trend={hisse.trend} buyuk />
           </div>
-          {/* Veri tazeliği — kullanıcı isteği: "kaç dk önce" + tam tarih/saat.
-              taze === null ise (henüz yüklenmediyse/parse edilemediyse) HİÇBİR
-              ŞEY gösterme; yanlış/sahte bir tazelik iddiası vermemek için. */}
+          {/* Veri tazeliği (son tarama) — kullanıcı isteği: "kaç dk önce" +
+              tam tarih/saat. taze === null ise (henüz yüklenmediyse/parse
+              edilemediyse) HİÇBİR ŞEY gösterme; yanlış/sahte bir tazelik
+              iddiası vermemek için. */}
           {taze && (
             <div className="mt-1.5 text-xs text-gray-400">
-              🕒 Veri {taze.goreli} güncellendi · {taze.tamTarih}
+              🕒 Tarama verisi {taze.goreli} güncellendi · {taze.tamTarih}
             </div>
           )}
 
