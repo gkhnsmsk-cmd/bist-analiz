@@ -1,0 +1,92 @@
+# ═══════════════════════════════════════════════════════════════════════════
+# SANAL PORTFÖY SIFIRLAMA — elle (manuel) tetiklenen, GERİ ALINAMAZ iş akışı.
+# ═══════════════════════════════════════════════════════════════════════════
+# NEDEN AYRI BİR İŞ AKIŞI: Kullanıcı isteği — Sanal Portföy'ün TEK meşru
+# kullanıcı kontrolü "baştan başlat"tır; pozisyon ekleme/çıkarma, al-sat gibi
+# başka hiçbir müdahale YOKTUR — motor (sanal_yatirimci.py) kendi kararlarını
+# kendi verir. Bu iş akışı, o "baştan başlat" düğmesinin GitHub Actions
+# karşılığıdır. Pusula statik bir sayfa olduğu için tarayıcıdan bu işlemi
+# tetikleyemez; bu YÜZDEN elle, GitHub'a giriş yapmış depo sahibi tarafından
+# "Run workflow" ile tetiklenir — Pusula'yı gezen başka biri bunu asla
+# çalıştıramaz.
+#
+# NASIL ÇALIŞTIRILIR: GitHub'da bu depo → "Actions" sekmesi → sol menüden
+# "Sanal Portföy Sıfırlama" → sağ üstte "Run workflow" → onay kutusunu işaretle
+# → "Run workflow". Birkaç dakika içinde sanal_portfoy.json ve Pusula'daki
+# ilgili veriler sıfırdan (1.000.000 ₺ nakit, pozisyonsuz) başlar.
+#
+# GÜVENLİK: "confirm" girdisi tam olarak "SIFIRLA" yazılmadıkça iş akışı
+# hiçbir dosyaya dokunmadan durur — yanlışlıkla tetiklenmeye karşı basit bir
+# koruma (GERİ ALINAMAZ bir işlem olduğu için).
+
+name: Sanal Portföy Sıfırlama
+
+on:
+  workflow_dispatch:
+    inputs:
+      confirm:
+        description: 'Onaylamak için tam olarak SIFIRLA yazın (GERİ ALINAMAZ)'
+        required: true
+        default: ''
+
+permissions:
+  contents: write
+
+concurrency:
+  group: gunluk-otomasyon
+  cancel-in-progress: false
+
+jobs:
+  sifirla:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Onayı kontrol et
+        run: |
+          if [ "${{ inputs.confirm }}" != "SIFIRLA" ]; then
+            echo "::error::Onay metni 'SIFIRLA' değil — hiçbir şey silinmedi/değiştirilmedi. Tekrar 'Run workflow' ile, onay kutusuna tam olarak SIFIRLA yazarak deneyin."
+            exit 1
+          fi
+          echo "Onaylandı — sıfırlama işlemine devam ediliyor."
+
+      - name: Depoyu indir
+        uses: actions/checkout@v4
+
+      - name: Python kur
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Paketleri kur
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements-otomasyon.txt
+
+      - name: Sanal portföyü sıfırla
+        run: python sanal_portfoy_sifirla_cli.py
+
+      - name: Pusula verisini güncelle
+        run: python pusula_veri_uret.py
+
+      - name: Sonuçları depoya kaydet
+        run: |
+          git config user.name  "bist-otomasyon"
+          git config user.email "bist-otomasyon@users.noreply.github.com"
+          git add -A -- '*.json' 'docs/pusula/data' || true
+          if git diff --staged --quiet; then
+            echo "Değişen kayıt yok — commit atlanıyor."
+          else
+            git commit -m "Sanal Portföy sıfırlandı (elle tetiklendi): $(date -u '+%Y-%m-%d %H:%M UTC')"
+            git pull --rebase --autostash origin "${GITHUB_REF_NAME}" || true
+            git push origin "HEAD:${GITHUB_REF_NAME}"
+          fi
+
+      - name: Çalışma özeti
+        if: always()
+        run: |
+          {
+            echo "### Sanal Portföy sıfırlama sonucu"
+            echo ""
+            echo "Sıfırlama tamamlandı. Pusula'da 'Sanal Portföy' sekmesini yenileyince yeni durumu göreceksin."
+          } >> "$GITHUB_STEP_SUMMARY"
