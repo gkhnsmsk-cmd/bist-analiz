@@ -1,0 +1,85 @@
+# ═══════════════════════════════════════════════════════════════════════════
+# HAFTALIK BACKTEST — TÜM BIST × 5 yıllık doğrulama, bulutta, otomatik.
+# ═══════════════════════════════════════════════════════════════════════════
+# NEDEN AYRI VE HAFTALIK (günlük otomasyona DAHİL DEĞİL):
+#   backtest_calistir.py ~600 hissenin 5 yıllık verisini indirip binlerce
+#   puanlama noktası hesaplıyor — bu, günlük taramadan çok daha ağır bir
+#   işlemdir ve sonucu da GÜN İÇİNDE anlamlı biçimde değişmez (istatistiksel
+#   bir eğilim ölçer, güncel fiyattan değil). Bu yüzden haftada bir, piyasa
+#   kapalıyken (Cumartesi) çalıştırmak yeterli — hem veri kaynağını (Yahoo
+#   Finance) gereksiz yormaz hem de Pusula'daki 🧪 Backtest sekmesini
+#   kullanıcı hiç elle BACKTEST_CALISTIR.bat çalıştırmadan güncel tutar.
+#
+# NE YAPAR:
+#   1) backtest_calistir.py → backtest_sonuc.txt / backtest_sonuc.csv üretir
+#   2) pusula_veri_uret.backtest_uret() → bunu docs/pusula/data/backtest.json'a çevirir
+#   3) Sonuçları depoya kaydeder (commit + push)
+
+name: Haftalık backtest
+
+on:
+  schedule:
+    # UTC saatiyle yazılır. Türkiye = UTC+3.
+    # 06:00 UTC Cumartesi = 09:00 TR Cumartesi — piyasa kapalı, tam gün önde.
+    - cron: "0 6 * * 6"
+  # Elle de çalıştırılabilsin (Actions sekmesindeki "Run workflow" düğmesi).
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: haftalik-backtest
+  cancel-in-progress: false
+
+jobs:
+  backtest:
+    runs-on: ubuntu-latest
+    # TÜM BIST × 5 yıl uzun sürebilir (onlarca dakika) — geniş pay bırakıldı.
+    timeout-minutes: 180
+
+    steps:
+      - name: Depoyu indir
+        uses: actions/checkout@v4
+
+      - name: Python kur
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Paketleri kur
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements-otomasyon.txt
+
+      - name: Backtest çalıştır (TÜM BIST, 5 yıl)
+        id: backtest
+        continue-on-error: true
+        run: python backtest_calistir.py
+
+      - name: Pusula verisine çevir
+        if: steps.backtest.outcome == 'success'
+        run: python -c "import pusula_veri_uret as pvu; pvu.backtest_uret()"
+
+      - name: Sonuçları depoya kaydet
+        run: |
+          git config user.name  "bist-otomasyon"
+          git config user.email "bist-otomasyon@users.noreply.github.com"
+          git add -A -- backtest_sonuc.txt backtest_sonuc.csv 'docs/pusula/data/backtest.json' || true
+          if git diff --staged --quiet; then
+            echo "Değişen kayıt yok — commit atlanıyor."
+          else
+            git commit -m "Haftalık backtest: $(date -u '+%Y-%m-%d %H:%M UTC')"
+            git pull --rebase --autostash origin "${GITHUB_REF_NAME}" || true
+            git push origin "HEAD:${GITHUB_REF_NAME}"
+          fi
+
+      - name: Çalışma özeti
+        if: always()
+        run: |
+          {
+            echo "### Haftalık backtest sonucu"
+            echo ""
+            echo "- Backtest adımı: ${{ steps.backtest.outcome }}"
+          } >> "$GITHUB_STEP_SUMMARY"
