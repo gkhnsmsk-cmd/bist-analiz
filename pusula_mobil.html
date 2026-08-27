@@ -369,6 +369,34 @@ function HisseSatiri({ h, onSec, onYildiz }) {
    sadece pusula_veri_uret.sistem_durumu_uret()'in ürettiği zaten-hazır
    zaman damgalarını gösterir. Orijinal app.py'deki "ℹ️ Durum" sekmesinin
    hafifletilmiş karşılığı. ─────────────────────────────────────────────── */
+/* ── Tarama bayatlığı uyarısı — kullanıcı isteği: "yükselecek hisseler eski
+   gözüküyor" derken sebep, arka plandaki GitHub Actions taraması o gün henüz
+   çalışmamıştı ("son tarama" bilgisi zaten vardı ama küçük gri yazıyla,
+   kapalı bir akordeonun içindeydi — kimse fark etmiyordu). Bu, o bilgiyi
+   HER ZAMAN görünür, göze çarpan bir uyarı şeridine taşır: hafta içi, günün
+   geç saatinde (taramanın normalde bitmiş olması gereken saatten sonra) hâlâ
+   dünkü/daha eski veri gösteriliyorsa turuncu bir şerit çıkar. */
+function TaramaBayatUyarisi({ durum }) {
+  if (!durum || !durum.tarama || !durum.tarama.zaman) return null;
+  const simdi = new Date();
+  const taramaZamani = new Date(durum.tarama.zaman);
+  const farkSaat = (simdi - taramaZamani) / 3600000;
+  const gunAdi = simdi.getDay(); // 0=Pazar, 6=Cumartesi
+  const hafkaIci = gunAdi >= 1 && gunAdi <= 5;
+  const gunGecSaat = simdi.getHours() >= 20; // 19:15 TR'deki planlı taramadan sonra, pay bırakılmış
+  if (!(hafkaIci && gunGecSaat && farkSaat > 24)) return null;
+  return (
+    <div className="mx-4 mb-3 rounded-xl bg-orange-50 ring-1 ring-orange-200 px-3 py-2 text-xs text-orange-800 flex items-start gap-2">
+      <span>⚠️</span>
+      <span>
+        Veriler {Math.floor(farkSaat / 24) >= 1 ? Math.floor(farkSaat / 24) + " gün" : Math.floor(farkSaat) + " saat"} önceki
+        taramadan — bugünkü otomatik tarama henüz tamamlanmamış olabilir. Fiyatlar (varsa favoriler/liste canlı fiyatı)
+        güncel olsa da puan/trend bilgileri dünkü olabilir.
+      </span>
+    </div>
+  );
+}
+
 function SistemDurumuKarti({ durum }) {
   const [acik, setAcik] = useState(false);
   if (!durum) return null;
@@ -411,6 +439,8 @@ function AnaEkran({ hisseler, onSec, onYildiz, zaman, sistemDurumu }) {
         <h1 className="text-2xl font-bold text-gray-900">Pusula</h1>
         <p className="text-sm text-gray-400">BIST özet{zaman ? " — tarama: " + zaman : ""} · değişim = 1 aylık</p>
       </div>
+
+      <TaramaBayatUyarisi durum={sistemDurumu} />
 
       <h2 className="px-4 text-sm font-semibold text-gray-500 uppercase tracking-wide mb-2">⭐ Favoriler</h2>
       <FavorilerSeridi hisseler={hisseler} onSec={onSec} />
@@ -656,7 +686,7 @@ function DipDonusuSatiri({ h, onSec }) {
   );
 }
 
-function YukselecekEkran({ hisseler, dipDonusu, onSec, zaman }) {
+function YukselecekEkran({ hisseler, dipDonusu, onSec, zaman, sistemDurumu }) {
   const [altSekme, setAltSekme] = useState('yukselecek');
   const siralı = useMemo(() => [...hisseler].sort((a, b) => b.genelPuan - a.genelPuan), [hisseler]);
   const dipSirali = useMemo(() => [...dipDonusu].sort((a, b) => b.donusGucu - a.donusGucu), [dipDonusu]);
@@ -673,6 +703,7 @@ function YukselecekEkran({ hisseler, dipDonusu, onSec, zaman }) {
           {zaman ? " · tarama: " + zaman : ""}
         </p>
       </div>
+      <TaramaBayatUyarisi durum={sistemDurumu} />
       <div className="flex gap-2 px-4 pb-3">
         <button
           onClick={() => setAltSekme('yukselecek')}
@@ -1529,7 +1560,7 @@ function App() {
         )}
         {tab === 'ana' && <AnaEkran hisseler={hisselerCanli} onSec={setDetaySembol} onYildiz={yildizToggle} zaman={taramaZaman} sistemDurumu={sistemDurumu} />}
         {tab === 'tarama' && <TaramaEkran hisseler={hisselerCanli} onSec={setDetaySembol} onYildiz={yildizToggle} fonKurumsal={fonKurumsal} />}
-        {tab === 'yukselecek' && <YukselecekEkran hisseler={yukselecekCanli} dipDonusu={dipDonusuCanli} onSec={setDetaySembol} zaman={taramaZaman} />}
+        {tab === 'yukselecek' && <YukselecekEkran hisseler={yukselecekCanli} dipDonusu={dipDonusuCanli} onSec={setDetaySembol} zaman={taramaZaman} sistemDurumu={sistemDurumu} />}
         {tab === 'ara' && <AraEkran hisseler={hisselerCanli} onSec={setDetaySembol} onYildiz={yildizToggle} />}
         {tab === 'portfoy' && <PortfoyEkran hisseler={hisselerCanli} portfoy={portfoy} setPortfoy={setPortfoy} gercekPortfoy={gercekPortfoy} performans={performans} backtest={backtest} />}
       </div>

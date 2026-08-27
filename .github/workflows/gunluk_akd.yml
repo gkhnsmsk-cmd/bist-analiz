@@ -35,6 +35,12 @@ on:
     # 16:15 UTC = 19:15 TR — ana günlük otomasyondan (19:00 TR) 15 dk sonra,
     # çakışmasın diye.
     - cron: "15 16 * * 1-5"
+    # YEDEK TETİKLEYİCİ — bkz. gunluk_otomasyon.yml'deki aynı notta anlatılan
+    # gerekçe: GitHub'ın zamanlanmış tetikleyiciyi hiç ateşlememe riski var
+    # (bu workflow ilk eklendiğinden beri hiç zamanlanmış çalıştırması
+    # olmamıştı — 27 Ağustos 2026'da fark edildi). Ana taramanın yedek
+    # saatinden (19:00 TR) 15 dk sonra ikinci bir deneme.
+    - cron: "15 19 * * 1-5"
   workflow_dispatch:
 
 permissions:

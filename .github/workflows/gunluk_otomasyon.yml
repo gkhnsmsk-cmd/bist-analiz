@@ -23,6 +23,14 @@ on:
     # Pazartesi-Cuma. NOT: GitHub cron'u yoğunlukta 5-30 dk gecikebilir; bu
     # bizim için sorun değil, veri gün sonu verisidir.
     - cron: "0 16 * * 1-5"
+    # YEDEK TETİKLEYİCİ (27 Ağustos 2026'da fark edildi): GitHub bazen
+    # zamanlanmış bir çalıştırmayı hiç tetiklemeden atlıyor — bu, "Yükselecek
+    # Hisseler" ekranının bir gün eski görünmesine yol açtı. arka_plan_tarama.py
+    # her çalıştığında veriyi baştan üretip üzerine yazdığı için iki kez
+    # çalışması ZARARSIZ (idempotent) — bu yüzden 3 saat sonra ikinci bir
+    # deneme daha var. İlk çalıştırma zaten başarılıysa bu ikinci çalıştırma
+    # aynı sonucu üretir, veriyi bozmaz.
+    - cron: "0 19 * * 1-5"
   # Elle de çalıştırılabilsin (Actions sekmesindeki "Run workflow" düğmesi).
   workflow_dispatch:
 
