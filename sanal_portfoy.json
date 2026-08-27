@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 {
   "baslangic_butce": 1000000.0,
   "baslangic_tarihi": "2026-07-28",
@@ -78,4 +79,86 @@
     }
   },
   "askida_satislar": []
+=======
+{
+  "baslangic_butce": 1000000.0,
+  "baslangic_tarihi": "2026-07-28",
+  "hedef_aylik_yuzde": 10.0,
+  "nakit": 529081.9367238462,
+  "pozisyonlar": [
+    {
+      "sembol": "ANELE",
+      "adet": 628.6720504015443,
+      "maliyet": 138.8,
+      "eklenme_tarihi": "2026-08-18T01:31:03.083919",
+      "son_fiyat": 165.0,
+      "en_yuksek": 165.0
+    },
+    {
+      "sembol": "INVES",
+      "adet": 99.80229592168796,
+      "maliyet": 814.0,
+      "eklenme_tarihi": "2026-08-18T01:37:47.996679",
+      "son_fiyat": 857.0,
+      "en_yuksek": 857.0
+    },
+    {
+      "sembol": "RYGYO",
+      "adet": 1930.5862376486216,
+      "maliyet": 42.08,
+      "eklenme_tarihi": "2026-08-18T01:37:47.996679",
+      "son_fiyat": 44.56,
+      "en_yuksek": 44.56
+    },
+    {
+      "sembol": "MTRKS",
+      "adet": 600.5700993793478,
+      "maliyet": 33.86,
+      "eklenme_tarihi": "2026-08-19T18:43:40.705214",
+      "son_fiyat": 34.6,
+      "en_yuksek": 36.0
+    },
+    {
+      "sembol": "KRDMA",
+      "adet": 1787.683270741638,
+      "maliyet": 50.0,
+      "eklenme_tarihi": "2026-08-20T18:42:52.115402",
+      "son_fiyat": 58.6,
+      "en_yuksek": 59.65
+    },
+    {
+      "sembol": "PASEU",
+      "adet": 344.05757635284283,
+      "maliyet": 202.3,
+      "eklenme_tarihi": "2026-08-21T18:42:34.360223",
+      "son_fiyat": 242.0,
+      "en_yuksek": 242.0
+    }
+  ],
+  "son_rebalans_tarihi": "2026-08-26",
+  "aktif": true,
+  "stop_cikislari": {
+    "AKSEN": {
+      "tarih": "2026-08-18",
+      "puan": 56.4
+    },
+    "CCOLA": {
+      "tarih": "2026-08-18",
+      "puan": 50.4
+    },
+    "AEFES": {
+      "tarih": "2026-08-18",
+      "puan": 45.2
+    },
+    "EREGL": {
+      "tarih": "2026-08-18",
+      "puan": 46.2
+    },
+    "AKSA": {
+      "tarih": "2026-08-18",
+      "puan": 53.2
+    }
+  },
+  "askida_satislar": []
+>>>>>>> Stashed changes
 }

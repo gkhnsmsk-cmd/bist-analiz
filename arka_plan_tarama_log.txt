@@ -420,3 +420,191 @@ HTTP Error 404:
 [23.08.2026 23:46:27] Tavsiye kaydı (Uzun vade): 0 yeni, 39 mükerrer.
 [23.08.2026 23:46:27] Arka plan taraması tamamlandı ✅
 [Paz 23.08.2026 23:46:28.08] BITTI - cikis kodu: 0 
+ 
+[Pzt 24.08.2026 17:04:58.82] BASLIYOR - Python: py -3.11 
+
+1 Failed download:
+['ALMAD.IS']: YFPricesMissingError('possibly delisted; no price data found  (period=24mo) (Yahoo error = "No data found, symbol may be delisted")')
+HTTP Error 404: 
+
+2 Failed downloads:
+['DAGHL.IS', 'DOBUR.IS']: YFPricesMissingError('possibly delisted; no price data found  (period=24mo) (Yahoo error = "No data found, symbol may be delisted")')
+
+1 Failed download:
+['EFORC.IS']: YFPricesMissingError('possibly delisted; no price data found  (period=24mo) (Yahoo error = "No data found, symbol may be delisted")')
+
+1 Failed download:
+['GRTRK.IS']: YFPricesMissingError('possibly delisted; no price data found  (period=24mo) (Yahoo error = "No data found, symbol may be delisted")')
+
+3 Failed downloads:
+['KARYE.IS', 'IPEKE.IS', 'KERVT.IS']: YFPricesMissingError('possibly delisted; no price data found  (period=24mo) (Yahoo error = "No data found, symbol may be delisted")')
+
+2 Failed downloads:
+['KOZAA.IS', 'KOZAL.IS']: YFPricesMissingError('possibly delisted; no price data found  (period=24mo) (Yahoo error = "No data found, symbol may be delisted")')
+
+3 Failed downloads:
+['MIPAZ.IS', 'METUR.IS', 'MENDR.IS']: YFPricesMissingError('possibly delisted; no price data found  (period=24mo) (Yahoo error = "No data found, symbol may be delisted")')
+
+2 Failed downloads:
+['ROYAL.IS', 'PEGYO.IS']: YFPricesMissingError('possibly delisted; no price data found  (period=24mo) (Yahoo error = "No data found, symbol may be delisted")')
+
+3 Failed downloads:
+['SELGD.IS', 'TETMT.IS', 'SNKRN.IS']: YFPricesMissingError('possibly delisted; no price data found  (period=24mo) (Yahoo error = "No data found, symbol may be delisted")')
+
+2 Failed downloads:
+['UZERB.IS', 'YGYO.IS']: YFPricesMissingError('possibly delisted; no price data found  (period=24mo) (Yahoo error = "No data found, symbol may be delisted")')
+[24.08.2026 17:05:01] Arka plan taraması başlıyor...
+[24.08.2026 17:05:03] 559 hisse için veri indiriliyor (kapsam=TUM)...
+[24.08.2026 17:05:56] 539 hissenin verisi hazır. Puanlama taraması çalışıyor...
+[24.08.2026 17:05:59] Piyasa rejimi: 74/100 — RİSK AÇIK — Boğa ortamı
+[24.08.2026 17:06:07] Puanlama taraması bitti: 423 hisse puanlandı.
+[24.08.2026 17:06:07] Vade taraması (Kısa/Orta/Uzun, teknik puan tabanlı) çalışıyor...
+[24.08.2026 17:06:16] Vade taraması bitti: 40 hisse üç vadede değerlendirildi.
+[24.08.2026 17:06:16] Önbellek yazıldı: C:\Users\gkhns\YandexDisk\Yandex genel\lispler\YAZILIMLAR\Borsa yazılımı1\tarama_onbellek.json
+[24.08.2026 17:06:16] Tavsiye kaydı (Öne Çıkan): 20 yeni, 0 mükerrer.
+[24.08.2026 17:06:16] Tavsiye kaydı (Kısa vade): 32 yeni, 0 mükerrer.
+[24.08.2026 17:06:17] Tavsiye kaydı (Orta vade): 40 yeni, 0 mükerrer.
+[24.08.2026 17:06:17] Tavsiye kaydı (Uzun vade): 39 yeni, 0 mükerrer.
+[24.08.2026 17:06:17] Arka plan taraması tamamlandı ✅
+[Pzt 24.08.2026 17:06:17.68] BITTI - cikis kodu: 0 
+ 
+[Pzt 24.08.2026 18:30:01.49] BASLIYOR - Python: py -3.11 
+
+1 Failed download:
+['ALMAD.IS']: YFPricesMissingError('possibly delisted; no price data found  (period=24mo) (Yahoo error = "No data found, symbol may be delisted")')
+HTTP Error 404: 
+
+2 Failed downloads:
+['DAGHL.IS', 'DOBUR.IS']: YFPricesMissingError('possibly delisted; no price data found  (period=24mo) (Yahoo error = "No data found, symbol may be delisted")')
+
+1 Failed download:
+['EFORC.IS']: YFPricesMissingError('possibly delisted; no price data found  (period=24mo) (Yahoo error = "No data found, symbol may be delisted")')
+
+1 Failed download:
+['GRTRK.IS']: YFPricesMissingError('possibly delisted; no price data found  (period=24mo) (Yahoo error = "No data found, symbol may be delisted")')
+
+3 Failed downloads:
+['KARYE.IS', 'IPEKE.IS', 'KERVT.IS']: YFPricesMissingError('possibly delisted; no price data found  (period=24mo) (Yahoo error = "No data found, symbol may be delisted")')
+
+2 Failed downloads:
+['KOZAA.IS', 'KOZAL.IS']: YFPricesMissingError('possibly delisted; no price data found  (period=24mo) (Yahoo error = "No data found, symbol may be delisted")')
+
+3 Failed downloads:
+['METUR.IS', 'MENDR.IS', 'MIPAZ.IS']: YFPricesMissingError('possibly delisted; no price data found  (period=24mo) (Yahoo error = "No data found, symbol may be delisted")')
+
+2 Failed downloads:
+['PEGYO.IS', 'ROYAL.IS']: YFPricesMissingError('possibly delisted; no price data found  (period=24mo) (Yahoo error = "No data found, symbol may be delisted")')
+
+3 Failed downloads:
+['SELGD.IS', 'TETMT.IS', 'SNKRN.IS']: YFPricesMissingError('possibly delisted; no price data found  (period=24mo) (Yahoo error = "No data found, symbol may be delisted")')
+
+2 Failed downloads:
+['UZERB.IS', 'YGYO.IS']: YFPricesMissingError('possibly delisted; no price data found  (period=24mo) (Yahoo error = "No data found, symbol may be delisted")')
+[24.08.2026 18:30:03] Arka plan taraması başlıyor...
+[24.08.2026 18:30:06] 559 hisse için veri indiriliyor (kapsam=TUM)...
+[24.08.2026 18:30:57] 539 hissenin verisi hazır. Puanlama taraması çalışıyor...
+[24.08.2026 18:31:00] Piyasa rejimi: 74/100 — RİSK AÇIK — Boğa ortamı
+[24.08.2026 18:31:08] Puanlama taraması bitti: 424 hisse puanlandı.
+[24.08.2026 18:31:08] Vade taraması (Kısa/Orta/Uzun, teknik puan tabanlı) çalışıyor...
+[24.08.2026 18:31:16] Vade taraması bitti: 40 hisse üç vadede değerlendirildi.
+[24.08.2026 18:31:16] Önbellek yazıldı: C:\Users\gkhns\YandexDisk\Yandex genel\lispler\YAZILIMLAR\Borsa yazılımı1\tarama_onbellek.json
+[24.08.2026 18:31:16] Tavsiye kaydı (Öne Çıkan): 1 yeni, 19 mükerrer.
+[24.08.2026 18:31:16] Tavsiye kaydı (Kısa vade): 1 yeni, 31 mükerrer.
+[24.08.2026 18:31:16] Tavsiye kaydı (Orta vade): 1 yeni, 39 mükerrer.
+[24.08.2026 18:31:17] Tavsiye kaydı (Uzun vade): 1 yeni, 38 mükerrer.
+[24.08.2026 18:31:17] Arka plan taraması tamamlandı ✅
+[Pzt 24.08.2026 18:31:17.52] BITTI - cikis kodu: 0 
+ 
+[Sal 25.08.2026 18:30:02.11] BASLIYOR - Python: py -3.11 
+
+1 Failed download:
+['ALMAD.IS']: YFPricesMissingError('possibly delisted; no price data found  (period=24mo) (Yahoo error = "No data found, symbol may be delisted")')
+HTTP Error 404: 
+
+2 Failed downloads:
+['DOBUR.IS', 'DAGHL.IS']: YFPricesMissingError('possibly delisted; no price data found  (period=24mo) (Yahoo error = "No data found, symbol may be delisted")')
+
+1 Failed download:
+['EFORC.IS']: YFPricesMissingError('possibly delisted; no price data found  (period=24mo) (Yahoo error = "No data found, symbol may be delisted")')
+
+1 Failed download:
+['GRTRK.IS']: YFPricesMissingError('possibly delisted; no price data found  (period=24mo) (Yahoo error = "No data found, symbol may be delisted")')
+
+3 Failed downloads:
+['IPEKE.IS', 'KARYE.IS', 'KERVT.IS']: YFPricesMissingError('possibly delisted; no price data found  (period=24mo) (Yahoo error = "No data found, symbol may be delisted")')
+
+2 Failed downloads:
+['KOZAL.IS', 'KOZAA.IS']: YFPricesMissingError('possibly delisted; no price data found  (period=24mo) (Yahoo error = "No data found, symbol may be delisted")')
+
+3 Failed downloads:
+['MIPAZ.IS', 'METUR.IS', 'MENDR.IS']: YFPricesMissingError('possibly delisted; no price data found  (period=24mo) (Yahoo error = "No data found, symbol may be delisted")')
+
+2 Failed downloads:
+['PEGYO.IS', 'ROYAL.IS']: YFPricesMissingError('possibly delisted; no price data found  (period=24mo) (Yahoo error = "No data found, symbol may be delisted")')
+
+3 Failed downloads:
+['SNKRN.IS', 'SELGD.IS', 'TETMT.IS']: YFPricesMissingError('possibly delisted; no price data found  (period=24mo) (Yahoo error = "No data found, symbol may be delisted")')
+
+2 Failed downloads:
+['YGYO.IS', 'UZERB.IS']: YFPricesMissingError('possibly delisted; no price data found  (period=24mo) (Yahoo error = "No data found, symbol may be delisted")')
+[25.08.2026 18:30:04] Arka plan taraması başlıyor...
+[25.08.2026 18:30:06] 559 hisse için veri indiriliyor (kapsam=TUM)...
+[25.08.2026 18:31:00] 539 hissenin verisi hazır. Puanlama taraması çalışıyor...
+[25.08.2026 18:31:04] Piyasa rejimi: 74/100 — RİSK AÇIK — Boğa ortamı
+[25.08.2026 18:31:13] Puanlama taraması bitti: 423 hisse puanlandı.
+[25.08.2026 18:31:13] Vade taraması (Kısa/Orta/Uzun, teknik puan tabanlı) çalışıyor...
+[25.08.2026 18:31:23] Vade taraması bitti: 40 hisse üç vadede değerlendirildi.
+[25.08.2026 18:31:23] Önbellek yazıldı: C:\Users\gkhns\YandexDisk\Yandex genel\lispler\YAZILIMLAR\Borsa yazılımı1\tarama_onbellek.json
+[25.08.2026 18:31:24] Tavsiye kaydı (Öne Çıkan): 20 yeni, 0 mükerrer.
+[25.08.2026 18:31:24] Tavsiye kaydı (Kısa vade): 2 yeni, 31 mükerrer.
+[25.08.2026 18:31:24] Tavsiye kaydı (Orta vade): 4 yeni, 36 mükerrer.
+[25.08.2026 18:31:25] Tavsiye kaydı (Uzun vade): 4 yeni, 35 mükerrer.
+[25.08.2026 18:31:25] Arka plan taraması tamamlandı ✅
+[Sal 25.08.2026 18:31:25.70] BITTI - cikis kodu: 0 
+ 
+[�ar 26.08.2026 18:30:02.15] BASLIYOR - Python: py -3.11 
+
+1 Failed download:
+['ALMAD.IS']: YFPricesMissingError('possibly delisted; no price data found  (period=24mo) (Yahoo error = "No data found, symbol may be delisted")')
+HTTP Error 404: 
+
+2 Failed downloads:
+['DAGHL.IS', 'DOBUR.IS']: YFPricesMissingError('possibly delisted; no price data found  (period=24mo) (Yahoo error = "No data found, symbol may be delisted")')
+
+1 Failed download:
+['EFORC.IS']: YFPricesMissingError('possibly delisted; no price data found  (period=24mo) (Yahoo error = "No data found, symbol may be delisted")')
+
+1 Failed download:
+['GRTRK.IS']: YFPricesMissingError('possibly delisted; no price data found  (period=24mo) (Yahoo error = "No data found, symbol may be delisted")')
+
+3 Failed downloads:
+['KARYE.IS', 'KERVT.IS', 'IPEKE.IS']: YFPricesMissingError('possibly delisted; no price data found  (period=24mo) (Yahoo error = "No data found, symbol may be delisted")')
+
+2 Failed downloads:
+['KOZAL.IS', 'KOZAA.IS']: YFPricesMissingError('possibly delisted; no price data found  (period=24mo) (Yahoo error = "No data found, symbol may be delisted")')
+
+3 Failed downloads:
+['METUR.IS', 'MIPAZ.IS', 'MENDR.IS']: YFPricesMissingError('possibly delisted; no price data found  (period=24mo) (Yahoo error = "No data found, symbol may be delisted")')
+
+2 Failed downloads:
+['ROYAL.IS', 'PEGYO.IS']: YFPricesMissingError('possibly delisted; no price data found  (period=24mo) (Yahoo error = "No data found, symbol may be delisted")')
+
+3 Failed downloads:
+['SNKRN.IS', 'SELGD.IS', 'TETMT.IS']: YFPricesMissingError('possibly delisted; no price data found  (period=24mo) (Yahoo error = "No data found, symbol may be delisted")')
+
+2 Failed downloads:
+['UZERB.IS', 'YGYO.IS']: YFPricesMissingError('possibly delisted; no price data found  (period=24mo) (Yahoo error = "No data found, symbol may be delisted")')
+[26.08.2026 18:30:04] Arka plan taraması başlıyor...
+[26.08.2026 18:30:05] 559 hisse için veri indiriliyor (kapsam=TUM)...
+[26.08.2026 18:31:04] 539 hissenin verisi hazır. Puanlama taraması çalışıyor...
+[26.08.2026 18:31:08] Piyasa rejimi: 88/100 — RİSK AÇIK — Boğa ortamı
+[26.08.2026 18:31:14] Puanlama taraması bitti: 421 hisse puanlandı.
+[26.08.2026 18:31:14] Vade taraması (Kısa/Orta/Uzun, teknik puan tabanlı) çalışıyor...
+[26.08.2026 18:31:21] Vade taraması bitti: 40 hisse üç vadede değerlendirildi.
+[26.08.2026 18:31:21] Önbellek yazıldı: C:\Users\gkhns\YandexDisk\Yandex genel\lispler\YAZILIMLAR\Borsa yazılımı1\tarama_onbellek.json
+[26.08.2026 18:31:22] Tavsiye kaydı (Öne Çıkan): 20 yeni, 0 mükerrer.
+[26.08.2026 18:31:22] Tavsiye kaydı (Kısa vade): 36 yeni, 0 mükerrer.
+[26.08.2026 18:31:22] Tavsiye kaydı (Orta vade): 40 yeni, 0 mükerrer.
+[26.08.2026 18:31:23] Tavsiye kaydı (Uzun vade): 39 yeni, 0 mükerrer.
+[26.08.2026 18:31:23] Arka plan taraması tamamlandı ✅
+[�ar 26.08.2026 18:31:23.24] BITTI - cikis kodu: 0 

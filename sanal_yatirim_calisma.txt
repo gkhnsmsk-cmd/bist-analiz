@@ -1112,3 +1112,324 @@ ENDEKS KARŞILAŞTIRMASI (asıl başarı ölçütü):
   Şimdiye kadarki maksimum düşüş: %-26.17
 ⚠️ Bu SANAL bir portföydür, gerçek para kullanılmamıştır. Hiçbir gerçek alım-satım emri gönderilmedi.
 [Paz 23.08.2026 23:47:33.11] BITTI - cikis kodu: 0 
+ 
+[Pzt 24.08.2026 18:40:01.61] BASLIYOR - Python: py -3.11 
+
+1 Failed download:
+['ALMAD.IS']: YFPricesMissingError('possibly delisted; no price data found  (period=24mo) (Yahoo error = "No data found, symbol may be delisted")')
+HTTP Error 404: 
+
+2 Failed downloads:
+['DOBUR.IS', 'DAGHL.IS']: YFPricesMissingError('possibly delisted; no price data found  (period=24mo) (Yahoo error = "No data found, symbol may be delisted")')
+
+1 Failed download:
+['EFORC.IS']: YFPricesMissingError('possibly delisted; no price data found  (period=24mo) (Yahoo error = "No data found, symbol may be delisted")')
+
+1 Failed download:
+['GRTRK.IS']: YFPricesMissingError('possibly delisted; no price data found  (period=24mo) (Yahoo error = "No data found, symbol may be delisted")')
+
+3 Failed downloads:
+['KERVT.IS', 'IPEKE.IS', 'KARYE.IS']: YFPricesMissingError('possibly delisted; no price data found  (period=24mo) (Yahoo error = "No data found, symbol may be delisted")')
+
+2 Failed downloads:
+['KOZAA.IS', 'KOZAL.IS']: YFPricesMissingError('possibly delisted; no price data found  (period=24mo) (Yahoo error = "No data found, symbol may be delisted")')
+
+3 Failed downloads:
+['METUR.IS', 'MIPAZ.IS', 'MENDR.IS']: YFPricesMissingError('possibly delisted; no price data found  (period=24mo) (Yahoo error = "No data found, symbol may be delisted")')
+
+2 Failed downloads:
+['ROYAL.IS', 'PEGYO.IS']: YFPricesMissingError('possibly delisted; no price data found  (period=24mo) (Yahoo error = "No data found, symbol may be delisted")')
+
+3 Failed downloads:
+['SELGD.IS', 'SNKRN.IS', 'TETMT.IS']: YFPricesMissingError('possibly delisted; no price data found  (period=24mo) (Yahoo error = "No data found, symbol may be delisted")')
+
+2 Failed downloads:
+['UZERB.IS', 'YGYO.IS']: YFPricesMissingError('possibly delisted; no price data found  (period=24mo) (Yahoo error = "No data found, symbol may be delisted")')
+$ALMAD.IS: possibly delisted; no price data found  (period=12mo) (Yahoo error = "No data found, symbol may be delisted")
+$DAGHL.IS: possibly delisted; no price data found  (period=12mo) (Yahoo error = "No data found, symbol may be delisted")
+C:\Users\gkhns\YandexDisk\Yandex genel\lispler\YAZILIMLAR\Borsa yazılımı1\veri_katmani.py:403: FutureWarning: Passing literal html to 'read_html' is deprecated and will be removed in a future version. To read from a literal string, wrap it in a 'StringIO' object.
+  tablolar = pd.read_html(r.text)
+$DOBUR.IS: possibly delisted; no price data found  (period=12mo) (Yahoo error = "No data found, symbol may be delisted")
+$EFORC.IS: possibly delisted; no price data found  (period=12mo) (Yahoo error = "No data found, symbol may be delisted")
+C:\Users\gkhns\YandexDisk\Yandex genel\lispler\YAZILIMLAR\Borsa yazılımı1\veri_katmani.py:403: FutureWarning: Passing literal html to 'read_html' is deprecated and will be removed in a future version. To read from a literal string, wrap it in a 'StringIO' object.
+  tablolar = pd.read_html(r.text)
+$GRTRK.IS: possibly delisted; no price data found  (period=12mo) (Yahoo error = "No data found, symbol may be delisted")
+C:\Users\gkhns\YandexDisk\Yandex genel\lispler\YAZILIMLAR\Borsa yazılımı1\veri_katmani.py:403: FutureWarning: Passing literal html to 'read_html' is deprecated and will be removed in a future version. To read from a literal string, wrap it in a 'StringIO' object.
+  tablolar = pd.read_html(r.text)
+$IPEKE.IS: possibly delisted; no price data found  (period=12mo) (Yahoo error = "No data found, symbol may be delisted")
+$KARYE.IS: possibly delisted; no price data found  (period=12mo) (Yahoo error = "No data found, symbol may be delisted")
+$KERVT.IS: possibly delisted; no price data found  (period=12mo) (Yahoo error = "No data found, symbol may be delisted")
+$KOZAA.IS: possibly delisted; no price data found  (period=12mo) (Yahoo error = "No data found, symbol may be delisted")
+C:\Users\gkhns\YandexDisk\Yandex genel\lispler\YAZILIMLAR\Borsa yazılımı1\veri_katmani.py:403: FutureWarning: Passing literal html to 'read_html' is deprecated and will be removed in a future version. To read from a literal string, wrap it in a 'StringIO' object.
+  tablolar = pd.read_html(r.text)
+$KOZAL.IS: possibly delisted; no price data found  (period=12mo) (Yahoo error = "No data found, symbol may be delisted")
+$MENDR.IS: possibly delisted; no price data found  (period=12mo) (Yahoo error = "No data found, symbol may be delisted")
+C:\Users\gkhns\YandexDisk\Yandex genel\lispler\YAZILIMLAR\Borsa yazılımı1\veri_katmani.py:403: FutureWarning: Passing literal html to 'read_html' is deprecated and will be removed in a future version. To read from a literal string, wrap it in a 'StringIO' object.
+  tablolar = pd.read_html(r.text)
+$METUR.IS: possibly delisted; no price data found  (period=12mo) (Yahoo error = "No data found, symbol may be delisted")
+$MIPAZ.IS: possibly delisted; no price data found  (period=12mo) (Yahoo error = "No data found, symbol may be delisted")
+C:\Users\gkhns\YandexDisk\Yandex genel\lispler\YAZILIMLAR\Borsa yazılımı1\veri_katmani.py:403: FutureWarning: Passing literal html to 'read_html' is deprecated and will be removed in a future version. To read from a literal string, wrap it in a 'StringIO' object.
+  tablolar = pd.read_html(r.text)
+$PEGYO.IS: possibly delisted; no price data found  (period=12mo) (Yahoo error = "No data found, symbol may be delisted")
+C:\Users\gkhns\YandexDisk\Yandex genel\lispler\YAZILIMLAR\Borsa yazılımı1\veri_katmani.py:403: FutureWarning: Passing literal html to 'read_html' is deprecated and will be removed in a future version. To read from a literal string, wrap it in a 'StringIO' object.
+  tablolar = pd.read_html(r.text)
+$ROYAL.IS: possibly delisted; no price data found  (period=12mo) (Yahoo error = "No data found, symbol may be delisted")
+C:\Users\gkhns\YandexDisk\Yandex genel\lispler\YAZILIMLAR\Borsa yazılımı1\veri_katmani.py:403: FutureWarning: Passing literal html to 'read_html' is deprecated and will be removed in a future version. To read from a literal string, wrap it in a 'StringIO' object.
+  tablolar = pd.read_html(r.text)
+$SELGD.IS: possibly delisted; no price data found  (period=12mo) (Yahoo error = "No data found, symbol may be delisted")
+$SNKRN.IS: possibly delisted; no price data found  (period=12mo) (Yahoo error = "No data found, symbol may be delisted")
+$TETMT.IS: possibly delisted; no price data found  (period=12mo) (Yahoo error = "No data found, symbol may be delisted")
+C:\Users\gkhns\YandexDisk\Yandex genel\lispler\YAZILIMLAR\Borsa yazılımı1\veri_katmani.py:403: FutureWarning: Passing literal html to 'read_html' is deprecated and will be removed in a future version. To read from a literal string, wrap it in a 'StringIO' object.
+  tablolar = pd.read_html(r.text)
+$UZERB.IS: possibly delisted; no price data found  (period=12mo) (Yahoo error = "No data found, symbol may be delisted")
+C:\Users\gkhns\YandexDisk\Yandex genel\lispler\YAZILIMLAR\Borsa yazılımı1\veri_katmani.py:403: FutureWarning: Passing literal html to 'read_html' is deprecated and will be removed in a future version. To read from a literal string, wrap it in a 'StringIO' object.
+  tablolar = pd.read_html(r.text)
+$YGYO.IS: possibly delisted; no price data found  (period=12mo) (Yahoo error = "No data found, symbol may be delisted")
+C:\Users\gkhns\YandexDisk\Yandex genel\lispler\YAZILIMLAR\Borsa yazılımı1\veri_katmani.py:403: FutureWarning: Passing literal html to 'read_html' is deprecated and will be removed in a future version. To read from a literal string, wrap it in a 'StringIO' object.
+  tablolar = pd.read_html(r.text)
+Tarama evreni: TUM (559 hisse)
+Toplu veri indirildi: 539/559 hisse için geçmiş veri mevcut.
+Günlük izleme: toplam değer=995,076 ₺ (başlangıç: 1,000,000 ₺, kümülatif getiri: %-0.49)
+  TUPRS: puan=72
+  ANELE: puan=71
+  INVES: puan=71
+  RYGYO: puan=72
+  ATATP: puan=72
+  OZSUB: puan=67
+  MTRKS: puan=71
+  KRDMA: puan=72
+  PASEU: puan=76
+Karar motoru çalıştı. 1 işlem yapıldı (kural tabanlı, takvim kısıtı yok).
+  ELDE TUTULANLAR (satım gerekçesi oluşmadı):
+    PASEU: puan=76
+    TUPRS: puan=72
+    RYGYO: puan=72
+    ATATP: puan=72
+    KRDMA: puan=72
+    ANELE: puan=71
+    INVES: puan=71
+    MTRKS: puan=71
+    OZSUB: puan=67
+  SAT OZSUB: 60,476 ₺ — takas: EUKYO birikim skoru +0.433, bu pozisyonunki +0.309 (marj: 0.10)
+  ⏱ OZSUB: 6 gün tutuldu, getiri %-2.55
+Performans: 27 gün (0.9 ay) — gerçekleşen kümülatif getiri %-0.50, hedefin gerektirdiği %+8.82 (hedef: aylık %10)
+ENDEKS KARŞILAŞTIRMASI (asıl başarı ölçütü):
+  Portföy : %-0.50
+  BIST 100: %+5.94  (13,687.90 → 14,501.49)
+  ENDEKS ÜSTÜ: %-6.44  ⚠️ endeksin GERİSİNDE — endekse yatırmak daha iyi olurdu
+  Hedefi YAKALAYAMIYOR ⚠️ (dürüst rapor — gizlenmez)
+  Şimdiye kadarki maksimum düşüş: %-26.17
+⚠️ Bu SANAL bir portföydür, gerçek para kullanılmamıştır. Hiçbir gerçek alım-satım emri gönderilmedi.
+[Pzt 24.08.2026 18:43:03.35] BITTI - cikis kodu: 0 
+ 
+[Sal 25.08.2026 18:40:01.68] BASLIYOR - Python: py -3.11 
+
+1 Failed download:
+['ALMAD.IS']: YFPricesMissingError('possibly delisted; no price data found  (period=24mo) (Yahoo error = "No data found, symbol may be delisted")')
+HTTP Error 404: 
+
+2 Failed downloads:
+['DAGHL.IS', 'DOBUR.IS']: YFPricesMissingError('possibly delisted; no price data found  (period=24mo) (Yahoo error = "No data found, symbol may be delisted")')
+
+1 Failed download:
+['EFORC.IS']: YFPricesMissingError('possibly delisted; no price data found  (period=24mo) (Yahoo error = "No data found, symbol may be delisted")')
+
+1 Failed download:
+['GRTRK.IS']: YFPricesMissingError('possibly delisted; no price data found  (period=24mo) (Yahoo error = "No data found, symbol may be delisted")')
+
+3 Failed downloads:
+['KERVT.IS', 'IPEKE.IS', 'KARYE.IS']: YFPricesMissingError('possibly delisted; no price data found  (period=24mo) (Yahoo error = "No data found, symbol may be delisted")')
+
+2 Failed downloads:
+['KOZAL.IS', 'KOZAA.IS']: YFPricesMissingError('possibly delisted; no price data found  (period=24mo) (Yahoo error = "No data found, symbol may be delisted")')
+
+3 Failed downloads:
+['MIPAZ.IS', 'METUR.IS', 'MENDR.IS']: YFPricesMissingError('possibly delisted; no price data found  (period=24mo) (Yahoo error = "No data found, symbol may be delisted")')
+
+2 Failed downloads:
+['ROYAL.IS', 'PEGYO.IS']: YFPricesMissingError('possibly delisted; no price data found  (period=24mo) (Yahoo error = "No data found, symbol may be delisted")')
+
+3 Failed downloads:
+['SELGD.IS', 'SNKRN.IS', 'TETMT.IS']: YFPricesMissingError('possibly delisted; no price data found  (period=24mo) (Yahoo error = "No data found, symbol may be delisted")')
+
+2 Failed downloads:
+['YGYO.IS', 'UZERB.IS']: YFPricesMissingError('possibly delisted; no price data found  (period=24mo) (Yahoo error = "No data found, symbol may be delisted")')
+$ALMAD.IS: possibly delisted; no price data found  (period=12mo) (Yahoo error = "No data found, symbol may be delisted")
+$DAGHL.IS: possibly delisted; no price data found  (period=12mo) (Yahoo error = "No data found, symbol may be delisted")
+C:\Users\gkhns\YandexDisk\Yandex genel\lispler\YAZILIMLAR\Borsa yazılımı1\veri_katmani.py:403: FutureWarning: Passing literal html to 'read_html' is deprecated and will be removed in a future version. To read from a literal string, wrap it in a 'StringIO' object.
+  tablolar = pd.read_html(r.text)
+$DOBUR.IS: possibly delisted; no price data found  (period=12mo) (Yahoo error = "No data found, symbol may be delisted")
+$EFORC.IS: possibly delisted; no price data found  (period=12mo) (Yahoo error = "No data found, symbol may be delisted")
+C:\Users\gkhns\YandexDisk\Yandex genel\lispler\YAZILIMLAR\Borsa yazılımı1\veri_katmani.py:403: FutureWarning: Passing literal html to 'read_html' is deprecated and will be removed in a future version. To read from a literal string, wrap it in a 'StringIO' object.
+  tablolar = pd.read_html(r.text)
+$GRTRK.IS: possibly delisted; no price data found  (period=12mo) (Yahoo error = "No data found, symbol may be delisted")
+C:\Users\gkhns\YandexDisk\Yandex genel\lispler\YAZILIMLAR\Borsa yazılımı1\veri_katmani.py:403: FutureWarning: Passing literal html to 'read_html' is deprecated and will be removed in a future version. To read from a literal string, wrap it in a 'StringIO' object.
+  tablolar = pd.read_html(r.text)
+$IPEKE.IS: possibly delisted; no price data found  (period=12mo) (Yahoo error = "No data found, symbol may be delisted")
+$KARYE.IS: possibly delisted; no price data found  (period=12mo) (Yahoo error = "No data found, symbol may be delisted")
+$KERVT.IS: possibly delisted; no price data found  (period=12mo) (Yahoo error = "No data found, symbol may be delisted")
+$KOZAA.IS: possibly delisted; no price data found  (period=12mo) (Yahoo error = "No data found, symbol may be delisted")
+C:\Users\gkhns\YandexDisk\Yandex genel\lispler\YAZILIMLAR\Borsa yazılımı1\veri_katmani.py:403: FutureWarning: Passing literal html to 'read_html' is deprecated and will be removed in a future version. To read from a literal string, wrap it in a 'StringIO' object.
+  tablolar = pd.read_html(r.text)
+$KOZAL.IS: possibly delisted; no price data found  (period=12mo) (Yahoo error = "No data found, symbol may be delisted")
+$MENDR.IS: possibly delisted; no price data found  (period=12mo) (Yahoo error = "No data found, symbol may be delisted")
+C:\Users\gkhns\YandexDisk\Yandex genel\lispler\YAZILIMLAR\Borsa yazılımı1\veri_katmani.py:403: FutureWarning: Passing literal html to 'read_html' is deprecated and will be removed in a future version. To read from a literal string, wrap it in a 'StringIO' object.
+  tablolar = pd.read_html(r.text)
+$METUR.IS: possibly delisted; no price data found  (period=12mo) (Yahoo error = "No data found, symbol may be delisted")
+$MIPAZ.IS: possibly delisted; no price data found  (period=12mo) (Yahoo error = "No data found, symbol may be delisted")
+C:\Users\gkhns\YandexDisk\Yandex genel\lispler\YAZILIMLAR\Borsa yazılımı1\veri_katmani.py:403: FutureWarning: Passing literal html to 'read_html' is deprecated and will be removed in a future version. To read from a literal string, wrap it in a 'StringIO' object.
+  tablolar = pd.read_html(r.text)
+$PEGYO.IS: possibly delisted; no price data found  (period=12mo) (Yahoo error = "No data found, symbol may be delisted")
+C:\Users\gkhns\YandexDisk\Yandex genel\lispler\YAZILIMLAR\Borsa yazılımı1\veri_katmani.py:403: FutureWarning: Passing literal html to 'read_html' is deprecated and will be removed in a future version. To read from a literal string, wrap it in a 'StringIO' object.
+  tablolar = pd.read_html(r.text)
+$ROYAL.IS: possibly delisted; no price data found  (period=12mo) (Yahoo error = "No data found, symbol may be delisted")
+C:\Users\gkhns\YandexDisk\Yandex genel\lispler\YAZILIMLAR\Borsa yazılımı1\veri_katmani.py:403: FutureWarning: Passing literal html to 'read_html' is deprecated and will be removed in a future version. To read from a literal string, wrap it in a 'StringIO' object.
+  tablolar = pd.read_html(r.text)
+$SELGD.IS: possibly delisted; no price data found  (period=12mo) (Yahoo error = "No data found, symbol may be delisted")
+$SNKRN.IS: possibly delisted; no price data found  (period=12mo) (Yahoo error = "No data found, symbol may be delisted")
+$TETMT.IS: possibly delisted; no price data found  (period=12mo) (Yahoo error = "No data found, symbol may be delisted")
+C:\Users\gkhns\YandexDisk\Yandex genel\lispler\YAZILIMLAR\Borsa yazılımı1\veri_katmani.py:403: FutureWarning: Passing literal html to 'read_html' is deprecated and will be removed in a future version. To read from a literal string, wrap it in a 'StringIO' object.
+  tablolar = pd.read_html(r.text)
+$UZERB.IS: possibly delisted; no price data found  (period=12mo) (Yahoo error = "No data found, symbol may be delisted")
+C:\Users\gkhns\YandexDisk\Yandex genel\lispler\YAZILIMLAR\Borsa yazılımı1\veri_katmani.py:403: FutureWarning: Passing literal html to 'read_html' is deprecated and will be removed in a future version. To read from a literal string, wrap it in a 'StringIO' object.
+  tablolar = pd.read_html(r.text)
+$YGYO.IS: possibly delisted; no price data found  (period=12mo) (Yahoo error = "No data found, symbol may be delisted")
+C:\Users\gkhns\YandexDisk\Yandex genel\lispler\YAZILIMLAR\Borsa yazılımı1\veri_katmani.py:403: FutureWarning: Passing literal html to 'read_html' is deprecated and will be removed in a future version. To read from a literal string, wrap it in a 'StringIO' object.
+  tablolar = pd.read_html(r.text)
+Tarama evreni: TUM (559 hisse)
+Toplu veri indirildi: 539/559 hisse için geçmiş veri mevcut.
+Günlük izleme: toplam değer=1,010,919 ₺ (başlangıç: 1,000,000 ₺, kümülatif getiri: %+1.09)
+  TUPRS: puan=70
+  ANELE: puan=72
+  INVES: puan=72
+  RYGYO: puan=73
+  ATATP: puan=72
+  MTRKS: puan=70
+  KRDMA: puan=72
+  PASEU: puan=76
+Karar motoru çalıştı. 1 işlem yapıldı (kural tabanlı, takvim kısıtı yok).
+  ELDE TUTULANLAR (satım gerekçesi oluşmadı):
+    PASEU: puan=76
+    RYGYO: puan=73
+    INVES: puan=72
+    ANELE: puan=72
+    ATATP: puan=72
+    KRDMA: puan=72
+    TUPRS: puan=70
+    MTRKS: puan=70
+  SAT TUPRS: 101,124 ₺ — takas: ERSU birikim skoru +0.448, bu pozisyonunki +0.219 (marj: 0.10)
+  ⏱ TUPRS: 19 gün tutuldu, getiri %+19.31
+Performans: 28 gün (0.9 ay) — gerçekleşen kümülatif getiri %+1.08, hedefin gerektirdiği %+9.16 (hedef: aylık %10)
+ENDEKS KARŞILAŞTIRMASI (asıl başarı ölçütü):
+  Portföy : %+1.08
+  BIST 100: %+5.74  (13,687.90 → 14,473.42)
+  ENDEKS ÜSTÜ: %-4.66  ⚠️ endeksin GERİSİNDE — endekse yatırmak daha iyi olurdu
+  Hedefi YAKALAYAMIYOR ⚠️ (dürüst rapor — gizlenmez)
+  Şimdiye kadarki maksimum düşüş: %-26.17
+⚠️ Bu SANAL bir portföydür, gerçek para kullanılmamıştır. Hiçbir gerçek alım-satım emri gönderilmedi.
+[Sal 25.08.2026 18:42:45.22] BITTI - cikis kodu: 0 
+ 
+[�ar 26.08.2026 18:40:01.60] BASLIYOR - Python: py -3.11 
+
+1 Failed download:
+['ALMAD.IS']: YFPricesMissingError('possibly delisted; no price data found  (period=24mo) (Yahoo error = "No data found, symbol may be delisted")')
+HTTP Error 404: 
+
+2 Failed downloads:
+['DOBUR.IS', 'DAGHL.IS']: YFPricesMissingError('possibly delisted; no price data found  (period=24mo) (Yahoo error = "No data found, symbol may be delisted")')
+
+1 Failed download:
+['EFORC.IS']: YFPricesMissingError('possibly delisted; no price data found  (period=24mo) (Yahoo error = "No data found, symbol may be delisted")')
+
+1 Failed download:
+['GRTRK.IS']: YFPricesMissingError('possibly delisted; no price data found  (period=24mo) (Yahoo error = "No data found, symbol may be delisted")')
+
+3 Failed downloads:
+['KERVT.IS', 'KARYE.IS', 'IPEKE.IS']: YFPricesMissingError('possibly delisted; no price data found  (period=24mo) (Yahoo error = "No data found, symbol may be delisted")')
+
+2 Failed downloads:
+['KOZAL.IS', 'KOZAA.IS']: YFPricesMissingError('possibly delisted; no price data found  (period=24mo) (Yahoo error = "No data found, symbol may be delisted")')
+
+3 Failed downloads:
+['MENDR.IS', 'MIPAZ.IS', 'METUR.IS']: YFPricesMissingError('possibly delisted; no price data found  (period=24mo) (Yahoo error = "No data found, symbol may be delisted")')
+
+2 Failed downloads:
+['PEGYO.IS', 'ROYAL.IS']: YFPricesMissingError('possibly delisted; no price data found  (period=24mo) (Yahoo error = "No data found, symbol may be delisted")')
+
+3 Failed downloads:
+['TETMT.IS', 'SNKRN.IS', 'SELGD.IS']: YFPricesMissingError('possibly delisted; no price data found  (period=24mo) (Yahoo error = "No data found, symbol may be delisted")')
+
+2 Failed downloads:
+['YGYO.IS', 'UZERB.IS']: YFPricesMissingError('possibly delisted; no price data found  (period=24mo) (Yahoo error = "No data found, symbol may be delisted")')
+$ALMAD.IS: possibly delisted; no price data found  (period=12mo) (Yahoo error = "No data found, symbol may be delisted")
+$DAGHL.IS: possibly delisted; no price data found  (period=12mo) (Yahoo error = "No data found, symbol may be delisted")
+C:\Users\gkhns\YandexDisk\Yandex genel\lispler\YAZILIMLAR\Borsa yazılımı1\veri_katmani.py:403: FutureWarning: Passing literal html to 'read_html' is deprecated and will be removed in a future version. To read from a literal string, wrap it in a 'StringIO' object.
+  tablolar = pd.read_html(r.text)
+$DOBUR.IS: possibly delisted; no price data found  (period=12mo) (Yahoo error = "No data found, symbol may be delisted")
+$EFORC.IS: possibly delisted; no price data found  (period=12mo) (Yahoo error = "No data found, symbol may be delisted")
+C:\Users\gkhns\YandexDisk\Yandex genel\lispler\YAZILIMLAR\Borsa yazılımı1\veri_katmani.py:403: FutureWarning: Passing literal html to 'read_html' is deprecated and will be removed in a future version. To read from a literal string, wrap it in a 'StringIO' object.
+  tablolar = pd.read_html(r.text)
+$GRTRK.IS: possibly delisted; no price data found  (period=12mo) (Yahoo error = "No data found, symbol may be delisted")
+C:\Users\gkhns\YandexDisk\Yandex genel\lispler\YAZILIMLAR\Borsa yazılımı1\veri_katmani.py:403: FutureWarning: Passing literal html to 'read_html' is deprecated and will be removed in a future version. To read from a literal string, wrap it in a 'StringIO' object.
+  tablolar = pd.read_html(r.text)
+$IPEKE.IS: possibly delisted; no price data found  (period=12mo) (Yahoo error = "No data found, symbol may be delisted")
+$KARYE.IS: possibly delisted; no price data found  (period=12mo) (Yahoo error = "No data found, symbol may be delisted")
+$KERVT.IS: possibly delisted; no price data found  (period=12mo) (Yahoo error = "No data found, symbol may be delisted")
+$KOZAA.IS: possibly delisted; no price data found  (period=12mo) (Yahoo error = "No data found, symbol may be delisted")
+C:\Users\gkhns\YandexDisk\Yandex genel\lispler\YAZILIMLAR\Borsa yazılımı1\veri_katmani.py:403: FutureWarning: Passing literal html to 'read_html' is deprecated and will be removed in a future version. To read from a literal string, wrap it in a 'StringIO' object.
+  tablolar = pd.read_html(r.text)
+$KOZAL.IS: possibly delisted; no price data found  (period=12mo) (Yahoo error = "No data found, symbol may be delisted")
+$MENDR.IS: possibly delisted; no price data found  (period=12mo) (Yahoo error = "No data found, symbol may be delisted")
+C:\Users\gkhns\YandexDisk\Yandex genel\lispler\YAZILIMLAR\Borsa yazılımı1\veri_katmani.py:403: FutureWarning: Passing literal html to 'read_html' is deprecated and will be removed in a future version. To read from a literal string, wrap it in a 'StringIO' object.
+  tablolar = pd.read_html(r.text)
+$METUR.IS: possibly delisted; no price data found  (period=12mo) (Yahoo error = "No data found, symbol may be delisted")
+$MIPAZ.IS: possibly delisted; no price data found  (period=12mo) (Yahoo error = "No data found, symbol may be delisted")
+C:\Users\gkhns\YandexDisk\Yandex genel\lispler\YAZILIMLAR\Borsa yazılımı1\veri_katmani.py:403: FutureWarning: Passing literal html to 'read_html' is deprecated and will be removed in a future version. To read from a literal string, wrap it in a 'StringIO' object.
+  tablolar = pd.read_html(r.text)
+$PEGYO.IS: possibly delisted; no price data found  (period=12mo) (Yahoo error = "No data found, symbol may be delisted")
+C:\Users\gkhns\YandexDisk\Yandex genel\lispler\YAZILIMLAR\Borsa yazılımı1\veri_katmani.py:403: FutureWarning: Passing literal html to 'read_html' is deprecated and will be removed in a future version. To read from a literal string, wrap it in a 'StringIO' object.
+  tablolar = pd.read_html(r.text)
+$ROYAL.IS: possibly delisted; no price data found  (period=12mo) (Yahoo error = "No data found, symbol may be delisted")
+C:\Users\gkhns\YandexDisk\Yandex genel\lispler\YAZILIMLAR\Borsa yazılımı1\veri_katmani.py:403: FutureWarning: Passing literal html to 'read_html' is deprecated and will be removed in a future version. To read from a literal string, wrap it in a 'StringIO' object.
+  tablolar = pd.read_html(r.text)
+$SELGD.IS: possibly delisted; no price data found  (period=12mo) (Yahoo error = "No data found, symbol may be delisted")
+$SNKRN.IS: possibly delisted; no price data found  (period=12mo) (Yahoo error = "No data found, symbol may be delisted")
+$TETMT.IS: possibly delisted; no price data found  (period=12mo) (Yahoo error = "No data found, symbol may be delisted")
+C:\Users\gkhns\YandexDisk\Yandex genel\lispler\YAZILIMLAR\Borsa yazılımı1\veri_katmani.py:403: FutureWarning: Passing literal html to 'read_html' is deprecated and will be removed in a future version. To read from a literal string, wrap it in a 'StringIO' object.
+  tablolar = pd.read_html(r.text)
+$UZERB.IS: possibly delisted; no price data found  (period=12mo) (Yahoo error = "No data found, symbol may be delisted")
+C:\Users\gkhns\YandexDisk\Yandex genel\lispler\YAZILIMLAR\Borsa yazılımı1\veri_katmani.py:403: FutureWarning: Passing literal html to 'read_html' is deprecated and will be removed in a future version. To read from a literal string, wrap it in a 'StringIO' object.
+  tablolar = pd.read_html(r.text)
+$YGYO.IS: possibly delisted; no price data found  (period=12mo) (Yahoo error = "No data found, symbol may be delisted")
+C:\Users\gkhns\YandexDisk\Yandex genel\lispler\YAZILIMLAR\Borsa yazılımı1\veri_katmani.py:403: FutureWarning: Passing literal html to 'read_html' is deprecated and will be removed in a future version. To read from a literal string, wrap it in a 'StringIO' object.
+  tablolar = pd.read_html(r.text)
+Tarama evreni: TUM (559 hisse)
+Toplu veri indirildi: 539/559 hisse için geçmiş veri mevcut.
+Günlük izleme: toplam değer=1,013,300 ₺ (başlangıç: 1,000,000 ₺, kümülatif getiri: %+1.33)
+  ANELE: puan=72
+  INVES: puan=71
+  RYGYO: puan=71
+  ATATP: puan=71
+  MTRKS: puan=71
+  KRDMA: puan=72
+  PASEU: puan=75
+Karar motoru çalıştı. 1 işlem yapıldı (kural tabanlı, takvim kısıtı yok).
+  ELDE TUTULANLAR (satım gerekçesi oluşmadı):
+    PASEU: puan=75
+    ANELE: puan=72
+    KRDMA: puan=72
+    INVES: puan=71
+    RYGYO: puan=71
+    ATATP: puan=71
+    MTRKS: puan=71
+  SAT ATATP: 86,658 ₺ — takas: ETYAT birikim skoru +0.416, bu pozisyonunki +0.126 (marj: 0.10)
+  ⏱ ATATP: 8 gün tutuldu, getiri %+8.19
+Performans: 29 gün (0.9 ay) — gerçekleşen kümülatif getiri %+1.32, hedefin gerektirdiği %+9.51 (hedef: aylık %10)
+ENDEKS KARŞILAŞTIRMASI (asıl başarı ölçütü):
+  Portföy : %+1.32
+  BIST 100: %+6.74  (13,687.90 → 14,610.92)
+  ENDEKS ÜSTÜ: %-5.42  ⚠️ endeksin GERİSİNDE — endekse yatırmak daha iyi olurdu
+  Hedefi YAKALAYAMIYOR ⚠️ (dürüst rapor — gizlenmez)
+  Şimdiye kadarki maksimum düşüş: %-26.17
+⚠️ Bu SANAL bir portföydür, gerçek para kullanılmamıştır. Hiçbir gerçek alım-satım emri gönderilmedi.
+[�ar 26.08.2026 18:42:18.98] BITTI - cikis kodu: 0 
