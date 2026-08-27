@@ -22,6 +22,7 @@ Pusula'ya da yansır. Bkz. bu iki dosyanın sonundaki çağrı ve
 """
 from __future__ import annotations
 
+import datetime as dt
 import io
 import json
 import os
@@ -107,6 +108,7 @@ def tarama_uret():
                 "degisim1ay": float(r.get("1 Ay %", 0) or 0),
                 "degisim3ay": float(r.get("3 Ay %", 0) or 0),
                 "puan": float(r.get("Puan", 0) or 0),
+                "takasPuan": float(r.get("Takas", 0) or 0),
                 "trend": _karar_to_trend(r.get("Karar")),
                 "karar": str(r.get("Karar", "")),
                 "hacim": float(r.get("Hacim(M₺)", 0) or 0),
@@ -299,13 +301,91 @@ def performans_uret():
     return True
 
 
+def fon_kurumsal_uret():
+    """TEFAS'ın yerli fon portföylerindeki ortalama hisse ağırlığı (aylık) —
+    veri_katmani.tefas_hisse_trendi zaten 24 saat diskte önbelleklenmiş
+    (_disk_cache_oku), o yüzden burada tekrar ağ isteği YAPMIYORUZ — sadece
+    o önbelleği (veya varsa canlı sonucu) okuyup Pusula formatına çeviriyoruz.
+    NEDEN: Bu makro seviyeli tek bir seri (hisse bazlı DEĞİL) — 421 hisse için
+    tek tek ETF/TEFAS sorgusu YAPILMIYOR, bu çok pahalı olurdu. app.py'deki
+    'Fon & Kurumsal' sekmesinin hisse-bazlı kısmı (ETF sahipliği) tek hisse
+    sorgulandığında hesaplanıyor; statik ön-üretimde bu nedenle yer almıyor.
+    """
+    try:
+        import veri_katmani as vk
+    except Exception as e:
+        print("veri_katmani içe aktarılamadı:", e)
+        return False
+    try:
+        seri = vk.tefas_hisse_trendi(6)
+    except Exception as e:
+        print("TEFAS trendi alınamadı:", e)
+        return False
+    if seri is None or len(seri) == 0:
+        return False
+    tefas_trend = [{"tarih": str(t.date()) if hasattr(t, "date") else str(t), "deger": float(v)}
+                   for t, v in seri.items()]
+    _yaz("fon_kurumsal.json", {
+        "zaman": dt.datetime.now().isoformat(),
+        "tefasTrend": tefas_trend,
+    })
+    return True
+
+
+def sistem_durumu_uret():
+    """Her veri kaynağının tazelik durumunu tek bir dosyada özetler —
+    Pusula'da 'Sistem Durumu' bilgi kartı için. Ağ isteği yapmaz, sadece
+    zaten diskteki dosyaların zaman damgalarını/okur."""
+    durum = {}
+
+    onbellek_yolu = os.path.join(KLASOR, "tarama_onbellek.json")
+    if os.path.exists(onbellek_yolu):
+        try:
+            with open(onbellek_yolu, encoding="utf-8") as f:
+                d = json.load(f)
+            durum["tarama"] = {"zaman": d.get("zaman"), "kapsam": d.get("kapsam")}
+        except Exception:
+            pass
+
+    portfoy_yolu = os.path.join(KLASOR, "sanal_portfoy.json")
+    if os.path.exists(portfoy_yolu):
+        try:
+            with open(portfoy_yolu, encoding="utf-8") as f:
+                p = json.load(f)
+            durum["sanalPortfoy"] = {
+                "sonRebalansTarihi": p.get("son_rebalans_tarihi"),
+                "aktif": p.get("aktif", True),
+                "pozisyonSayisi": len(p.get("pozisyonlar", [])),
+            }
+        except Exception:
+            pass
+
+    tavsiye_yolu = os.path.join(KLASOR, "tavsiye_gecmisi.json")
+    if os.path.exists(tavsiye_yolu):
+        try:
+            with open(tavsiye_yolu, encoding="utf-8") as f:
+                t = json.load(f)
+            durum["tavsiyeSayisi"] = len(t)
+            if t:
+                durum["sonTavsiyeZamani"] = max((x.get("kayit_zamani") or "") for x in t)
+        except Exception:
+            pass
+
+    _yaz("sistem_durumu.json", {"uretimZamani": dt.datetime.now().isoformat(), **durum})
+    return True
+
+
 def hepsi():
     a = tarama_uret()
     b = portfoy_uret()
     c = performans_uret()
+    d = fon_kurumsal_uret()
+    e = sistem_durumu_uret()
     print("tarama/yukselecek/dip_donusu:", "OK" if a else "atlandı (dosya yok)")
     print("portfoy:", "OK" if b else "atlandı (dosya yok)")
     print("performans:", "OK" if c else "atlandı (dosya yok)")
+    print("fon_kurumsal:", "OK" if d else "atlandı")
+    print("sistem_durumu:", "OK" if e else "atlandı")
 
 
 if __name__ == "__main__":

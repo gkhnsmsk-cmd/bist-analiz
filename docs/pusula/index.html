@@ -74,6 +74,7 @@ function _apiHisseUyarla(x, favoriSet) {
     puan: x.puan,
     karar: x.karar,
     hacim: x.hacim,
+    spark: x.spark,
     trend: x.trend || 'Tut',
     favori: favoriSet.has(x.symbol),
   };
@@ -239,7 +240,46 @@ function HisseSatiri({ h, onSec, onYildiz }) {
 }
 
 /* ── Ekran 1: Ana ─────────────────────────────────────────────────────── */
-function AnaEkran({ hisseler, onSec, onYildiz, zaman }) {
+/* ── Sistem Durumu — küçük, katlanabilir bilgi kartı. Ağ isteği yapmaz,
+   sadece pusula_veri_uret.sistem_durumu_uret()'in ürettiği zaten-hazır
+   zaman damgalarını gösterir. Orijinal app.py'deki "ℹ️ Durum" sekmesinin
+   hafifletilmiş karşılığı. ─────────────────────────────────────────────── */
+function SistemDurumuKarti({ durum }) {
+  const [acik, setAcik] = useState(false);
+  if (!durum) return null;
+  return (
+    <div className="px-4 mt-2">
+      <button
+        onClick={() => setAcik(a => !a)}
+        className="w-full flex items-center justify-between text-xs text-gray-400 px-1 py-1"
+      >
+        <span>ℹ️ Sistem Durumu {durum.tarama?.zaman ? "· son tarama " + new Date(durum.tarama.zaman).toLocaleString('tr-TR') : ""}</span>
+        <span>{acik ? '▲' : '▼'}</span>
+      </button>
+      {acik && (
+        <div className="bg-white rounded-2xl shadow-sm ring-1 ring-gray-100 p-3 mt-1 flex flex-col gap-1.5 text-xs pop-anim">
+          {durum.tarama && (
+            <div className="flex justify-between"><span className="text-gray-400">Son tarama</span>
+              <span className="font-medium text-gray-700">{new Date(durum.tarama.zaman).toLocaleString('tr-TR')} · {durum.tarama.kapsam}</span></div>
+          )}
+          {durum.sanalPortfoy && (
+            <div className="flex justify-between"><span className="text-gray-400">Sanal portföy</span>
+              <span className="font-medium text-gray-700">
+                {durum.sanalPortfoy.aktif ? "aktif" : "pasif"} · {durum.sanalPortfoy.pozisyonSayisi} pozisyon
+                {durum.sanalPortfoy.sonRebalansTarihi ? " · rebalans " + durum.sanalPortfoy.sonRebalansTarihi : ""}
+              </span></div>
+          )}
+          {durum.tavsiyeSayisi != null && (
+            <div className="flex justify-between"><span className="text-gray-400">Toplam tavsiye kaydı</span>
+              <span className="font-medium text-gray-700">{durum.tavsiyeSayisi}</span></div>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function AnaEkran({ hisseler, onSec, onYildiz, zaman, sistemDurumu }) {
   return (
     <div className="pb-4">
       <div className="px-4 pt-2 pb-3">
@@ -254,40 +294,150 @@ function AnaEkran({ hisseler, onSec, onYildiz, zaman }) {
       <div className="px-4 flex flex-col gap-2 md:grid md:grid-cols-2 md:gap-3">
         {hisseler.map(h => <HisseSatiri key={h.symbol} h={h} onSec={onSec} onYildiz={onYildiz} />)}
       </div>
+
+      <SistemDurumuKarti durum={sistemDurumu} />
     </div>
   );
 }
 
 /* ── Ekran 2: Tarama — trend filtreli liste ──────────────────────────── */
-function TaramaEkran({ hisseler, onSec, onYildiz }) {
+/* Takas satırı — HisseSatiri'ye benzer ama sağda takas puanı gösterir
+   (yabancı/kurumsal birikim vekil göstergesi — bkz. analiz_motoru.takas_analizi). */
+function TakasSatiri({ h, onSec, onYildiz }) {
+  return (
+    <div
+      role="button" tabIndex={0}
+      onClick={() => onSec(h.symbol)}
+      onKeyDown={(e) => { if (e.key === 'Enter') onSec(h.symbol); }}
+      className="w-full flex items-center gap-3 bg-white rounded-2xl shadow-sm ring-1 ring-gray-100 px-4 py-3 min-h-[44px] active:bg-gray-50 transition-colors text-left cursor-pointer"
+    >
+      <button onClick={(e) => { e.stopPropagation(); onYildiz(h.symbol); }}
+              className="text-xl w-11 h-11 -ml-1 flex items-center justify-center shrink-0" aria-label="Favori">
+        {h.favori ? '⭐' : '☆'}
+      </button>
+      <div className="flex-1 min-w-0">
+        <div className="font-bold text-gray-900">{h.symbol}</div>
+        <div className="text-xs text-gray-400 truncate">{h.ad}</div>
+      </div>
+      <div className="text-right shrink-0">
+        <div className="text-[11px] text-gray-400 uppercase tracking-wide">Takas Puan</div>
+        <div className={"font-bold tabular-nums " + (h.takasPuan >= 60 ? "text-emerald-600" : h.takasPuan <= 40 ? "text-red-600" : "text-amber-600")}>
+          {(h.takasPuan || 0).toFixed(0)}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* Fon & Kurumsal — TEFAS'ın yerli yatırım fonlarındaki ortalama hisse
+   ağırlığı (aylık, makro seviyeli). Artıyorsa yerli fonlar borsaya para
+   sokuyor demektir. Bkz. veri_katmani.tefas_hisse_trendi + pusula_veri_uret.py. */
+function FonKurumsalEkran({ fonKurumsal }) {
+  const trend = fonKurumsal?.tefasTrend || [];
+  if (trend.length < 2) {
+    return (
+      <div className="px-4">
+        <p className="text-sm text-gray-400 py-8 text-center">
+          TEFAS fon verisi henüz üretilmedi ya da geçici olarak erişilemiyor.
+          Bir sonraki otomatik taramada tekrar denenecek.
+        </p>
+      </div>
+    );
+  }
+  const genislik = 320, yukseklik = 110, dolgu = 8;
+  const degerler = trend.map(t => t.deger);
+  const minD = Math.min(...degerler), maxD = Math.max(...degerler);
+  const aralik = (maxD - minD) || 1;
+  const yol = trend.map((t, i) => {
+    const x = dolgu + (i / (trend.length - 1)) * (genislik - 2 * dolgu);
+    const y = yukseklik - dolgu - ((t.deger - minD) / aralik) * (yukseklik - 2 * dolgu);
+    return `${x},${y}`;
+  }).join(' ');
+  const ilk = trend[0].deger, son = trend[trend.length - 1].deger;
+  const artis = son >= ilk;
+  return (
+    <div className="px-4">
+      <div className="bg-white rounded-2xl shadow-sm ring-1 ring-gray-100 p-4">
+        <div className="text-xs text-gray-400 uppercase tracking-wide">Yerli Fonlarda Ortalama Hisse Ağırlığı</div>
+        <div className={"text-2xl font-bold tabular-nums mt-1 " + (artis ? "text-emerald-600" : "text-red-600")}>
+          %{son.toFixed(1)}
+        </div>
+        <svg viewBox={`0 0 ${genislik} ${yukseklik}`} className="w-full h-28 mt-2">
+          <polyline points={yol} fill="none" stroke={artis ? "#059669" : "#dc2626"} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+        <p className="text-xs text-gray-400 mt-2 leading-relaxed">
+          {artis
+            ? "Son aylarda yerli fonlar borsaya PARA SOKUYOR — hisse ağırlığı artıyor."
+            : "Son aylarda yerli fonlar borsadan PARA ÇEKİYOR — hisse ağırlığı azalıyor."}
+          {" "}(TEFAS, aylık örneklem)
+        </p>
+      </div>
+    </div>
+  );
+}
+
+function TaramaEkran({ hisseler, onSec, onYildiz, fonKurumsal }) {
+  const [altSekme, setAltSekme] = useState('one_cikan');
   const [filtre, setFiltre] = useState('Tümü');
   const filtreli = useMemo(
     () => filtre === 'Tümü' ? hisseler : hisseler.filter(h => h.trend === filtre),
     [hisseler, filtre]
   );
+  const takasSirali = useMemo(() => [...hisseler].sort((a, b) => (b.takasPuan || 0) - (a.takasPuan || 0)), [hisseler]);
+
   return (
     <div className="pb-4">
       <div className="px-4 pt-2 pb-3">
         <h1 className="text-2xl font-bold text-gray-900">Tarama</h1>
-        <p className="text-sm text-gray-400">{filtreli.length} hisse — filtreye göre</p>
+        <p className="text-sm text-gray-400">
+          {altSekme === 'one_cikan' ? filtreli.length + " hisse — filtreye göre" :
+           altSekme === 'takas' ? "Takas puanına göre sıralı (yabancı/kurumsal birikim vekili)" :
+           "Yerli fon (TEFAS) kurumsal ilgisi"}
+        </p>
       </div>
-      <div className="flex gap-2 overflow-x-auto no-scrollbar px-4 pb-1">
-        {TREND_FILTRELERI.map(f => (
+
+      <div className="flex gap-2 px-4 pb-3">
+        {[['one_cikan', '🚀 Öne Çıkan'], ['takas', '🤝 Takas'], ['fon', '🏦 Fon & Kurumsal']].map(([k, etiket]) => (
           <button
-            key={f}
-            onClick={() => setFiltre(f)}
-            className={"shrink-0 min-h-[44px] px-4 rounded-full text-sm font-semibold transition-colors " +
-                       (filtre === f ? "bg-indigo-600 text-white" : "bg-white text-gray-600 ring-1 ring-gray-200")}
+            key={k}
+            onClick={() => setAltSekme(k)}
+            className={"flex-1 min-h-[40px] rounded-xl text-xs sm:text-sm font-semibold transition-colors " +
+                       (altSekme === k ? "bg-indigo-600 text-white" : "bg-white text-gray-600 ring-1 ring-gray-200")}
           >
-            {f}
+            {etiket}
           </button>
         ))}
       </div>
-      <div className="px-4 flex flex-col gap-2 md:grid md:grid-cols-2 md:gap-3 mt-3">
-        {filtreli.length === 0
-          ? <p className="text-sm text-gray-400 py-6 text-center col-span-2">Bu filtreye uyan hisse yok.</p>
-          : filtreli.map(h => <HisseSatiri key={h.symbol} h={h} onSec={onSec} onYildiz={onYildiz} />)}
-      </div>
+
+      {altSekme === 'one_cikan' && (
+        <>
+          <div className="flex gap-2 overflow-x-auto no-scrollbar px-4 pb-1">
+            {TREND_FILTRELERI.map(f => (
+              <button
+                key={f}
+                onClick={() => setFiltre(f)}
+                className={"shrink-0 min-h-[44px] px-4 rounded-full text-sm font-semibold transition-colors " +
+                           (filtre === f ? "bg-indigo-600 text-white" : "bg-white text-gray-600 ring-1 ring-gray-200")}
+              >
+                {f}
+              </button>
+            ))}
+          </div>
+          <div className="px-4 flex flex-col gap-2 md:grid md:grid-cols-2 md:gap-3 mt-3">
+            {filtreli.length === 0
+              ? <p className="text-sm text-gray-400 py-6 text-center col-span-2">Bu filtreye uyan hisse yok.</p>
+              : filtreli.map(h => <HisseSatiri key={h.symbol} h={h} onSec={onSec} onYildiz={onYildiz} />)}
+          </div>
+        </>
+      )}
+
+      {altSekme === 'takas' && (
+        <div className="px-4 flex flex-col gap-2 md:grid md:grid-cols-2 md:gap-3">
+          {takasSirali.slice(0, 60).map(h => <TakasSatiri key={h.symbol} h={h} onSec={onSec} onYildiz={onYildiz} />)}
+        </div>
+      )}
+
+      {altSekme === 'fon' && <FonKurumsalEkran fonKurumsal={fonKurumsal} />}
     </div>
   );
 }
@@ -691,6 +841,27 @@ function PortfoyEkran({ hisseler, portfoy, setPortfoy, gercekPortfoy, performans
    NEDEN bottom nav'ı gizliyoruz: gerçek native app'lerde detay ekranı
    önceki ekranın ÜSTÜNE gelir (push navigation); alt sekmeler kaybolur,
    sadece "‹ Geri" ile dönülür. Bu Streamlit'te YAPILAMAYAN bir şeydi. ─── */
+/* Son ~15 kapanış fiyatından tek çizgi grafik — hisse.spark zaten
+   tarama_onbellek.json:"Trend" sütunundan geliyordu, önceden hiç
+   çizilmiyordu (sadece taşınıyordu). Kütüphane gerekmez, tek polyline. */
+function SparkGrafik({ veri }) {
+  if (!veri || veri.length < 2) return null;
+  const genislik = 320, yukseklik = 70, dolgu = 4;
+  const minV = Math.min(...veri), maxV = Math.max(...veri);
+  const aralik = (maxV - minV) || 1;
+  const artis = veri[veri.length - 1] >= veri[0];
+  const yol = veri.map((v, i) => {
+    const x = dolgu + (i / (veri.length - 1)) * (genislik - 2 * dolgu);
+    const y = yukseklik - dolgu - ((v - minV) / aralik) * (yukseklik - 2 * dolgu);
+    return `${x},${y}`;
+  }).join(' ');
+  return (
+    <svg viewBox={`0 0 ${genislik} ${yukseklik}`} className="w-full h-16 mt-3">
+      <polyline points={yol} fill="none" stroke={artis ? "#059669" : "#dc2626"} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
 function DetayEkran({ hisse, onGeri, onYildiz, onPortfoyeEkle }) {
   const [eklendiGoster, setEklendiGoster] = useState(false);
   if (!hisse) return null;
@@ -729,6 +900,8 @@ function DetayEkran({ hisse, onGeri, onYildiz, onPortfoyeEkle }) {
             <span className="text-gray-300">·</span>
             <TrendRozeti trend={hisse.trend} buyuk />
           </div>
+
+          <SparkGrafik veri={hisse.spark} />
 
           <div className="mt-6 bg-white rounded-2xl shadow-sm ring-1 ring-gray-100 p-4">
             <div className="text-xs text-gray-400 uppercase tracking-wide mb-2">Algoritma Kararı</div>
@@ -817,6 +990,8 @@ function App() {
   const [portfoy, setPortfoy] = useState([]);
   const [gercekPortfoy, setGercekPortfoy] = useState(null);
   const [performans, setPerformans] = useState(null);
+  const [fonKurumsal, setFonKurumsal] = useState(null);
+  const [sistemDurumu, setSistemDurumu] = useState(null);
 
   // Gerçek veriyi çek — docs/pusula/data/*.json (bkz. pusula_veri_uret.py).
   // Üçü de bağımsız başarısız olabilir (ör. henüz üretilmemişse); biri
@@ -851,6 +1026,14 @@ function App() {
 
     fetch('./data/performans.json').then(r => r.ok ? r.json() : Promise.reject())
       .then(d => setPerformans(d))
+      .catch(() => {});
+
+    fetch('./data/fon_kurumsal.json').then(r => r.ok ? r.json() : Promise.reject())
+      .then(d => setFonKurumsal(d))
+      .catch(() => {});
+
+    fetch('./data/sistem_durumu.json').then(r => r.ok ? r.json() : Promise.reject())
+      .then(d => setSistemDurumu(d))
       .catch(() => {});
   }, []);
 
@@ -894,8 +1077,8 @@ function App() {
         {yukleniyor && (
           <p className="px-4 pt-3 text-xs text-gray-400">Gerçek veri yükleniyor…</p>
         )}
-        {tab === 'ana' && <AnaEkran hisseler={hisseler} onSec={setDetaySembol} onYildiz={yildizToggle} zaman={taramaZaman} />}
-        {tab === 'tarama' && <TaramaEkran hisseler={hisseler} onSec={setDetaySembol} onYildiz={yildizToggle} />}
+        {tab === 'ana' && <AnaEkran hisseler={hisseler} onSec={setDetaySembol} onYildiz={yildizToggle} zaman={taramaZaman} sistemDurumu={sistemDurumu} />}
+        {tab === 'tarama' && <TaramaEkran hisseler={hisseler} onSec={setDetaySembol} onYildiz={yildizToggle} fonKurumsal={fonKurumsal} />}
         {tab === 'yukselecek' && <YukselecekEkran hisseler={yukselecek} dipDonusu={dipDonusu} onSec={setDetaySembol} zaman={taramaZaman} />}
         {tab === 'ara' && <AraEkran hisseler={hisseler} onSec={setDetaySembol} onYildiz={yildizToggle} />}
         {tab === 'portfoy' && <PortfoyEkran hisseler={hisseler} portfoy={portfoy} setPortfoy={setPortfoy} gercekPortfoy={gercekPortfoy} performans={performans} />}

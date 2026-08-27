@@ -207,6 +207,7 @@ if __name__ == "__main__":
         import pusula_veri_uret as pvu
         pvu.portfoy_uret()
         pvu.performans_uret()
+        pvu.sistem_durumu_uret()
         print("Pusula portföy/performans verisi güncellendi.")
     except Exception as e:
         print(f"UYARI: Pusula portföy/performans verisi güncellenemedi: {e}")
