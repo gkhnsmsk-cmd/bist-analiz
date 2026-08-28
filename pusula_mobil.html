@@ -389,6 +389,11 @@ function HisseSatiri({ h, onSec, onYildiz }) {
       <div className="text-right shrink-0">
         <div className={"font-semibold text-gray-900 tabular-nums transition-colors " + _flashSinifi(flashYon)}>{h.fiyat.toFixed(2)} ₺</div>
         <DegisimEtiketi deger={h.degisim} />
+        {/* Sadece takip edilen sınırlı listeler (Favoriler/Portföy/Yükselebilecek/
+           Dipten Dönenler) canlı fiyat alıyor — bkz. App'teki canliSemboller notu.
+           Diğer tüm hisseler için bu etiket, fiyatın son taramadan geldiğini
+           açıkça belirtir (kullanıcı isteği: "yanıltıcı oluyor"). */}
+        {h.canli === false && <div className="text-[10px] text-gray-400 mt-0.5">son tarama</div>}
       </div>
       <TrendRozeti trend={h.trend} />
     </div>
@@ -2395,7 +2400,7 @@ function App() {
   }, [hisseler, portfoy, kullaniciPortfoy, yukselecek, dipDonusu]);
   const canliMap = useCanliFiyatlar(canliSemboller);
   const hisselerCanli = useMemo(
-    () => hisseler.map(h => canliMap[h.symbol] ? { ...h, fiyat: canliMap[h.symbol].fiyat } : h),
+    () => hisseler.map(h => canliMap[h.symbol] ? { ...h, fiyat: canliMap[h.symbol].fiyat, canli: true } : { ...h, canli: false }),
     [hisseler, canliMap]
   );
   const yukselecekCanli = useMemo(
