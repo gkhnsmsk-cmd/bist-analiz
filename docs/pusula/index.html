@@ -154,17 +154,18 @@ function _kullaniciPortfoyYaz(liste) {
    portföy ile PC'deki senkron olmuyor... herşey senkron olabilir". localStorage
    sadece cihaza özel kalıyordu; şimdi aynı anahtar Cloudflare Worker'daki
    /portfoy ucu üzerinden KV'ye de yazılıyor/oradan okunuyor — tek kullanıcı
-   olduğu için tüm cihazlar aynı KV kaydını paylaşır. Anahtar (passphrase)
-   sadece İLK kurulumda bir kere sorulur, sonra localStorage'a önbelleklenir. */
-const SENKRON_ANAHTAR_ANAHTARI = 'pusula_senkron_anahtari';
+   olduğu için tüm cihazlar aynı KV kaydını paylaşır.
+   NOT: Anahtar önce window.prompt() ile cihaz başına elle giriliyordu — bu,
+   kullanıcının telefon/PC'de FARKLI değer girmesine (ya da prompt'u yanlışlıkla
+   iptal edip sessizce senkronsuz kalmasına) açıktı ve "senkron olmuyor"
+   şikayetinin asıl sebebiydi. Tek kullanıcılı bir uygulamada bu passphrase zaten
+   sadece worker URL'sini herkese açık bulan birinin portföyü okumasını/üzerine
+   yazmasını engellemek içindi — CANLI_FIYAT_API_URL gibi diğer sabitler de
+   zaten herkese açık istemci kodunda. Bu yüzden tüm cihazlarda OTOMATİK aynı
+   değeri kullansın diye sabit koda gömüldü; kullanıcıdan hiçbir giriş istemez. */
+const SENKRON_ANAHTARI_SABIT = 'JZqAxGtXdcZAyzXGxR0S7TtU';
 function _senkronAnahtariGetir() {
-  try {
-    let a = localStorage.getItem(SENKRON_ANAHTAR_ANAHTARI);
-    if (a) return a;
-    a = window.prompt('Portföy senkronu için anahtarı gir (telefon ve PC\'de AYNI anahtarı kullan):');
-    if (a) { try { localStorage.setItem(SENKRON_ANAHTAR_ANAHTARI, a); } catch (e) {} }
-    return a || null;
-  } catch (e) { return null; }
+  return SENKRON_ANAHTARI_SABIT;
 }
 async function _portfoyBulutaYaz(liste) {
   if (!CANLI_FIYAT_API_URL) return;
@@ -1677,6 +1678,16 @@ function KullaniciPortfoyEkran({ hisseler, kullaniciPortfoy, setKullaniciPortfoy
 
   // Ekle/Düzenle formunun ortak gövdesi — hem satırın altında (düzenlerken)
   // hem de listenin en altında (yeni eklerken) aynı JSX kullanılır.
+  // ÖNEMLİ: Bu fonksiyon JSX içinde <PozisyonFormu/> ETİKETİ olarak DEĞİL,
+  // düz bir fonksiyon çağrısı ({PozisyonFormu({...})}) olarak kullanılmalı.
+  // NEDEN: Render gövdesi içinde tanımlanan bir bileşen, JSX etiketi olarak
+  // kullanılırsa her render'da YENİ bir fonksiyon kimliği (=YENİ bileşen tipi)
+  // olur; React bunu eski input'u SÖKÜP YENİDEN KURMAK olarak görür. Sonuç:
+  // kullanıcı input'a her karakter yazdığında (onChange → setYAdet → yeniden
+  // render) input DOM'dan silinip yeniden oluşturuluyor, focus/klavye kayboluyor
+  // — kullanıcı raporu: "editlerken rakam yazılamıyor, daha yazamadan kapanıyor".
+  // Düz fonksiyon çağrısı bu remount'u önler çünkü DOM ağacı aynı ebeveynin
+  // render çıktısına dahil olur, ayrı bir bileşen olarak değerlendirilmez.
   function PozisyonFormu({ baslik }) {
     return (
       <div className="bg-white rounded-2xl shadow-sm ring-1 ring-gray-100 p-4 flex flex-col gap-3 pop-anim">
@@ -1775,7 +1786,7 @@ function KullaniciPortfoyEkran({ hisseler, kullaniciPortfoy, setKullaniciPortfoy
                   {/* Düzenleme formu TAM BURADA, ilgili kartın hemen altında açılır
                       (kullanıcı isteği: "edit sayfası en altta çıkıyor, bulunduğu
                       yerde çıkmalı"). */}
-                  {buSatirDuzenleniyor && <PozisyonFormu baslik={`${p.symbol} — Düzenle`} />}
+                  {buSatirDuzenleniyor && PozisyonFormu({ baslik: `${p.symbol} — Düzenle` })}
                 </div>
               );
             })}
@@ -1792,7 +1803,7 @@ function KullaniciPortfoyEkran({ hisseler, kullaniciPortfoy, setKullaniciPortfoy
             + Pozisyon Ekle
           </button>
         ) : duzenlenenSembol === null ? (
-          <PozisyonFormu baslik="Yeni Pozisyon" />
+          PozisyonFormu({ baslik: "Yeni Pozisyon" })
         ) : null}
       </div>
     </div>
