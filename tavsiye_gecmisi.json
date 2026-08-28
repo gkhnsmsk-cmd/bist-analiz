@@ -56278,5 +56278,64 @@
       "piyasa_rejim_durumu": "RİSK AÇIK — Boğa ortamı"
     },
     "kayit_zamani": "2026-08-28T00:48:13"
+  },
+  {
+    "tarih": "2026-08-28",
+    "kaynak": "One Cikan Hisseler",
+    "sembol": "TUPRS",
+    "sinyal": "🟢 AL",
+    "puan": 76.3,
+    "kayit_anindaki_fiyat": 380.0,
+    "ek": {
+      "kisa": 70,
+      "orta": 76,
+      "uzun": 65,
+      "takas": 65,
+      "snapshot_durumu": "tam",
+      "rsi14": 65.8,
+      "macd_hist": 1.122,
+      "ma20_uzaklik_yuzde": 9.47,
+      "ma50_uzaklik_yuzde": 29.0,
+      "ma200_uzaklik_yuzde": 57.27,
+      "zirve52_uzaklik_yuzde": -6.58,
+      "onceki_1ay_getiri": 29.47,
+      "onceki_3ay_getiri": 60.88,
+      "trend_yonu": "yukselis",
+      "hacim_orani_5g_60g": 1.17,
+      "atr_yuzde": 3.87,
+      "yillik_volatilite": 37.8,
+      "piyasa_rejim_puani": 74.0,
+      "piyasa_rejim_durumu": "RİSK AÇIK — Boğa ortamı"
+    },
+    "kayit_zamani": "2026-08-28T02:24:12"
+  },
+  {
+    "tarih": "2026-08-28",
+    "kaynak": "Vade: Uzun (~6 ay)",
+    "sembol": "SEKUR",
+    "sinyal": "🟢 AL",
+    "puan": 65,
+    "kayit_anindaki_fiyat": 10.12,
+    "ek": {
+      "genel_puan": 58.6,
+      "bir_ay": -6.3,
+      "uc_ay": 28.1,
+      "snapshot_durumu": "tam",
+      "rsi14": 42.3,
+      "macd_hist": -0.13,
+      "ma20_uzaklik_yuzde": -8.31,
+      "ma50_uzaklik_yuzde": -7.84,
+      "ma200_uzaklik_yuzde": 44.5,
+      "zirve52_uzaklik_yuzde": -22.09,
+      "onceki_1ay_getiri": -6.3,
+      "onceki_3ay_getiri": 28.1,
+      "trend_yonu": "yatay",
+      "hacim_orani_5g_60g": 0.71,
+      "atr_yuzde": 7.16,
+      "yillik_volatilite": 77.4,
+      "piyasa_rejim_puani": 74.0,
+      "piyasa_rejim_durumu": "RİSK AÇIK — Boğa ortamı"
+    },
+    "kayit_zamani": "2026-08-28T02:24:13"
   }
 ]
