@@ -383,8 +383,8 @@ function HisseSatiri({ h, onSec, onYildiz }) {
         {h.favori ? '⭐' : '☆'}
       </button>
       <div className="flex-1 min-w-0">
-        <div className="font-bold text-gray-900 truncate">{h.ad}</div>
-        <div className="text-xs text-gray-400">{h.symbol}</div>
+        <div className="font-bold text-gray-900 truncate">{h.symbol}</div>
+        <div className="text-xs text-gray-400 truncate">{h.ad}</div>
       </div>
       <div className="text-right shrink-0">
         <div className={"font-semibold text-gray-900 tabular-nums transition-colors " + _flashSinifi(flashYon)}>{h.fiyat.toFixed(2)} ₺</div>
@@ -504,8 +504,8 @@ function TakasSatiri({ h, onSec, onYildiz }) {
         {h.favori ? '⭐' : '☆'}
       </button>
       <div className="flex-1 min-w-0">
-        <div className="font-bold text-gray-900 truncate">{h.ad}</div>
-        <div className="text-xs text-gray-400">{h.symbol}</div>
+        <div className="font-bold text-gray-900 truncate">{h.symbol}</div>
+        <div className="text-xs text-gray-400 truncate">{h.ad}</div>
       </div>
       <div className="text-right shrink-0">
         <div className="text-[11px] text-gray-400 uppercase tracking-wide">Takas Puan</div>
@@ -643,6 +643,16 @@ function VadeRozeti({ metin }) {
 
 function YukselecekSatiri({ h, onSec }) {
   const flashYon = useFlashOnChange(h.fiyat);
+  // Kullanıcı geri bildirimi (28.08.2026): "Kısa vade UZAK DUR yazıyor ama
+  // altında yeşil 'Doğrulanmış sinyal' de var — çelişkili duruyor". İkisi
+  // gerçekten FARKLI şeyler ölçüyor (Kısa/Orta/Uzun = vade_karari puanı,
+  // Doğrulanmış = ayrı bir CMF+MA200 filtresi) ama yan yana durunca kafa
+  // karıştırıyor. Kısa vade kırmızıysa (UZAK DUR) rozeti yeşilden nötr
+  // maviye çevirip metne açıkça "kısa vadede temkinli ol" uyarısı ekliyoruz.
+  const kisaOlumsuz = (h.kisa || '').includes('🔴');
+  const dogrulanmaRengi = kisaOlumsuz
+    ? 'text-sky-700 bg-sky-50'
+    : 'text-emerald-700 bg-emerald-50';
   return (
     <div
       role="button"
@@ -653,8 +663,8 @@ function YukselecekSatiri({ h, onSec }) {
     >
       <div className="flex items-center justify-between gap-3">
         <div className="min-w-0">
-          <div className="font-bold text-gray-900 truncate">{h.ad}</div>
-          <div className="text-xs text-gray-400">{h.symbol}</div>
+          <div className="font-bold text-gray-900 truncate">{h.symbol}</div>
+          <div className="text-xs text-gray-400 truncate">{h.ad}</div>
         </div>
         <div className="text-right shrink-0">
           <div className={"font-semibold text-gray-900 tabular-nums transition-colors " + _flashSinifi(flashYon)}>{h.fiyat.toFixed(2)} ₺</div>
@@ -674,8 +684,9 @@ function YukselecekSatiri({ h, onSec }) {
           Garanti değil, sadece listenin üst sırasına neden bu hissenin
           geldiğinin açıklaması. */}
       {h.dogrulanmis && (
-        <div className="mt-2 text-xs font-semibold text-emerald-700 bg-emerald-50 rounded-lg px-2.5 py-1.5">
-          ✅ Doğrulanmış sinyal — MA200 üstünde + para akışı pozitif (CMF {h.cmf != null ? h.cmf.toFixed(3) : '—'})
+        <div className={"mt-2 text-xs font-semibold rounded-lg px-2.5 py-1.5 " + dogrulanmaRengi}>
+          {kisaOlumsuz ? '🔷' : '✅'} Doğrulanmış sinyal — MA200 üstünde + para akışı pozitif (CMF {h.cmf != null ? h.cmf.toFixed(3) : '—'})
+          {kisaOlumsuz && ' — ama kısa vadede sinyal zayıf, aceleyle girmeyin.'}
         </div>
       )}
       {/* StochRSI — bilgi amaçlı ek sinyal, puanı etkilemez (bkz. Task #17). */}
@@ -703,8 +714,8 @@ function DipDonusuSatiri({ h, onSec }) {
     >
       <div className="flex items-center justify-between gap-3">
         <div className="min-w-0">
-          <div className="font-bold text-gray-900 truncate">{h.ad}</div>
-          <div className="text-xs text-gray-400">{h.symbol}</div>
+          <div className="font-bold text-gray-900 truncate">{h.symbol}</div>
+          <div className="text-xs text-gray-400 truncate">{h.ad}</div>
         </div>
         <div className="text-right shrink-0">
           <div className={"font-semibold text-gray-900 tabular-nums transition-colors " + _flashSinifi(flashYon)}>{h.fiyat.toFixed(2)} ₺</div>
@@ -1229,8 +1240,8 @@ function PozisyonSatiri({ p, onSec }) {
     >
       <div className="flex items-center justify-between">
         <div className="min-w-0">
-          <div className="font-bold text-gray-900 truncate">{p.ad || p.symbol}</div>
-          <div className="text-xs text-gray-400 truncate">{p.symbol} · {p.adet.toFixed(2)} adet · maliyet {p.maliyet.toFixed(2)} ₺</div>
+          <div className="font-bold text-gray-900 truncate">{p.symbol}</div>
+          <div className="text-xs text-gray-400 truncate">{p.ad || p.symbol} · {p.adet.toFixed(2)} adet · maliyet {p.maliyet.toFixed(2)} ₺</div>
         </div>
         <div className="text-right">
           <div className={"font-semibold text-gray-900 tabular-nums transition-colors " + _flashSinifi(flashYon)}>
@@ -1506,6 +1517,10 @@ function AramaliHisseSecici({ hisseler, secili, onSec }) {
 
 function KullaniciPortfoyEkran({ hisseler, kullaniciPortfoy, setKullaniciPortfoy, onSec }) {
   const [formAcik, setFormAcik] = useState(false);
+  // null = "Yeni Pozisyon" ekleniyor (form en altta); bir sembol ise O
+  // POZİSYONUN KARTININ ALTINDA açılır — kullanıcı isteği: "editleme sayfası
+  // en altta çıkıyor, bulunduğu yerde çıkmalı, kafa karıştırıyor".
+  const [duzenlenenSembol, setDuzenlenenSembol] = useState(null);
   const [ySembol, setYSembol] = useState(hisseler[0]?.symbol || '');
   const [yAdet, setYAdet] = useState('');
   const [yMaliyet, setYMaliyet] = useState('');
@@ -1586,23 +1601,57 @@ function KullaniciPortfoyEkran({ hisseler, kullaniciPortfoy, setKullaniciPortfoy
     if (!ySembol || !adet || !maliyet || adet <= 0 || maliyet <= 0) return;
     setKullaniciPortfoy(prev => [...prev.filter(p => p.symbol !== ySembol),
       { symbol: ySembol, adet, maliyet, eklemeTarihi: new Date().toISOString() }]);
-    setYAdet(''); setYMaliyet(''); setFormAcik(false);
+    setYAdet(''); setYMaliyet(''); setFormAcik(false); setDuzenlenenSembol(null);
   }
   function sil(symbol) {
     // Buton büyütüldü (Task: "silme butonları küçük"), yanlışlıkla dokunmaya
     // karşı basit bir onay eklendi.
     if (!window.confirm(`${symbol} pozisyonunu silmek istediğine emin misin?`)) return;
     setKullaniciPortfoy(prev => prev.filter(p => p.symbol !== symbol));
+    if (duzenlenenSembol === symbol) { setFormAcik(false); setDuzenlenenSembol(null); }
   }
   // Kullanıcı isteği: "kullanıcı portföyünü istediği gibi editleyebilmeli" —
   // mevcut bir pozisyonun adet/maliyetini değiştirmek için formu o pozisyonun
   // değerleriyle önceden doldurup açar; ekle() zaten aynı sembolü değiştirip
   // üzerine yazdığı için (upsert) bu doğrudan bir "düzenle" gibi çalışır.
+  // duzenlenenSembol set edilerek form o pozisyonun KARTININ ALTINDA açılır
+  // (kullanıcı isteği: "edit sayfası en altta çıkıyor, bulunduğu yerde
+  // çıkmalı, kafa karıştırıyor").
   function duzenle(p) {
+    if (formAcik && duzenlenenSembol === p.symbol) {
+      // Aynı satırın ✎'sine tekrar dokununca formu kapat (iptal kısayolu).
+      setFormAcik(false); setDuzenlenenSembol(null);
+      return;
+    }
     setYSembol(p.symbol);
     setYAdet(String(p.adet));
     setYMaliyet(String(p.maliyet));
+    setDuzenlenenSembol(p.symbol);
     setFormAcik(true);
+  }
+  function iptal() { setFormAcik(false); setDuzenlenenSembol(null); }
+
+  // Ekle/Düzenle formunun ortak gövdesi — hem satırın altında (düzenlerken)
+  // hem de listenin en altında (yeni eklerken) aynı JSX kullanılır.
+  function PozisyonFormu({ baslik }) {
+    return (
+      <div className="bg-white rounded-2xl shadow-sm ring-1 ring-gray-100 p-4 flex flex-col gap-3 pop-anim">
+        <div className="text-sm font-semibold text-gray-700">{baslik}</div>
+        <AramaliHisseSecici hisseler={hisseler} secili={ySembol} onSec={setYSembol} />
+        <div className="flex gap-2">
+          <input type="number" inputMode="decimal" placeholder="Adet" value={yAdet}
+                 onChange={e => setYAdet(e.target.value)}
+                 className="w-1/2 min-h-[44px] rounded-xl bg-gray-50 ring-1 ring-gray-200 px-3" />
+          <input type="number" inputMode="decimal" placeholder="Maliyet (₺)" value={yMaliyet}
+                 onChange={e => setYMaliyet(e.target.value)}
+                 className="w-1/2 min-h-[44px] rounded-xl bg-gray-50 ring-1 ring-gray-200 px-3" />
+        </div>
+        <div className="flex gap-2">
+          <button onClick={iptal} className="flex-1 min-h-[44px] rounded-xl bg-gray-100 text-gray-600 font-semibold">İptal</button>
+          <button onClick={ekle} className="flex-1 min-h-[44px] rounded-xl bg-indigo-600 text-white font-semibold active:bg-indigo-700">Kaydet</button>
+        </div>
+      </div>
+    );
   }
 
   return (
@@ -1636,45 +1685,53 @@ function KullaniciPortfoyEkran({ hisseler, kullaniciPortfoy, setKullaniciPortfoy
           <div className="flex flex-col gap-2">
             {satirlar.map(p => {
               const tavsiye = tavsiyeHaritasi[p.symbol];
+              const buSatirDuzenleniyor = formAcik && duzenlenenSembol === p.symbol;
               return (
-                <div key={p.symbol} className="bg-white rounded-2xl shadow-sm ring-1 ring-gray-100 p-3">
-                  <div className="flex items-center gap-2">
-                    <div
-                      role="button" tabIndex={0}
-                      onClick={() => onSec && onSec(p.symbol)}
-                      onKeyDown={(e) => { if (e.key === 'Enter' && onSec) onSec(p.symbol); }}
-                      className="cursor-pointer min-w-0 flex-1"
-                    >
-                      <div className="font-bold text-gray-900 truncate">{p.ad || p.symbol}</div>
-                      <div className="text-xs text-gray-400 truncate">{p.symbol} · {p.adet} adet · maliyet {p.maliyet.toLocaleString('tr-TR')} ₺</div>
-                    </div>
-                    <div className="text-right shrink-0">
-                      <div className="font-semibold text-gray-900 tabular-nums">{p.deger.toLocaleString('tr-TR', {maximumFractionDigits: 2})} ₺</div>
-                      <div className={"text-xs font-semibold tabular-nums " + (p.karZarar >= 0 ? "text-emerald-600" : "text-red-600")}>
-                        {p.karZarar >= 0 ? "+" : ""}{p.karZararYuzde.toFixed(1)}%
+                <div key={p.symbol} className="flex flex-col gap-2">
+                  <div className="bg-white rounded-2xl shadow-sm ring-1 ring-gray-100 p-3">
+                    <div className="flex items-center gap-2">
+                      <div
+                        role="button" tabIndex={0}
+                        onClick={() => onSec && onSec(p.symbol)}
+                        onKeyDown={(e) => { if (e.key === 'Enter' && onSec) onSec(p.symbol); }}
+                        className="cursor-pointer min-w-0 flex-1"
+                      >
+                        <div className="font-bold text-gray-900 truncate">{p.symbol}</div>
+                        <div className="text-xs text-gray-400 truncate">{p.ad || p.symbol} · {p.adet} adet · maliyet {p.maliyet.toLocaleString('tr-TR')} ₺</div>
+                      </div>
+                      <div className="text-right shrink-0">
+                        <div className="font-semibold text-gray-900 tabular-nums">{p.deger.toLocaleString('tr-TR', {maximumFractionDigits: 2})} ₺</div>
+                        <div className={"text-xs font-semibold tabular-nums " + (p.karZarar >= 0 ? "text-emerald-600" : "text-red-600")}>
+                          {p.karZarar >= 0 ? "+" : ""}{p.karZararYuzde.toFixed(1)}%
+                        </div>
+                      </div>
+                      <div className="shrink-0 flex items-center gap-1.5">
+                        <button type="button" onClick={(e) => { e.stopPropagation(); duzenle(p); }}
+                                className={"min-h-[44px] min-w-[44px] shrink-0 flex items-center justify-center text-lg rounded-xl ring-1 " +
+                                           (buSatirDuzenleniyor ? "text-indigo-600 bg-indigo-50 ring-indigo-200" : "text-gray-500 bg-gray-50 ring-gray-200 active:bg-gray-100")}
+                                aria-label="Düzenle">
+                          ✎
+                        </button>
+                        <button type="button" onClick={(e) => { e.stopPropagation(); sil(p.symbol); }}
+                                className="min-h-[44px] min-w-[44px] shrink-0 flex items-center justify-center text-lg text-red-500 bg-red-50 ring-1 ring-red-200 active:bg-red-100 rounded-xl"
+                                aria-label="Sil">
+                          ✕
+                        </button>
                       </div>
                     </div>
-                    <div className="shrink-0 flex items-center gap-1">
-                      <button type="button" onClick={(e) => { e.stopPropagation(); duzenle(p); }}
-                              className="min-h-[44px] min-w-[44px] shrink-0 flex items-center justify-center text-lg text-gray-400 active:text-indigo-600 active:bg-gray-50 rounded-xl"
-                              aria-label="Düzenle">
-                        ✎
-                      </button>
-                      <button type="button" onClick={(e) => { e.stopPropagation(); sil(p.symbol); }}
-                              className="min-h-[44px] min-w-[44px] shrink-0 flex items-center justify-center text-lg text-red-400 active:text-red-600 active:bg-red-50 rounded-xl"
-                              aria-label="Sil">
-                        ✕
-                      </button>
-                    </div>
+                    {(() => { const y = _karZararYorumu(p.karZararYuzde); return y && (
+                      <div className={"mt-2 rounded-lg px-2.5 py-1.5 text-xs " + y.renk}>{y.metin}</div>
+                    ); })()}
+                    {tavsiye && (
+                      <div className={"mt-2 rounded-lg px-2.5 py-1.5 text-xs " + renkSinifi[tavsiye.renk]}>
+                        {tavsiye.metin}
+                      </div>
+                    )}
                   </div>
-                  {(() => { const y = _karZararYorumu(p.karZararYuzde); return y && (
-                    <div className={"mt-2 rounded-lg px-2.5 py-1.5 text-xs " + y.renk}>{y.metin}</div>
-                  ); })()}
-                  {tavsiye && (
-                    <div className={"mt-2 rounded-lg px-2.5 py-1.5 text-xs " + renkSinifi[tavsiye.renk]}>
-                      {tavsiye.metin}
-                    </div>
-                  )}
+                  {/* Düzenleme formu TAM BURADA, ilgili kartın hemen altında açılır
+                      (kullanıcı isteği: "edit sayfası en altta çıkıyor, bulunduğu
+                      yerde çıkmalı"). */}
+                  {buSatirDuzenleniyor && <PozisyonFormu baslik={`${p.symbol} — Düzenle`} />}
                 </div>
               );
             })}
@@ -1685,31 +1742,14 @@ function KullaniciPortfoyEkran({ hisseler, kullaniciPortfoy, setKullaniciPortfoy
       <div className="mt-4">
         {!formAcik ? (
           <button
-            onClick={() => { setYSembol(hisseler[0]?.symbol || ''); setYAdet(''); setYMaliyet(''); setFormAcik(true); }}
+            onClick={() => { setYSembol(hisseler[0]?.symbol || ''); setYAdet(''); setYMaliyet(''); setDuzenlenenSembol(null); setFormAcik(true); }}
             className="w-full min-h-[44px] rounded-2xl bg-indigo-600 text-white font-semibold active:bg-indigo-700 transition-colors"
           >
             + Pozisyon Ekle
           </button>
-        ) : (
-          <div className="bg-white rounded-2xl shadow-sm ring-1 ring-gray-100 p-4 flex flex-col gap-3 pop-anim">
-            <div className="text-sm font-semibold text-gray-700">
-              {kullaniciPortfoy.some(p => p.symbol === ySembol) ? `${ySembol} — Düzenle` : 'Yeni Pozisyon'}
-            </div>
-            <AramaliHisseSecici hisseler={hisseler} secili={ySembol} onSec={setYSembol} />
-            <div className="flex gap-2">
-              <input type="number" inputMode="decimal" placeholder="Adet" value={yAdet}
-                     onChange={e => setYAdet(e.target.value)}
-                     className="w-1/2 min-h-[44px] rounded-xl bg-gray-50 ring-1 ring-gray-200 px-3" />
-              <input type="number" inputMode="decimal" placeholder="Maliyet (₺)" value={yMaliyet}
-                     onChange={e => setYMaliyet(e.target.value)}
-                     className="w-1/2 min-h-[44px] rounded-xl bg-gray-50 ring-1 ring-gray-200 px-3" />
-            </div>
-            <div className="flex gap-2">
-              <button onClick={() => setFormAcik(false)} className="flex-1 min-h-[44px] rounded-xl bg-gray-100 text-gray-600 font-semibold">İptal</button>
-              <button onClick={ekle} className="flex-1 min-h-[44px] rounded-xl bg-indigo-600 text-white font-semibold active:bg-indigo-700">Kaydet</button>
-            </div>
-          </div>
-        )}
+        ) : duzenlenenSembol === null ? (
+          <PozisyonFormu baslik="Yeni Pozisyon" />
+        ) : null}
       </div>
     </div>
   );

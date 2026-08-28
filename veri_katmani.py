@@ -615,13 +615,17 @@ def temel_veriler(sembol: str) -> dict:
                 "halka_aciklik":  fi.get("free_float"),
                 "yabanci_orani":  fi.get("foreign_ratio"),
                 "temettu_verimi": info.get("dividendYield"),
-                "sirket_adi":     info.get("name") or info.get("shortName"),
+                "sirket_adi":     info.get("name") or info.get("shortName") or info.get("longName"),
                 "sektor":         info.get("sector") or info.get("industry"),
             })
         except Exception:
             pass
-    # yfinance ile tamamla
-    if yf is not None and (not sonuc.get("fk") or not sonuc.get("piyasa_degeri")):
+    # yfinance ile tamamla (F/K, piyasa değeri VEYA şirket adı eksikse — adı
+    # eksik diye borsapy'nin dolu bıraktığı diğer alanları görmezden gelip
+    # bu adımı ATLAMAK, "hisse kartlarında hala tam ad yok" şikayetinin asıl
+    # nedeniydi: borsapy F/K'yı bulunca yfinance hiç denenmiyordu, oysa isim
+    # çoğu zaman sadece yfinance'ta vardı.)
+    if yf is not None and (not sonuc.get("fk") or not sonuc.get("piyasa_degeri") or not sonuc.get("sirket_adi")):
         try:
             info = yf.Ticker(f"{sembol}.IS").info or {}
             sonuc.setdefault("son_fiyat", info.get("currentPrice"))
