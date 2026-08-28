@@ -788,5 +788,18 @@
     "tutma_gunu": 8,
     "gerekce": "takas: ETYAT birikim skoru +0.416, bu pozisyonunki +0.126 (marj: 0.10)",
     "getiri_yuzde": 8.19
+  },
+  {
+    "tarih": "2026-08-28",
+    "sembol": "MTRKS",
+    "yon": "SAT",
+    "adet": 600.5701,
+    "fiyat": 34.6,
+    "tutar": 20779.73,
+    "komisyon": 31.17,
+    "puan": 71.0,
+    "tutma_gunu": 9,
+    "gerekce": "kapasite aşımı düzeltmesi: portföy MAKS_POZISYON (5) sınırının üzerindeydi, en zayıf puanlı pozisyon (Puan 71) satıldı",
+    "getiri_yuzde": 2.19
   }
 ]
