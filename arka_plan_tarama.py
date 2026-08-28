@@ -77,10 +77,39 @@ def _tarama_calistir(veriler: dict, endeks, rejim=None) -> pd.DataFrame:
     return tablo
 
 
+İSIM_BACKFILL_LIMIT = 150
+
+
+def _sirket_adlarini_tazele(semboller):
+    """Şirket adı önbelleğini (hisse_adlari.json) eksik semboller için
+    tamamlar. NEDEN VAR: kullanıcı geri bildirimi — "hâlâ etiketlerde
+    firmaların tam adı yazmıyor". Kart bileşenleri her zaman h.ad'ı
+    gösteriyordu (bkz. Task #11), ama hisse_adlari.json hiç üretilmemişti;
+    adlari_indir() sadece app.py'deki elle tıklanan bir düğmeden
+    çağrılıyordu, bulut otomasyonunda hiç çalışmamıştı. Bu yüzden yerleşik
+    ~48 tanınmış hisse dışında HER sembol için ad==kod'du (görünürde hiçbir
+    şey değişmemiş gibi görünüyordu). Ağ yükünü tek çalıştırmada şişirmemek
+    için, önbellekte eksik sembollerden en fazla İSIM_BACKFILL_LIMIT tanesi
+    indirilir — kalan günlerde otomatik olarak tamamlanır."""
+    try:
+        import hisse_adlari as ha
+        mevcut = ha.adlari_getir()
+        eksik = [s for s in semboller if s not in mevcut][:İSIM_BACKFILL_LIMIT]
+        if not eksik:
+            _log("Şirket adı önbelleği zaten tam.")
+            return
+        _log(f"{len(eksik)} hissenin şirket adı eksik — indiriliyor...")
+        ha.adlari_indir(eksik, vk.toplu_temel_veriler)
+        _log("Şirket adı önbelleği güncellendi: hisse_adlari.json")
+    except Exception as e:
+        _log(f"UYARI: Şirket adları indirilemedi: {e}")
+
+
 def calistir():
     _log("Arka plan taraması başlıyor...")
     semboller = vk.sembol_listesi(KAPSAM)
     _log(f"{len(semboller)} hisse için veri indiriliyor (kapsam={KAPSAM})...")
+    _sirket_adlarini_tazele(semboller)
     veriler = vk.toplu_fiyat(semboller, yil=2.0)
     endeks = vk.endeks_gecmisi(2.0)
     _log(f"{len(veriler)} hissenin verisi hazır. Puanlama taraması çalışıyor...")
