@@ -19,6 +19,14 @@ name: Günlük BIST otomasyonu
 on:
   schedule:
     # UTC saatiyle yazılır. Türkiye = UTC+3 (yaz saati uygulanmaz).
+    # SABAH TAZELEME (28.08.2026, kullanıcı isteği): "sabah açtığımda gece
+    # 02:00'den kalma veri görüyorum, seans 10:00'da başlıyor" — akşam
+    # taramaları arasında ~15 saatlik boşluk vardı. 06:30 UTC = 09:30 TR,
+    # seans açılışından (10:00) hemen önce — kullanıcı sabah baktığında en
+    # azından SON KAPANIŞ verisi güncel görünür (gün içi anlık fiyat zaten
+    # ayrıca Cloudflare Worker'dan geliyor, bu SADECE puanlama/skor tazeliği
+    # içindir).
+    - cron: "30 6 * * 1-5"
     # 16:00 UTC = 19:00 TR → BIST kapanışından (18:00) sonra.
     # Pazartesi-Cuma. NOT: GitHub cron'u yoğunlukta 5-30 dk gecikebilir; bu
     # bizim için sorun değil, veri gün sonu verisidir.
