@@ -116,11 +116,17 @@ const DONEM_ESLESTIRME = {
   yil:    { range: "1y",  interval: "1wk" },
 };
 
-async function grafikVeriCek(sembol, donem) {
+// hamSembol=true: sembol Yahoo'nun beklediği TAM haliyle geçilir (örn.
+// "USDTRY=X") — BIST ".IS" soneki EKLENMEZ. Task #20 (28.08.2026, kullanıcı
+// isteği: "hisseleri USD bazında da değerlendir — TL'nin değer kaybı nominal
+// TL getirisini şişiriyor, USD bazlı daha gerçekçi") için eklendi: detay
+// ekranındaki grafik USDTRY kurunu da çekebilsin diye.
+async function grafikVeriCek(sembol, donem, hamSembol = false) {
   const esleme = DONEM_ESLESTIRME[donem];
   if (!esleme) return { hata: "geçersiz dönem" };
+  const yahooSembol = hamSembol ? sembol : `${sembol}.IS`;
   const yahooUrl =
-    `https://query1.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(sembol)}.IS` +
+    `https://query1.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(yahooSembol)}` +
     `?interval=${esleme.interval}&range=${esleme.range}`;
 
   const onbellek = caches.default;
@@ -248,6 +254,16 @@ export default {
         gecikmeNotu: "Yahoo Finance ücretsiz veri, genelde 15 dk'ya kadar gecikmeli olabilir.",
         fiyatlar,
       });
+    }
+
+    // USDTRY KUR GRAFİĞİ — Task #20: hisse fiyatını USD bazında göstermek için
+    // detay ekranı bu uç noktadan aynı dönemin USDTRY kur serisini çeker.
+    // ?kurGrafik=ay (anlik | hafta | ay | uc_ay | yil)
+    const kurDonem = url.searchParams.get("kurGrafik");
+    if (kurDonem) {
+      const g = await grafikVeriCek("USDTRY=X", kurDonem, true);
+      if (g.hata) return jsonYanit({ hata: g.hata, sembol: "USDTRY" }, 502);
+      return jsonYanit(g);
     }
 
     // GRAFİK MODU — hisse detay ekranındaki dönem çipleri için —

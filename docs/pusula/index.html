@@ -1744,9 +1744,31 @@ function DestekDirencOzet({ sembol, guncelFiyat }) {
   );
 }
 
+// Task #20 (28.08.2026, kullanıcı isteği: "hisseleri USD bazında da
+// değerlendir — TL'nin değer kaybı nominal TL getirisini şişiriyor, USD
+// bazlı daha gerçekçi sonuçlar veriyor"). Bir hisse fiyat noktası dizisini,
+// en yakın zaman damgalı USDTRY kur noktasına bölerek USD karşılığına
+// çevirir. İki seri farklı borsalardan geldiği için zaman damgaları BİREBİR
+// eşleşmez (BIST/FX tatil günleri farklı olabilir) — bu yüzden her nokta
+// için en yakın (en küçük zaman farkı) kur noktası aranır.
+function _usdSerisineCevir(noktalar, kurNoktalar) {
+  if (!kurNoktalar || kurNoktalar.length === 0) return null;
+  return noktalar.map(n => {
+    let enYakin = kurNoktalar[0];
+    let enKucukFark = Math.abs(n.t - enYakin.t);
+    for (let i = 1; i < kurNoktalar.length; i++) {
+      const fark = Math.abs(n.t - kurNoktalar[i].t);
+      if (fark < enKucukFark) { enKucukFark = fark; enYakin = kurNoktalar[i]; }
+    }
+    return enYakin.f ? n.f / enYakin.f : null;
+  });
+}
+
 function DetayGrafik({ sembol, sparkYedek }) {
   const [donem, setDonem] = useState('ay');
+  const [birim, setBirim] = useState('try');   // 'try' | 'usd'
   const [veri, setVeri] = useState(null);      // { noktalar: [{t,f}], ... } | null
+  const [kurVeri, setKurVeri] = useState(null); // USDTRY için aynı biçim
   const [yukleniyor, setYukleniyor] = useState(false);
   const [hataVar, setHataVar] = useState(false);
 
@@ -1770,8 +1792,27 @@ function DetayGrafik({ sembol, sparkYedek }) {
     return () => { iptal = true; };
   }, [sembol, donem]);
 
+  // USD kuru sadece kullanıcı $ görünümünü seçtiğinde çekilir (gereksiz istek yok).
+  useEffect(() => {
+    if (!CANLI_FIYAT_API_URL || birim !== 'usd') return;
+    let iptal = false;
+    fetch(`${CANLI_FIYAT_API_URL}?kurGrafik=${donem}`)
+      .then(r => r.ok ? r.json() : Promise.reject())
+      .then(d => {
+        if (iptal) return;
+        if (d && !d.hata && Array.isArray(d.noktalar) && d.noktalar.length >= 2) setKurVeri(d);
+        else setKurVeri(null);
+      })
+      .catch(() => { if (!iptal) setKurVeri(null); });
+    return () => { iptal = true; };
+  }, [donem, birim]);
+
   const noktalar = veri?.noktalar || null;
-  const fiyatDizisi = noktalar ? noktalar.map(n => n.f) : null;
+  const usdDizisi = (birim === 'usd' && noktalar && kurVeri?.noktalar)
+    ? _usdSerisineCevir(noktalar, kurVeri.noktalar) : null;
+  const usdKullanilabilir = birim === 'usd' && Array.isArray(usdDizisi) && usdDizisi.every(v => v != null);
+  const fiyatDizisi = noktalar ? (usdKullanilabilir ? usdDizisi : noktalar.map(n => n.f)) : null;
+  const birimSimge = usdKullanilabilir ? '$' : '₺';
 
   function _tarihEtiketi(saniyeZaman) {
     if (!saniyeZaman) return '';
@@ -1784,18 +1825,37 @@ function DetayGrafik({ sembol, sparkYedek }) {
 
   return (
     <div className="mt-6 bg-white rounded-2xl shadow-sm ring-1 ring-gray-100 p-4">
-      <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar">
-        {DONEM_CIPLERI.map(c => (
+      <div className="flex items-center justify-between gap-2">
+        <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar">
+          {DONEM_CIPLERI.map(c => (
+            <button
+              key={c.anahtar}
+              onClick={() => setDonem(c.anahtar)}
+              className={"shrink-0 px-3 py-1.5 rounded-full text-xs font-semibold transition-colors " +
+                         (donem === c.anahtar ? "bg-indigo-600 text-white" : "bg-gray-100 text-gray-500")}
+            >
+              {c.etiket}
+            </button>
+          ))}
+        </div>
+        <div className="shrink-0 flex rounded-full bg-gray-100 p-0.5 text-xs font-semibold">
           <button
-            key={c.anahtar}
-            onClick={() => setDonem(c.anahtar)}
-            className={"shrink-0 px-3 py-1.5 rounded-full text-xs font-semibold transition-colors " +
-                       (donem === c.anahtar ? "bg-indigo-600 text-white" : "bg-gray-100 text-gray-500")}
-          >
-            {c.etiket}
-          </button>
-        ))}
+            onClick={() => setBirim('try')}
+            className={"px-2.5 py-1 rounded-full transition-colors " + (birim === 'try' ? "bg-white shadow-sm text-gray-900" : "text-gray-400")}
+          >₺</button>
+          <button
+            onClick={() => setBirim('usd')}
+            className={"px-2.5 py-1 rounded-full transition-colors " + (birim === 'usd' ? "bg-white shadow-sm text-gray-900" : "text-gray-400")}
+          >$</button>
+        </div>
       </div>
+      {birim === 'usd' && (
+        <p className="text-[11px] text-gray-400 mt-1.5">
+          {usdKullanilabilir
+            ? "USD bazında — TL'nin değer kaybından arındırılmış, dönemsel getiriyi daha gerçekçi gösterir."
+            : "USD kuru şu an alınamadı, TL fiyat gösteriliyor."}
+        </p>
+      )}
 
       {yukleniyor ? (
         <div className="h-24 flex items-center justify-center text-xs text-gray-400">Yükleniyor…</div>
@@ -1803,8 +1863,8 @@ function DetayGrafik({ sembol, sparkYedek }) {
         <>
           <SparkGrafik veri={fiyatDizisi} />
           <div className="flex justify-between text-[11px] text-gray-400 mt-1">
-            <span>{_tarihEtiketi(noktalar[0].t)}</span>
-            <span>{_tarihEtiketi(noktalar[noktalar.length - 1].t)}</span>
+            <span>{_tarihEtiketi(noktalar[0].t)} · {fiyatDizisi[0].toFixed(fiyatDizisi[0] < 20 ? 3 : 2)} {birimSimge}</span>
+            <span>{_tarihEtiketi(noktalar[noktalar.length - 1].t)} · {fiyatDizisi[fiyatDizisi.length - 1].toFixed(fiyatDizisi[fiyatDizisi.length - 1] < 20 ? 3 : 2)} {birimSimge}</span>
           </div>
         </>
       ) : hataVar ? (
