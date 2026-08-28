@@ -77,7 +77,7 @@ def _tarama_calistir(veriler: dict, endeks, rejim=None) -> pd.DataFrame:
     return tablo
 
 
-İSIM_BACKFILL_LIMIT = 150
+İSIM_BACKFILL_LIMIT = 700  # kullanıcı isteği: parçalı doldurma çok yavaş kaldı — pratikte tüm BIST'i tek seferde kapsar
 
 
 def _sirket_adlarini_tazele(semboller):
