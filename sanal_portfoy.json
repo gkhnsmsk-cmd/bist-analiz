@@ -9,31 +9,31 @@
       "adet": 1093.647316538883,
       "maliyet": 182.6,
       "eklenme_tarihi": "2026-08-28T11:25:31.617969",
-      "son_fiyat": 182.0,
-      "en_yuksek": 182.6
+      "son_fiyat": 187.0,
+      "en_yuksek": 187.0
     },
     {
       "sembol": "PASEU",
       "adet": 777.0428015564203,
       "maliyet": 257.0,
       "eklenme_tarihi": "2026-08-28T11:25:31.617987",
-      "son_fiyat": 256.25,
-      "en_yuksek": 257.0
+      "son_fiyat": 264.5,
+      "en_yuksek": 264.5
     },
     {
       "sembol": "SELEC",
       "adet": 605.1515151515151,
       "maliyet": 330.0,
       "eklenme_tarihi": "2026-08-28T11:25:31.617995",
-      "son_fiyat": 331.0,
-      "en_yuksek": 331.0
+      "son_fiyat": 331.25,
+      "en_yuksek": 331.25
     },
     {
       "sembol": "TGSAS",
       "adet": 751.4581373471308,
       "maliyet": 265.75,
       "eklenme_tarihi": "2026-08-28T11:25:31.618001",
-      "son_fiyat": 261.25,
+      "son_fiyat": 258.0,
       "en_yuksek": 265.75
     },
     {
@@ -41,8 +41,8 @@
       "adet": 2991.760299625468,
       "maliyet": 66.75,
       "eklenme_tarihi": "2026-08-28T11:25:31.618006",
-      "son_fiyat": 66.5999984741211,
-      "en_yuksek": 66.75
+      "son_fiyat": 67.94999694824219,
+      "en_yuksek": 67.95
     }
   ],
   "son_rebalans_tarihi": "2026-08-28",
