@@ -2,8 +2,50 @@
   "baslangic_butce": 1000000.0,
   "baslangic_tarihi": "2026-08-28",
   "hedef_aylik_yuzde": 10.0,
-  "nakit": 1000000.0,
-  "pozisyonlar": [],
-  "son_rebalans_tarihi": null,
-  "aktif": true
+  "nakit": 0.0,
+  "pozisyonlar": [
+    {
+      "sembol": "ANELE",
+      "adet": 1093.647316538883,
+      "maliyet": 182.6,
+      "eklenme_tarihi": "2026-08-28T11:25:31.617969",
+      "son_fiyat": 182.6,
+      "en_yuksek": 182.6
+    },
+    {
+      "sembol": "PASEU",
+      "adet": 777.0428015564203,
+      "maliyet": 257.0,
+      "eklenme_tarihi": "2026-08-28T11:25:31.617987",
+      "son_fiyat": 257.0,
+      "en_yuksek": 257.0
+    },
+    {
+      "sembol": "SELEC",
+      "adet": 605.1515151515151,
+      "maliyet": 330.0,
+      "eklenme_tarihi": "2026-08-28T11:25:31.617995",
+      "son_fiyat": 330.0,
+      "en_yuksek": 330.0
+    },
+    {
+      "sembol": "TGSAS",
+      "adet": 751.4581373471308,
+      "maliyet": 265.75,
+      "eklenme_tarihi": "2026-08-28T11:25:31.618001",
+      "son_fiyat": 265.75,
+      "en_yuksek": 265.75
+    },
+    {
+      "sembol": "KTLEV",
+      "adet": 2991.760299625468,
+      "maliyet": 66.75,
+      "eklenme_tarihi": "2026-08-28T11:25:31.618006",
+      "son_fiyat": 66.75,
+      "en_yuksek": 66.75
+    }
+  ],
+  "son_rebalans_tarihi": "2026-08-28",
+  "aktif": true,
+  "askida_satislar": []
 }

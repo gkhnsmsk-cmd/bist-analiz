@@ -1,0 +1,57 @@
+[
+  {
+    "tarih": "2026-08-28",
+    "sembol": "ANELE",
+    "yon": "AL",
+    "adet": 1093.6473,
+    "fiyat": 182.6,
+    "tutar": 200000.0,
+    "komisyon": 300.0,
+    "puan": 76.0,
+    "gerekce": "birikim skoru en yüksek adaylardan (CMF +0.803, MA200 üstünde, Puan 76)"
+  },
+  {
+    "tarih": "2026-08-28",
+    "sembol": "PASEU",
+    "yon": "AL",
+    "adet": 777.0428,
+    "fiyat": 257.0,
+    "tutar": 200000.0,
+    "komisyon": 300.0,
+    "puan": 76.8,
+    "gerekce": "birikim skoru en yüksek adaylardan (CMF +0.625, MA200 üstünde, Puan 77)"
+  },
+  {
+    "tarih": "2026-08-28",
+    "sembol": "SELEC",
+    "yon": "AL",
+    "adet": 605.1515,
+    "fiyat": 330.0,
+    "tutar": 200000.0,
+    "komisyon": 300.0,
+    "puan": 75.5,
+    "gerekce": "birikim skoru en yüksek adaylardan (CMF +0.482, MA200 üstünde, Puan 76)"
+  },
+  {
+    "tarih": "2026-08-28",
+    "sembol": "TGSAS",
+    "yon": "AL",
+    "adet": 751.4581,
+    "fiyat": 265.75,
+    "tutar": 200000.0,
+    "komisyon": 300.0,
+    "puan": 78.0,
+    "gerekce": "birikim skoru en yüksek adaylardan (CMF +0.408, MA200 üstünde, Puan 78)"
+  },
+  {
+    "tarih": "2026-08-28",
+    "sembol": "KTLEV",
+    "yon": "AL",
+    "adet": 2991.7603,
+    "fiyat": 66.75,
+    "tutar": 200000.0,
+    "komisyon": 300.0,
+    "puan": 72.0,
+    "gerekce": "birikim skoru en yüksek adaylardan (CMF +0.405, MA200 üstünde, Puan 72)"
+  }
+]
