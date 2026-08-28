@@ -150,6 +150,45 @@ function _kullaniciPortfoyYaz(liste) {
   try { localStorage.setItem(KULLANICI_PORTFOY_ANAHTAR, JSON.stringify(liste)); } catch (e) {}
 }
 
+/* ── Bulut senkronu (telefon ↔ PC) — Task #24, kullanıcı isteği: "telefondaki
+   portföy ile PC'deki senkron olmuyor... herşey senkron olabilir". localStorage
+   sadece cihaza özel kalıyordu; şimdi aynı anahtar Cloudflare Worker'daki
+   /portfoy ucu üzerinden KV'ye de yazılıyor/oradan okunuyor — tek kullanıcı
+   olduğu için tüm cihazlar aynı KV kaydını paylaşır. Anahtar (passphrase)
+   sadece İLK kurulumda bir kere sorulur, sonra localStorage'a önbelleklenir. */
+const SENKRON_ANAHTAR_ANAHTARI = 'pusula_senkron_anahtari';
+function _senkronAnahtariGetir() {
+  try {
+    let a = localStorage.getItem(SENKRON_ANAHTAR_ANAHTARI);
+    if (a) return a;
+    a = window.prompt('Portföy senkronu için anahtarı gir (telefon ve PC\'de AYNI anahtarı kullan):');
+    if (a) { try { localStorage.setItem(SENKRON_ANAHTAR_ANAHTARI, a); } catch (e) {} }
+    return a || null;
+  } catch (e) { return null; }
+}
+async function _portfoyBulutaYaz(liste) {
+  if (!CANLI_FIYAT_API_URL) return;
+  const anahtar = _senkronAnahtariGetir();
+  if (!anahtar) return;
+  try {
+    await fetch(`${CANLI_FIYAT_API_URL}/portfoy`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ anahtar, portfoy: liste }),
+    });
+  } catch (e) { /* sessiz — internet yoksa localStorage zaten yedek */ }
+}
+async function _portfoyBulutanOku() {
+  if (!CANLI_FIYAT_API_URL) return null;
+  const anahtar = _senkronAnahtariGetir();
+  if (!anahtar) return null;
+  try {
+    const r = await fetch(`${CANLI_FIYAT_API_URL}/portfoy?anahtar=${encodeURIComponent(anahtar)}`);
+    const veri = await r.json();
+    return Array.isArray(veri.portfoy) ? veri.portfoy : null;
+  } catch (e) { return null; }
+}
+
 /* ── Liste ekranlarında (Favoriler, Yükselecek Hisseler, Portföy) da anlık
    fiyat — kullanıcı isteği: "sadece tıklayınca değil, gösterilen hisselerin
    hepsinin anlık fiyatı sürekli yanıp sönmeli". Worker'ın toplu (?semboller=)
@@ -2266,13 +2305,31 @@ function App() {
   const [portfoy, setPortfoy] = useState([]);
   const [kullaniciPortfoy, _setKullaniciPortfoy] = useState(() => _kullaniciPortfoyOku());
   // Her değişiklikte localStorage'a yaz — sayfa kapansa/yenilense de kaybolmasın.
+  // Ayrıca buluta (Cloudflare KV) da yaz — telefon/PC arasında senkron olsun.
   function setKullaniciPortfoy(guncelleyici) {
     _setKullaniciPortfoy(prev => {
       const sonraki = typeof guncelleyici === 'function' ? guncelleyici(prev) : guncelleyici;
       _kullaniciPortfoyYaz(sonraki);
+      _portfoyBulutaYaz(sonraki);
       return sonraki;
     });
   }
+  // Açılışta buluttan oku — başka bir cihazda eklenmiş pozisyonlar buraya da
+  // yansısın. Bulut boşsa (ilk kurulum) ama cihazda kayıt varsa, cihazdakini
+  // buluta gönderip ilk senkronu başlatır.
+  useEffect(() => {
+    let iptal = false;
+    _portfoyBulutanOku().then(bulut => {
+      if (iptal) return;
+      if (bulut && bulut.length) {
+        _setKullaniciPortfoy(bulut);
+        _kullaniciPortfoyYaz(bulut);
+      } else if (kullaniciPortfoy.length) {
+        _portfoyBulutaYaz(kullaniciPortfoy);
+      }
+    });
+    return () => { iptal = true; };
+  }, []);
   const [gercekPortfoy, setGercekPortfoy] = useState(null);
   const [performans, setPerformans] = useState(null);
   const [fonKurumsal, setFonKurumsal] = useState(null);

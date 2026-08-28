@@ -220,6 +220,50 @@ async function sanalPortfoySifirla(request, env) {
   }
 }
 
+// ═════════════════════════════════════════════════════════════════════════
+// KULLANICI PORTFÖYÜ SENKRONU — telefon ↔ PC (Task #24, 28.08.2026)
+// ═════════════════════════════════════════════════════════════════════════
+// NEDEN VAR: Kullanıcı Portföyü daha önce SADECE tarayıcının localStorage'ında
+// tutuluyordu — kullanıcı isteği: "telefondaki portföy ile PC'deki senkron
+// olmuyor... şimdilik 1 adet kullanıcı olacağı için herşey senkron olabilir".
+// Cloudflare KV (basit, ücretsiz bulut anahtar-değer deposu) tek bir "portfoy"
+// anahtarı altında portföyün TAMAMINI JSON olarak saklar — tek kullanıcı
+// olduğu için bu kadarı yeterli (çok kullanıcılı bir sistem değil).
+// KORUMA: Basit bir paylaşılan anahtar (SENKRON_ANAHTARI secret) hem
+// okuma hem yazmada istenir — worker URL'si herkese açık olduğu için, bu
+// olmadan herhangi biri portföyü okuyabilir/üzerine yazabilirdi. Anahtar
+// tarayıcıda localStorage'a önbelleklenir (bkz. pusula_mobil.html), bu yüzden
+// kullanıcı sadece İLK kurulumda bir kere girer.
+async function portfoyOku(request, env) {
+  if (!env.PORTFOY_KV) return jsonYanit({ hata: "Portföy deposu henüz kurulmadı (KV eksik)." }, 501);
+  if (!env.SENKRON_ANAHTARI) return jsonYanit({ hata: "Senkron uç noktası henüz kurulmadı (secret eksik)." }, 501);
+  const anahtar = new URL(request.url).searchParams.get("anahtar");
+  if (anahtar !== env.SENKRON_ANAHTARI) return jsonYanit({ hata: "Anahtar yanlış." }, 403);
+  const ham = await env.PORTFOY_KV.get("portfoy");
+  let portfoy = [];
+  try { portfoy = ham ? JSON.parse(ham) : []; } catch { portfoy = []; }
+  return jsonYanit({ portfoy });
+}
+
+async function portfoyYaz(request, env) {
+  if (!env.PORTFOY_KV) return jsonYanit({ hata: "Portföy deposu henüz kurulmadı (KV eksik)." }, 501);
+  if (!env.SENKRON_ANAHTARI) return jsonYanit({ hata: "Senkron uç noktası henüz kurulmadı (secret eksik)." }, 501);
+  let govde;
+  try {
+    govde = await request.json();
+  } catch {
+    return jsonYanit({ hata: "Geçersiz istek gövdesi (JSON bekleniyor)." }, 400);
+  }
+  if (!govde || govde.anahtar !== env.SENKRON_ANAHTARI) {
+    return jsonYanit({ hata: "Anahtar yanlış." }, 403);
+  }
+  if (!Array.isArray(govde.portfoy)) {
+    return jsonYanit({ hata: "portfoy alanı bir dizi olmalı." }, 400);
+  }
+  await env.PORTFOY_KV.put("portfoy", JSON.stringify(govde.portfoy));
+  return jsonYanit({ tamam: true });
+}
+
 export default {
   async fetch(request, env) {
     // Tarayıcılar bazı isteklerden önce bir "izin var mı?" (preflight/OPTIONS)
@@ -232,6 +276,11 @@ export default {
 
     if (url.pathname === "/sifirla" && request.method === "POST") {
       return sanalPortfoySifirla(request, env);
+    }
+
+    if (url.pathname === "/portfoy") {
+      if (request.method === "GET") return portfoyOku(request, env);
+      if (request.method === "POST") return portfoyYaz(request, env);
     }
 
     // TOPLU MOD — liste ekranlarında (Favoriler, Yükselecek Hisseler,
