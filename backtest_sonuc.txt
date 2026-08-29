@@ -1,55 +1,75 @@
 BIST Analiz Platformu — Backtest Raporu
-Çalıştırma zamanı: 15.08.2026 01:39
+Çalıştırma zamanı: 29.08.2026 12:33
 Kapsam: TUM · Geçmiş: 5.0 yıl · Adım: 5 iş günü · Puanlama penceresi: 500 iş günü
 Hisse sayısı: 539
 ======================================================================
 
-Toplam 94144 tarihsel puanlama noktası test edildi.
+Toplam 94436 tarihsel puanlama noktası test edildi.
 
-10 günlük ufukta korelasyon: +0.012 → ölçülebilir bir ilişki YOK — puan bu ufukta ileri getiriyi öngörmüyor gibi görünüyor.
-  İstatistiksel kontrol: örnekler 2.0 kat örtüştüğü için etkin örnek sayısı ~47072 (ham 94144 değil); t≈+2.5 → bu ilişki rastlantıyla açıklanamayacak kadar güçlü.
+10 günlük ufukta korelasyon: +0.033 → ölçülebilir bir ilişki YOK — puan bu ufukta ileri getiriyi öngörmüyor gibi görünüyor.
+  İstatistiksel kontrol: örnekler 2.0 kat örtüştüğü için etkin örnek sayısı ~47218 (ham 94436 değil); t≈+7.2 → bu ilişki rastlantıyla açıklanamayacak kadar güçlü.
 Puan kovaları arasında 10 günlük getiri MONOTON artmıyor — eşikler (72/62/52/40) ideal ayrım noktaları olmayabilir.
 
 Kova bazlı sonuçlar:
-  🔴 UZAK DUR/SAT (<40) (n=20031): 5g ort=%+0.81 (pozitif oran %52) 10g ort=%+1.67 (pozitif oran %52) 20g ort=%+3.20 (pozitif oran %54)
-  🟠 ZAYIF/BEKLE (40-52) (n=28187): 5g ort=%+1.01 (pozitif oran %48) 10g ort=%+1.80 (pozitif oran %49) 20g ort=%+3.67 (pozitif oran %50)
-  🟡 İZLE/TUT (52-62) (n=25285): 5g ort=%+1.17 (pozitif oran %51) 10g ort=%+2.41 (pozitif oran %52) 20g ort=%+4.84 (pozitif oran %53)
-  🟢 AL (62-72) (n=19821): 5g ort=%+1.53 (pozitif oran %53) 10g ort=%+2.83 (pozitif oran %54) 20g ort=%+5.30 (pozitif oran %55)
-  🟢 GÜÇLÜ AL (72+) (n=820): 5g ort=%+0.40 (pozitif oran %50) 10g ort=%+0.67 (pozitif oran %49) 20g ort=%+2.18 (pozitif oran %52)
+  🔴 UZAK DUR/SAT (<40) (n=20433): 5g ort=%+0.69 (pozitif oran %51) 10g ort=%+1.50 (pozitif oran %51) 20g ort=%+3.02 (pozitif oran %53)
+  🟠 ZAYIF/BEKLE (40-52) (n=26432): 5g ort=%+0.66 (pozitif oran %48) 10g ort=%+1.39 (pozitif oran %49) 20g ort=%+3.23 (pozitif oran %50)
+  🟡 İZLE/TUT (52-62) (n=20457): 5g ort=%+0.90 (pozitif oran %50) 10g ort=%+2.01 (pozitif oran %51) 20g ort=%+4.36 (pozitif oran %52)
+  🟢 AL (62-72) (n=19089): 5g ort=%+1.39 (pozitif oran %52) 10g ort=%+2.64 (pozitif oran %53) 20g ort=%+5.03 (pozitif oran %54)
+  🟢 GÜÇLÜ AL (72+) (n=8025): 5g ort=%+1.67 (pozitif oran %53) 10g ort=%+3.30 (pozitif oran %55) 20g ort=%+6.42 (pozitif oran %56)
 
-Walk-forward kontrolü — ilk yarı korelasyon: +0.010, ikinci yarı korelasyon: +0.003.
+Walk-forward kontrolü — ilk yarı korelasyon: +0.040, ikinci yarı korelasyon: +0.009.
 İki dönemde de yön tutarlı — bulgu tek bir döneme özgü (overfit) görünmüyor.
+
+======================================================================
+GERÇEKÇİLİK KATMANI — maliyet, tavan/taban, endeks karşılaştırması
+======================================================================
+Toplam gözlem                         : 94,436
+Gerçekte İŞLEME DÖNÜŞTÜRÜLEMEZ olan   : 10,475 (%11.1)
+  bunlardan TAVANDA olanlar           : 3,000
+  (tavandaki hisse alınamaz; sığ hisseler de işlem dışı sayıldı)
+
+PORTFÖY SİMÜLASYONU — her dönem en yüksek puanlı 10 hisse
+  (işlem maliyeti düşülmüş: al+sat turu %0.5)
+----------------------------------------------------------------------
+  Dönem sayısı                    : 923
+  Ortalama dönem getirisi (NET)   : %+1.421
+  Aynı dönemde ENDEKS             : %+1.425
+  ENDEKS ÜSTÜ FARK                : %-0.004
+  ⚠️  Strateji endeksi YENEMİYOR — bu durumda tek tek hisse seçmek yerine endeks fonu almak daha mantıklıdır.
+  Kazanma oranı                   : %56.4
+  Ortalama kazanç / kayıp         : %+6.22 / %-4.8
+  Profit factor                   : 1.68
+  Sharpe (dönemsel)               : 0.201
+  Sortino (dönemsel)              : 0.348
+  Maksimum düşüş (drawdown)       : %-71.8
+
+  NOT: Sharpe/Sortino DÖNEMSELDİR (yıllıklaştırılmamıştır); farklı ufuklar arasında kıyaslanmamalıdır.
 
 ======================================================================
 AŞIRI UZAMA CEZASI — ÖNCE / SONRA KARŞILAŞTIRMASI
 ======================================================================
-Aynı 94,144 gözlem üzerinde iki puanlama sürümü kıyaslandı.
+Aynı 94,436 gözlem üzerinde iki puanlama sürümü kıyaslandı.
 
 ESKİ puanlama (aşırı uzama cezası YOK)
-   Sıralama gücü (Spearman)     : +0.0268
-   En yüksek puanlı %20 getirisi : %+3.13
-   En düşük  puanlı %20 getirisi : %+1.72
-   Aradaki fark (spread)         : %+1.41
+   Sıralama gücü (Spearman)     : +nan
+   En yüksek puanlı %20 getirisi : %+2.95
+   En düşük  puanlı %20 getirisi : %+1.56
+   Aradaki fark (spread)         : %+1.39
 
 YENİ puanlama (aşırı uzama cezası VAR)
-   Sıralama gücü (Spearman)     : +0.0218
-   En yüksek puanlı %20 getirisi : %+2.69
-   En düşük  puanlı %20 getirisi : %+1.68
-   Aradaki fark (spread)         : %+1.00
+   Sıralama gücü (Spearman)     : +nan
+   En yüksek puanlı %20 getirisi : %+2.95
+   En düşük  puanlı %20 getirisi : %+1.56
+   Aradaki fark (spread)         : %+1.39
 
 ----------------------------------------------------------------------
-Sıralama gücü değişimi : +0.0268 → +0.0218 (-0.0049)
-Spread değişimi        : %+1.41 → %+1.00 (-0.41 puan)
-SONUÇ: Yeni puanlama DAHA KÖTÜ. Ceza katsayısı düşürülmeli veya kaldırılmalı. (analiz_motoru.asiri_uzama_skoru içindeki 12.0 çarpanı)
-
-CEZANIN GEREKÇESİ — şişkinlik tek başına ne söylüyor?
-   Şişkinlik ↔ gelecek getiri korelasyonu : +0.0496
-   En şişkin %20 → ort. getiri            : %+3.52
-   En sakin  %20 → ort. getiri            : %+1.61
-   → Şişkin hisseler daha kötü performans GÖSTERMEMİŞ; ceza bu veri setinde gerekçelendirilemiyor.
+Sıralama gücü değişimi : +nan → +nan (+nan)
+Spread değişimi        : %+1.39 → %+1.39 (+0.00 puan)
+SONUÇ: İki sürüm arasında anlamlı fark yok. Ceza zarar vermiyor ama ölçülebilir bir fayda da göstermiyor.
 
 ⚠️ KAPSAM VE SINIRLAR — sonuçları yorumlarken bunları göz önünde tutun:
   • Yalnızca VARSAYILAN teknik puanlama test edilir (F/K, PD/DD ve gerçek yabancı takas oranı OLMADAN); bu verilerin GEÇMİŞ değerlerine erişim olmadığı için '🔬 Temel oranları dahil et' seçeneği kapsam dışıdır.
   • Aynı güne ait farklı hisseler birlikte yükselip düştüğü için (piyasa etkisi) örnekler birbirinden tam bağımsız değildir; yukarıdaki etkin örnek sayısı yalnızca zaman örtüşmesini düzeltir, bu piyasa etkisini düzeltmez — yani gerçek anlamlılık raporlanandan bir miktar DAHA DÜŞÜKTÜR.
-  • Komisyon, alım-satım maliyeti ve kayma (slippage) hesaba katılmamıştır; bunlar gerçek getiriyi düşürür.
+  • İşlem maliyeti ARTIK hesaba katılmaktadır (al+sat turu %0.50: komisyon %0.15 + kayma %0.10, tek yön). Yukarıdaki 'net' değerler bu maliyeti içerir; ham getiriler içermez.
+  • Tavan/taban günleri ve sığ hisseler 'işlem dışı' olarak işaretlenir; portföy simülasyonu bunları eler. Ancak emrin kısmen dolması, gün içi fiyat farkı gibi etkiler hâlâ modellenmemektedir.
   • Yalnızca bugün BIST'te işlem gören hisseler test edilir; geçmişte borsadan çıkmış/battı olanlar veri setinde yoktur (hayatta kalma yanlılığı) — bu, sonuçları OLDUĞUNDAN İYİ gösterme eğilimindedir.
