@@ -9,7 +9,7 @@
       "adet": 1093.647316538883,
       "maliyet": 182.6,
       "eklenme_tarihi": "2026-08-28T11:25:31.617969",
-      "son_fiyat": 187.0,
+      "son_fiyat": 180.0,
       "en_yuksek": 187.0
     },
     {
@@ -17,7 +17,7 @@
       "adet": 777.0428015564203,
       "maliyet": 257.0,
       "eklenme_tarihi": "2026-08-28T11:25:31.617987",
-      "son_fiyat": 264.5,
+      "son_fiyat": 258.0,
       "en_yuksek": 264.5
     },
     {
@@ -25,7 +25,7 @@
       "adet": 605.1515151515151,
       "maliyet": 330.0,
       "eklenme_tarihi": "2026-08-28T11:25:31.617995",
-      "son_fiyat": 331.25,
+      "son_fiyat": 324.0,
       "en_yuksek": 331.25
     },
     {
@@ -33,19 +33,19 @@
       "adet": 751.4581373471308,
       "maliyet": 265.75,
       "eklenme_tarihi": "2026-08-28T11:25:31.618001",
-      "son_fiyat": 258.0,
-      "en_yuksek": 265.75
+      "son_fiyat": 268.5,
+      "en_yuksek": 268.5
     },
     {
       "sembol": "KTLEV",
       "adet": 2991.760299625468,
       "maliyet": 66.75,
       "eklenme_tarihi": "2026-08-28T11:25:31.618006",
-      "son_fiyat": 67.94999694824219,
+      "son_fiyat": 67.0,
       "en_yuksek": 67.95
     }
   ],
-  "son_rebalans_tarihi": "2026-08-28",
+  "son_rebalans_tarihi": "2026-08-29",
   "aktif": true,
   "askida_satislar": []
 }
