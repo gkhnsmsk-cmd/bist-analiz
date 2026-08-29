@@ -61034,5 +61034,35 @@
       "piyasa_rejim_durumu": "RİSK AÇIK — Boğa ortamı"
     },
     "kayit_zamani": "2026-08-29T00:30:00"
+  },
+  {
+    "tarih": "2026-08-29",
+    "kaynak": "One Cikan Hisseler",
+    "sembol": "OZSUB",
+    "sinyal": "🟢 AL",
+    "puan": 79.5,
+    "kayit_anindaki_fiyat": 44.18,
+    "ek": {
+      "kisa": 54,
+      "orta": 95,
+      "uzun": 65,
+      "takas": 71,
+      "snapshot_durumu": "tam",
+      "rsi14": 69.1,
+      "macd_hist": -0.093,
+      "ma20_uzaklik_yuzde": 6.97,
+      "ma50_uzaklik_yuzde": 24.63,
+      "ma200_uzaklik_yuzde": 75.02,
+      "zirve52_uzaklik_yuzde": 0.0,
+      "onceki_1ay_getiri": 36.11,
+      "onceki_3ay_getiri": 56.03,
+      "trend_yonu": "yukselis",
+      "hacim_orani_5g_60g": 0.92,
+      "atr_yuzde": 5.27,
+      "yillik_volatilite": 49.2,
+      "piyasa_rejim_puani": 74.0,
+      "piyasa_rejim_durumu": "RİSK AÇIK — Boğa ortamı"
+    },
+    "kayit_zamani": "2026-08-29T01:58:23"
   }
 ]
