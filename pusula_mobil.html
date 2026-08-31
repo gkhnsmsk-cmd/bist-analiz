@@ -413,7 +413,7 @@ function HisseSatiri({ h, onSec, onYildiz }) {
       tabIndex={0}
       onClick={() => onSec(h.symbol)}
       onKeyDown={(e) => { if (e.key === 'Enter') onSec(h.symbol); }}
-      className="w-full flex items-center gap-3 bg-white rounded-2xl shadow-sm ring-1 ring-gray-100 px-4 py-3 min-h-[44px] active:bg-gray-50 transition-colors text-left cursor-pointer"
+      className="relative w-full flex items-center gap-3 bg-white rounded-2xl shadow-sm ring-1 ring-gray-100 px-4 py-3 min-h-[44px] active:bg-gray-50 transition-colors text-left cursor-pointer"
     >
       <button
         onClick={(e) => { e.stopPropagation(); onYildiz(h.symbol); }}
@@ -436,6 +436,14 @@ function HisseSatiri({ h, onSec, onYildiz }) {
         {h.canli === false && <div className="text-[10px] text-gray-400 mt-0.5">son tarama</div>}
       </div>
       <TrendRozeti trend={h.trend} />
+      {/* Doğrulanmış = MA200 üstünde + para akışı (CMF) pozitif — depoda
+          walk-forward doğrulanmış TEK sinyal (korelasyon ~+0,079, Genel
+          Puan'ın ~6 katı; bkz. analiz_motoru.secim_skoru). 31.08.2026:
+          önceden sadece "Yükselebilecek Hisseler" sekmesinde vardı, artık
+          kullanıcının en çok gördüğü ana listede de rozet olarak gösteriliyor. */}
+      {h.dogrulanmis && (
+        <span className="absolute top-1.5 right-1.5 text-[13px]" title={"Doğrulanmış sinyal — MA200 üstü + para akışı pozitif (CMF " + (h.cmf != null ? h.cmf.toFixed(3) : '—') + ")"}>✅</span>
+      )}
     </div>
   );
 }

@@ -63,6 +63,24 @@ def _tarama_calistir(veriler: dict, endeks, rejim=None) -> pd.DataFrame:
             except Exception:
                 satir["GuvenliDonus"] = None
                 satir["GuvenlikNedeni"] = None
+            # "Öne Çıkan Hisseler" (bu tarama) daha önce depodaki TEK
+            # walk-forward doğrulanmış sinyali (CMF+MA200, bkz.
+            # analiz_motoru.secim_skoru — korelasyon ~+0,079, Genel Puan'ın
+            # ~6 katı) HİÇ göstermiyordu; bu sinyal sadece "Yükselebilecek
+            # Hisseler" sekmesinde vardı. Kullanıcı günlük kararını çoğunlukla
+            # BU listeden veriyor, dolayısıyla en güçlü kanıtlanmış sinyal
+            # gözünden kaçıyordu (31.08.2026, "yazılım para kazandırmıyor"
+            # geri bildirimi sonrası tespit edildi). Aynı hesap burada da
+            # yapılıp "Doğrulanmış"/"CMF" olarak eklendi — puanlamayı
+            # DEĞİŞTİRMEZ, sadece zaten var olan kanıtlanmış bilgiyi ana
+            # ekranda da görünür kılar.
+            try:
+                secim = am.secim_skoru(df)
+                satir["CMF"] = secim.get("cmf")
+                satir["Dogrulanmis"] = bool(secim.get("uygun") and (secim.get("cmf") or 0) > 0)
+            except Exception:
+                satir["CMF"] = None
+                satir["Dogrulanmis"] = False
             sonuclar.append(satir)
         except Exception:
             continue
@@ -71,7 +89,7 @@ def _tarama_calistir(veriler: dict, endeks, rejim=None) -> pd.DataFrame:
     tablo = pd.DataFrame(sonuclar)
     kolonlar = ["Hisse", "Puan", "Karar", "Kısa", "Orta", "Uzun", "Takas",
                 "Fiyat", "1 Hafta %", "1 Ay %", "3 Ay %", "1 Yıl %", "Hacim(M₺)",
-                "GuvenliDonus", "GuvenlikNedeni"]
+                "GuvenliDonus", "GuvenlikNedeni", "CMF", "Dogrulanmis"]
     tablo = tablo[kolonlar].sort_values("Puan", ascending=False).reset_index(drop=True)
     tablo.index += 1
     return tablo

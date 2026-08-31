@@ -129,6 +129,13 @@ def tarama_uret():
                 "karar": str(r.get("Karar", "")),
                 "hacim": float(r.get("Hacim(M₺)", 0) or 0),
                 "spark": [float(x) for x in trend_dizisi][-15:],
+                # 31.08.2026: "Öne Çıkan Hisseler" artık "Yükselebilecek
+                # Hisseler" ile aynı kanıtlanmış sinyali de taşıyor (bkz.
+                # arka_plan_tarama._tarama_calistir'deki not) — Genel Puan'ın
+                # ~6 katı korelasyona sahip TEK doğrulanmış gösterge artık
+                # kullanıcının en çok baktığı ekranda da görünür.
+                "dogrulanmis": bool(r.get("Dogrulanmis", False)),
+                "cmf": (float(r["CMF"]) if pd.notna(r.get("CMF")) else None),
             })
         return out
 
