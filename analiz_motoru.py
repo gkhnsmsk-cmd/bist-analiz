@@ -258,6 +258,27 @@ def kisa_vade(df, baglam: dict = None) -> tuple:
     _yukselis = baglam["yon"] == "yukselis"
     _dusus = baglam["yon"] == "dusus"
 
+    # ═══════════════════════════════════════════════════════════════════
+    # RSI AĞIRLIKLARI — 01.09.2026, 94.436 satırlık backtest_sonuc.csv
+    # (2022-09 → 2026-07, işlenebilir/tavan-taban dışı 83.961 nokta)
+    # üzerinde tek tek her (gösterge, yön, trend) üçlüsünün 10 günlük NET
+    # ileri getiriye etkisi ölçüldü (bkz. Task #27/#28/#30, kullanıcının
+    # "yazılım para kazandırmıyor" geri bildirimi). RSI için bulgular:
+    #   • "Aşırı satım, trend YATAY" (r<30, eski +4): ort. getiri BASELİNE'DEN
+    #     -0,96 puan DÜŞÜK (n=12.965, p<0,0001) — bonus hatalıydı, kaldırıldı.
+    #   • "Aşırı satım, trend YUKARI" (r<30, eski +12): gerçek örneklem küçük
+    #     (n=600) ve ortalama artı ama mütevazı (+0,27) — ağırlık düşürüldü.
+    #   • "Aşırı alım, trend desteklemiyor" (r>75, eski -10): ort. getiri
+    #     BASELİNE'DEN +0,86 puan YÜKSEK (n=2431, p=0,0006, iki yarıda da
+    #     tutarlı: ilk +2,57 / ikinci +1,65) — yani "geri çekilme riski"
+    #     varsayımının verideki karşılığı YOK, tam tersi. Ceza büyük ölçüde
+    #     kaldırıldı ama (aşırı uzama bulgusundaki temkinli emsale uyarak)
+    #     tam bonusa çevrilmedi — tek bir dönem/rejime aşırı uyum riski var.
+    #   • "Güçlü ama aşırı değil" / "aşırı alım + trend yukarı" (RSI NÖTR
+    #     etiketi genel): trend YUKARI bağlamında ort. +1,50 (n=16.724),
+    #     trend YATAY/AŞAĞI bağlamında zayıf/negatif — bu yüzden artık
+    #     TREND'e göre ayrıştırıldı (eskiden ikisi de düz +3'tü).
+    # ═══════════════════════════════════════════════════════════════════
     r = rsi(c).iloc[-1]
     if r < 30:
         if _dusus:
@@ -266,27 +287,34 @@ def kisa_vade(df, baglam: dict = None) -> tuple:
                           f"RSI {r:.0f} — aşırı satım AMA ana trend AŞAĞI. Bu bir alım "
                           "sinyali değil, düşüşün sürdüğünün işaretidir (düşen bıçak).")
         elif _yukselis:
-            p += 12; _ekle(sinyaller, "RSI", "AL",
-                           f"RSI {r:.0f} — YÜKSELİŞ trendinde aşırı satım: klasik düzeltme/alım fırsatı")
+            p += 6; _ekle(sinyaller, "RSI", "AL",
+                          f"RSI {r:.0f} — YÜKSELİŞ trendinde aşırı satım: düzeltme/alım fırsatı "
+                          "olabilir (veride bu koşulun gerçek edge'i ölçülenden daha küçük)")
         else:
-            p += 4; _ekle(sinyaller, "RSI", "AL",
-                          f"RSI {r:.0f} — aşırı satım (trend yatay, temkinli)")
+            _ekle(sinyaller, "RSI", "NÖTR",
+                  f"RSI {r:.0f} — aşırı satım ama trend YATAY: veride bu durumun ileri getirisi "
+                  "baseline'ın altında çıktı, artık bonus verilmiyor")
     elif r < 45:
         if _dusus:
             _ekle(sinyaller, "RSI", "NÖTR", f"RSI {r:.0f} — düşük ama trend aşağı, acele etme")
         else:
-            p += 4; _ekle(sinyaller, "RSI", "AL", f"RSI {r:.0f} — düşük bölge")
+            p += 2; _ekle(sinyaller, "RSI", "AL", f"RSI {r:.0f} — düşük bölge")
     elif r > 75:
         if _yukselis:
             # Güçlü trendde RSI 75+ zayıflık değil GÜÇ göstergesidir.
-            p += 3; _ekle(sinyaller, "RSI", "NÖTR",
+            p += 6; _ekle(sinyaller, "RSI", "NÖTR",
                           f"RSI {r:.0f} — aşırı alım ama trend YUKARI: momentum gücü "
                           "(tek başına satış gerekçesi değil)")
         else:
-            p -= 10; _ekle(sinyaller, "RSI", "SAT",
-                           f"RSI {r:.0f} — aşırı alım ve trend desteklemiyor, geri çekilme riski")
+            p -= 3; _ekle(sinyaller, "RSI", "SAT",
+                          f"RSI {r:.0f} — aşırı alım ve trend desteklemiyor. Not: veride bu koşul "
+                          "ortalamada NEGATİF değil pozitif ileri getiri gösterdi; ceza bu yüzden "
+                          "büyük ölçüde azaltıldı (bkz. 01.09.2026 notu), tam tersine çevrilmedi.")
     elif r > 60:
-        p += 3; _ekle(sinyaller, "RSI", "NÖTR", f"RSI {r:.0f} — güçlü ama aşırı değil")
+        if _yukselis:
+            p += 6; _ekle(sinyaller, "RSI", "NÖTR", f"RSI {r:.0f} — güçlü ve trend yukarı")
+        else:
+            p += 1; _ekle(sinyaller, "RSI", "NÖTR", f"RSI {r:.0f} — güçlü ama aşırı değil, trend teyitsiz")
 
     m, ms, hist = macd(c)
     if hist.iloc[-1] > 0 and hist.iloc[-2] <= 0:
@@ -298,14 +326,26 @@ def kisa_vade(df, baglam: dict = None) -> tuple:
     else:
         p -= 5; _ekle(sinyaller, "MACD", "SAT", "MACD negatif bölgede")
 
+    # STOKASTIK — 01.09.2026 aynı analiz: "dipte" (k<20) bonus verilen HER
+    # iki trend bağlamında da (yatay -0,83, yukselis -0,17) ileri getiri
+    # baseline'ın ALTINDA çıktı — yani RSI'daki gibi klasik "dipten al"
+    # varsayımının burada da veri karşılığı yok. Bonus neredeyse tamamen
+    # kaldırıldı (yukselis'te küçük bir pay bırakıldı, çünkü RSI'daki aynı
+    # koşulda hafif pozitif bir eğilim vardı). "Tepede" (k>80) cezası ise
+    # veriyle uyumlu (dusus -0,15, yatay -0,33) — aynen korundu.
     k, d = stochastic(df)
     if not np.isnan(k.iloc[-1]):
         if k.iloc[-1] < 20:
             if _dusus:
                 _ekle(sinyaller, "Stokastik", "NÖTR",
                       f"Stokastik {k.iloc[-1]:.0f} — dipte ama düşüş trendinde dip kalıcı olabilir")
+            elif _yukselis:
+                p += 2; _ekle(sinyaller, "Stokastik", "AL",
+                              f"Stokastik {k.iloc[-1]:.0f} — dipte, trend yukarı")
             else:
-                p += 7; _ekle(sinyaller, "Stokastik", "AL", f"Stokastik {k.iloc[-1]:.0f} — dipte")
+                _ekle(sinyaller, "Stokastik", "NÖTR",
+                      f"Stokastik {k.iloc[-1]:.0f} — dipte ama trend yatay: veride bu durumun "
+                      "ileri getirisi zayıf, bonus verilmiyor")
         elif k.iloc[-1] > 80:
             if _yukselis:
                 _ekle(sinyaller, "Stokastik", "NÖTR",
@@ -334,28 +374,57 @@ def kisa_vade(df, baglam: dict = None) -> tuple:
         else:
             p -= 5; _ekle(sinyaller, "Bollinger", "SAT", "Fiyat üst bandın üzerinde — ısınmış")
 
+    # HACİM ve MOMENTUM — 01.09.2026 analizi: ikisi de eskiden trend
+    # bağlamından bağımsız SABİT puanlıydı, ama veri ikisinin de etkisinin
+    # trend'e göre büyük ölçüde değiştiğini gösterdi (Hacim AL: yukselis
+    # +0,69, yatay -0,83, dusus -1,16; Hacim SAT: yukselis +0,13 [neredeyse
+    # nötr — muhtemelen sağlıklı bir sarsıntı], yatay -2,51, dusus -2,76
+    # [çok kötü]; Momentum AL: yukselis +1,26, yatay -0,62; Momentum SAT:
+    # yukselis +0,40, yatay -0,51). Artık ikisi de trend'e göre ayrıştırıldı.
     hacim_oran = df["Volume"].tail(5).mean() / max(df["Volume"].tail(60).mean(), 1)
     getiri_5g = 100 * (son / c.iloc[-6] - 1) if len(c) > 6 else 0
     if hacim_oran > 1.8 and getiri_5g > 0:
-        p += 8; _ekle(sinyaller, "Hacim", "AL",
-                      f"Hacim son 5 günde ortalamanın {hacim_oran:.1f} katı + fiyat yükselişte")
+        if _yukselis:
+            p += 10; _ekle(sinyaller, "Hacim", "AL",
+                           f"Hacim son 5 günde ortalamanın {hacim_oran:.1f} katı + fiyat yükselişte, trend yukarı")
+        else:
+            p += 1; _ekle(sinyaller, "Hacim", "NÖTR",
+                          f"Hacim son 5 günde ortalamanın {hacim_oran:.1f} katı + fiyat yükselişte "
+                          "ama trend teyitsiz — veride bu koşulun tek başına edge'i zayıf")
     elif hacim_oran > 1.8 and getiri_5g < -3:
-        p -= 6; _ekle(sinyaller, "Hacim", "SAT", "Yüksek hacimli satış baskısı")
+        if _yukselis:
+            p -= 1; _ekle(sinyaller, "Hacim", "NÖTR",
+                          "Yüksek hacimli düşüş ama trend hâlâ yukarı — sağlıklı bir sarsıntı olabilir")
+        else:
+            p -= 9; _ekle(sinyaller, "Hacim", "SAT", "Yüksek hacimli satış baskısı, trend de desteklemiyor")
 
     mom = 100 * (son / c.iloc[-11] - 1) if len(c) > 11 else 0
     if mom > 8:
-        p += 5; _ekle(sinyaller, "Momentum", "AL", f"10 günlük momentum +%{mom:.1f}")
+        if _yukselis:
+            p += 8; _ekle(sinyaller, "Momentum", "AL", f"10 günlük momentum +%{mom:.1f}, trend yukarı")
+        else:
+            p += 1; _ekle(sinyaller, "Momentum", "NÖTR", f"10 günlük momentum +%{mom:.1f} ama trend teyitsiz")
     elif mom < -8:
-        p -= 5; _ekle(sinyaller, "Momentum", "SAT", f"10 günlük momentum %{mom:.1f}")
+        if _dusus:
+            p -= 6; _ekle(sinyaller, "Momentum", "SAT", f"10 günlük momentum %{mom:.1f}, trend zaten aşağı")
+        else:
+            p -= 2; _ekle(sinyaller, "Momentum", "NÖTR",
+                          f"10 günlük momentum %{mom:.1f} — veride bu koşul trend yatay/yukarıyken "
+                          "beklenenden daha az olumsuz çıktı")
 
     return float(np.clip(p, 0, 100)), sinyaller
 
 
-def orta_vade(df, endeks_df=None) -> tuple:
-    """1-6 ay perspektifi."""
+def orta_vade(df, endeks_df=None, baglam: dict = None) -> tuple:
+    """1-6 ay perspektifi.
+
+    baglam: trend_baglami() çıktısı (opsiyonel — verilmezse Göreceli Güç
+    bileşeni trend bağlamı olmadan, eski/düz mantıkla çalışır). 01.09.2026'da
+    eklendi — bkz. Göreceli Güç bloğu üzerindeki not."""
     p, sinyaller = 50.0, []
     c = df["Close"]
     son = c.iloc[-1]
+    _yon = baglam["yon"] if baglam else None
 
     s50, s100 = sma(c, 50).iloc[-1], sma(c, 100).iloc[-1]
     if son > s50 > s100:
@@ -382,9 +451,24 @@ def orta_vade(df, endeks_df=None) -> tuple:
         elif e < -0.15:
             p -= 8; _ekle(sinyaller, "Eğim", "SAT", "Son 3 ayın fiyat eğimi belirgin negatif")
 
-    # Göreceli güç (XU100'e karşı) — Task #16, 28.08.2026: ağırlık ±10/±5/-8'den
-    # ±14/±7/-11'e çıkarıldı (kompozit skor içinde çok zayıf kalıyordu).
-    # ⚠️ DOĞRULANMADI — bkz. rejim_duzeltmesi üzerindeki not, aynı uyarı geçerli.
+    # ═══════════════════════════════════════════════════════════════════
+    # GÖRECELİ GÜÇ — 01.09.2026 DÜZELTME (Task #16'nın DOĞRULANMADI uyarısı
+    # gerçekleşti): Task #16'da (28.08.2026) ağırlık ±10/±5/-8'den ±14/±7/-11'e
+    # çıkarılmıştı ama "⚠️ DOĞRULANMADI" notuyla işaretlenmişti. 94.436
+    # noktalık backtest_sonuc.csv analizinde (Task #27/#28/#30) çok
+    # regresyonlu (diğer tüm göstergeler kontrol edilerek) katsayısı
+    # -0,897 (p<0,0001) çıktı — yani DOĞRULANMADI notu haklıymış, bu
+    # gösterge diğerlerinden bağımsız olarak NET NEGATİF katkı yapıyordu.
+    # Ham (trend'e göre kesitlenmiş) veri nedeni gösteriyor: "BIST100'den
+    # güçlü" (AL) sadece trend AŞAĞI/dipten dönüş bağlamında iyi (+1,49),
+    # trend YATAY'da KÖTÜ (-0,70); "BIST100'ün gerisinde" (SAT) ise trend
+    # YUKARI bağlamında müthiş iyi (+2,63, n=4.108) — muhtemelen "yükselen
+    # piyasada geride kalan, henüz yakalanmamış hisse" rotasyon etkisi.
+    # Bu yüzden gösterge artık (a) YATAY trendde bonus vermiyor, (b) YUKARI
+    # trendde "geride" olmak ceza değil hafif bonus, (c) diğer durumlarda
+    # eski mantığa yakın ama trimlenmiş ağırlıklarla devam ediyor.
+    # baglam verilmezse (eski çağıranlar) eski düz mantığa geri döner.
+    # ═══════════════════════════════════════════════════════════════════
     if endeks_df is not None and len(endeks_df) > 70:
         try:
             ort = c.tail(63); end = endeks_df["Close"].reindex(ort.index).ffill()
@@ -392,14 +476,25 @@ def orta_vade(df, endeks_df=None) -> tuple:
             endeks_g = end.iloc[-1] / end.iloc[0] - 1
             fark = 100 * (hisse_g - endeks_g)
             if fark > 10:
-                p += 14; _ekle(sinyaller, "Göreceli Güç", "AL",
-                               f"Son 3 ayda BIST100'den %{fark:.0f} daha iyi performans")
+                if _yon == "yatay":
+                    p += 3; _ekle(sinyaller, "Göreceli Güç", "NÖTR",
+                                  f"Son 3 ayda BIST100'den %{fark:.0f} daha iyi performans, "
+                                  "ama trend yatay — veride bu kombinasyonun edge'i zayıf")
+                else:
+                    p += 10; _ekle(sinyaller, "Göreceli Güç", "AL",
+                                   f"Son 3 ayda BIST100'den %{fark:.0f} daha iyi performans")
             elif fark > 3:
-                p += 7; _ekle(sinyaller, "Göreceli Güç", "AL",
-                              f"BIST100'den %{fark:.0f} daha güçlü")
+                if _yon == "yatay":
+                    p += 1; _ekle(sinyaller, "Göreceli Güç", "NÖTR", f"BIST100'den %{fark:.0f} daha güçlü, trend yatay")
+                else:
+                    p += 5; _ekle(sinyaller, "Göreceli Güç", "AL", f"BIST100'den %{fark:.0f} daha güçlü")
             elif fark < -10:
-                p -= 11; _ekle(sinyaller, "Göreceli Güç", "SAT",
-                              f"BIST100'ün %{abs(fark):.0f} gerisinde")
+                if _yon == "yukselis":
+                    p += 4; _ekle(sinyaller, "Göreceli Güç", "NÖTR",
+                                  f"BIST100'ün %{abs(fark):.0f} gerisinde ama kendi trendi yukarı — "
+                                  "veride bu kombinasyon güçlü pozitif çıktı (rotasyon/yakalama potansiyeli)")
+                else:
+                    p -= 8; _ekle(sinyaller, "Göreceli Güç", "SAT", f"BIST100'ün %{abs(fark):.0f} gerisinde")
         except Exception:
             pass
 
@@ -411,27 +506,51 @@ def orta_vade(df, endeks_df=None) -> tuple:
         else:
             p -= 6; _ekle(sinyaller, "Haftalık MACD", "SAT", "Haftalık MACD negatif")
 
-    # Zirveden uzaklık (taban yapma / momentum dengesi)
+    # Zirveden uzaklık (taban yapma / momentum dengesi) — 01.09.2026: bu,
+    # 94.436 noktalık analizde tek başına EN GÜÇLÜ standart göstergelerden
+    # biri çıktı (yukselis bağlamında +1,40, yatayda bile +0,79, iki yarıda
+    # da tutarlı) ama ağırlığı (+5) diğer birçok zayıf göstergeyle aynı
+    # seviyedeydi. +5 → +8'e çıkarıldı.
     zirve52 = c.tail(252).max()
     uzaklik = 100 * (son / zirve52 - 1)
     if uzaklik > -5:
-        p += 5; _ekle(sinyaller, "52H Zirve", "AL", "52 haftalık zirveye çok yakın — güç işareti")
+        p += 8; _ekle(sinyaller, "52H Zirve", "AL", "52 haftalık zirveye çok yakın — güç işareti")
     elif uzaklik < -40:
         _ekle(sinyaller, "52H Zirve", "NÖTR", f"Zirveden %{abs(uzaklik):.0f} aşağıda — ucuzlamış ama trend zayıf")
 
     return float(np.clip(p, 0, 100)), sinyaller
 
 
-def uzun_vade(df, temel: dict) -> tuple:
-    """6 ay+ perspektifi: uzun trend + temel değerleme."""
+def uzun_vade(df, temel: dict, baglam: dict = None) -> tuple:
+    """6 ay+ perspektifi: uzun trend + temel değerleme.
+
+    baglam: trend_baglami() çıktısı (opsiyonel) — MA200 bonusunu trend
+    bağlamına göre ayrıştırmak için kullanılır, bkz. aşağıdaki not."""
     p, sinyaller = 50.0, []
     c = df["Close"]
     son = c.iloc[-1]
+    _yon = baglam["yon"] if baglam else None
 
+    # MA200 — 01.09.2026: eskiden fiyat MA200 üstündeyse trend bağlamından
+    # bağımsız SABİT +10 veriliyordu. 94.436 noktalık analiz, bunun
+    # trend YUKARI bağlamında gerçekten iyi (+0,73) ama trend YATAY
+    # bağlamında (fiyat MA200 üstünde ama net bir trend yok — "sıkışmış
+    # üstte") NEGATİF (-0,81, n=21.186 — büyük örneklem) olduğunu gösterdi.
+    # Çoklu regresyonda da MA200-üstü'nün marjinal katkısı negatif çıktı
+    # (-0,518, p=0,003) — muhtemelen diğer trend göstergeleri zaten "sağlıklı"
+    # durumları yakaladığı için MA200 tek başına ayırt edici değil, sadece
+    # bir FİLTRE (bkz. secim_skoru). Bonus artık trend'e göre ayrıştırılıyor.
     s200 = sma(c, 200).iloc[-1]
     if not np.isnan(s200):
         if son > s200:
-            p += 10; _ekle(sinyaller, "MA200", "AL", "Fiyat 200 günlük ortalamanın üzerinde")
+            if _yon == "yukselis":
+                p += 10; _ekle(sinyaller, "MA200", "AL", "Fiyat 200 günlük ortalamanın üzerinde, trend yukarı")
+            elif _yon == "yatay":
+                p += 2; _ekle(sinyaller, "MA200", "NÖTR",
+                              "Fiyat 200 günlük ortalamanın üzerinde ama net bir trend yok — "
+                              "veride bu kombinasyonun edge'i zayıf/negatif")
+            else:
+                p += 5; _ekle(sinyaller, "MA200", "AL", "Fiyat 200 günlük ortalamanın üzerinde")
         else:
             p -= 10; _ekle(sinyaller, "MA200", "SAT", "Fiyat 200 günlük ortalamanın altında")
 
@@ -541,13 +660,28 @@ def takas_analizi(df, temel: dict, yabanci_s: pd.Series) -> tuple:
         elif ad_egim > 0.1:
             p += 5; _ekle(sinyaller, "Toplama/Dağıtım", "AL", "A/D çizgisi yükseliş trendinde")
 
-    # 4) MFI
+    # ═══════════════════════════════════════════════════════════════════
+    # MFI — 01.09.2026 DÜZELTME: "para akışı aşırı ısınmış = SAT" varsayımı,
+    # 94.436 noktalık backtest_sonuc.csv'de tersine döndü. MFI>80 (eski -6
+    # ceza) ortalama 10 günlük net getiride baseline'dan +1,19 puan DAHA
+    # İYİ çıktı (n=6.544, p<0,0001, iki yarıda da tutarlı: ilk +3,57 /
+    # ikinci +0,91). Bu, projede bağımsız olarak zaten doğrulanmış bir
+    # başka bulguyla (asiri_uzama_skoru üzerindeki 15.08.2026 notu: "aşırı
+    # uzama/şişkinlik BIST'te risk değil momentum devam sinyali") birebir
+    # örtüşüyor — iki AYRI çalışma aynı yöne işaret ediyor, bu yüzden burada
+    # (RSI/Stokastik'in aksine) cezayı sıfırlamakla yetinmeyip BONUSA
+    # çevirmek makul görüldü. "Aşırı satım = dönüş potansiyeli" (eski MFI<20
+    # +6) tarafında ise veri desteği yok/zayıf (dusus -0,21, yatay -0,54) —
+    # bonus küçültüldü.
+    # ═══════════════════════════════════════════════════════════════════
     m = mfi(df).iloc[-1]
     if not np.isnan(m):
         if m < 20:
-            p += 6; _ekle(sinyaller, "MFI", "AL", f"MFI {m:.0f} — para akışı aşırı satımda, dönüş potansiyeli")
+            p += 1; _ekle(sinyaller, "MFI", "NÖTR", f"MFI {m:.0f} — para akışı aşırı satımda")
         elif m > 80:
-            p -= 6; _ekle(sinyaller, "MFI", "SAT", f"MFI {m:.0f} — para akışı aşırı ısınmış")
+            p += 6; _ekle(sinyaller, "MFI", "AL",
+                          f"MFI {m:.0f} — para akışı aşırı ısınmış; veride bu, tükenme değil "
+                          "momentumun devam sinyali (bkz. 01.09.2026 notu)")
 
     # 5) OBV trendi
     o = obv(df)
@@ -1298,8 +1432,8 @@ def tam_analiz(sembol: str, df: pd.DataFrame, temel: dict,
     """Bir hissenin komple analizi. Tüm puanlar, sinyaller ve karar."""
     baglam = trend_baglami(df)
     kp, ks = kisa_vade(df, baglam)
-    op, osig = orta_vade(df, endeks_df)
-    up, us = uzun_vade(df, temel)
+    op, osig = orta_vade(df, endeks_df, baglam)
+    up, us = uzun_vade(df, temel, baglam)
     tp, ts = takas_analizi(df, temel, yabanci_s)
 
     fon_var = etf_df is not None or (tefas_s is not None and len(tefas_s) >= 3)
@@ -1395,9 +1529,9 @@ def hizli_puan(df: pd.DataFrame, endeks_df: pd.DataFrame = None,
         }
     baglam = trend_baglami(df)
     kp, kp_sinyaller = kisa_vade(df, baglam)
-    op, op_sinyaller = orta_vade(df, endeks_df)
+    op, op_sinyaller = orta_vade(df, endeks_df, baglam)
     tp, tp_sinyaller = takas_analizi(df, temel or {}, yabanci_s)
-    up, up_sinyaller = uzun_vade(df, temel or {})
+    up, up_sinyaller = uzun_vade(df, temel or {}, baglam)
     genel = (AGIRLIKLAR["kisa"] * kp + AGIRLIKLAR["orta"] * op +
              AGIRLIKLAR["uzun"] * up + AGIRLIKLAR["takas"] * tp)
     # Aşırı uzama cezası — tam_analiz ile AYNI sırada uygulanmalıdır
