@@ -9,15 +9,15 @@
       "adet": 1093.647316538883,
       "maliyet": 182.6,
       "eklenme_tarihi": "2026-08-28T11:25:31.617969",
-      "son_fiyat": 180.0,
-      "en_yuksek": 187.0
+      "son_fiyat": 190.3000030517578,
+      "en_yuksek": 190.3
     },
     {
       "sembol": "PASEU",
       "adet": 777.0428015564203,
       "maliyet": 257.0,
       "eklenme_tarihi": "2026-08-28T11:25:31.617987",
-      "son_fiyat": 258.0,
+      "son_fiyat": 248.39999389648438,
       "en_yuksek": 264.5
     },
     {
@@ -25,15 +25,15 @@
       "adet": 605.1515151515151,
       "maliyet": 330.0,
       "eklenme_tarihi": "2026-08-28T11:25:31.617995",
-      "son_fiyat": 324.0,
-      "en_yuksek": 331.25
+      "son_fiyat": 334.0,
+      "en_yuksek": 334.0
     },
     {
       "sembol": "TGSAS",
       "adet": 751.4581373471308,
       "maliyet": 265.75,
       "eklenme_tarihi": "2026-08-28T11:25:31.618001",
-      "son_fiyat": 268.5,
+      "son_fiyat": 232.1999969482422,
       "en_yuksek": 268.5
     },
     {
@@ -41,11 +41,11 @@
       "adet": 2991.760299625468,
       "maliyet": 66.75,
       "eklenme_tarihi": "2026-08-28T11:25:31.618006",
-      "son_fiyat": 67.0,
+      "son_fiyat": 64.5999984741211,
       "en_yuksek": 67.95
     }
   ],
-  "son_rebalans_tarihi": "2026-08-29",
+  "son_rebalans_tarihi": "2026-08-31",
   "aktif": true,
   "askida_satislar": []
 }
