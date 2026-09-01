@@ -167,6 +167,19 @@ const SENKRON_ANAHTARI_SABIT = 'JZqAxGtXdcZAyzXGxR0S7TtU';
 function _senkronAnahtariGetir() {
   return SENKRON_ANAHTARI_SABIT;
 }
+
+/* ── "Şimdi Güncelle" butonu (01.09.2026, kullanıcı isteği) ──────────────
+   NEDEN: gunluk_otomasyon.yml günde 3 kez otomatik çalışıyor ama GitHub'ın
+   cron zamanlayıcısı yoğunlukta saatlerce gecikebiliyor — kullanıcı "veri
+   bir gün öncesini gösteriyor" diye şikayet etti. Bu buton, worker'daki
+   /tetikle-tarama ucuna POST atıp AYNI otomasyonu (gunluk_otomasyon.yml)
+   elle tetikler. Anahtar SENKRON_ANAHTARI ile AYNI gerekçeyle sabit koda
+   gömülü — tek kullanıcılı uygulamada gerçek bir sır değil, sadece worker
+   URL'sini bulan rastgele birinin Actions dakikalarını boşa harcamasını
+   önleyen hafif bir bariyer. Worker tarafında AYNI değer TETIKLE_ANAHTARI
+   secret'ı olarak girilmelidir (bkz. cloudflare_worker_canli_fiyat.js). */
+const TETIKLE_ANAHTARI_SABIT = 'uy21YaLDoOT6JSL53HxR57KJ';
+const TETIKLE_SOGUMA_ANAHTAR = 'pusula_son_tetikleme';
 async function _portfoyBulutaYaz(liste) {
   if (!CANLI_FIYAT_API_URL) return;
   const anahtar = _senkronAnahtariGetir();
@@ -460,6 +473,69 @@ function HisseSatiri({ h, onSec, onYildiz }) {
    HER ZAMAN görünür, göze çarpan bir uyarı şeridine taşır: hafta içi, günün
    geç saatinde (taramanın normalde bitmiş olması gereken saatten sonra) hâlâ
    dünkü/daha eski veri gösteriliyorsa turuncu bir şerit çıkar. */
+/* "Şimdi Güncelle" — bkz. TETIKLE_ANAHTARI_SABIT üzerindeki not. 3 dakikalık
+   soğuma hem worker tarafında (edge cache) hem burada (localStorage) tutulur
+   — worker tarafı GERÇEK sınır (Actions dakikasını korur), buradaki sadece
+   kullanıcıya "az önce tıkladın" geri bildirimini worker'a hiç gitmeden
+   anında verir. */
+function SimdiGuncelleButonu() {
+  const [durum, setDurum] = useState('bos'); // bos | gonderiliyor | tamam | hata | soguma
+  const [mesaj, setMesaj] = useState('');
+
+  useEffect(() => {
+    const son = Number(localStorage.getItem(TETIKLE_SOGUMA_ANAHTAR) || 0);
+    if (Date.now() - son < 3 * 60 * 1000) setDurum('soguma');
+  }, []);
+
+  async function tikla() {
+    if (durum === 'gonderiliyor' || durum === 'soguma') return;
+    if (!CANLI_FIYAT_API_URL) {
+      setDurum('hata'); setMesaj('Worker adresi ayarlı değil.'); return;
+    }
+    setDurum('gonderiliyor');
+    try {
+      const yanit = await fetch(`${CANLI_FIYAT_API_URL}/tetikle-tarama`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ anahtar: TETIKLE_ANAHTARI_SABIT }),
+      });
+      const veri = await yanit.json().catch(() => ({}));
+      if (yanit.ok && veri.tamam) {
+        localStorage.setItem(TETIKLE_SOGUMA_ANAHTAR, String(Date.now()));
+        setDurum('tamam'); setMesaj(veri.mesaj || 'Tetiklendi.');
+        setTimeout(() => setDurum('soguma'), 2000);
+      } else {
+        setDurum('hata');
+        setMesaj(veri.hata || `İstek başarısız (${yanit.status}).`);
+      }
+    } catch (e) {
+      setDurum('hata'); setMesaj('Bağlantı hatası: ' + (e.message || e));
+    }
+  }
+
+  return (
+    <div className="px-4 -mt-1 mb-3">
+      <button
+        onClick={tikla}
+        disabled={durum === 'gonderiliyor' || durum === 'soguma'}
+        className={"w-full min-h-[40px] rounded-xl text-xs font-semibold transition-colors ring-1 " +
+                   (durum === 'tamam' ? "bg-emerald-50 text-emerald-700 ring-emerald-200"
+                    : durum === 'hata' ? "bg-red-50 text-red-600 ring-red-200"
+                    : "bg-indigo-50 text-indigo-700 ring-indigo-200") +
+                   (durum === 'gonderiliyor' || durum === 'soguma' ? " opacity-60" : " active:scale-[.98]")}
+      >
+        {durum === 'gonderiliyor' ? '⏳ Tetikleniyor...'
+          : durum === 'tamam' ? '✅ Tetiklendi — birazdan tazelenir'
+          : durum === 'soguma' ? '🔄 Az önce güncellendi'
+          : '🔄 Şimdi Güncelle'}
+      </button>
+      {mesaj && durum === 'hata' && (
+        <p className="text-[11px] mt-1.5 leading-relaxed text-red-500">{mesaj}</p>
+      )}
+    </div>
+  );
+}
+
 function TaramaBayatUyarisi({ durum }) {
   if (!durum || !durum.tarama || !durum.tarama.zaman) return null;
   const simdi = new Date();
@@ -524,6 +600,7 @@ function AnaEkran({ hisseler, onSec, onYildiz, zaman, sistemDurumu }) {
         <p className="text-sm text-gray-400">BIST özet{zaman ? " — tarama: " + zaman : ""} · değişim = 1 aylık</p>
       </div>
 
+      <SimdiGuncelleButonu />
       <TaramaBayatUyarisi durum={sistemDurumu} />
 
       <h2 className="px-4 text-sm font-semibold text-gray-500 uppercase tracking-wide mb-2">⭐ Favoriler</h2>

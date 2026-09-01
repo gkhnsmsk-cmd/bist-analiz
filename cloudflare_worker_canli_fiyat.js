@@ -221,6 +221,71 @@ async function sanalPortfoySifirla(request, env) {
 }
 
 // ═════════════════════════════════════════════════════════════════════════
+// TARAMA TETİKLEME — "Şimdi Güncelle" butonu (01.09.2026, kullanıcı isteği)
+// ═════════════════════════════════════════════════════════════════════════
+// NEDEN VAR: gunluk_otomasyon.yml günde 3 kez (10:20/14:00/19:00 TR) otomatik
+// çalışır, ama GitHub'ın kendi cron zamanlayıcısı yoğunlukta SAATLERCE
+// gecikebiliyor (gözlemlenen: 5+ saat) — kullanıcı "veri bir gün öncesini
+// gösteriyor" diye şikayet etti. Çözüm: Pusula'nın ana ekranına, aynı
+// gunluk_otomasyon.yml'i elle (workflow_dispatch) tetikleyen bir buton
+// eklendi — SifirlaButonu ile BİREBİR aynı güvenlik deseni: PAT sunucu
+// tarafında (Cloudflare secret), tarayıcı sadece bir passphrase gönderir.
+// Tek fark: bu passphrase (TETIKLE_ANAHTARI) tek-kullanıcılı uygulama olduğu
+// için istemci koduna sabit gömülü (bkz. pusula_mobil.html TETIKLE_ANAHTARI_SABIT)
+// — SENKRON_ANAHTARI ile aynı gerekçe: worker URL'si zaten herkese açık,
+// bu sadece rastgele birinin Actions dakikalarını boşa harcamasını önleyen
+// hafif bir bariyer, gerçek bir sır değil.
+//   wrangler secret put GITHUB_ACTIONS_PAT   (zaten kurulu — sifirla ile ortak)
+//   wrangler secret put TETIKLE_ANAHTARI     (pusula_mobil.html'deki
+//                                              TETIKLE_ANAHTARI_SABIT ile
+//                                              AYNI değeri gir)
+// SOĞUMA (cooldown): edge Cache API üzerinden 3 dakikada bir sınırlanır —
+// art arda tıklamalar gereksiz Actions çalıştırması başlatmasın diye.
+async function taramaTetikle(request, env) {
+  if (!env.TETIKLE_ANAHTARI || !env.GITHUB_ACTIONS_PAT) {
+    return jsonYanit({ hata: "Bu uç nokta henüz kurulmadı (secret eksik)." }, 501);
+  }
+  let govde;
+  try {
+    govde = await request.json();
+  } catch {
+    return jsonYanit({ hata: "Geçersiz istek gövdesi (JSON bekleniyor)." }, 400);
+  }
+  if (!govde || govde.anahtar !== env.TETIKLE_ANAHTARI) {
+    return jsonYanit({ hata: "Anahtar yanlış." }, 403);
+  }
+  const onbellek = caches.default;
+  const sogumaIstegi = new Request("https://pusula-tetikle-sogumasi.internal/");
+  if (await onbellek.match(sogumaIstegi)) {
+    return jsonYanit({ hata: "Az önce tetiklendi — birkaç dakika içinde tekrar deneyin." }, 429);
+  }
+  try {
+    const yanit = await fetch(
+      "https://api.github.com/repos/gkhnsmsk-cmd/bist-analiz/actions/workflows/gunluk_otomasyon.yml/dispatches",
+      {
+        method: "POST",
+        headers: {
+          "Authorization": `Bearer ${env.GITHUB_ACTIONS_PAT}`,
+          "Accept": "application/vnd.github+json",
+          "User-Agent": "pusula-tetikle-worker",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ ref: "main" }),
+      }
+    );
+    if (yanit.status === 204) {
+      const sogumaYaniti = new Response("1", { headers: { "Cache-Control": "max-age=180" } });
+      onbellek.put(sogumaIstegi, sogumaYaniti.clone());
+      return jsonYanit({ tamam: true, mesaj: "Tarama tetiklendi — ~3-5 dakika içinde veriler tazelenir." });
+    }
+    const metin = await yanit.text();
+    return jsonYanit({ hata: `GitHub API hatası (${yanit.status}): ${metin.slice(0, 300)}` }, 502);
+  } catch (e) {
+    return jsonYanit({ hata: `İstek başarısız: ${e.message || e}` }, 502);
+  }
+}
+
+// ═════════════════════════════════════════════════════════════════════════
 // KULLANICI PORTFÖYÜ SENKRONU — telefon ↔ PC (Task #24, 28.08.2026)
 // ═════════════════════════════════════════════════════════════════════════
 // NEDEN VAR: Kullanıcı Portföyü daha önce SADECE tarayıcının localStorage'ında
@@ -276,6 +341,10 @@ export default {
 
     if (url.pathname === "/sifirla" && request.method === "POST") {
       return sanalPortfoySifirla(request, env);
+    }
+
+    if (url.pathname === "/tetikle-tarama" && request.method === "POST") {
+      return taramaTetikle(request, env);
     }
 
     if (url.pathname === "/portfoy") {
