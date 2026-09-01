@@ -53,5 +53,80 @@
     "komisyon": 300.0,
     "puan": 72.0,
     "gerekce": "birikim skoru en yüksek adaylardan (CMF +0.405, MA200 üstünde, Puan 72)"
+  },
+  {
+    "tarih": "2026-09-01",
+    "sembol": "PASEU",
+    "yon": "SAT",
+    "adet": 777.0428,
+    "fiyat": 221.5,
+    "tutar": 172114.98,
+    "komisyon": 258.17,
+    "gerekce": "takip eden stop tetiklendi (fiyat 221.50 < stop 224.86; zirve 268.00)",
+    "puan": 80.0,
+    "tutma_gunu": 4,
+    "stop_cikisi": true,
+    "getiri_yuzde": -13.81
+  },
+  {
+    "tarih": "2026-09-01",
+    "sembol": "TGSAS",
+    "yon": "SAT",
+    "adet": 751.4581,
+    "fiyat": 211.5,
+    "tutar": 158933.4,
+    "komisyon": 238.4,
+    "gerekce": "takip eden stop tetiklendi (fiyat 211.50 < stop 224.05; zirve 268.50)",
+    "puan": 71.8,
+    "tutma_gunu": 4,
+    "stop_cikisi": true,
+    "getiri_yuzde": -20.41
+  },
+  {
+    "tarih": "2026-09-01",
+    "sembol": "KTLEV",
+    "yon": "SAT",
+    "adet": 2991.7603,
+    "fiyat": 56.55,
+    "tutar": 169184.04,
+    "komisyon": 253.78,
+    "gerekce": "takip eden stop tetiklendi (fiyat 56.55 < stop 57.12; zirve 69.00)",
+    "puan": 70.5,
+    "tutma_gunu": 4,
+    "stop_cikisi": true,
+    "getiri_yuzde": -15.28
+  },
+  {
+    "tarih": "2026-09-01",
+    "sembol": "ETYAT",
+    "yon": "AL",
+    "adet": 10894.1208,
+    "fiyat": 15.26,
+    "tutar": 166494.02,
+    "komisyon": 249.74,
+    "puan": 69.3,
+    "gerekce": "birikim skoru en yüksek adaylardan (CMF +0.407, MA200 üstünde, Puan 69)"
+  },
+  {
+    "tarih": "2026-09-01",
+    "sembol": "ATSYH",
+    "yon": "AL",
+    "adet": 1278.8022,
+    "fiyat": 130.0,
+    "tutar": 166494.02,
+    "komisyon": 249.74,
+    "puan": 69.2,
+    "gerekce": "birikim skoru en yüksek adaylardan (CMF +0.360, MA200 üstünde, Puan 69)"
+  },
+  {
+    "tarih": "2026-09-01",
+    "sembol": "KRGYO",
+    "yon": "AL",
+    "adet": 52114.1954,
+    "fiyat": 3.19,
+    "tutar": 166494.02,
+    "komisyon": 249.74,
+    "puan": 70.8,
+    "gerekce": "birikim skoru en yüksek adaylardan (CMF +0.344, MA200 üstünde, Puan 71)"
   }
 ]

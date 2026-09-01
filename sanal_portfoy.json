@@ -2,50 +2,64 @@
   "baslangic_butce": 1000000.0,
   "baslangic_tarihi": "2026-08-28",
   "hedef_aylik_yuzde": 10.0,
-  "nakit": 0.0,
+  "nakit": 5.820766091346741e-11,
   "pozisyonlar": [
     {
       "sembol": "ANELE",
       "adet": 1093.647316538883,
       "maliyet": 182.6,
       "eklenme_tarihi": "2026-08-28T11:25:31.617969",
-      "son_fiyat": 187.10000610351562,
-      "en_yuksek": 190.3
-    },
-    {
-      "sembol": "PASEU",
-      "adet": 777.0428015564203,
-      "maliyet": 257.0,
-      "eklenme_tarihi": "2026-08-28T11:25:31.617987",
-      "son_fiyat": 268.0,
-      "en_yuksek": 268.0
+      "son_fiyat": 192.10000610351562,
+      "en_yuksek": 192.1
     },
     {
       "sembol": "SELEC",
       "adet": 605.1515151515151,
       "maliyet": 330.0,
       "eklenme_tarihi": "2026-08-28T11:25:31.617995",
-      "son_fiyat": 333.0,
-      "en_yuksek": 334.0
+      "son_fiyat": 334.75,
+      "en_yuksek": 334.75
     },
     {
-      "sembol": "TGSAS",
-      "adet": 751.4581373471308,
-      "maliyet": 265.75,
-      "eklenme_tarihi": "2026-08-28T11:25:31.618001",
-      "son_fiyat": 258.0,
-      "en_yuksek": 268.5
+      "sembol": "ETYAT",
+      "adet": 10894.120790647039,
+      "maliyet": 15.26,
+      "eklenme_tarihi": "2026-09-01T11:53:00.577154",
+      "son_fiyat": 15.26,
+      "en_yuksek": 15.26
     },
     {
-      "sembol": "KTLEV",
-      "adet": 2991.760299625468,
-      "maliyet": 66.75,
-      "eklenme_tarihi": "2026-08-28T11:25:31.618006",
-      "son_fiyat": 69.0,
-      "en_yuksek": 69.0
+      "sembol": "ATSYH",
+      "adet": 1278.8021789636448,
+      "maliyet": 130.0,
+      "eklenme_tarihi": "2026-09-01T11:53:00.577167",
+      "son_fiyat": 130.0,
+      "en_yuksek": 130.0
+    },
+    {
+      "sembol": "KRGYO",
+      "adet": 52114.19538096358,
+      "maliyet": 3.19,
+      "eklenme_tarihi": "2026-09-01T11:53:00.577173",
+      "son_fiyat": 3.19,
+      "en_yuksek": 3.19
     }
   ],
-  "son_rebalans_tarihi": "2026-08-31",
+  "son_rebalans_tarihi": "2026-09-01",
   "aktif": true,
-  "askida_satislar": []
+  "askida_satislar": [],
+  "stop_cikislari": {
+    "PASEU": {
+      "tarih": "2026-09-01",
+      "puan": 80.0
+    },
+    "TGSAS": {
+      "tarih": "2026-09-01",
+      "puan": 71.8
+    },
+    "KTLEV": {
+      "tarih": "2026-09-01",
+      "puan": 70.5
+    }
+  }
 }
