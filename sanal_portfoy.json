@@ -9,7 +9,7 @@
       "adet": 1093.647316538883,
       "maliyet": 182.6,
       "eklenme_tarihi": "2026-08-28T11:25:31.617969",
-      "son_fiyat": 193.1999969482422,
+      "son_fiyat": 194.0,
       "en_yuksek": 194.8
     },
     {
@@ -17,16 +17,16 @@
       "adet": 605.1515151515151,
       "maliyet": 330.0,
       "eklenme_tarihi": "2026-08-28T11:25:31.617995",
-      "son_fiyat": 343.0,
-      "en_yuksek": 343.0
+      "son_fiyat": 345.0,
+      "en_yuksek": 345.0
     },
     {
       "sembol": "ETYAT",
       "adet": 10894.120790647039,
       "maliyet": 15.26,
       "eklenme_tarihi": "2026-09-01T11:53:00.577154",
-      "son_fiyat": 14.699999809265137,
-      "en_yuksek": 15.45
+      "son_fiyat": 15.600000381469727,
+      "en_yuksek": 15.6
     },
     {
       "sembol": "ATSYH",
@@ -41,7 +41,7 @@
       "adet": 52114.19538096358,
       "maliyet": 3.19,
       "eklenme_tarihi": "2026-09-01T11:53:00.577173",
-      "son_fiyat": 2.9700000286102295,
+      "son_fiyat": 2.990000009536743,
       "en_yuksek": 3.19
     }
   ],
