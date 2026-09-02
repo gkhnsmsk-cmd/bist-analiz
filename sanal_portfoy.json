@@ -9,23 +9,23 @@
       "adet": 1093.647316538883,
       "maliyet": 182.6,
       "eklenme_tarihi": "2026-08-28T11:25:31.617969",
-      "son_fiyat": 193.0,
-      "en_yuksek": 193.0
+      "son_fiyat": 194.8000030517578,
+      "en_yuksek": 194.8
     },
     {
       "sembol": "SELEC",
       "adet": 605.1515151515151,
       "maliyet": 330.0,
       "eklenme_tarihi": "2026-08-28T11:25:31.617995",
-      "son_fiyat": 338.0,
-      "en_yuksek": 338.0
+      "son_fiyat": 339.75,
+      "en_yuksek": 339.75
     },
     {
       "sembol": "ETYAT",
       "adet": 10894.120790647039,
       "maliyet": 15.26,
       "eklenme_tarihi": "2026-09-01T11:53:00.577154",
-      "son_fiyat": 15.449999809265137,
+      "son_fiyat": 14.800000190734863,
       "en_yuksek": 15.45
     },
     {
@@ -33,7 +33,7 @@
       "adet": 1278.8021789636448,
       "maliyet": 130.0,
       "eklenme_tarihi": "2026-09-01T11:53:00.577167",
-      "son_fiyat": 129.0,
+      "son_fiyat": 128.6999969482422,
       "en_yuksek": 130.0
     },
     {
@@ -41,11 +41,11 @@
       "adet": 52114.19538096358,
       "maliyet": 3.19,
       "eklenme_tarihi": "2026-09-01T11:53:00.577173",
-      "son_fiyat": 3.109999895095825,
+      "son_fiyat": 3.0399999618530273,
       "en_yuksek": 3.19
     }
   ],
-  "son_rebalans_tarihi": "2026-09-01",
+  "son_rebalans_tarihi": "2026-09-02",
   "aktif": true,
   "askida_satislar": [],
   "stop_cikislari": {
