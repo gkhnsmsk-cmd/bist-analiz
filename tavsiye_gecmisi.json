@@ -74610,5 +74610,64 @@
       "piyasa_rejim_durumu": "NÖTR — Seçici olun"
     },
     "kayit_zamani": "2026-09-03T14:58:36"
+  },
+  {
+    "tarih": "2026-09-03",
+    "kaynak": "One Cikan Hisseler",
+    "sembol": "BIMAS",
+    "sinyal": "🟢 AL",
+    "puan": 69.1,
+    "kayit_anindaki_fiyat": 412.75,
+    "ek": {
+      "kisa": 51,
+      "orta": 89,
+      "uzun": 65,
+      "takas": 71,
+      "snapshot_durumu": "tam",
+      "rsi14": 58.3,
+      "macd_hist": -0.166,
+      "ma20_uzaklik_yuzde": 2.89,
+      "ma50_uzaklik_yuzde": 6.3,
+      "ma200_uzaklik_yuzde": 18.2,
+      "zirve52_uzaklik_yuzde": -1.32,
+      "onceki_1ay_getiri": 7.98,
+      "onceki_3ay_getiri": 9.98,
+      "trend_yonu": "yukselis",
+      "hacim_orani_5g_60g": 0.97,
+      "atr_yuzde": 2.71,
+      "yillik_volatilite": 33.4,
+      "piyasa_rejim_puani": 46.0,
+      "piyasa_rejim_durumu": "NÖTR — Seçici olun"
+    },
+    "kayit_zamani": "2026-09-03T19:12:43"
+  },
+  {
+    "tarih": "2026-09-03",
+    "kaynak": "Vade: Kisa (~2 hafta)",
+    "sembol": "ETYAT",
+    "sinyal": "🟢 AL",
+    "puan": 82,
+    "kayit_anindaki_fiyat": 16.13,
+    "ek": {
+      "genel_puan": 78.3,
+      "bir_ay": 21.8,
+      "uc_ay": 64.3,
+      "snapshot_durumu": "tam",
+      "rsi14": 65.2,
+      "macd_hist": 0.002,
+      "ma20_uzaklik_yuzde": 5.82,
+      "ma50_uzaklik_yuzde": 14.37,
+      "ma200_uzaklik_yuzde": 62.24,
+      "zirve52_uzaklik_yuzde": -0.25,
+      "onceki_1ay_getiri": 21.83,
+      "onceki_3ay_getiri": 44.4,
+      "trend_yonu": "yukselis",
+      "hacim_orani_5g_60g": 0.8,
+      "atr_yuzde": 5.55,
+      "yillik_volatilite": 56.8,
+      "piyasa_rejim_puani": 46.0,
+      "piyasa_rejim_durumu": "NÖTR — Seçici olun"
+    },
+    "kayit_zamani": "2026-09-03T19:12:43"
   }
 ]
