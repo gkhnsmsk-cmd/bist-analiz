@@ -9,24 +9,24 @@
       "adet": 1093.647316538883,
       "maliyet": 182.6,
       "eklenme_tarihi": "2026-08-28T11:25:31.617969",
-      "son_fiyat": 194.8000030517578,
-      "en_yuksek": 194.8
+      "son_fiyat": 196.39999389648438,
+      "en_yuksek": 196.4
     },
     {
       "sembol": "SELEC",
       "adet": 605.1515151515151,
       "maliyet": 330.0,
       "eklenme_tarihi": "2026-08-28T11:25:31.617995",
-      "son_fiyat": 347.0,
-      "en_yuksek": 347.75
+      "son_fiyat": 349.0,
+      "en_yuksek": 349.0
     },
     {
       "sembol": "ETYAT",
       "adet": 10894.120790647039,
       "maliyet": 15.26,
       "eklenme_tarihi": "2026-09-01T11:53:00.577154",
-      "son_fiyat": 15.5,
-      "en_yuksek": 15.6
+      "son_fiyat": 15.90999984741211,
+      "en_yuksek": 15.91
     },
     {
       "sembol": "KRGYO",
@@ -41,7 +41,7 @@
       "adet": 73972.23769669519,
       "maliyet": 2.12,
       "eklenme_tarihi": "2026-09-03T10:31:25.474305",
-      "son_fiyat": 2.190000057220459,
+      "son_fiyat": 2.109999895095825,
       "en_yuksek": 2.21
     }
   ],
