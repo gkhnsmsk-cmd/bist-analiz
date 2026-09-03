@@ -128,5 +128,29 @@
     "komisyon": 249.74,
     "puan": 70.8,
     "gerekce": "birikim skoru en yüksek adaylardan (CMF +0.344, MA200 üstünde, Puan 71)"
+  },
+  {
+    "tarih": "2026-09-03",
+    "sembol": "ATSYH",
+    "yon": "SAT",
+    "adet": 1278.8022,
+    "fiyat": 123.0,
+    "tutar": 157292.67,
+    "komisyon": 235.94,
+    "puan": 65.3,
+    "tutma_gunu": 2,
+    "gerekce": "takas: MARTI birikim skoru +0.402, bu pozisyonunki +0.276 (marj: 0.10)",
+    "getiri_yuzde": -5.38
+  },
+  {
+    "tarih": "2026-09-03",
+    "sembol": "MARTI",
+    "yon": "AL",
+    "adet": 73972.2377,
+    "fiyat": 2.12,
+    "tutar": 157056.73,
+    "komisyon": 235.59,
+    "puan": 53.6,
+    "gerekce": "birikim skoru en yüksek adaylardan (CMF +0.402, MA200 üstünde, Puan 54)"
   }
 ]

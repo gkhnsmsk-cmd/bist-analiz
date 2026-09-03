@@ -2,14 +2,14 @@
   "baslangic_butce": 1000000.0,
   "baslangic_tarihi": "2026-08-28",
   "hedef_aylik_yuzde": 10.0,
-  "nakit": 5.820766091346741e-11,
+  "nakit": 0.0,
   "pozisyonlar": [
     {
       "sembol": "ANELE",
       "adet": 1093.647316538883,
       "maliyet": 182.6,
       "eklenme_tarihi": "2026-08-28T11:25:31.617969",
-      "son_fiyat": 194.0,
+      "son_fiyat": 194.8000030517578,
       "en_yuksek": 194.8
     },
     {
@@ -17,7 +17,7 @@
       "adet": 605.1515151515151,
       "maliyet": 330.0,
       "eklenme_tarihi": "2026-08-28T11:25:31.617995",
-      "son_fiyat": 345.75,
+      "son_fiyat": 332.75,
       "en_yuksek": 345.75
     },
     {
@@ -25,16 +25,8 @@
       "adet": 10894.120790647039,
       "maliyet": 15.26,
       "eklenme_tarihi": "2026-09-01T11:53:00.577154",
-      "son_fiyat": 15.399999618530273,
+      "son_fiyat": 15.489999771118164,
       "en_yuksek": 15.6
-    },
-    {
-      "sembol": "ATSYH",
-      "adet": 1278.8021789636448,
-      "maliyet": 130.0,
-      "eklenme_tarihi": "2026-09-01T11:53:00.577167",
-      "son_fiyat": 120.0,
-      "en_yuksek": 130.0
     },
     {
       "sembol": "KRGYO",
@@ -43,9 +35,17 @@
       "eklenme_tarihi": "2026-09-01T11:53:00.577173",
       "son_fiyat": 2.9600000381469727,
       "en_yuksek": 3.19
+    },
+    {
+      "sembol": "MARTI",
+      "adet": 73972.23769669519,
+      "maliyet": 2.12,
+      "eklenme_tarihi": "2026-09-03T10:31:25.474305",
+      "son_fiyat": 2.12,
+      "en_yuksek": 2.12
     }
   ],
-  "son_rebalans_tarihi": "2026-09-02",
+  "son_rebalans_tarihi": "2026-09-03",
   "aktif": true,
   "askida_satislar": [],
   "stop_cikislari": {
