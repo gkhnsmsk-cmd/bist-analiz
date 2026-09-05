@@ -1,19 +1,95 @@
 {
- "guncelleme": "2026-08-29T12:48:00",
+ "guncelleme": "2026-09-05T10:42:09",
  "ufuk": 10,
  "hipotez": {
   "durum": "ölçüldü",
-  "toplam_olgun_karar": 452,
-  "genel_basari_orani": 55.1,
+  "toplam_olgun_karar": 1348,
+  "genel_basari_orani": 46.0,
   "genel_basari_guven_araligi": [
-   50.5,
-   59.6
+   43.3,
+   48.7
   ],
-  "ortalama_getiri": 1.48,
+  "ortalama_getiri": -0.58,
   "yeterli_veri_mi": true,
-  "bulgular": [],
+  "bulgular": [
+   {
+    "kategori": "HIGH_VOLATILITY_ENTRY",
+    "aciklama": "Aşırı oynak hissede pozisyon açıldı (yıllık volatilite %80+)",
+    "ornek_sayisi": 1,
+    "basari_orani": 0.0,
+    "guven_araligi": [
+     0.0,
+     79.3
+    ],
+    "ortalama_getiri": -41.83,
+    "kontrol_grubu_basari": 30.5,
+    "fark_puan": -30.5,
+    "not": "Sadece 1 örnek — sonuç güvenilir değil, yalnızca izleme amaçlı."
+   },
+   {
+    "kategori": "OVEREXTENDED_ENTRY",
+    "aciklama": "Fiyat 50 günlük ortalamadan çok uzaktayken alındı (şişmiş giriş)",
+    "ornek_sayisi": 118,
+    "basari_orani": 32.2,
+    "guven_araligi": [
+     24.4,
+     41.1
+    ],
+    "ortalama_getiri": -2.5,
+    "kontrol_grubu_basari": 28.6,
+    "fark_puan": 3.6
+   },
+   {
+    "kategori": "MOMENTUM_CHASE",
+    "aciklama": "Zaten çok yükselmiş hisse kovalandı (son 1 ayda %25+)",
+    "ornek_sayisi": 89,
+    "basari_orani": 34.8,
+    "guven_araligi": [
+     25.7,
+     45.2
+    ],
+    "ortalama_getiri": -1.74,
+    "kontrol_grubu_basari": 27.7,
+    "fark_puan": 7.1
+   },
+   {
+    "kategori": "FALSE_BREAKOUT",
+    "aciklama": "52 haftalık zirveye yapışıkken alındı, kırılım tutmadı",
+    "ornek_sayisi": 27,
+    "basari_orani": 37.0,
+    "guven_araligi": [
+     21.5,
+     55.8
+    ],
+    "ortalama_getiri": 0.74,
+    "kontrol_grubu_basari": 29.5,
+    "fark_puan": 7.5
+   },
+   {
+    "kategori": "OVERBOUGHT_ENTRY",
+    "aciklama": "RSI aşırı alım bölgesindeyken (75+) alındı",
+    "ornek_sayisi": 38,
+    "basari_orani": 36.8,
+    "guven_araligi": [
+     23.4,
+     52.7
+    ],
+    "ortalama_getiri": -0.8,
+    "kontrol_grubu_basari": 29.1,
+    "fark_puan": 7.7
+   }
+  ],
   "uyarilar": [
-   "Hiçbir kararda özellik anlık görüntüsü yok — bu kayıtlar öğrenme motoru eklenmeden önce oluşturulmuş. Bundan sonraki kayıtlar otomatik olarak snapshot içerecek."
-  ]
+   "Bu rapor bir ÖNERİ listesidir. Hiçbir kural otomatik değiştirilmedi. Bir öneriyi uygulamadan önce backtest'te önce/sonra karşılaştırması yapılmalıdır."
+  ],
+  "basarisiz_kararlarda_hata_sayimi": {
+   "OVEREXTENDED_ENTRY": 80,
+   "MOMENTUM_CHASE": 58,
+   "OVERBOUGHT_ENTRY": 24,
+   "FALSE_BREAKOUT": 17,
+   "HIGH_VOLATILITY_ENTRY": 1,
+   "REGIME_MISMATCH": 0,
+   "FALLING_KNIFE": 0
+  }
  }
 }
