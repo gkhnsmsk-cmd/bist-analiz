@@ -83610,5 +83610,64 @@
       "piyasa_rejim_durumu": "RİSK AÇIK — Boğa ortamı"
     },
     "kayit_zamani": "2026-09-07T08:44:29"
+  },
+  {
+    "tarih": "2026-09-07",
+    "kaynak": "One Cikan Hisseler",
+    "sembol": "SKYMD",
+    "sinyal": "🟢 AL",
+    "puan": 78.0,
+    "kayit_anindaki_fiyat": 16.84,
+    "ek": {
+      "kisa": 79,
+      "orta": 86,
+      "uzun": 65,
+      "takas": 51,
+      "snapshot_durumu": "tam",
+      "rsi14": 66.8,
+      "macd_hist": 0.185,
+      "ma20_uzaklik_yuzde": 14.02,
+      "ma50_uzaklik_yuzde": 14.49,
+      "ma200_uzaklik_yuzde": 27.65,
+      "zirve52_uzaklik_yuzde": -4.91,
+      "onceki_1ay_getiri": 13.71,
+      "onceki_3ay_getiri": 26.62,
+      "trend_yonu": "yukselis",
+      "hacim_orani_5g_60g": 1.02,
+      "atr_yuzde": 5.1,
+      "yillik_volatilite": 47.8,
+      "piyasa_rejim_puani": 74.0,
+      "piyasa_rejim_durumu": "RİSK AÇIK — Boğa ortamı"
+    },
+    "kayit_zamani": "2026-09-07T09:39:01"
+  },
+  {
+    "tarih": "2026-09-07",
+    "kaynak": "Vade: Kisa (~2 hafta)",
+    "sembol": "OZRDN",
+    "sinyal": "🟢 AL",
+    "puan": 62,
+    "kayit_anindaki_fiyat": 30.34,
+    "ek": {
+      "genel_puan": 63.6,
+      "bir_ay": 1.5,
+      "uc_ay": -8.9,
+      "snapshot_durumu": "tam",
+      "rsi14": 54.1,
+      "macd_hist": 0.274,
+      "ma20_uzaklik_yuzde": 4.63,
+      "ma50_uzaklik_yuzde": 2.54,
+      "ma200_uzaklik_yuzde": 14.81,
+      "zirve52_uzaklik_yuzde": -21.56,
+      "onceki_1ay_getiri": 1.47,
+      "onceki_3ay_getiri": -9.05,
+      "trend_yonu": "yatay",
+      "hacim_orani_5g_60g": 1.01,
+      "atr_yuzde": 6.21,
+      "yillik_volatilite": 71.2,
+      "piyasa_rejim_puani": 74.0,
+      "piyasa_rejim_durumu": "RİSK AÇIK — Boğa ortamı"
+    },
+    "kayit_zamani": "2026-09-07T09:39:01"
   }
 ]
