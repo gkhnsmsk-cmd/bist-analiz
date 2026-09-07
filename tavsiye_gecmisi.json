@@ -84135,5 +84135,34 @@
       "piyasa_rejim_durumu": "RİSK AÇIK — Boğa ortamı"
     },
     "kayit_zamani": "2026-09-07T15:06:34"
+  },
+  {
+    "tarih": "2026-09-07",
+    "kaynak": "Vade: Kisa (~2 hafta)",
+    "sembol": "KRGYO",
+    "sinyal": "🟢 AL",
+    "puan": 65,
+    "kayit_anindaki_fiyat": 3.05,
+    "ek": {
+      "genel_puan": 72.7,
+      "bir_ay": 22.5,
+      "uc_ay": 10.5,
+      "snapshot_durumu": "tam",
+      "rsi14": 60.0,
+      "macd_hist": -0.009,
+      "ma20_uzaklik_yuzde": 4.22,
+      "ma50_uzaklik_yuzde": 13.0,
+      "ma200_uzaklik_yuzde": 7.85,
+      "zirve52_uzaklik_yuzde": -12.17,
+      "onceki_1ay_getiri": 22.49,
+      "onceki_3ay_getiri": 13.38,
+      "trend_yonu": "yukselis",
+      "hacim_orani_5g_60g": 0.75,
+      "atr_yuzde": 4.72,
+      "yillik_volatilite": 37.9,
+      "piyasa_rejim_puani": 74.0,
+      "piyasa_rejim_durumu": "RİSK AÇIK — Boğa ortamı"
+    },
+    "kayit_zamani": "2026-09-07T15:24:23"
   }
 ]
