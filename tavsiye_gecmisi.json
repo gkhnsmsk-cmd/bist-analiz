@@ -84164,5 +84164,35 @@
       "piyasa_rejim_durumu": "RİSK AÇIK — Boğa ortamı"
     },
     "kayit_zamani": "2026-09-07T15:24:23"
+  },
+  {
+    "tarih": "2026-09-07",
+    "kaynak": "One Cikan Hisseler",
+    "sembol": "BRSAN",
+    "sinyal": "🟢 AL",
+    "puan": 76.5,
+    "kayit_anindaki_fiyat": 728.0,
+    "ek": {
+      "kisa": 57,
+      "orta": 86,
+      "uzun": 60,
+      "takas": 71,
+      "snapshot_durumu": "tam",
+      "rsi14": 63.2,
+      "macd_hist": -2.569,
+      "ma20_uzaklik_yuzde": 5.5,
+      "ma50_uzaklik_yuzde": 19.38,
+      "ma200_uzaklik_yuzde": 25.87,
+      "zirve52_uzaklik_yuzde": -5.39,
+      "onceki_1ay_getiri": 27.27,
+      "onceki_3ay_getiri": 21.74,
+      "trend_yonu": "yukselis",
+      "hacim_orani_5g_60g": 0.74,
+      "atr_yuzde": 3.98,
+      "yillik_volatilite": 57.5,
+      "piyasa_rejim_puani": 74.0,
+      "piyasa_rejim_durumu": "RİSK AÇIK — Boğa ortamı"
+    },
+    "kayit_zamani": "2026-09-07T19:44:15"
   }
 ]
