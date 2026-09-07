@@ -83550,5 +83550,65 @@
       "piyasa_rejim_durumu": "RİSK AÇIK — Boğa ortamı"
     },
     "kayit_zamani": "2026-09-07T07:27:40"
+  },
+  {
+    "tarih": "2026-09-07",
+    "kaynak": "One Cikan Hisseler",
+    "sembol": "KLSYN",
+    "sinyal": "🟢 AL",
+    "puan": 78.7,
+    "kayit_anindaki_fiyat": 15.81,
+    "ek": {
+      "kisa": 57,
+      "orta": 94,
+      "uzun": 65,
+      "takas": 66,
+      "snapshot_durumu": "tam",
+      "rsi14": 61.1,
+      "macd_hist": -0.053,
+      "ma20_uzaklik_yuzde": 1.34,
+      "ma50_uzaklik_yuzde": 9.03,
+      "ma200_uzaklik_yuzde": 48.87,
+      "zirve52_uzaklik_yuzde": -1.13,
+      "onceki_1ay_getiri": 12.07,
+      "onceki_3ay_getiri": 17.52,
+      "trend_yonu": "yukselis",
+      "hacim_orani_5g_60g": 0.38,
+      "atr_yuzde": 4.0,
+      "yillik_volatilite": 60.4,
+      "piyasa_rejim_puani": 74.0,
+      "piyasa_rejim_durumu": "RİSK AÇIK — Boğa ortamı"
+    },
+    "kayit_zamani": "2026-09-07T08:44:29"
+  },
+  {
+    "tarih": "2026-09-07",
+    "kaynak": "One Cikan Hisseler",
+    "sembol": "CRFSA",
+    "sinyal": "🟢 AL",
+    "puan": 78.0,
+    "kayit_anindaki_fiyat": 289.75,
+    "ek": {
+      "kisa": 69,
+      "orta": 86,
+      "uzun": 65,
+      "takas": 61,
+      "snapshot_durumu": "tam",
+      "rsi14": 57.5,
+      "macd_hist": -3.25,
+      "ma20_uzaklik_yuzde": 1.34,
+      "ma50_uzaklik_yuzde": 37.47,
+      "ma200_uzaklik_yuzde": 90.24,
+      "zirve52_uzaklik_yuzde": -14.34,
+      "onceki_1ay_getiri": 37.65,
+      "onceki_3ay_getiri": 89.63,
+      "trend_yonu": "yukselis",
+      "hacim_orani_5g_60g": 2.04,
+      "atr_yuzde": 8.39,
+      "yillik_volatilite": 67.7,
+      "piyasa_rejim_puani": 74.0,
+      "piyasa_rejim_durumu": "RİSK AÇIK — Boğa ortamı"
+    },
+    "kayit_zamani": "2026-09-07T08:44:29"
   }
 ]
