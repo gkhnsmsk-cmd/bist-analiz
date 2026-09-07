@@ -83902,5 +83902,35 @@
       "piyasa_rejim_durumu": "RİSK AÇIK — Boğa ortamı"
     },
     "kayit_zamani": "2026-09-07T11:46:16"
+  },
+  {
+    "tarih": "2026-09-07",
+    "kaynak": "One Cikan Hisseler",
+    "sembol": "KRDMD",
+    "sinyal": "🟢 AL",
+    "puan": 78.4,
+    "kayit_anindaki_fiyat": 45.1,
+    "ek": {
+      "kisa": 51,
+      "orta": 94,
+      "uzun": 65,
+      "takas": 71,
+      "snapshot_durumu": "tam",
+      "rsi14": 55.0,
+      "macd_hist": -0.244,
+      "ma20_uzaklik_yuzde": 1.7,
+      "ma50_uzaklik_yuzde": 7.13,
+      "ma200_uzaklik_yuzde": 28.82,
+      "zirve52_uzaklik_yuzde": -4.81,
+      "onceki_1ay_getiri": 13.95,
+      "onceki_3ay_getiri": 15.4,
+      "trend_yonu": "yukselis",
+      "hacim_orani_5g_60g": 0.78,
+      "atr_yuzde": 4.08,
+      "yillik_volatilite": 43.9,
+      "piyasa_rejim_puani": 74.0,
+      "piyasa_rejim_durumu": "RİSK AÇIK — Boğa ortamı"
+    },
+    "kayit_zamani": "2026-09-07T13:36:48"
   }
 ]
