@@ -87234,5 +87234,64 @@
       "piyasa_rejim_durumu": "RİSK AÇIK — Boğa ortamı"
     },
     "kayit_zamani": "2026-09-08T07:34:33"
+  },
+  {
+    "tarih": "2026-09-08",
+    "kaynak": "One Cikan Hisseler",
+    "sembol": "KRGYO",
+    "sinyal": "🟢 AL",
+    "puan": 80.9,
+    "kayit_anindaki_fiyat": 3.31,
+    "ek": {
+      "kisa": 82,
+      "orta": 83,
+      "uzun": 55,
+      "takas": 71,
+      "snapshot_durumu": "tam",
+      "rsi14": 68.8,
+      "macd_hist": 0.008,
+      "ma20_uzaklik_yuzde": 12.6,
+      "ma50_uzaklik_yuzde": 22.4,
+      "ma200_uzaklik_yuzde": 16.99,
+      "zirve52_uzaklik_yuzde": -4.68,
+      "onceki_1ay_getiri": 32.93,
+      "onceki_3ay_getiri": 23.05,
+      "trend_yonu": "yukselis",
+      "hacim_orani_5g_60g": 0.69,
+      "atr_yuzde": 4.95,
+      "yillik_volatilite": 39.8,
+      "piyasa_rejim_puani": 74.0,
+      "piyasa_rejim_durumu": "RİSK AÇIK — Boğa ortamı"
+    },
+    "kayit_zamani": "2026-09-08T07:56:45"
+  },
+  {
+    "tarih": "2026-09-08",
+    "kaynak": "Vade: Kisa (~2 hafta)",
+    "sembol": "KRGYO",
+    "sinyal": "🟢 AL",
+    "puan": 82,
+    "kayit_anindaki_fiyat": 3.31,
+    "ek": {
+      "genel_puan": 80.9,
+      "bir_ay": 32.9,
+      "uc_ay": 19.9,
+      "snapshot_durumu": "tam",
+      "rsi14": 68.8,
+      "macd_hist": 0.008,
+      "ma20_uzaklik_yuzde": 12.6,
+      "ma50_uzaklik_yuzde": 22.4,
+      "ma200_uzaklik_yuzde": 16.99,
+      "zirve52_uzaklik_yuzde": -4.68,
+      "onceki_1ay_getiri": 32.93,
+      "onceki_3ay_getiri": 23.05,
+      "trend_yonu": "yukselis",
+      "hacim_orani_5g_60g": 0.69,
+      "atr_yuzde": 4.95,
+      "yillik_volatilite": 39.8,
+      "piyasa_rejim_puani": 74.0,
+      "piyasa_rejim_durumu": "RİSK AÇIK — Boğa ortamı"
+    },
+    "kayit_zamani": "2026-09-08T07:56:46"
   }
 ]
