@@ -87380,5 +87380,64 @@
       "piyasa_rejim_durumu": "RİSK AÇIK — Boğa ortamı"
     },
     "kayit_zamani": "2026-09-08T09:23:54"
+  },
+  {
+    "tarih": "2026-09-08",
+    "kaynak": "One Cikan Hisseler",
+    "sembol": "AKCNS",
+    "sinyal": "🟢 AL",
+    "puan": 78.4,
+    "kayit_anindaki_fiyat": 252.25,
+    "ek": {
+      "kisa": 77,
+      "orta": 94,
+      "uzun": 65,
+      "takas": 45,
+      "snapshot_durumu": "tam",
+      "rsi14": 65.0,
+      "macd_hist": 0.034,
+      "ma20_uzaklik_yuzde": 3.55,
+      "ma50_uzaklik_yuzde": 5.96,
+      "ma200_uzaklik_yuzde": 25.74,
+      "zirve52_uzaklik_yuzde": 0.0,
+      "onceki_1ay_getiri": 6.7,
+      "onceki_3ay_getiri": 21.27,
+      "trend_yonu": "yukselis",
+      "hacim_orani_5g_60g": 0.7,
+      "atr_yuzde": 2.41,
+      "yillik_volatilite": 40.3,
+      "piyasa_rejim_puani": 74.0,
+      "piyasa_rejim_durumu": "RİSK AÇIK — Boğa ortamı"
+    },
+    "kayit_zamani": "2026-09-08T11:44:02"
+  },
+  {
+    "tarih": "2026-09-08",
+    "kaynak": "Vade: Kisa (~2 hafta)",
+    "sembol": "BIMAS",
+    "sinyal": "🟢 AL",
+    "puan": 74,
+    "kayit_anindaki_fiyat": 417.75,
+    "ek": {
+      "genel_puan": 82.7,
+      "bir_ay": 8.3,
+      "uc_ay": 11.3,
+      "snapshot_durumu": "tam",
+      "rsi14": 61.1,
+      "macd_hist": 0.073,
+      "ma20_uzaklik_yuzde": 3.31,
+      "ma50_uzaklik_yuzde": 7.13,
+      "ma200_uzaklik_yuzde": 19.11,
+      "zirve52_uzaklik_yuzde": -0.12,
+      "onceki_1ay_getiri": 8.3,
+      "onceki_3ay_getiri": 9.43,
+      "trend_yonu": "yukselis",
+      "hacim_orani_5g_60g": 0.76,
+      "atr_yuzde": 2.51,
+      "yillik_volatilite": 33.4,
+      "piyasa_rejim_puani": 74.0,
+      "piyasa_rejim_durumu": "RİSK AÇIK — Boğa ortamı"
+    },
+    "kayit_zamani": "2026-09-08T11:44:02"
   }
 ]
