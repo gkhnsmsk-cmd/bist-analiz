@@ -91468,5 +91468,64 @@
       "piyasa_rejim_durumu": "RİSK AÇIK — Boğa ortamı"
     },
     "kayit_zamani": "2026-09-09T12:26:05"
+  },
+  {
+    "tarih": "2026-09-09",
+    "kaynak": "One Cikan Hisseler",
+    "sembol": "NETAS",
+    "sinyal": "🟢 AL",
+    "puan": 79.3,
+    "kayit_anindaki_fiyat": 99.9,
+    "ek": {
+      "kisa": 78,
+      "orta": 86,
+      "uzun": 60,
+      "takas": 61,
+      "snapshot_durumu": "tam",
+      "rsi14": 62.8,
+      "macd_hist": 0.187,
+      "ma20_uzaklik_yuzde": 13.24,
+      "ma50_uzaklik_yuzde": 36.47,
+      "ma200_uzaklik_yuzde": 53.49,
+      "zirve52_uzaklik_yuzde": -6.9,
+      "onceki_1ay_getiri": 59.71,
+      "onceki_3ay_getiri": 54.17,
+      "trend_yonu": "yukselis",
+      "hacim_orani_5g_60g": 1.8,
+      "atr_yuzde": 6.86,
+      "yillik_volatilite": 55.3,
+      "piyasa_rejim_puani": 74.0,
+      "piyasa_rejim_durumu": "RİSK AÇIK — Boğa ortamı"
+    },
+    "kayit_zamani": "2026-09-09T13:34:17"
+  },
+  {
+    "tarih": "2026-09-09",
+    "kaynak": "Vade: Orta (~3 ay)",
+    "sembol": "EKGYO",
+    "sinyal": "🟢 AL",
+    "puan": 65,
+    "kayit_anindaki_fiyat": 22.42,
+    "ek": {
+      "genel_puan": 64.9,
+      "bir_ay": 25.8,
+      "uc_ay": 18.7,
+      "snapshot_durumu": "tam",
+      "rsi14": 70.1,
+      "macd_hist": 0.183,
+      "ma20_uzaklik_yuzde": 13.58,
+      "ma50_uzaklik_yuzde": 14.35,
+      "ma200_uzaklik_yuzde": 9.31,
+      "zirve52_uzaklik_yuzde": -12.04,
+      "onceki_1ay_getiri": 25.81,
+      "onceki_3ay_getiri": 20.81,
+      "trend_yonu": "yatay",
+      "hacim_orani_5g_60g": 1.48,
+      "atr_yuzde": 3.6,
+      "yillik_volatilite": 41.8,
+      "piyasa_rejim_puani": 74.0,
+      "piyasa_rejim_durumu": "RİSK AÇIK — Boğa ortamı"
+    },
+    "kayit_zamani": "2026-09-09T13:34:18"
   }
 ]
