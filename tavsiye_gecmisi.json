@@ -90421,5 +90421,64 @@
       "piyasa_rejim_durumu": "RİSK AÇIK — Boğa ortamı"
     },
     "kayit_zamani": "2026-09-09T07:56:12"
+  },
+  {
+    "tarih": "2026-09-09",
+    "kaynak": "One Cikan Hisseler",
+    "sembol": "VBTYZ",
+    "sinyal": "🟢 AL",
+    "puan": 81.7,
+    "kayit_anindaki_fiyat": 38.42,
+    "ek": {
+      "kisa": 68,
+      "orta": 94,
+      "uzun": 60,
+      "takas": 71,
+      "snapshot_durumu": "tam",
+      "rsi14": 61.2,
+      "macd_hist": 0.024,
+      "ma20_uzaklik_yuzde": 7.23,
+      "ma50_uzaklik_yuzde": 18.1,
+      "ma200_uzaklik_yuzde": 59.96,
+      "zirve52_uzaklik_yuzde": -2.98,
+      "onceki_1ay_getiri": 26.63,
+      "onceki_3ay_getiri": 19.99,
+      "trend_yonu": "yukselis",
+      "hacim_orani_5g_60g": 0.51,
+      "atr_yuzde": 5.05,
+      "yillik_volatilite": 53.9,
+      "piyasa_rejim_puani": 74.0,
+      "piyasa_rejim_durumu": "RİSK AÇIK — Boğa ortamı"
+    },
+    "kayit_zamani": "2026-09-09T08:43:08"
+  },
+  {
+    "tarih": "2026-09-09",
+    "kaynak": "Vade: Kisa (~2 hafta)",
+    "sembol": "VBTYZ",
+    "sinyal": "🟢 AL",
+    "puan": 68,
+    "kayit_anindaki_fiyat": 38.42,
+    "ek": {
+      "genel_puan": 81.7,
+      "bir_ay": 26.6,
+      "uc_ay": 31.7,
+      "snapshot_durumu": "tam",
+      "rsi14": 61.2,
+      "macd_hist": 0.024,
+      "ma20_uzaklik_yuzde": 7.23,
+      "ma50_uzaklik_yuzde": 18.1,
+      "ma200_uzaklik_yuzde": 59.96,
+      "zirve52_uzaklik_yuzde": -2.98,
+      "onceki_1ay_getiri": 26.63,
+      "onceki_3ay_getiri": 19.99,
+      "trend_yonu": "yukselis",
+      "hacim_orani_5g_60g": 0.51,
+      "atr_yuzde": 5.05,
+      "yillik_volatilite": 53.9,
+      "piyasa_rejim_puani": 74.0,
+      "piyasa_rejim_durumu": "RİSK AÇIK — Boğa ortamı"
+    },
+    "kayit_zamani": "2026-09-09T08:43:09"
   }
 ]
