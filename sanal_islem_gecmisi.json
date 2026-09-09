@@ -152,5 +152,29 @@
     "komisyon": 235.59,
     "puan": 53.6,
     "gerekce": "birikim skoru en yüksek adaylardan (CMF +0.402, MA200 üstünde, Puan 54)"
+  },
+  {
+    "tarih": "2026-09-09",
+    "sembol": "MARTI",
+    "yon": "SAT",
+    "adet": 73972.2377,
+    "fiyat": 2.15,
+    "tutar": 159040.31,
+    "komisyon": 238.56,
+    "puan": 61.6,
+    "tutma_gunu": 6,
+    "gerekce": "takas: KZGYO birikim skoru +0.406, bu pozisyonunki +0.297 (marj: 0.10)",
+    "getiri_yuzde": 1.42
+  },
+  {
+    "tarih": "2026-09-09",
+    "sembol": "KZGYO",
+    "yon": "AL",
+    "adet": 5486.628,
+    "fiyat": 28.9,
+    "tutar": 158801.75,
+    "komisyon": 238.2,
+    "puan": 62.5,
+    "gerekce": "birikim skoru en yüksek adaylardan (CMF +0.406, MA200 üstünde, Puan 62)"
   }
 ]

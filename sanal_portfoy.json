@@ -9,23 +9,23 @@
       "adet": 1093.647316538883,
       "maliyet": 182.6,
       "eklenme_tarihi": "2026-08-28T11:25:31.617969",
-      "son_fiyat": 221.1999969482422,
-      "en_yuksek": 221.2
+      "son_fiyat": 222.10000610351562,
+      "en_yuksek": 222.1
     },
     {
       "sembol": "SELEC",
       "adet": 605.1515151515151,
       "maliyet": 330.0,
       "eklenme_tarihi": "2026-08-28T11:25:31.617995",
-      "son_fiyat": 376.75,
-      "en_yuksek": 376.75
+      "son_fiyat": 378.75,
+      "en_yuksek": 378.75
     },
     {
       "sembol": "ETYAT",
       "adet": 10894.120790647039,
       "maliyet": 15.26,
       "eklenme_tarihi": "2026-09-01T11:53:00.577154",
-      "son_fiyat": 15.239999771118164,
+      "son_fiyat": 14.9399995803833,
       "en_yuksek": 16.21
     },
     {
@@ -33,16 +33,16 @@
       "adet": 52114.19538096358,
       "maliyet": 3.19,
       "eklenme_tarihi": "2026-09-01T11:53:00.577173",
-      "son_fiyat": 3.3499999046325684,
-      "en_yuksek": 3.35
+      "son_fiyat": 3.359999895095825,
+      "en_yuksek": 3.36
     },
     {
-      "sembol": "MARTI",
-      "adet": 73972.23769669519,
-      "maliyet": 2.12,
-      "eklenme_tarihi": "2026-09-03T10:31:25.474305",
-      "son_fiyat": 2.1500000953674316,
-      "en_yuksek": 2.28
+      "sembol": "KZGYO",
+      "adet": 5486.627956936015,
+      "maliyet": 28.9,
+      "eklenme_tarihi": "2026-09-09T10:37:40.030395",
+      "son_fiyat": 28.9,
+      "en_yuksek": 28.9
     }
   ],
   "son_rebalans_tarihi": "2026-09-09",
