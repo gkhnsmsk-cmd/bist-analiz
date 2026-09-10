@@ -136,6 +136,21 @@ def _calistir_ic(veriler: dict, endeks_df: pd.DataFrame, baslangic: str, bitis: 
     rebalans_sayisi = 0
     efektif_hedef_oran = 0.0
     toplam_gun = len(takvim)
+    # KRİTİK MUHASEBE DÜZELTMESİ: `takvim` XU100.IS endeksinin tarih index'inden
+    # türetiliyor; ama TEK TEK hisselerin DataFrame'i (ayrı ayrı indirilen/
+    # önbelleklenen) o GÜN İÇİN bir satıra sahip olmayabilir (tatil öncesi
+    # yarım seans, o hisseye özel veri gecikmesi/eksikliği, yfinance toplu
+    # indirmenin "sessizce bazı sembolleri atlaması" — bkz. veri.py
+    # _TOPLU_BOYUT notu). Bu satır önceden mark-to-market toplamından
+    # SESSİZCE düşürülüyordu (bkz. aşağıdaki eski kod), bu da elde tutulan
+    # bir pozisyonu o GÜN İÇİN "değeri 0'mış gibi" saymak anlamına geliyordu
+    # — ertesi gün veri geri gelince özsermaye birebir eski seviyesine
+    # sıçrıyor. Bu, sahte (gerçek olmayan) tek-günlük çöküş+tam-toparlanma
+    # döngüleri üretip maksimum düşüş metriğini anlamsızlaştırıyordu (bkz.
+    # 2024-04-09 ve 2026-09-07 örnekleri). Düzeltme: veri eksik olan bir gün
+    # için pozisyon SON BİLİNEN kapanış fiyatıyla değerlenir (forward-fill),
+    # asla sıfırlanmaz.
+    son_fiyat_satiri: dict[str, pd.Series] = {}
 
     for idx, T in enumerate(takvim):
         # ── 1) Dünün (T-1 kapanışında karara bağlanan) emirlerini bugünün
@@ -248,16 +263,39 @@ def _calistir_ic(veriler: dict, endeks_df: pd.DataFrame, baslangic: str, bitis: 
             efektif_hedef_oran = hedef_ham  # düşerken ANINDA (§7)
 
         # ── 3) Günlük mark-to-market. ──
+        # ÖNEMLİ: bir hissenin bugünkü satırı eksikse pozisyon mark-to-market
+        # toplamından DÜŞÜRÜLMEZ (bu, değerini sessizce 0 saymakla eşdeğerdi
+        # ve sahte tek-günlük çöküş+toparlanma döngüleri üretiyordu — bkz.
+        # yukarıdaki KRİTİK MUHASEBE DÜZELTMESİ notu). Bunun yerine son
+        # bilinen kapanışla (forward-fill) değerlenir; hiç fiyat geçmişi
+        # yoksa (teorik olarak olmamalı, pozisyon zaten bir açılış fiyatıyla
+        # kurulmuş olmalı) yine de dışarıda bırakılır.
         fiyatlar_bugun: dict[str, pd.Series] = {}
         for p in acik_pozisyonlar:
-            df = veriler.get(p["sembol"])
+            sembol = p["sembol"]
+            df = veriler.get(sembol)
             if df is not None and T in df.index:
-                fiyatlar_bugun[p["sembol"]] = df.loc[T]
+                satir = df.loc[T]
+                fiyatlar_bugun[sembol] = satir
+                son_fiyat_satiri[sembol] = satir
+            elif sembol in son_fiyat_satiri:
+                fiyatlar_bugun[sembol] = son_fiyat_satiri[sembol]
         yatirim_deger = sum(
             float(fiyatlar_bugun[p["sembol"]]["Close"]) * p["adet"]
             for p in acik_pozisyonlar if p["sembol"] in fiyatlar_bugun
         )
         guncel_ozsermaye = cash + yatirim_deger
+
+        # ── GÜVENLİK KONTROLÜ: nakit özsermayenin %1'inden fazla negatife
+        #    düşerse (kaldıraç sızıntısı / emir doldurma hatası) backtest
+        #    SESSİZCE yanlış sonuç üretmek yerine ÇÖKER. ──
+        if cash < -0.01 * guncel_ozsermaye:
+            raise RuntimeError(
+                f"[v3_backtest] KALDIRAÇ SIZINTISI: {T.date()} günü nakit "
+                f"({cash:,.2f} TL) özsermayenin (%{guncel_ozsermaye:,.2f} TL) "
+                f"%1'inden fazla negatif. Emir doldurma/nakit muhasebesinde "
+                f"bir hata var — backtest durduruldu (bkz. STRATEJI_V3.md §8)."
+            )
 
         # ── 4) Günlük kontrol — YALNIZ felaket stopu + rejim çıkışı (§6). ──
         bugun_ctx = {"fiyatlar": fiyatlar_bugun, "ozsermaye": guncel_ozsermaye}
@@ -319,8 +357,13 @@ def _calistir_ic(veriler: dict, endeks_df: pd.DataFrame, baslangic: str, bitis: 
                 })
 
         # ── 6) Günlük özsermaye kaydı (mark-to-market, bugünün exitleri
-        #        sonrası, YARININ emirleri HARİÇ). ──
-        ozsermaye_egrisi.append({"tarih": T, "ozsermaye": guncel_ozsermaye})
+        #        sonrası, YARININ emirleri HARİÇ). `nakit`/`pozisyon_deger`
+        #        teşhis amaçlı ayrıca tutulur (bkz. cash < 0 / mark-to-market
+        #        anomalilerini ileride erken yakalamak için). ──
+        ozsermaye_egrisi.append({
+            "tarih": T, "ozsermaye": guncel_ozsermaye,
+            "nakit": cash, "pozisyon_deger": yatirim_deger,
+        })
 
         if T in izleme_tarihleri:
             pozisyon_izleme[T] = [dict(p) for p in acik_pozisyonlar]
