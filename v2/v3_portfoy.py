@@ -140,8 +140,20 @@ def _agirlik_kliple(ham_agirliklar: dict[str, float], taban: float, tavan: float
 
 def hedef_portfoy(siralama: list[dict], veriler: dict, tarih,
                    ozsermaye: float, hedef_oran: float,
-                   mevcut: list[dict]) -> dict:
+                   mevcut: list[dict],
+                   maks_pozisyon: int | None = None,
+                   ilk_n_tampon: int | None = None,
+                   agirlik_tabani: float | None = None,
+                   agirlik_tavani: float | None = None,
+                   maks_sektor: int | None = None) -> dict:
     """§5-§6: rebalans gününde hedef portföyü kurar.
+
+    DENEY PARAMETRELERİ (maks_pozisyon / ilk_n_tampon / agirlik_tabani /
+    agirlik_tavani / maks_sektor): hepsi VARSAYILAN OLARAK None'dır ve None
+    iken bu modülün §5 sabitleri (_MAKS_POZISYON=10, _ILK_N_TAMPON=20,
+    %5-%15 bandı, sektör başına 3) BİREBİR kullanılır — yani mevcut V3
+    davranışı hiç değişmez. Bunlar yalnız deney_lab.py'nin "N pozisyon"
+    varyantları için vardır (bkz. v3_backtest._calistir_ic).
 
     siralama: v3_skor.skorla() çıktısı (skora göre azalan, 'uygun' bayraklı).
     veriler: {sembol: DataFrame} — veri.gostergeler() uygulanmış.
@@ -160,8 +172,16 @@ def hedef_portfoy(siralama: list[dict], veriler: dict, tarih,
     """
     tarih = pd.Timestamp(tarih)
     mevcut = mevcut or []
+
+    # Deney parametreleri — None ise §5 sabitleri aynen geçerli.
+    maks_poz = _MAKS_POZISYON if maks_pozisyon is None else max(1, int(maks_pozisyon))
+    ilk_n_sayi = _ILK_N_TAMPON if ilk_n_tampon is None else max(maks_poz, int(ilk_n_tampon))
+    taban = _AGIRLIK_TABANI if agirlik_tabani is None else float(agirlik_tabani)
+    tavan = _AGIRLIK_TAVANI if agirlik_tavani is None else float(agirlik_tavani)
+    sektor_tavani = _MAKS_SEKTOR if maks_sektor is None else max(1, int(maks_sektor))
+
     siralama_sirali = sorted(siralama or [], key=lambda s: s["skor"], reverse=True)
-    ilk_n = {s["sembol"] for s in siralama_sirali[:_ILK_N_TAMPON]}
+    ilk_n = {s["sembol"] for s in siralama_sirali[:ilk_n_sayi]}
     skor_haritasi = {s["sembol"]: s for s in siralama_sirali}
 
     # ── 1) Mevcut pozisyonlardan SATILACAKLARI belirle. ────────────────
@@ -186,13 +206,13 @@ def hedef_portfoy(siralama: list[dict], veriler: dict, tarih,
             satilacak.append({"sembol": sembol, "neden": "Kapanış < MA200 (trend kaybı)."})
         elif disarida:
             satilacak.append({"sembol": sembol,
-                               "neden": f"Skor sıralamasında ilk {_ILK_N_TAMPON}'nin dışına düştü."})
+                               "neden": f"Skor sıralamasında ilk {ilk_n_sayi}'nin dışına düştü."})
         else:
             tutulanlar.append(sembol)
 
     # ── 2) Boşalan yerleri, uygunluk filtresini geçen en yüksek skorlulardan
     #        (sektör kısıtına uyarak) doldur. ────────────────────────────
-    bos_sayisi = max(0, _MAKS_POZISYON - len(tutulanlar))
+    bos_sayisi = max(0, maks_poz - len(tutulanlar))
     sektor_sayaci: dict[str, int] = {}
     for sembol in tutulanlar:
         sektor = _sektor_bul(sembol)
@@ -210,7 +230,7 @@ def hedef_portfoy(siralama: list[dict], veriler: dict, tarih,
             if sembol in tutulan_kume:
                 continue
             sektor = _sektor_bul(sembol)
-            if sektor_sayaci.get(sektor, 0) >= _MAKS_SEKTOR:
+            if sektor_sayaci.get(sektor, 0) >= sektor_tavani:
                 continue
             alinacak.append(sembol)
             sektor_sayaci[sektor] = sektor_sayaci.get(sektor, 0) + 1
@@ -232,7 +252,7 @@ def hedef_portfoy(siralama: list[dict], veriler: dict, tarih,
             continue
         ham_agirlik[sembol] = 1.0 / atr_oran
 
-    klip_agirlik = _agirlik_kliple(ham_agirlik, _AGIRLIK_TABANI, _AGIRLIK_TAVANI)
+    klip_agirlik = _agirlik_kliple(ham_agirlik, taban, tavan)
 
     # ── 4) §4 madde-4 likidite kontrolü — NİHAİ/OTORİTER kontrol burada,
     #        GERÇEK ağırlık ve GERÇEK özsermaye ile (v3_skor'daki yalnız
