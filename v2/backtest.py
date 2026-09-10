@@ -421,11 +421,14 @@ def _metrikleri_hesapla(islemler: list[dict], ozsermaye_egrisi: list[dict],
         gun_araligi = (seri.index[-1] - seri.index[0]).days
         yil = max(gun_araligi / 365.25, 1e-9)
         cagr = float((seri.iloc[-1] / seri.iloc[0]) ** (1.0 / yil) - 1.0) if seri.iloc[0] > 0 else float("nan")
-        # Ay sonu değerleri üzerinden aylık getiri tablosu. "M" pandas'ın
-        # eski sürümlerinde de çalışan, deprecate edilse dahi işlevsel
-        # kalan bir frekans kodu — CI ortamında pandas sürümü garanti
-        # edilemediği için "ME" yerine bu tercih edildi.
-        aylik = seri.resample("M").last()
+        # Ay sonu değerleri üzerinden aylık getiri tablosu.
+        # NEDEN İKİ DENEME: pandas 2.2+ "M" takma adını KALDIRDI (ValueError
+        # fırlatıyor — Actions run #1 tam olarak burada patladı), 2.2 öncesi
+        # ise "ME"yi tanımıyor. Sürümü varsaymak yerine ikisini de deniyoruz.
+        try:
+            aylik = seri.resample("ME").last()
+        except ValueError:
+            aylik = seri.resample("M").last()
         aylik_getiri = aylik.pct_change().dropna()
         aylik_getiri_tablosu = {d.strftime("%Y-%m"): float(v) for d, v in aylik_getiri.items()}
     else:
