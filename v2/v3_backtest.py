@@ -67,6 +67,18 @@ _YIL_ISLEM_GUNU = 252
 _TURNOVER_ESIGI_YILLIK = 6.00   # §9: yıllık turnover <= %600
 _MIN_REBALANS_SAYISI = 24        # §9
 
+# ── DENEY DESTEĞİ (deney_lab.py) — v3_portfoy.py'nin §5 sabitlerinin AYNISI.
+# `pozisyon_sayisi` parametresi verilmediğinde bunların HİÇBİRİ kullanılmaz
+# (v3_portfoy kendi sabitlerini kullanır), yani mevcut V3 davranışı birebir
+# korunur. Verildiğinde ise portföy geometrisi pozisyon sayısıyla ORANTILI
+# olarak ölçeklenir: N=10 için hesaplanan değerler §5 sabitleriyle AYNIDIR
+# (tampon 20, band %5-%15, sektör 3, tolerans %5) — yani ölçekleme mevcut
+# tasarımın genelleştirilmesidir, farklı bir tasarım değil.
+_TEMEL_POZISYON_SAYISI = 10
+_TEMEL_AGIRLIK_TABANI = 0.05
+_TEMEL_AGIRLIK_TAVANI = 0.15
+_TEMEL_MAKS_SEKTOR = 3
+
 
 def _komisyon_kayma_orani(hacim_tl_medyan) -> float:
     """§8: komisyon + kayma (tek yön), likiditeye göre kayma oranı değişir."""
@@ -106,7 +118,10 @@ def _pozisyon_bul(acik_pozisyonlar: list[dict], sembol: str) -> dict | None:
 # ─────────────────────────────────────────────────────────────────────────
 def _calistir_ic(veriler: dict, endeks_df: pd.DataFrame, baslangic: str, bitis: str,
                   ozsermaye: float = 1_000_000.0, ilerleme: bool = True,
-                  izleme_tarihleri: set | None = None) -> dict:
+                  izleme_tarihleri: set | None = None,
+                  rejim_kapisi_aktif: bool = True,
+                  rebalans_gun: int | None = None,
+                  pozisyon_sayisi: int | None = None) -> dict:
     """izleme_tarihleri: YALNIZ self-test için — verilen tarihlerde açık
     pozisyonların anlık (o günkü) kopyasını `pozisyon_izleme` içine alır.
     Üretimde (calistir()/walk_forward()) KULLANILMAZ (None -> sıfır ek
@@ -114,11 +129,44 @@ def _calistir_ic(veriler: dict, endeks_df: pd.DataFrame, baslangic: str, bitis: 
     look-ahead testine dahil edilebilmesidir — `islemler` listesi yalnız
     KAPANAN işlemleri kaydeder, aylık rebalans + trend-takibi tarzı bir
     sistemde birçok pozisyon backtest boyunca hiç kapanmayabilir.
+
+    DENEY PARAMETRELERİ (deney_lab.py için; VARSAYILANLARI mevcut V3
+    davranışını BİREBİR korur — bu üçü dokunulmadığında tek bir satır kod
+    yolu bile değişmez):
+      rejim_kapisi_aktif=True : False ise rejim.rejim_hesapla() sonucu
+          KULLANILMAZ; her gün R1/%100 varsayılır (rejim kaynaklı R3/R4
+          çıkışları da devre dışı kalır). Felaket stopu ve hisse bazlı
+          "Kapanış < MA200 -> sat" kuralı AYNEN çalışmaya devam eder.
+      rebalans_gun=None       : None ise §6'daki 20 işlem günü.
+      pozisyon_sayisi=None    : None ise v3_portfoy'un §5 sabitleri (10
+          pozisyon). Bir sayı verilirse tampon/ağırlık bandı/sektör tavanı/
+          ağırlık toleransı bu sayıyla ORANTILI ölçeklenir.
     """
     baslangic_ts = pd.Timestamp(baslangic)
     bitis_ts = pd.Timestamp(bitis)
     izleme_tarihleri = izleme_tarihleri or set()
     pozisyon_izleme: dict = {}
+
+    # ── Deney parametrelerinin çözümlenmesi (varsayılanlar = mevcut V3). ──
+    rebalans_araligi = _REBALANS_ARALIGI if rebalans_gun is None else max(1, int(rebalans_gun))
+    if pozisyon_sayisi is None:
+        poz_maks = None
+        poz_ilk_n = None
+        poz_taban = None
+        poz_tavan = None
+        poz_sektor = None
+        agirlik_toleransi = _AGIRLIK_TOLERANSI
+    else:
+        poz_maks = max(1, int(pozisyon_sayisi))
+        olcek = _TEMEL_POZISYON_SAYISI / poz_maks
+        poz_ilk_n = 2 * poz_maks
+        poz_taban = _TEMEL_AGIRLIK_TABANI * olcek
+        poz_tavan = _TEMEL_AGIRLIK_TAVANI * olcek
+        poz_sektor = max(1, math.ceil(_TEMEL_MAKS_SEKTOR / olcek))
+        # ÖNEMLİ: tolerans da ölçeklenmeli. Aksi halde N=20'de hedef ağırlık
+        # (~%2.5) sabit %5'lik toleransın ALTINDA kalır ve motor HİÇBİR alım
+        # emri üretmez — deney sessizce "hep nakitte" bir sonuç verirdi.
+        agirlik_toleransi = _AGIRLIK_TOLERANSI * olcek
 
     takvim = endeks_df.loc[(endeks_df.index >= baslangic_ts) & (endeks_df.index <= bitis_ts)].index
     if len(takvim) == 0:
@@ -255,12 +303,27 @@ def _calistir_ic(veriler: dict, endeks_df: pd.DataFrame, baslangic: str, bitis: 
         pending_orders = []
 
         # ── 2) Rejim (§7) — bugünün kapanışına göre, look-ahead güvenli. ──
-        rejim_bugun = rejim.rejim_hesapla(endeks_df, veriler, T)
-        hedef_ham = rejim_bugun["hedef_oran"]
-        if hedef_ham > efektif_hedef_oran:
-            efektif_hedef_oran = min(hedef_ham, efektif_hedef_oran + _KADEMELI_ADIM)
+        if rejim_kapisi_aktif:
+            rejim_bugun = rejim.rejim_hesapla(endeks_df, veriler, T)
+            hedef_ham = rejim_bugun["hedef_oran"]
+            if hedef_ham > efektif_hedef_oran:
+                efektif_hedef_oran = min(hedef_ham, efektif_hedef_oran + _KADEMELI_ADIM)
+            else:
+                efektif_hedef_oran = hedef_ham  # düşerken ANINDA (§7)
         else:
-            efektif_hedef_oran = hedef_ham  # düşerken ANINDA (§7)
+            # DENEY: rejim kapısı KAPALI. rejim.rejim_hesapla() hiç çağrılmaz
+            # (hem hız hem de "rejimin hiçbir kanaldan sızmaması" için); her
+            # gün R1/%100 varsayılır, kademeleme de anlamsızlaştığı için
+            # doğrudan tam yatırım hedefi verilir. v3_portfoy.gunluk_kontrol
+            # bu sözlükte R1 gördüğü için R3/R4 çıkış dallarına HİÇ girmez —
+            # yani rejim kaynaklı satış da tamamen devre dışıdır.
+            rejim_bugun = {
+                "rejim": "R1",
+                "hedef_oran": 1.0,
+                "genislik": float("nan"),
+                "gerekce": "Rejim kapısı deney amaçlı KAPALI — her zaman tam yatırım.",
+            }
+            efektif_hedef_oran = 1.0
 
         # ── 3) Günlük mark-to-market. ──
         # ÖNEMLİ: bir hissenin bugünkü satırı eksikse pozisyon mark-to-market
@@ -306,7 +369,7 @@ def _calistir_ic(veriler: dict, endeks_df: pd.DataFrame, baslangic: str, bitis: 
             zaten_satilacak.add(k["sembol"])
 
         # ── 5) Rebalans günü mü (her 20 işlem günü)? ──
-        if idx % _REBALANS_ARALIGI == 0:
+        if idx % rebalans_araligi == 0:
             rebalans_sayisi += 1
             evren_guncel = evren.evren_olustur(veriler, T)
             siralama = v3_skor.skorla(veriler, evren_guncel, T)
@@ -317,6 +380,9 @@ def _calistir_ic(veriler: dict, endeks_df: pd.DataFrame, baslangic: str, bitis: 
             ]
             sonuc_portfoy = v3_portfoy.hedef_portfoy(
                 siralama, veriler, T, guncel_ozsermaye, efektif_hedef_oran, mevcut_liste,
+                maks_pozisyon=poz_maks, ilk_n_tampon=poz_ilk_n,
+                agirlik_tabani=poz_taban, agirlik_tavani=poz_tavan,
+                maks_sektor=poz_sektor,
             )
 
             for s in sonuc_portfoy["satilacak"]:
@@ -348,7 +414,7 @@ def _calistir_ic(veriler: dict, endeks_df: pd.DataFrame, baslangic: str, bitis: 
                         float(fiyatlar_bugun[sembol]["Close"]) * mevcut_poz["adet"] / guncel_ozsermaye
                     )
                 # §6: sapma %5 puandan küçükse dokunulmaz (turnover azaltma).
-                if abs(hedef_agirlik - mevcut_agirlik) < _AGIRLIK_TOLERANSI:
+                if abs(hedef_agirlik - mevcut_agirlik) < agirlik_toleransi:
                     continue
                 pending_orders.append({
                     "tip": "hedef_ayarla", "sembol": sembol,
@@ -498,8 +564,16 @@ def _kabul_kriterlerini_kontrol(test_metrikleri: dict) -> dict:
     return {"gecti": len(basarisiz) == 0, "basarisiz_kriterler": basarisiz}
 
 
-def calistir(baslangic: str, bitis: str, ozsermaye: float = 1_000_000.0) -> dict:
+def calistir(baslangic: str, bitis: str, ozsermaye: float = 1_000_000.0,
+             rejim_kapisi_aktif: bool = True,
+             rebalans_gun: int | None = None,
+             pozisyon_sayisi: int | None = None) -> dict:
     """§11 imzası. Veriyi indirir/hazırlar, ardından _calistir_ic ile simüle eder.
+
+    Son üç parametre YALNIZ deney_lab.py içindir; varsayılanları (True/None/
+    None) mevcut V3 davranışını BİREBİR korur — calistir_v3.py ve
+    walk_forward() bunları hiç vermez, dolayısıyla etkilenmez. Ayrıntı için
+    bkz. _calistir_ic docstring'i.
 
     Döner: {'islemler': [...], 'ozsermaye_egrisi': [...], 'metrikler': {...}}
     """
@@ -529,7 +603,12 @@ def calistir(baslangic: str, bitis: str, ozsermaye: float = 1_000_000.0) -> dict
         veriler[sembol] = veri.gostergeler(df)
     print(f"[v3_backtest] {len(veriler)}/{len(evren.TEMEL_SEMBOLLER)} sembol için veri hazır.")
 
-    return _calistir_ic(veriler, endeks_df, baslangic, bitis, ozsermaye)
+    return _calistir_ic(
+        veriler, endeks_df, baslangic, bitis, ozsermaye,
+        rejim_kapisi_aktif=rejim_kapisi_aktif,
+        rebalans_gun=rebalans_gun,
+        pozisyon_sayisi=pozisyon_sayisi,
+    )
 
 
 def al_tut_kiyas(endeks_df: pd.DataFrame, baslangic: str, bitis: str, ozsermaye: float) -> dict:
