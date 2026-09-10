@@ -1,6 +1,6 @@
 # PUSULA V3 — Göreli Güç Rotasyonu — Walk-Forward Backtest Sonucu
 
-Çalıştırma: 10.09.2026 09:12 UTC · Başlangıç özsermayesi: 1,000,000 TL
+Çalıştırma: 10.09.2026 14:11 UTC · Başlangıç özsermayesi: 1,000,000 TL
 
 ---
 
@@ -14,25 +14,25 @@
 
 | Metrik | V3 (bu sistem) | BIST100 al-ve-tut | V2 (eski, referans) |
 |---|---|---|---|
-| **CAGR** | **%-2.32** | %27.02 | — |
-| **Maksimum düşüş** | **%-94.9** | %-22.8 | %-30.9 |
-| İşlem sayısı | 102 | — (tek alım) | — |
-| Kazanma oranı | %35.3 | — | — |
+| **CAGR** | **%-1.46** | %27.02 | — |
+| **Maksimum düşüş** | **%-33.6** | %-22.8 | %-30.9 |
+| İşlem sayısı | 101 | — (tek alım) | — |
+| Kazanma oranı | %33.7 | — | — |
 | Profit factor | 0.84 | — | 0.99 |
 | Rebalans sayısı | 34 | — | — |
-| Yıllık turnover | %693 | — | — |
+| Yıllık turnover | %694 | — | — |
 
 ### Geliştirme dönemi (2019-01-01 → 2023-12-31) — yalnız kıyas amaçlı
 
 | Metrik | V3 (bu sistem) | BIST100 al-ve-tut | V2 (eski, referans) |
 |---|---|---|---|
-| **CAGR** | **%34.49** | %53.22 | %17.00 |
-| **Maksimum düşüş** | **%-29.9** | %-31.8 | %-25.9 |
-| İşlem sayısı | 209 | — (tek alım) | — |
-| Kazanma oranı | %45.5 | — | — |
-| Profit factor | 2.32 | — | 1.80 |
+| **CAGR** | **%34.13** | %53.22 | %17.00 |
+| **Maksimum düşüş** | **%-30.4** | %-31.8 | %-25.9 |
+| İşlem sayısı | 208 | — (tek alım) | — |
+| Kazanma oranı | %45.7 | — | — |
+| Profit factor | 2.37 | — | 1.80 |
 | Rebalans sayısı | 63 | — | — |
-| Yıllık turnover | %787 | — | — |
+| Yıllık turnover | %785 | — | — |
 
 ---
 

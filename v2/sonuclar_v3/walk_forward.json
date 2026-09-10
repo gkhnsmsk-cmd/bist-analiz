@@ -1,29 +1,29 @@
 {
- "calistirma_zamani_utc": "2026-09-10T09:12:22.060214+00:00",
+ "calistirma_zamani_utc": "2026-09-10T14:11:07.056804+00:00",
  "ozsermaye": 1000000.0,
  "dogrulama": {
   "gecti": false,
   "basarisiz_kriterler": [
-   "CAGR endeksi geçemedi (fark: %-29.38 puan) — eşik: >0",
-   "Maksimum düşüş endeksten kötü (V3 %94.9 > endeks %22.8)",
-   "Yıllık turnover %693 — eşik: <=%600"
+   "CAGR endeksi geçemedi (fark: %-28.52 puan) — eşik: >0",
+   "Maksimum düşüş endeksten kötü (V3 %33.6 > endeks %22.8)",
+   "Yıllık turnover %694 — eşik: <=%600"
   ]
  },
  "test_v3_metrikleri": {
-  "islem_sayisi": 102,
-  "kazanma_orani": 0.352941,
-  "profit_factor": 0.837326,
-  "maksimum_dusus_%": -0.948554,
-  "cagr": -0.023188,
+  "islem_sayisi": 101,
+  "kazanma_orani": 0.336634,
+  "profit_factor": 0.835316,
+  "maksimum_dusus_%": -0.336169,
+  "cagr": -0.014607,
   "endeks_cagr": 0.270581,
-  "endeks_ustu_fark": -0.293769,
+  "endeks_ustu_fark": -0.285188,
   "en_kotu_islem": {
    "sembol": "CCOLA",
    "net_pnl_tl": -79344.796247,
    "cikis_nedeni": "felaket_stop"
   },
   "rebalans_sayisi": 34,
-  "yillik_turnover_%": 6.929177
+  "yillik_turnover_%": 6.942835
  },
  "test_al_tut_metrikleri": {
   "cagr": 0.270152,
@@ -32,20 +32,20 @@
   "giris_fiyati": 7542.299805
  },
  "gelistirme_v3_metrikleri": {
-  "islem_sayisi": 209,
-  "kazanma_orani": 0.454545,
-  "profit_factor": 2.321661,
-  "maksimum_dusus_%": -0.299301,
-  "cagr": 0.344853,
+  "islem_sayisi": 208,
+  "kazanma_orani": 0.456731,
+  "profit_factor": 2.372005,
+  "maksimum_dusus_%": -0.304309,
+  "cagr": 0.341252,
   "endeks_cagr": 0.532328,
-  "endeks_ustu_fark": -0.187474,
+  "endeks_ustu_fark": -0.191076,
   "en_kotu_islem": {
    "sembol": "TTRAK",
-   "net_pnl_tl": -117583.6475,
+   "net_pnl_tl": -115956.99625,
    "cikis_nedeni": "felaket_stop"
   },
   "rebalans_sayisi": 63,
-  "yillik_turnover_%": 7.868871
+  "yillik_turnover_%": 7.851219
  },
  "gelistirme_al_tut_metrikleri": {
   "cagr": 0.532245,
@@ -56,2683 +56,4023 @@
  "test_v3_ozsermaye_egrisi": [
   {
    "tarih": "2024-01-02T00:00:00",
-   "ozsermaye": 1000000.0
+   "ozsermaye": 1000000.0,
+   "nakit": 1000000.0,
+   "pozisyon_deger": 0
   },
   {
    "tarih": "2024-01-03T00:00:00",
-   "ozsermaye": 1000000.0
+   "ozsermaye": 1000000.0,
+   "nakit": 1000000.0,
+   "pozisyon_deger": 0
   },
   {
    "tarih": "2024-01-04T00:00:00",
-   "ozsermaye": 1000000.0
+   "ozsermaye": 1000000.0,
+   "nakit": 1000000.0,
+   "pozisyon_deger": 0
   },
   {
    "tarih": "2024-01-05T00:00:00",
-   "ozsermaye": 1000000.0
+   "ozsermaye": 1000000.0,
+   "nakit": 1000000.0,
+   "pozisyon_deger": 0
   },
   {
    "tarih": "2024-01-08T00:00:00",
-   "ozsermaye": 1000000.0
+   "ozsermaye": 1000000.0,
+   "nakit": 1000000.0,
+   "pozisyon_deger": 0
   },
   {
    "tarih": "2024-01-09T00:00:00",
-   "ozsermaye": 1000000.0
+   "ozsermaye": 1000000.0,
+   "nakit": 1000000.0,
+   "pozisyon_deger": 0
   },
   {
    "tarih": "2024-01-10T00:00:00",
-   "ozsermaye": 1000000.0
+   "ozsermaye": 1000000.0,
+   "nakit": 1000000.0,
+   "pozisyon_deger": 0
   },
   {
    "tarih": "2024-01-11T00:00:00",
-   "ozsermaye": 1000000.0
+   "ozsermaye": 1000000.0,
+   "nakit": 1000000.0,
+   "pozisyon_deger": 0
   },
   {
    "tarih": "2024-01-12T00:00:00",
-   "ozsermaye": 1000000.0
+   "ozsermaye": 1000000.0,
+   "nakit": 1000000.0,
+   "pozisyon_deger": 0
   },
   {
    "tarih": "2024-01-15T00:00:00",
-   "ozsermaye": 1000000.0
+   "ozsermaye": 1000000.0,
+   "nakit": 1000000.0,
+   "pozisyon_deger": 0
   },
   {
    "tarih": "2024-01-16T00:00:00",
-   "ozsermaye": 1000000.0
+   "ozsermaye": 1000000.0,
+   "nakit": 1000000.0,
+   "pozisyon_deger": 0
   },
   {
    "tarih": "2024-01-17T00:00:00",
-   "ozsermaye": 1000000.0
+   "ozsermaye": 1000000.0,
+   "nakit": 1000000.0,
+   "pozisyon_deger": 0
   },
   {
    "tarih": "2024-01-18T00:00:00",
-   "ozsermaye": 1000000.0
+   "ozsermaye": 1000000.0,
+   "nakit": 1000000.0,
+   "pozisyon_deger": 0
   },
   {
    "tarih": "2024-01-19T00:00:00",
-   "ozsermaye": 1000000.0
+   "ozsermaye": 1000000.0,
+   "nakit": 1000000.0,
+   "pozisyon_deger": 0
   },
   {
    "tarih": "2024-01-22T00:00:00",
-   "ozsermaye": 1000000.0
+   "ozsermaye": 1000000.0,
+   "nakit": 1000000.0,
+   "pozisyon_deger": 0
   },
   {
    "tarih": "2024-01-23T00:00:00",
-   "ozsermaye": 1000000.0
+   "ozsermaye": 1000000.0,
+   "nakit": 1000000.0,
+   "pozisyon_deger": 0
   },
   {
    "tarih": "2024-01-24T00:00:00",
-   "ozsermaye": 1000000.0
+   "ozsermaye": 1000000.0,
+   "nakit": 1000000.0,
+   "pozisyon_deger": 0
   },
   {
    "tarih": "2024-01-25T00:00:00",
-   "ozsermaye": 1000000.0
+   "ozsermaye": 1000000.0,
+   "nakit": 1000000.0,
+   "pozisyon_deger": 0
   },
   {
    "tarih": "2024-01-26T00:00:00",
-   "ozsermaye": 1000000.0
+   "ozsermaye": 1000000.0,
+   "nakit": 1000000.0,
+   "pozisyon_deger": 0
   },
   {
    "tarih": "2024-01-29T00:00:00",
-   "ozsermaye": 1000000.0
+   "ozsermaye": 1000000.0,
+   "nakit": 1000000.0,
+   "pozisyon_deger": 0
   },
   {
    "tarih": "2024-01-30T00:00:00",
-   "ozsermaye": 1000000.0
+   "ozsermaye": 1000000.0,
+   "nakit": 1000000.0,
+   "pozisyon_deger": 0
   },
   {
    "tarih": "2024-01-31T00:00:00",
-   "ozsermaye": 996757.330763
+   "ozsermaye": 996757.330763,
+   "nakit": 1032.048286,
+   "pozisyon_deger": 995725.282478
   },
   {
    "tarih": "2024-02-01T00:00:00",
-   "ozsermaye": 1023644.894232
+   "ozsermaye": 1023644.894232,
+   "nakit": 1032.048286,
+   "pozisyon_deger": 1022612.845947
   },
   {
    "tarih": "2024-02-02T00:00:00",
-   "ozsermaye": 1021549.138094
+   "ozsermaye": 1021549.138094,
+   "nakit": 1032.048286,
+   "pozisyon_deger": 1020517.089808
   },
   {
    "tarih": "2024-02-05T00:00:00",
-   "ozsermaye": 1050915.410337
+   "ozsermaye": 1050915.410337,
+   "nakit": 1032.048286,
+   "pozisyon_deger": 1049883.362051
   },
   {
    "tarih": "2024-02-06T00:00:00",
-   "ozsermaye": 1058566.149826
+   "ozsermaye": 1058566.149826,
+   "nakit": 1032.048286,
+   "pozisyon_deger": 1057534.10154
   },
   {
    "tarih": "2024-02-07T00:00:00",
-   "ozsermaye": 1048076.559309
+   "ozsermaye": 1048076.559309,
+   "nakit": 1032.048286,
+   "pozisyon_deger": 1047044.511023
   },
   {
    "tarih": "2024-02-08T00:00:00",
-   "ozsermaye": 1061752.8473
+   "ozsermaye": 1061752.8473,
+   "nakit": 1032.048286,
+   "pozisyon_deger": 1060720.799014
   },
   {
    "tarih": "2024-02-09T00:00:00",
-   "ozsermaye": 1067773.401906
+   "ozsermaye": 1067773.401906,
+   "nakit": 1032.048286,
+   "pozisyon_deger": 1066741.35362
   },
   {
    "tarih": "2024-02-12T00:00:00",
-   "ozsermaye": 1072768.019474
+   "ozsermaye": 1072768.019474,
+   "nakit": 1032.048286,
+   "pozisyon_deger": 1071735.971188
   },
   {
    "tarih": "2024-02-13T00:00:00",
-   "ozsermaye": 1064948.341285
+   "ozsermaye": 1064948.341285,
+   "nakit": 1032.048286,
+   "pozisyon_deger": 1063916.292999
   },
   {
    "tarih": "2024-02-14T00:00:00",
-   "ozsermaye": 1070898.65184
+   "ozsermaye": 1070898.65184,
+   "nakit": 1032.048286,
+   "pozisyon_deger": 1069866.603554
   },
   {
    "tarih": "2024-02-15T00:00:00",
-   "ozsermaye": 1092808.248069
+   "ozsermaye": 1092808.248069,
+   "nakit": 1032.048286,
+   "pozisyon_deger": 1091776.199783
   },
   {
    "tarih": "2024-02-16T00:00:00",
-   "ozsermaye": 1091690.857021
+   "ozsermaye": 1091690.857021,
+   "nakit": 1032.048286,
+   "pozisyon_deger": 1090658.808735
   },
   {
    "tarih": "2024-02-19T00:00:00",
-   "ozsermaye": 1086795.750568
+   "ozsermaye": 1086795.750568,
+   "nakit": 1032.048286,
+   "pozisyon_deger": 1085763.702282
   },
   {
    "tarih": "2024-02-20T00:00:00",
-   "ozsermaye": 1089444.219331
+   "ozsermaye": 1089444.219331,
+   "nakit": 1032.048286,
+   "pozisyon_deger": 1088412.171046
   },
   {
    "tarih": "2024-02-21T00:00:00",
-   "ozsermaye": 1088576.756952
+   "ozsermaye": 1088576.756952,
+   "nakit": 1032.048286,
+   "pozisyon_deger": 1087544.708666
   },
   {
    "tarih": "2024-02-22T00:00:00",
-   "ozsermaye": 1081666.468231
+   "ozsermaye": 1081666.468231,
+   "nakit": 1032.048286,
+   "pozisyon_deger": 1080634.419946
   },
   {
    "tarih": "2024-02-23T00:00:00",
-   "ozsermaye": 1080185.072488
+   "ozsermaye": 1080185.072488,
+   "nakit": 1032.048286,
+   "pozisyon_deger": 1079153.024202
   },
   {
    "tarih": "2024-02-26T00:00:00",
-   "ozsermaye": 1078425.765991
+   "ozsermaye": 1078425.765991,
+   "nakit": 1032.048286,
+   "pozisyon_deger": 1077393.717705
   },
   {
    "tarih": "2024-02-27T00:00:00",
-   "ozsermaye": 1052434.3516
+   "ozsermaye": 1052434.3516,
+   "nakit": 1032.048286,
+   "pozisyon_deger": 1051402.303315
   },
   {
    "tarih": "2024-02-28T00:00:00",
-   "ozsermaye": 1043463.936336
+   "ozsermaye": 1043463.936336,
+   "nakit": 32365.546299,
+   "pozisyon_deger": 1011098.390037
   },
   {
    "tarih": "2024-02-29T00:00:00",
-   "ozsermaye": 1072091.062922
+   "ozsermaye": 1072091.062922,
+   "nakit": 32365.546299,
+   "pozisyon_deger": 1039725.516623
   },
   {
    "tarih": "2024-03-01T00:00:00",
-   "ozsermaye": 1059693.200913
+   "ozsermaye": 1059693.200913,
+   "nakit": 32365.546299,
+   "pozisyon_deger": 1027327.654614
   },
   {
    "tarih": "2024-03-04T00:00:00",
-   "ozsermaye": 1037715.744327
+   "ozsermaye": 1037715.744327,
+   "nakit": 32365.546299,
+   "pozisyon_deger": 1005350.198028
   },
   {
    "tarih": "2024-03-05T00:00:00",
-   "ozsermaye": 1035632.52624
+   "ozsermaye": 1035632.52624,
+   "nakit": 32365.546299,
+   "pozisyon_deger": 1003266.979941
   },
   {
    "tarih": "2024-03-06T00:00:00",
-   "ozsermaye": 1017355.057273
+   "ozsermaye": 1017355.057273,
+   "nakit": 32365.546299,
+   "pozisyon_deger": 984989.510974
   },
   {
    "tarih": "2024-03-07T00:00:00",
-   "ozsermaye": 1047392.919939
+   "ozsermaye": 1047392.919939,
+   "nakit": 32365.546299,
+   "pozisyon_deger": 1015027.37364
   },
   {
    "tarih": "2024-03-08T00:00:00",
-   "ozsermaye": 1063778.492938
+   "ozsermaye": 1063778.492938,
+   "nakit": 32365.546299,
+   "pozisyon_deger": 1031412.946639
   },
   {
    "tarih": "2024-03-11T00:00:00",
-   "ozsermaye": 1063027.402057
+   "ozsermaye": 1063027.402057,
+   "nakit": 32365.546299,
+   "pozisyon_deger": 1030661.855758
   },
   {
    "tarih": "2024-03-12T00:00:00",
-   "ozsermaye": 1063381.269071
+   "ozsermaye": 1063381.269071,
+   "nakit": 32365.546299,
+   "pozisyon_deger": 1031015.722772
   },
   {
    "tarih": "2024-03-13T00:00:00",
-   "ozsermaye": 1051110.922542
+   "ozsermaye": 1051110.922542,
+   "nakit": 32365.546299,
+   "pozisyon_deger": 1018745.376243
   },
   {
    "tarih": "2024-03-14T00:00:00",
-   "ozsermaye": 1042879.47231
+   "ozsermaye": 1042879.47231,
+   "nakit": 32365.546299,
+   "pozisyon_deger": 1010513.926011
   },
   {
    "tarih": "2024-03-15T00:00:00",
-   "ozsermaye": 1030096.35977
+   "ozsermaye": 1030096.35977,
+   "nakit": 32365.546299,
+   "pozisyon_deger": 997730.813471
   },
   {
    "tarih": "2024-03-18T00:00:00",
-   "ozsermaye": 1016184.300076
+   "ozsermaye": 1016184.300076,
+   "nakit": 32365.546299,
+   "pozisyon_deger": 983818.753777
   },
   {
    "tarih": "2024-03-19T00:00:00",
-   "ozsermaye": 1022708.353248
+   "ozsermaye": 1022708.353248,
+   "nakit": 32365.546299,
+   "pozisyon_deger": 990342.806949
   },
   {
    "tarih": "2024-03-20T00:00:00",
-   "ozsermaye": 1027314.185894
+   "ozsermaye": 1027314.185894,
+   "nakit": 32365.546299,
+   "pozisyon_deger": 994948.639595
   },
   {
    "tarih": "2024-03-21T00:00:00",
-   "ozsermaye": 1050171.404714
+   "ozsermaye": 1050171.404714,
+   "nakit": 32365.546299,
+   "pozisyon_deger": 1017805.858415
   },
   {
    "tarih": "2024-03-22T00:00:00",
-   "ozsermaye": 1034455.978237
+   "ozsermaye": 1034455.978237,
+   "nakit": 32365.546299,
+   "pozisyon_deger": 1002090.431938
   },
   {
    "tarih": "2024-03-25T00:00:00",
-   "ozsermaye": 1008237.875479
+   "ozsermaye": 1008237.875479,
+   "nakit": 32365.546299,
+   "pozisyon_deger": 975872.32918
   },
   {
    "tarih": "2024-03-26T00:00:00",
-   "ozsermaye": 989255.733401
+   "ozsermaye": 989255.733401,
+   "nakit": 32365.546299,
+   "pozisyon_deger": 956890.187102
   },
   {
    "tarih": "2024-03-27T00:00:00",
-   "ozsermaye": 985524.192011
+   "ozsermaye": 985524.192011,
+   "nakit": 68864.654782,
+   "pozisyon_deger": 916659.537229
   },
   {
    "tarih": "2024-03-28T00:00:00",
-   "ozsermaye": 992041.237622
+   "ozsermaye": 992041.237622,
+   "nakit": 68864.654782,
+   "pozisyon_deger": 923176.58284
   },
   {
    "tarih": "2024-03-29T00:00:00",
-   "ozsermaye": 1008269.152988
+   "ozsermaye": 1008269.152988,
+   "nakit": 68864.654782,
+   "pozisyon_deger": 939404.498206
   },
   {
    "tarih": "2024-04-01T00:00:00",
-   "ozsermaye": 1008945.241331
+   "ozsermaye": 1008945.241331,
+   "nakit": 68864.654782,
+   "pozisyon_deger": 940080.586549
   },
   {
    "tarih": "2024-04-02T00:00:00",
-   "ozsermaye": 1008825.754624
+   "ozsermaye": 1008825.754624,
+   "nakit": 68864.654782,
+   "pozisyon_deger": 939961.099842
   },
   {
    "tarih": "2024-04-03T00:00:00",
-   "ozsermaye": 1004067.920304
+   "ozsermaye": 1004067.920304,
+   "nakit": 68864.654782,
+   "pozisyon_deger": 935203.265522
   },
   {
    "tarih": "2024-04-04T00:00:00",
-   "ozsermaye": 1020565.679725
+   "ozsermaye": 1020565.679725,
+   "nakit": 68864.654782,
+   "pozisyon_deger": 951701.024943
   },
   {
    "tarih": "2024-04-05T00:00:00",
-   "ozsermaye": 1078664.06433
+   "ozsermaye": 1078664.06433,
+   "nakit": 68864.654782,
+   "pozisyon_deger": 1009799.409548
   },
   {
    "tarih": "2024-04-08T00:00:00",
-   "ozsermaye": 1110707.023637
+   "ozsermaye": 1110707.023637,
+   "nakit": 68864.654782,
+   "pozisyon_deger": 1041842.368855
   },
   {
    "tarih": "2024-04-09T00:00:00",
-   "ozsermaye": 638116.07103
+   "ozsermaye": 1110707.023637,
+   "nakit": 68864.654782,
+   "pozisyon_deger": 1041842.368855
   },
   {
    "tarih": "2024-04-15T00:00:00",
-   "ozsermaye": 1105287.569645
+   "ozsermaye": 1105287.569645,
+   "nakit": 68864.654782,
+   "pozisyon_deger": 1036422.914863
   },
   {
    "tarih": "2024-04-16T00:00:00",
-   "ozsermaye": 1111365.710987
+   "ozsermaye": 1111365.710987,
+   "nakit": 68864.654782,
+   "pozisyon_deger": 1042501.056206
   },
   {
    "tarih": "2024-04-17T00:00:00",
-   "ozsermaye": 1097144.111834
+   "ozsermaye": 1097144.111834,
+   "nakit": 68864.654782,
+   "pozisyon_deger": 1028279.457052
   },
   {
    "tarih": "2024-04-18T00:00:00",
-   "ozsermaye": 1086840.288525
+   "ozsermaye": 1086840.288525,
+   "nakit": 68864.654782,
+   "pozisyon_deger": 1017975.633744
   },
   {
    "tarih": "2024-04-19T00:00:00",
-   "ozsermaye": 1094754.283384
+   "ozsermaye": 1094754.283384,
+   "nakit": 68864.654782,
+   "pozisyon_deger": 1025889.628602
   },
   {
    "tarih": "2024-04-22T00:00:00",
-   "ozsermaye": 1103584.585722
+   "ozsermaye": 1103584.585722,
+   "nakit": 68864.654782,
+   "pozisyon_deger": 1034719.93094
   },
   {
    "tarih": "2024-04-24T00:00:00",
-   "ozsermaye": 1098758.027804
+   "ozsermaye": 1098758.027804,
+   "nakit": 68864.654782,
+   "pozisyon_deger": 1029893.373022
   },
   {
    "tarih": "2024-04-25T00:00:00",
-   "ozsermaye": 1106577.545239
+   "ozsermaye": 1106577.545239,
+   "nakit": 68864.654782,
+   "pozisyon_deger": 1037712.890457
   },
   {
    "tarih": "2024-04-26T00:00:00",
-   "ozsermaye": 1119725.571926
+   "ozsermaye": 1119725.571926,
+   "nakit": 68864.654782,
+   "pozisyon_deger": 1050860.917144
   },
   {
    "tarih": "2024-04-29T00:00:00",
-   "ozsermaye": 1139953.210921
+   "ozsermaye": 1139953.210921,
+   "nakit": 68864.654782,
+   "pozisyon_deger": 1071088.556139
   },
   {
    "tarih": "2024-04-30T00:00:00",
-   "ozsermaye": 1139387.438679
+   "ozsermaye": 1139387.438679,
+   "nakit": 54303.837887,
+   "pozisyon_deger": 1085083.600792
   },
   {
    "tarih": "2024-05-02T00:00:00",
-   "ozsermaye": 1145786.871656
+   "ozsermaye": 1145786.871656,
+   "nakit": 54303.837887,
+   "pozisyon_deger": 1091483.03377
   },
   {
    "tarih": "2024-05-03T00:00:00",
-   "ozsermaye": 1155735.297849
+   "ozsermaye": 1155735.297849,
+   "nakit": 54303.837887,
+   "pozisyon_deger": 1101431.459962
   },
   {
    "tarih": "2024-05-06T00:00:00",
-   "ozsermaye": 1166418.203351
+   "ozsermaye": 1166418.203351,
+   "nakit": 54303.837887,
+   "pozisyon_deger": 1112114.365465
   },
   {
    "tarih": "2024-05-07T00:00:00",
-   "ozsermaye": 1161920.306077
+   "ozsermaye": 1161920.306077,
+   "nakit": 54303.837887,
+   "pozisyon_deger": 1107616.46819
   },
   {
    "tarih": "2024-05-08T00:00:00",
-   "ozsermaye": 1167721.160425
+   "ozsermaye": 1167721.160425,
+   "nakit": 54303.837887,
+   "pozisyon_deger": 1113417.322538
   },
   {
    "tarih": "2024-05-09T00:00:00",
-   "ozsermaye": 1170267.358436
+   "ozsermaye": 1170267.358436,
+   "nakit": 54303.837887,
+   "pozisyon_deger": 1115963.520549
   },
   {
    "tarih": "2024-05-10T00:00:00",
-   "ozsermaye": 1175628.532931
+   "ozsermaye": 1175628.532931,
+   "nakit": 54303.837887,
+   "pozisyon_deger": 1121324.695045
   },
   {
    "tarih": "2024-05-13T00:00:00",
-   "ozsermaye": 1158990.866011
+   "ozsermaye": 1158990.866011,
+   "nakit": 54303.837887,
+   "pozisyon_deger": 1104687.028125
   },
   {
    "tarih": "2024-05-14T00:00:00",
-   "ozsermaye": 1158263.042755
+   "ozsermaye": 1158263.042755,
+   "nakit": 54303.837887,
+   "pozisyon_deger": 1103959.204868
   },
   {
    "tarih": "2024-05-15T00:00:00",
-   "ozsermaye": 1169798.113418
+   "ozsermaye": 1169798.113418,
+   "nakit": 54303.837887,
+   "pozisyon_deger": 1115494.275532
   },
   {
    "tarih": "2024-05-16T00:00:00",
-   "ozsermaye": 1201964.962117
+   "ozsermaye": 1201964.962117,
+   "nakit": 54303.837887,
+   "pozisyon_deger": 1147661.12423
   },
   {
    "tarih": "2024-05-17T00:00:00",
-   "ozsermaye": 1238975.354534
+   "ozsermaye": 1238975.354534,
+   "nakit": 54303.837887,
+   "pozisyon_deger": 1184671.516647
   },
   {
    "tarih": "2024-05-20T00:00:00",
-   "ozsermaye": 1237047.919987
+   "ozsermaye": 1237047.919987,
+   "nakit": 54303.837887,
+   "pozisyon_deger": 1182744.0821
   },
   {
    "tarih": "2024-05-21T00:00:00",
-   "ozsermaye": 1241781.467663
+   "ozsermaye": 1241781.467663,
+   "nakit": 54303.837887,
+   "pozisyon_deger": 1187477.629776
   },
   {
    "tarih": "2024-05-22T00:00:00",
-   "ozsermaye": 1244512.848284
+   "ozsermaye": 1244512.848284,
+   "nakit": 54303.837887,
+   "pozisyon_deger": 1190209.010397
   },
   {
    "tarih": "2024-05-23T00:00:00",
-   "ozsermaye": 1230932.164051
+   "ozsermaye": 1230932.164051,
+   "nakit": 54303.837887,
+   "pozisyon_deger": 1176628.326164
   },
   {
    "tarih": "2024-05-24T00:00:00",
-   "ozsermaye": 1227430.675841
+   "ozsermaye": 1227430.675841,
+   "nakit": 54303.837887,
+   "pozisyon_deger": 1173126.837955
   },
   {
    "tarih": "2024-05-27T00:00:00",
-   "ozsermaye": 1210607.783918
+   "ozsermaye": 1210607.783918,
+   "nakit": 54303.837887,
+   "pozisyon_deger": 1156303.946032
   },
   {
    "tarih": "2024-05-28T00:00:00",
-   "ozsermaye": 1205553.456048
+   "ozsermaye": 1205553.456048,
+   "nakit": 54303.837887,
+   "pozisyon_deger": 1151249.618161
   },
   {
    "tarih": "2024-05-29T00:00:00",
-   "ozsermaye": 1191940.826629
+   "ozsermaye": 1191940.826629,
+   "nakit": 11223.134226,
+   "pozisyon_deger": 1180717.692403
   },
   {
    "tarih": "2024-05-30T00:00:00",
-   "ozsermaye": 1187660.740375
+   "ozsermaye": 1187660.740375,
+   "nakit": 11223.134226,
+   "pozisyon_deger": 1176437.606149
   },
   {
    "tarih": "2024-05-31T00:00:00",
-   "ozsermaye": 1195003.786019
+   "ozsermaye": 1195003.786019,
+   "nakit": 11223.134226,
+   "pozisyon_deger": 1183780.651793
   },
   {
    "tarih": "2024-06-03T00:00:00",
-   "ozsermaye": 1222546.070251
+   "ozsermaye": 1222546.070251,
+   "nakit": 11223.134226,
+   "pozisyon_deger": 1211322.936026
   },
   {
    "tarih": "2024-06-04T00:00:00",
-   "ozsermaye": 1223290.251891
+   "ozsermaye": 1223290.251891,
+   "nakit": 11223.134226,
+   "pozisyon_deger": 1212067.117665
   },
   {
    "tarih": "2024-06-05T00:00:00",
-   "ozsermaye": 1217610.192906
+   "ozsermaye": 1217610.192906,
+   "nakit": 11223.134226,
+   "pozisyon_deger": 1206387.05868
   },
   {
    "tarih": "2024-06-06T00:00:00",
-   "ozsermaye": 1222972.524029
+   "ozsermaye": 1222972.524029,
+   "nakit": 70574.384226,
+   "pozisyon_deger": 1152398.139803
   },
   {
    "tarih": "2024-06-07T00:00:00",
-   "ozsermaye": 1214865.471479
+   "ozsermaye": 1214865.471479,
+   "nakit": 70574.384226,
+   "pozisyon_deger": 1144291.087254
   },
   {
    "tarih": "2024-06-10T00:00:00",
-   "ozsermaye": 1189069.444457
+   "ozsermaye": 1189069.444457,
+   "nakit": 70574.384226,
+   "pozisyon_deger": 1118495.060231
   },
   {
    "tarih": "2024-06-11T00:00:00",
-   "ozsermaye": 1180590.869279
+   "ozsermaye": 1180590.869279,
+   "nakit": 70574.384226,
+   "pozisyon_deger": 1110016.485054
   },
   {
    "tarih": "2024-06-12T00:00:00",
-   "ozsermaye": 1190886.240669
+   "ozsermaye": 1190886.240669,
+   "nakit": 70574.384226,
+   "pozisyon_deger": 1120311.856443
   },
   {
    "tarih": "2024-06-13T00:00:00",
-   "ozsermaye": 1218849.746921
+   "ozsermaye": 1218849.746921,
+   "nakit": 70574.384226,
+   "pozisyon_deger": 1148275.362696
   },
   {
    "tarih": "2024-06-14T00:00:00",
-   "ozsermaye": 1227129.859771
+   "ozsermaye": 1227129.859771,
+   "nakit": 70574.384226,
+   "pozisyon_deger": 1156555.475545
   },
   {
    "tarih": "2024-06-20T00:00:00",
-   "ozsermaye": 1257427.877521
+   "ozsermaye": 1257427.877521,
+   "nakit": 70574.384226,
+   "pozisyon_deger": 1186853.493295
   },
   {
    "tarih": "2024-06-21T00:00:00",
-   "ozsermaye": 1258866.290039
+   "ozsermaye": 1258866.290039,
+   "nakit": 70574.384226,
+   "pozisyon_deger": 1188291.905813
   },
   {
    "tarih": "2024-06-24T00:00:00",
-   "ozsermaye": 1260637.970418
+   "ozsermaye": 1260637.970418,
+   "nakit": 70574.384226,
+   "pozisyon_deger": 1190063.586193
   },
   {
    "tarih": "2024-06-25T00:00:00",
-   "ozsermaye": 1259473.854187
+   "ozsermaye": 1259473.854187,
+   "nakit": 70574.384226,
+   "pozisyon_deger": 1188899.469962
   },
   {
    "tarih": "2024-06-26T00:00:00",
-   "ozsermaye": 1241518.437324
+   "ozsermaye": 1241518.437324,
+   "nakit": 70574.384226,
+   "pozisyon_deger": 1170944.053098
   },
   {
    "tarih": "2024-06-27T00:00:00",
-   "ozsermaye": 1269787.046372
+   "ozsermaye": 1269787.046372,
+   "nakit": 70574.384226,
+   "pozisyon_deger": 1199212.662147
   },
   {
    "tarih": "2024-06-28T00:00:00",
-   "ozsermaye": 1283748.075372
+   "ozsermaye": 1283748.075372,
+   "nakit": 70574.384226,
+   "pozisyon_deger": 1213173.691146
   },
   {
    "tarih": "2024-07-01T00:00:00",
-   "ozsermaye": 1239776.20917
+   "ozsermaye": 1239776.20917,
+   "nakit": 48.509226,
+   "pozisyon_deger": 1239727.699944
   },
   {
    "tarih": "2024-07-02T00:00:00",
-   "ozsermaye": 1272169.48857
+   "ozsermaye": 1272169.48857,
+   "nakit": 48.509226,
+   "pozisyon_deger": 1272120.979344
   },
   {
    "tarih": "2024-07-03T00:00:00",
-   "ozsermaye": 1278173.760599
+   "ozsermaye": 1278173.760599,
+   "nakit": 48.509226,
+   "pozisyon_deger": 1278125.251373
   },
   {
    "tarih": "2024-07-04T00:00:00",
-   "ozsermaye": 1282959.480229
+   "ozsermaye": 1282959.480229,
+   "nakit": 48.509226,
+   "pozisyon_deger": 1282910.971004
   },
   {
    "tarih": "2024-07-05T00:00:00",
-   "ozsermaye": 1262133.387284
+   "ozsermaye": 1262133.387284,
+   "nakit": 48.509226,
+   "pozisyon_deger": 1262084.878058
   },
   {
    "tarih": "2024-07-08T00:00:00",
-   "ozsermaye": 1260403.473416
+   "ozsermaye": 1260403.473416,
+   "nakit": 48.509226,
+   "pozisyon_deger": 1260354.96419
   },
   {
    "tarih": "2024-07-09T00:00:00",
-   "ozsermaye": 1271946.644291
+   "ozsermaye": 1271946.644291,
+   "nakit": 48.509226,
+   "pozisyon_deger": 1271898.135065
   },
   {
    "tarih": "2024-07-10T00:00:00",
-   "ozsermaye": 1266664.514903
+   "ozsermaye": 1266664.514903,
+   "nakit": 48.509226,
+   "pozisyon_deger": 1266616.005677
   },
   {
    "tarih": "2024-07-11T00:00:00",
-   "ozsermaye": 1275508.909912
+   "ozsermaye": 1275508.909912,
+   "nakit": 48.509226,
+   "pozisyon_deger": 1275460.400686
   },
   {
    "tarih": "2024-07-12T00:00:00",
-   "ozsermaye": 1306258.537334
+   "ozsermaye": 1306258.537334,
+   "nakit": 48.509226,
+   "pozisyon_deger": 1306210.028108
   },
   {
    "tarih": "2024-07-16T00:00:00",
-   "ozsermaye": 1331295.547519
+   "ozsermaye": 1331295.547519,
+   "nakit": 48.509226,
+   "pozisyon_deger": 1331247.038293
   },
   {
    "tarih": "2024-07-17T00:00:00",
-   "ozsermaye": 1321273.535654
+   "ozsermaye": 1321273.535654,
+   "nakit": 48.509226,
+   "pozisyon_deger": 1321225.026429
   },
   {
    "tarih": "2024-07-18T00:00:00",
-   "ozsermaye": 1306803.367372
+   "ozsermaye": 1306803.367372,
+   "nakit": 48.509226,
+   "pozisyon_deger": 1306754.858146
   },
   {
    "tarih": "2024-07-19T00:00:00",
-   "ozsermaye": 1306869.717776
+   "ozsermaye": 1306869.717776,
+   "nakit": 48.509226,
+   "pozisyon_deger": 1306821.20855
   },
   {
    "tarih": "2024-07-22T00:00:00",
-   "ozsermaye": 1300121.51404
+   "ozsermaye": 1300121.51404,
+   "nakit": 48.509226,
+   "pozisyon_deger": 1300073.004814
   },
   {
    "tarih": "2024-07-23T00:00:00",
-   "ozsermaye": 1297932.331761
+   "ozsermaye": 1297932.331761,
+   "nakit": 48.509226,
+   "pozisyon_deger": 1297883.822535
   },
   {
    "tarih": "2024-07-24T00:00:00",
-   "ozsermaye": 1273321.291624
+   "ozsermaye": 1273321.291624,
+   "nakit": 48.509226,
+   "pozisyon_deger": 1273272.782398
   },
   {
    "tarih": "2024-07-25T00:00:00",
-   "ozsermaye": 1272115.473726
+   "ozsermaye": 1272115.473726,
+   "nakit": 48.509226,
+   "pozisyon_deger": 1272066.9645
   },
   {
    "tarih": "2024-07-26T00:00:00",
-   "ozsermaye": 1254937.778046
+   "ozsermaye": 1254937.778046,
+   "nakit": 48.509226,
+   "pozisyon_deger": 1254889.26882
   },
   {
    "tarih": "2024-07-29T00:00:00",
-   "ozsermaye": 1223530.04261
+   "ozsermaye": 1223530.04261,
+   "nakit": 48.509226,
+   "pozisyon_deger": 1223481.533385
   },
   {
    "tarih": "2024-07-30T00:00:00",
-   "ozsermaye": 1211360.552605
+   "ozsermaye": 1211360.552605,
+   "nakit": 47.990195,
+   "pozisyon_deger": 1211312.562409
   },
   {
    "tarih": "2024-07-31T00:00:00",
-   "ozsermaye": 1206456.324834
+   "ozsermaye": 1206456.324834,
+   "nakit": 47.990195,
+   "pozisyon_deger": 1206408.334638
   },
   {
    "tarih": "2024-08-01T00:00:00",
-   "ozsermaye": 1089957.70633
+   "ozsermaye": 1089957.70633,
+   "nakit": 47.990195,
+   "pozisyon_deger": 1089909.716135
   },
   {
    "tarih": "2024-08-02T00:00:00",
-   "ozsermaye": 1069051.941207
+   "ozsermaye": 1069051.941207,
+   "nakit": 12997.353948,
+   "pozisyon_deger": 1056054.587259
   },
   {
    "tarih": "2024-08-05T00:00:00",
-   "ozsermaye": 1012791.253735
+   "ozsermaye": 1012791.253735,
+   "nakit": 12997.353948,
+   "pozisyon_deger": 999793.899787
   },
   {
    "tarih": "2024-08-06T00:00:00",
-   "ozsermaye": 1027090.730995
+   "ozsermaye": 1027090.730995,
+   "nakit": 775774.530433,
+   "pozisyon_deger": 251316.200562
   },
   {
    "tarih": "2024-08-07T00:00:00",
-   "ozsermaye": 1028202.233657
+   "ozsermaye": 1028202.233657,
+   "nakit": 775774.530433,
+   "pozisyon_deger": 252427.703224
   },
   {
    "tarih": "2024-08-08T00:00:00",
-   "ozsermaye": 1024528.025947
+   "ozsermaye": 1024528.025947,
+   "nakit": 775774.530433,
+   "pozisyon_deger": 248753.495514
   },
   {
    "tarih": "2024-08-09T00:00:00",
-   "ozsermaye": 1020052.929733
+   "ozsermaye": 1020052.929733,
+   "nakit": 775774.530433,
+   "pozisyon_deger": 244278.3993
   },
   {
    "tarih": "2024-08-12T00:00:00",
-   "ozsermaye": 1019998.52777
+   "ozsermaye": 1019998.52777,
+   "nakit": 775774.530433,
+   "pozisyon_deger": 244223.997337
   },
   {
    "tarih": "2024-08-13T00:00:00",
-   "ozsermaye": 1021919.226509
+   "ozsermaye": 1021919.226509,
+   "nakit": 775774.530433,
+   "pozisyon_deger": 246144.696075
   },
   {
    "tarih": "2024-08-14T00:00:00",
-   "ozsermaye": 1023628.02777
+   "ozsermaye": 1023628.02777,
+   "nakit": 775774.530433,
+   "pozisyon_deger": 247853.497337
   },
   {
    "tarih": "2024-08-15T00:00:00",
-   "ozsermaye": 1028663.025947
+   "ozsermaye": 1028663.025947,
+   "nakit": 775774.530433,
+   "pozisyon_deger": 252888.495514
   },
   {
    "tarih": "2024-08-16T00:00:00",
-   "ozsermaye": 1022002.525947
+   "ozsermaye": 1022002.525947,
+   "nakit": 775774.530433,
+   "pozisyon_deger": 246227.995514
   },
   {
    "tarih": "2024-08-19T00:00:00",
-   "ozsermaye": 1030969.726509
+   "ozsermaye": 1030969.726509,
+   "nakit": 775774.530433,
+   "pozisyon_deger": 255195.196075
   },
   {
    "tarih": "2024-08-20T00:00:00",
-   "ozsermaye": 1030326.534919
+   "ozsermaye": 1030326.534919,
+   "nakit": 775774.530433,
+   "pozisyon_deger": 254552.004486
   },
   {
    "tarih": "2024-08-21T00:00:00",
-   "ozsermaye": 1028893.132957
+   "ozsermaye": 1028893.132957,
+   "nakit": 775774.530433,
+   "pozisyon_deger": 253118.602524
   },
   {
    "tarih": "2024-08-22T00:00:00",
-   "ozsermaye": 1029233.229171
+   "ozsermaye": 1029233.229171,
+   "nakit": 775774.530433,
+   "pozisyon_deger": 253458.698738
   },
   {
    "tarih": "2024-08-23T00:00:00",
-   "ozsermaye": 1023298.427909
+   "ozsermaye": 1023298.427909,
+   "nakit": 775774.530433,
+   "pozisyon_deger": 247523.897476
   },
   {
    "tarih": "2024-08-26T00:00:00",
-   "ozsermaye": 1023381.334358
+   "ozsermaye": 1023381.334358,
+   "nakit": 775774.530433,
+   "pozisyon_deger": 247606.803925
   },
   {
    "tarih": "2024-08-27T00:00:00",
-   "ozsermaye": 1023615.4511
+   "ozsermaye": 1023615.4511,
+   "nakit": 952361.452931,
+   "pozisyon_deger": 71253.998169
   },
   {
    "tarih": "2024-08-28T00:00:00",
-   "ozsermaye": 1024087.353337
+   "ozsermaye": 1024087.353337,
+   "nakit": 952361.452931,
+   "pozisyon_deger": 71725.900406
   },
   {
    "tarih": "2024-08-29T00:00:00",
-   "ozsermaye": 1025110.351506
+   "ozsermaye": 1025110.351506,
+   "nakit": 952361.452931,
+   "pozisyon_deger": 72748.898575
   },
   {
    "tarih": "2024-09-02T00:00:00",
-   "ozsermaye": 1028013.603337
+   "ozsermaye": 1028013.603337,
+   "nakit": 952361.452931,
+   "pozisyon_deger": 75652.150406
   },
   {
    "tarih": "2024-09-03T00:00:00",
-   "ozsermaye": 1027747.603337
+   "ozsermaye": 1027747.603337,
+   "nakit": 952361.452931,
+   "pozisyon_deger": 75386.150406
   },
   {
    "tarih": "2024-09-04T00:00:00",
-   "ozsermaye": 1027952.652119
+   "ozsermaye": 1027952.652119,
+   "nakit": 952361.452931,
+   "pozisyon_deger": 75591.199188
   },
   {
    "tarih": "2024-09-05T00:00:00",
-   "ozsermaye": 1028312.902119
+   "ozsermaye": 1028312.902119,
+   "nakit": 952361.452931,
+   "pozisyon_deger": 75951.449188
   },
   {
    "tarih": "2024-09-06T00:00:00",
-   "ozsermaye": 1027682.253743
+   "ozsermaye": 1027682.253743,
+   "nakit": 952361.452931,
+   "pozisyon_deger": 75320.800812
   },
   {
    "tarih": "2024-09-09T00:00:00",
-   "ozsermaye": 1027499.052525
+   "ozsermaye": 1027499.052525,
+   "nakit": 952361.452931,
+   "pozisyon_deger": 75137.599594
   },
   {
    "tarih": "2024-09-10T00:00:00",
-   "ozsermaye": 1026898.353337
+   "ozsermaye": 1026898.353337,
+   "nakit": 952361.452931,
+   "pozisyon_deger": 74536.900406
   },
   {
    "tarih": "2024-09-11T00:00:00",
-   "ozsermaye": 1025576.802525
+   "ozsermaye": 1025576.802525,
+   "nakit": 952361.452931,
+   "pozisyon_deger": 73215.349594
   },
   {
    "tarih": "2024-09-12T00:00:00",
-   "ozsermaye": 1026541.802525
+   "ozsermaye": 1026541.802525,
+   "nakit": 952361.452931,
+   "pozisyon_deger": 74180.349594
   },
   {
    "tarih": "2024-09-13T00:00:00",
-   "ozsermaye": 1025266.402119
+   "ozsermaye": 1025266.402119,
+   "nakit": 952361.452931,
+   "pozisyon_deger": 72904.949188
   },
   {
    "tarih": "2024-09-16T00:00:00",
-   "ozsermaye": 1024594.353337
+   "ozsermaye": 1024594.353337,
+   "nakit": 952361.452931,
+   "pozisyon_deger": 72232.900406
   },
   {
    "tarih": "2024-09-17T00:00:00",
-   "ozsermaye": 1025847.902119
+   "ozsermaye": 1025847.902119,
+   "nakit": 952361.452931,
+   "pozisyon_deger": 73486.449188
   },
   {
    "tarih": "2024-09-18T00:00:00",
-   "ozsermaye": 1026220.302525
+   "ozsermaye": 1026220.302525,
+   "nakit": 952361.452931,
+   "pozisyon_deger": 73858.849594
   },
   {
    "tarih": "2024-09-19T00:00:00",
-   "ozsermaye": 1028294.402119
+   "ozsermaye": 1028294.402119,
+   "nakit": 952361.452931,
+   "pozisyon_deger": 75932.949188
   },
   {
    "tarih": "2024-09-20T00:00:00",
-   "ozsermaye": 1027238.503743
+   "ozsermaye": 1027238.503743,
+   "nakit": 952361.452931,
+   "pozisyon_deger": 74877.050812
   },
   {
    "tarih": "2024-09-23T00:00:00",
-   "ozsermaye": 1027322.702931
+   "ozsermaye": 1027322.702931,
+   "nakit": 952361.452931,
+   "pozisyon_deger": 74961.25
   },
   {
    "tarih": "2024-09-24T00:00:00",
-   "ozsermaye": 1028580.652119
+   "ozsermaye": 1028580.652119,
+   "nakit": 952361.452931,
+   "pozisyon_deger": 76219.199188
   },
   {
    "tarih": "2024-09-25T00:00:00",
-   "ozsermaye": 1014206.429132
+   "ozsermaye": 1014206.429132,
+   "nakit": 458143.395778,
+   "pozisyon_deger": 556063.033354
   },
   {
    "tarih": "2024-09-26T00:00:00",
-   "ozsermaye": 1016391.618255
+   "ozsermaye": 1016391.618255,
+   "nakit": 713416.157032,
+   "pozisyon_deger": 302975.461224
   },
   {
    "tarih": "2024-09-27T00:00:00",
-   "ozsermaye": 1017225.720737
+   "ozsermaye": 1017225.720737,
+   "nakit": 713416.157032,
+   "pozisyon_deger": 303809.563705
   },
   {
    "tarih": "2024-09-30T00:00:00",
-   "ozsermaye": 1013395.673401
+   "ozsermaye": 1013395.673401,
+   "nakit": 713416.157032,
+   "pozisyon_deger": 299979.516369
   },
   {
    "tarih": "2024-10-01T00:00:00",
-   "ozsermaye": 1005762.137378
+   "ozsermaye": 1005762.137378,
+   "nakit": 713416.157032,
+   "pozisyon_deger": 292345.980347
   },
   {
    "tarih": "2024-10-02T00:00:00",
-   "ozsermaye": 1002445.374507
+   "ozsermaye": 1002445.374507,
+   "nakit": 1002445.374507,
+   "pozisyon_deger": 0
   },
   {
    "tarih": "2024-10-03T00:00:00",
-   "ozsermaye": 1002445.374507
+   "ozsermaye": 1002445.374507,
+   "nakit": 1002445.374507,
+   "pozisyon_deger": 0
   },
   {
    "tarih": "2024-10-04T00:00:00",
-   "ozsermaye": 1002445.374507
+   "ozsermaye": 1002445.374507,
+   "nakit": 1002445.374507,
+   "pozisyon_deger": 0
   },
   {
    "tarih": "2024-10-07T00:00:00",
-   "ozsermaye": 1002445.374507
+   "ozsermaye": 1002445.374507,
+   "nakit": 1002445.374507,
+   "pozisyon_deger": 0
   },
   {
    "tarih": "2024-10-08T00:00:00",
-   "ozsermaye": 1002445.374507
+   "ozsermaye": 1002445.374507,
+   "nakit": 1002445.374507,
+   "pozisyon_deger": 0
   },
   {
    "tarih": "2024-10-09T00:00:00",
-   "ozsermaye": 1002445.374507
+   "ozsermaye": 1002445.374507,
+   "nakit": 1002445.374507,
+   "pozisyon_deger": 0
   },
   {
    "tarih": "2024-10-10T00:00:00",
-   "ozsermaye": 1002445.374507
+   "ozsermaye": 1002445.374507,
+   "nakit": 1002445.374507,
+   "pozisyon_deger": 0
   },
   {
    "tarih": "2024-10-11T00:00:00",
-   "ozsermaye": 1002445.374507
+   "ozsermaye": 1002445.374507,
+   "nakit": 1002445.374507,
+   "pozisyon_deger": 0
   },
   {
    "tarih": "2024-10-14T00:00:00",
-   "ozsermaye": 1002445.374507
+   "ozsermaye": 1002445.374507,
+   "nakit": 1002445.374507,
+   "pozisyon_deger": 0
   },
   {
    "tarih": "2024-10-15T00:00:00",
-   "ozsermaye": 1002445.374507
+   "ozsermaye": 1002445.374507,
+   "nakit": 1002445.374507,
+   "pozisyon_deger": 0
   },
   {
    "tarih": "2024-10-16T00:00:00",
-   "ozsermaye": 1002445.374507
+   "ozsermaye": 1002445.374507,
+   "nakit": 1002445.374507,
+   "pozisyon_deger": 0
   },
   {
    "tarih": "2024-10-17T00:00:00",
-   "ozsermaye": 1002445.374507
+   "ozsermaye": 1002445.374507,
+   "nakit": 1002445.374507,
+   "pozisyon_deger": 0
   },
   {
    "tarih": "2024-10-18T00:00:00",
-   "ozsermaye": 1002445.374507
+   "ozsermaye": 1002445.374507,
+   "nakit": 1002445.374507,
+   "pozisyon_deger": 0
   },
   {
    "tarih": "2024-10-21T00:00:00",
-   "ozsermaye": 1002445.374507
+   "ozsermaye": 1002445.374507,
+   "nakit": 1002445.374507,
+   "pozisyon_deger": 0
   },
   {
    "tarih": "2024-10-22T00:00:00",
-   "ozsermaye": 1002445.374507
+   "ozsermaye": 1002445.374507,
+   "nakit": 1002445.374507,
+   "pozisyon_deger": 0
   },
   {
    "tarih": "2024-10-23T00:00:00",
-   "ozsermaye": 1002445.374507
+   "ozsermaye": 1002445.374507,
+   "nakit": 1002445.374507,
+   "pozisyon_deger": 0
   },
   {
    "tarih": "2024-10-24T00:00:00",
-   "ozsermaye": 1002445.374507
+   "ozsermaye": 1002445.374507,
+   "nakit": 1002445.374507,
+   "pozisyon_deger": 0
   },
   {
    "tarih": "2024-10-25T00:00:00",
-   "ozsermaye": 1002445.374507
+   "ozsermaye": 1002445.374507,
+   "nakit": 1002445.374507,
+   "pozisyon_deger": 0
   },
   {
    "tarih": "2024-10-28T00:00:00",
-   "ozsermaye": 1002445.374507
+   "ozsermaye": 1002445.374507,
+   "nakit": 1002445.374507,
+   "pozisyon_deger": 0
   },
   {
    "tarih": "2024-10-30T00:00:00",
-   "ozsermaye": 1002445.374507
+   "ozsermaye": 1002445.374507,
+   "nakit": 1002445.374507,
+   "pozisyon_deger": 0
   },
   {
    "tarih": "2024-10-31T00:00:00",
-   "ozsermaye": 1002445.374507
+   "ozsermaye": 1002445.374507,
+   "nakit": 1002445.374507,
+   "pozisyon_deger": 0
   },
   {
    "tarih": "2024-11-01T00:00:00",
-   "ozsermaye": 1002445.374507
+   "ozsermaye": 1002445.374507,
+   "nakit": 1002445.374507,
+   "pozisyon_deger": 0
   },
   {
    "tarih": "2024-11-04T00:00:00",
-   "ozsermaye": 1002445.374507
+   "ozsermaye": 1002445.374507,
+   "nakit": 1002445.374507,
+   "pozisyon_deger": 0
   },
   {
    "tarih": "2024-11-05T00:00:00",
-   "ozsermaye": 1002445.374507
+   "ozsermaye": 1002445.374507,
+   "nakit": 1002445.374507,
+   "pozisyon_deger": 0
   },
   {
    "tarih": "2024-11-06T00:00:00",
-   "ozsermaye": 1002445.374507
+   "ozsermaye": 1002445.374507,
+   "nakit": 1002445.374507,
+   "pozisyon_deger": 0
   },
   {
    "tarih": "2024-11-07T00:00:00",
-   "ozsermaye": 1002445.374507
+   "ozsermaye": 1002445.374507,
+   "nakit": 1002445.374507,
+   "pozisyon_deger": 0
   },
   {
    "tarih": "2024-11-08T00:00:00",
-   "ozsermaye": 1002445.374507
+   "ozsermaye": 1002445.374507,
+   "nakit": 1002445.374507,
+   "pozisyon_deger": 0
   },
   {
    "tarih": "2024-11-11T00:00:00",
-   "ozsermaye": 1002445.374507
+   "ozsermaye": 1002445.374507,
+   "nakit": 1002445.374507,
+   "pozisyon_deger": 0
   },
   {
    "tarih": "2024-11-12T00:00:00",
-   "ozsermaye": 1002445.374507
+   "ozsermaye": 1002445.374507,
+   "nakit": 1002445.374507,
+   "pozisyon_deger": 0
   },
   {
    "tarih": "2024-11-13T00:00:00",
-   "ozsermaye": 1002445.374507
+   "ozsermaye": 1002445.374507,
+   "nakit": 1002445.374507,
+   "pozisyon_deger": 0
   },
   {
    "tarih": "2024-11-14T00:00:00",
-   "ozsermaye": 1002445.374507
+   "ozsermaye": 1002445.374507,
+   "nakit": 1002445.374507,
+   "pozisyon_deger": 0
   },
   {
    "tarih": "2024-11-15T00:00:00",
-   "ozsermaye": 1002445.374507
+   "ozsermaye": 1002445.374507,
+   "nakit": 1002445.374507,
+   "pozisyon_deger": 0
   },
   {
    "tarih": "2024-11-18T00:00:00",
-   "ozsermaye": 1002445.374507
+   "ozsermaye": 1002445.374507,
+   "nakit": 1002445.374507,
+   "pozisyon_deger": 0
   },
   {
    "tarih": "2024-11-19T00:00:00",
-   "ozsermaye": 1002445.374507
+   "ozsermaye": 1002445.374507,
+   "nakit": 1002445.374507,
+   "pozisyon_deger": 0
   },
   {
    "tarih": "2024-11-20T00:00:00",
-   "ozsermaye": 1002445.374507
+   "ozsermaye": 1002445.374507,
+   "nakit": 1002445.374507,
+   "pozisyon_deger": 0
   },
   {
    "tarih": "2024-11-21T00:00:00",
-   "ozsermaye": 1002445.374507
+   "ozsermaye": 1002445.374507,
+   "nakit": 1002445.374507,
+   "pozisyon_deger": 0
   },
   {
    "tarih": "2024-11-22T00:00:00",
-   "ozsermaye": 1002445.374507
+   "ozsermaye": 1002445.374507,
+   "nakit": 1002445.374507,
+   "pozisyon_deger": 0
   },
   {
    "tarih": "2024-11-25T00:00:00",
-   "ozsermaye": 1002445.374507
+   "ozsermaye": 1002445.374507,
+   "nakit": 1002445.374507,
+   "pozisyon_deger": 0
   },
   {
    "tarih": "2024-11-26T00:00:00",
-   "ozsermaye": 1002445.374507
+   "ozsermaye": 1002445.374507,
+   "nakit": 1002445.374507,
+   "pozisyon_deger": 0
   },
   {
    "tarih": "2024-11-27T00:00:00",
-   "ozsermaye": 1002445.374507
+   "ozsermaye": 1002445.374507,
+   "nakit": 1002445.374507,
+   "pozisyon_deger": 0
   },
   {
    "tarih": "2024-11-28T00:00:00",
-   "ozsermaye": 1002445.374507
+   "ozsermaye": 1002445.374507,
+   "nakit": 1002445.374507,
+   "pozisyon_deger": 0
   },
   {
    "tarih": "2024-11-29T00:00:00",
-   "ozsermaye": 1002445.374507
+   "ozsermaye": 1002445.374507,
+   "nakit": 1002445.374507,
+   "pozisyon_deger": 0
   },
   {
    "tarih": "2024-12-02T00:00:00",
-   "ozsermaye": 1002445.374507
+   "ozsermaye": 1002445.374507,
+   "nakit": 1002445.374507,
+   "pozisyon_deger": 0
   },
   {
    "tarih": "2024-12-03T00:00:00",
-   "ozsermaye": 1002445.374507
+   "ozsermaye": 1002445.374507,
+   "nakit": 1002445.374507,
+   "pozisyon_deger": 0
   },
   {
    "tarih": "2024-12-04T00:00:00",
-   "ozsermaye": 1002445.374507
+   "ozsermaye": 1002445.374507,
+   "nakit": 1002445.374507,
+   "pozisyon_deger": 0
   },
   {
    "tarih": "2024-12-05T00:00:00",
-   "ozsermaye": 1002445.374507
+   "ozsermaye": 1002445.374507,
+   "nakit": 1002445.374507,
+   "pozisyon_deger": 0
   },
   {
    "tarih": "2024-12-06T00:00:00",
-   "ozsermaye": 1002445.374507
+   "ozsermaye": 1002445.374507,
+   "nakit": 1002445.374507,
+   "pozisyon_deger": 0
   },
   {
    "tarih": "2024-12-09T00:00:00",
-   "ozsermaye": 1002445.374507
+   "ozsermaye": 1002445.374507,
+   "nakit": 1002445.374507,
+   "pozisyon_deger": 0
   },
   {
    "tarih": "2024-12-10T00:00:00",
-   "ozsermaye": 1002445.374507
+   "ozsermaye": 1002445.374507,
+   "nakit": 1002445.374507,
+   "pozisyon_deger": 0
   },
   {
    "tarih": "2024-12-11T00:00:00",
-   "ozsermaye": 1002445.374507
+   "ozsermaye": 1002445.374507,
+   "nakit": 1002445.374507,
+   "pozisyon_deger": 0
   },
   {
    "tarih": "2024-12-12T00:00:00",
-   "ozsermaye": 1002445.374507
+   "ozsermaye": 1002445.374507,
+   "nakit": 1002445.374507,
+   "pozisyon_deger": 0
   },
   {
    "tarih": "2024-12-13T00:00:00",
-   "ozsermaye": 1002445.374507
+   "ozsermaye": 1002445.374507,
+   "nakit": 1002445.374507,
+   "pozisyon_deger": 0
   },
   {
    "tarih": "2024-12-16T00:00:00",
-   "ozsermaye": 1002445.374507
+   "ozsermaye": 1002445.374507,
+   "nakit": 1002445.374507,
+   "pozisyon_deger": 0
   },
   {
    "tarih": "2024-12-17T00:00:00",
-   "ozsermaye": 1002445.374507
+   "ozsermaye": 1002445.374507,
+   "nakit": 1002445.374507,
+   "pozisyon_deger": 0
   },
   {
    "tarih": "2024-12-18T00:00:00",
-   "ozsermaye": 1002445.374507
+   "ozsermaye": 1002445.374507,
+   "nakit": 1002445.374507,
+   "pozisyon_deger": 0
   },
   {
    "tarih": "2024-12-19T00:00:00",
-   "ozsermaye": 985944.18739
+   "ozsermaye": 985982.255663,
+   "nakit": 4.151308,
+   "pozisyon_deger": 985978.104354
   },
   {
    "tarih": "2024-12-20T00:00:00",
-   "ozsermaye": 986012.042482
+   "ozsermaye": 986050.023603,
+   "nakit": 752363.922426,
+   "pozisyon_deger": 233686.101178
   },
   {
    "tarih": "2024-12-23T00:00:00",
-   "ozsermaye": 983813.210005
+   "ozsermaye": 983851.191127,
+   "nakit": 752363.922426,
+   "pozisyon_deger": 231487.268701
   },
   {
    "tarih": "2024-12-24T00:00:00",
-   "ozsermaye": 982369.458471
+   "ozsermaye": 982407.439592,
+   "nakit": 752363.922426,
+   "pozisyon_deger": 230043.517167
   },
   {
    "tarih": "2024-12-26T00:00:00",
-   "ozsermaye": 986512.062717
+   "ozsermaye": 986550.043839,
+   "nakit": 752363.922426,
+   "pozisyon_deger": 234186.121413
   },
   {
    "tarih": "2024-12-27T00:00:00",
-   "ozsermaye": 986088.302475
+   "ozsermaye": 986126.283596,
+   "nakit": 752363.922426,
+   "pozisyon_deger": 233762.361171
   },
   {
    "tarih": "2024-12-30T00:00:00",
-   "ozsermaye": 984975.643659
+   "ozsermaye": 985013.624781,
+   "nakit": 752363.922426,
+   "pozisyon_deger": 232649.702355
   },
   {
    "tarih": "2024-12-31T00:00:00",
-   "ozsermaye": 987569.941304
+   "ozsermaye": 987607.922426,
+   "nakit": 752363.922426,
+   "pozisyon_deger": 235244.0
   },
   {
    "tarih": "2025-01-02T00:00:00",
-   "ozsermaye": 987991.669534
+   "ozsermaye": 988029.650656,
+   "nakit": 752363.922426,
+   "pozisyon_deger": 235665.72823
   },
   {
    "tarih": "2025-01-03T00:00:00",
-   "ozsermaye": 985258.730241
+   "ozsermaye": 985296.711362,
+   "nakit": 752363.922426,
+   "pozisyon_deger": 232932.788937
   },
   {
    "tarih": "2025-01-06T00:00:00",
-   "ozsermaye": 984104.143659
+   "ozsermaye": 984142.124781,
+   "nakit": 752363.922426,
+   "pozisyon_deger": 231778.202355
   },
   {
    "tarih": "2025-01-07T00:00:00",
-   "ozsermaye": 984284.952832
+   "ozsermaye": 984322.933953,
+   "nakit": 752363.922426,
+   "pozisyon_deger": 231959.011528
   },
   {
    "tarih": "2025-01-08T00:00:00",
-   "ozsermaye": 984947.600119
+   "ozsermaye": 984985.581241,
+   "nakit": 752363.922426,
+   "pozisyon_deger": 232621.658815
   },
   {
    "tarih": "2025-01-09T00:00:00",
-   "ozsermaye": 985029.932596
+   "ozsermaye": 985067.913718,
+   "nakit": 752363.922426,
+   "pozisyon_deger": 232703.991292
   },
   {
    "tarih": "2025-01-10T00:00:00",
-   "ozsermaye": 989011.91236
+   "ozsermaye": 989049.893482,
+   "nakit": 752363.922426,
+   "pozisyon_deger": 236685.971056
   },
   {
    "tarih": "2025-01-13T00:00:00",
-   "ozsermaye": 978264.998942
+   "ozsermaye": 978302.980063,
+   "nakit": 752363.922426,
+   "pozisyon_deger": 225939.057638
   },
   {
    "tarih": "2025-01-14T00:00:00",
-   "ozsermaye": 974662.579884
+   "ozsermaye": 974700.561005,
+   "nakit": 752363.922426,
+   "pozisyon_deger": 222336.63858
   },
   {
    "tarih": "2025-01-15T00:00:00",
-   "ozsermaye": 976865.452832
+   "ozsermaye": 976903.433953,
+   "nakit": 752363.922426,
+   "pozisyon_deger": 224539.511528
   },
   {
    "tarih": "2025-01-16T00:00:00",
-   "ozsermaye": 976096.481775
+   "ozsermaye": 976134.462897,
+   "nakit": 752363.922426,
+   "pozisyon_deger": 223770.540471
   },
   {
    "tarih": "2025-01-17T00:00:00",
-   "ozsermaye": 980451.96154
+   "ozsermaye": 980489.942661,
+   "nakit": 752363.922426,
+   "pozisyon_deger": 228126.020236
   },
   {
    "tarih": "2025-01-20T00:00:00",
-   "ozsermaye": 979898.094224
+   "ozsermaye": 979936.057239,
+   "nakit": 364633.051742,
+   "pozisyon_deger": 615303.005497
   },
   {
    "tarih": "2025-01-21T00:00:00",
-   "ozsermaye": 976726.029027
+   "ozsermaye": 976763.985375,
+   "nakit": 364633.051742,
+   "pozisyon_deger": 612130.933633
   },
   {
    "tarih": "2025-01-22T00:00:00",
-   "ozsermaye": 982662.814947
+   "ozsermaye": 982700.771295,
+   "nakit": 364633.051742,
+   "pozisyon_deger": 618067.719553
   },
   {
    "tarih": "2025-01-23T00:00:00",
-   "ozsermaye": 989552.48937
+   "ozsermaye": 989590.455718,
+   "nakit": 364633.051742,
+   "pozisyon_deger": 624957.403976
   },
   {
    "tarih": "2025-01-24T00:00:00",
-   "ozsermaye": 998618.732267
+   "ozsermaye": 998656.718615,
+   "nakit": 364633.051742,
+   "pozisyon_deger": 634023.666873
   },
   {
    "tarih": "2025-01-27T00:00:00",
-   "ozsermaye": 990499.139536
+   "ozsermaye": 990536.829217,
+   "nakit": 364633.051742,
+   "pozisyon_deger": 625903.777475
   },
   {
    "tarih": "2025-01-28T00:00:00",
-   "ozsermaye": 993180.691819
+   "ozsermaye": 993218.394834,
+   "nakit": 364633.051742,
+   "pozisyon_deger": 628585.343092
   },
   {
    "tarih": "2025-01-29T00:00:00",
-   "ozsermaye": 985232.517705
+   "ozsermaye": 985270.147386,
+   "nakit": 364633.051742,
+   "pozisyon_deger": 620637.095644
   },
   {
    "tarih": "2025-01-30T00:00:00",
-   "ozsermaye": 989855.649905
+   "ozsermaye": 989893.246253,
+   "nakit": 364633.051742,
+   "pozisyon_deger": 625260.194511
   },
   {
    "tarih": "2025-01-31T00:00:00",
-   "ozsermaye": 986986.935166
+   "ozsermaye": 987024.564847,
+   "nakit": 364633.051742,
+   "pozisyon_deger": 622391.513105
   },
   {
    "tarih": "2025-02-03T00:00:00",
-   "ozsermaye": 974178.621042
+   "ozsermaye": 974215.990723,
+   "nakit": 364633.051742,
+   "pozisyon_deger": 609582.938981
   },
   {
    "tarih": "2025-02-04T00:00:00",
-   "ozsermaye": 973893.619114
+   "ozsermaye": 973930.992929,
+   "nakit": 696759.404606,
+   "pozisyon_deger": 277171.588323
   },
   {
    "tarih": "2025-02-05T00:00:00",
-   "ozsermaye": 973377.728844
+   "ozsermaye": 973415.102659,
+   "nakit": 973415.102659,
+   "pozisyon_deger": 0
   },
   {
    "tarih": "2025-02-06T00:00:00",
-   "ozsermaye": 973377.728844
+   "ozsermaye": 973415.102659,
+   "nakit": 973415.102659,
+   "pozisyon_deger": 0
   },
   {
    "tarih": "2025-02-07T00:00:00",
-   "ozsermaye": 973377.728844
+   "ozsermaye": 973415.102659,
+   "nakit": 973415.102659,
+   "pozisyon_deger": 0
   },
   {
    "tarih": "2025-02-10T00:00:00",
-   "ozsermaye": 973377.728844
+   "ozsermaye": 973415.102659,
+   "nakit": 973415.102659,
+   "pozisyon_deger": 0
   },
   {
    "tarih": "2025-02-11T00:00:00",
-   "ozsermaye": 973377.728844
+   "ozsermaye": 973415.102659,
+   "nakit": 973415.102659,
+   "pozisyon_deger": 0
   },
   {
    "tarih": "2025-02-12T00:00:00",
-   "ozsermaye": 973377.728844
+   "ozsermaye": 973415.102659,
+   "nakit": 973415.102659,
+   "pozisyon_deger": 0
   },
   {
    "tarih": "2025-02-13T00:00:00",
-   "ozsermaye": 973377.728844
+   "ozsermaye": 973415.102659,
+   "nakit": 973415.102659,
+   "pozisyon_deger": 0
   },
   {
    "tarih": "2025-02-14T00:00:00",
-   "ozsermaye": 973377.728844
+   "ozsermaye": 973415.102659,
+   "nakit": 973415.102659,
+   "pozisyon_deger": 0
   },
   {
    "tarih": "2025-02-17T00:00:00",
-   "ozsermaye": 973377.728844
+   "ozsermaye": 973415.102659,
+   "nakit": 973415.102659,
+   "pozisyon_deger": 0
   },
   {
    "tarih": "2025-02-18T00:00:00",
-   "ozsermaye": 973377.728844
+   "ozsermaye": 973415.102659,
+   "nakit": 973415.102659,
+   "pozisyon_deger": 0
   },
   {
    "tarih": "2025-02-19T00:00:00",
-   "ozsermaye": 973377.728844
+   "ozsermaye": 973415.102659,
+   "nakit": 973415.102659,
+   "pozisyon_deger": 0
   },
   {
    "tarih": "2025-02-20T00:00:00",
-   "ozsermaye": 973377.728844
+   "ozsermaye": 973415.102659,
+   "nakit": 973415.102659,
+   "pozisyon_deger": 0
   },
   {
    "tarih": "2025-02-21T00:00:00",
-   "ozsermaye": 973377.728844
+   "ozsermaye": 973415.102659,
+   "nakit": 973415.102659,
+   "pozisyon_deger": 0
   },
   {
    "tarih": "2025-02-24T00:00:00",
-   "ozsermaye": 973377.728844
+   "ozsermaye": 973415.102659,
+   "nakit": 973415.102659,
+   "pozisyon_deger": 0
   },
   {
    "tarih": "2025-02-25T00:00:00",
-   "ozsermaye": 973377.728844
+   "ozsermaye": 973415.102659,
+   "nakit": 973415.102659,
+   "pozisyon_deger": 0
   },
   {
    "tarih": "2025-02-26T00:00:00",
-   "ozsermaye": 973377.728844
+   "ozsermaye": 973415.102659,
+   "nakit": 973415.102659,
+   "pozisyon_deger": 0
   },
   {
    "tarih": "2025-02-27T00:00:00",
-   "ozsermaye": 973377.728844
+   "ozsermaye": 973415.102659,
+   "nakit": 973415.102659,
+   "pozisyon_deger": 0
   },
   {
    "tarih": "2025-02-28T00:00:00",
-   "ozsermaye": 973377.728844
+   "ozsermaye": 973415.102659,
+   "nakit": 973415.102659,
+   "pozisyon_deger": 0
   },
   {
    "tarih": "2025-03-03T00:00:00",
-   "ozsermaye": 973377.728844
+   "ozsermaye": 973415.102659,
+   "nakit": 973415.102659,
+   "pozisyon_deger": 0
   },
   {
    "tarih": "2025-03-04T00:00:00",
-   "ozsermaye": 973377.728844
+   "ozsermaye": 973415.102659,
+   "nakit": 973415.102659,
+   "pozisyon_deger": 0
   },
   {
    "tarih": "2025-03-05T00:00:00",
-   "ozsermaye": 973377.728844
+   "ozsermaye": 973415.102659,
+   "nakit": 973415.102659,
+   "pozisyon_deger": 0
   },
   {
    "tarih": "2025-03-06T00:00:00",
-   "ozsermaye": 973377.728844
+   "ozsermaye": 973415.102659,
+   "nakit": 973415.102659,
+   "pozisyon_deger": 0
   },
   {
    "tarih": "2025-03-07T00:00:00",
-   "ozsermaye": 973377.728844
+   "ozsermaye": 973415.102659,
+   "nakit": 973415.102659,
+   "pozisyon_deger": 0
   },
   {
    "tarih": "2025-03-10T00:00:00",
-   "ozsermaye": 973377.728844
+   "ozsermaye": 973415.102659,
+   "nakit": 973415.102659,
+   "pozisyon_deger": 0
   },
   {
    "tarih": "2025-03-11T00:00:00",
-   "ozsermaye": 973377.728844
+   "ozsermaye": 973415.102659,
+   "nakit": 973415.102659,
+   "pozisyon_deger": 0
   },
   {
    "tarih": "2025-03-12T00:00:00",
-   "ozsermaye": 973377.728844
+   "ozsermaye": 973415.102659,
+   "nakit": 973415.102659,
+   "pozisyon_deger": 0
   },
   {
    "tarih": "2025-03-13T00:00:00",
-   "ozsermaye": 973377.728844
+   "ozsermaye": 973415.102659,
+   "nakit": 973415.102659,
+   "pozisyon_deger": 0
   },
   {
    "tarih": "2025-03-14T00:00:00",
-   "ozsermaye": 973377.728844
+   "ozsermaye": 973415.102659,
+   "nakit": 973415.102659,
+   "pozisyon_deger": 0
   },
   {
    "tarih": "2025-03-17T00:00:00",
-   "ozsermaye": 971493.162217
+   "ozsermaye": 971528.011812,
+   "nakit": 3.699844,
+   "pozisyon_deger": 971524.311968
   },
   {
    "tarih": "2025-03-18T00:00:00",
-   "ozsermaye": 969293.779715
+   "ozsermaye": 969289.049314,
+   "nakit": 3.699844,
+   "pozisyon_deger": 969285.34947
   },
   {
    "tarih": "2025-03-19T00:00:00",
-   "ozsermaye": 886279.086954
+   "ozsermaye": 886148.116462,
+   "nakit": 3.699844,
+   "pozisyon_deger": 886144.416618
   },
   {
    "tarih": "2025-03-20T00:00:00",
-   "ozsermaye": 883904.294515
+   "ozsermaye": 883754.638189,
+   "nakit": 883754.638189,
+   "pozisyon_deger": 0
   },
   {
    "tarih": "2025-03-21T00:00:00",
-   "ozsermaye": 883904.294515
+   "ozsermaye": 883754.638189,
+   "nakit": 883754.638189,
+   "pozisyon_deger": 0
   },
   {
    "tarih": "2025-03-24T00:00:00",
-   "ozsermaye": 883904.294515
+   "ozsermaye": 883754.638189,
+   "nakit": 883754.638189,
+   "pozisyon_deger": 0
   },
   {
    "tarih": "2025-03-25T00:00:00",
-   "ozsermaye": 883904.294515
+   "ozsermaye": 883754.638189,
+   "nakit": 883754.638189,
+   "pozisyon_deger": 0
   },
   {
    "tarih": "2025-03-26T00:00:00",
-   "ozsermaye": 883904.294515
+   "ozsermaye": 883754.638189,
+   "nakit": 883754.638189,
+   "pozisyon_deger": 0
   },
   {
    "tarih": "2025-03-27T00:00:00",
-   "ozsermaye": 883904.294515
+   "ozsermaye": 883754.638189,
+   "nakit": 883754.638189,
+   "pozisyon_deger": 0
   },
   {
    "tarih": "2025-03-28T00:00:00",
-   "ozsermaye": 883904.294515
+   "ozsermaye": 883754.638189,
+   "nakit": 883754.638189,
+   "pozisyon_deger": 0
   },
   {
    "tarih": "2025-04-02T00:00:00",
-   "ozsermaye": 883904.294515
+   "ozsermaye": 883754.638189,
+   "nakit": 883754.638189,
+   "pozisyon_deger": 0
   },
   {
    "tarih": "2025-04-03T00:00:00",
-   "ozsermaye": 883904.294515
+   "ozsermaye": 883754.638189,
+   "nakit": 883754.638189,
+   "pozisyon_deger": 0
   },
   {
    "tarih": "2025-04-04T00:00:00",
-   "ozsermaye": 883904.294515
+   "ozsermaye": 883754.638189,
+   "nakit": 883754.638189,
+   "pozisyon_deger": 0
   },
   {
    "tarih": "2025-04-07T00:00:00",
-   "ozsermaye": 883904.294515
+   "ozsermaye": 883754.638189,
+   "nakit": 883754.638189,
+   "pozisyon_deger": 0
   },
   {
    "tarih": "2025-04-08T00:00:00",
-   "ozsermaye": 883904.294515
+   "ozsermaye": 883754.638189,
+   "nakit": 883754.638189,
+   "pozisyon_deger": 0
   },
   {
    "tarih": "2025-04-09T00:00:00",
-   "ozsermaye": 883904.294515
+   "ozsermaye": 883754.638189,
+   "nakit": 883754.638189,
+   "pozisyon_deger": 0
   },
   {
    "tarih": "2025-04-10T00:00:00",
-   "ozsermaye": 883904.294515
+   "ozsermaye": 883754.638189,
+   "nakit": 883754.638189,
+   "pozisyon_deger": 0
   },
   {
    "tarih": "2025-04-11T00:00:00",
-   "ozsermaye": 883904.294515
+   "ozsermaye": 883754.638189,
+   "nakit": 883754.638189,
+   "pozisyon_deger": 0
   },
   {
    "tarih": "2025-04-14T00:00:00",
-   "ozsermaye": 883904.294515
+   "ozsermaye": 883754.638189,
+   "nakit": 883754.638189,
+   "pozisyon_deger": 0
   },
   {
    "tarih": "2025-04-15T00:00:00",
-   "ozsermaye": 883904.294515
+   "ozsermaye": 883754.638189,
+   "nakit": 883754.638189,
+   "pozisyon_deger": 0
   },
   {
    "tarih": "2025-04-16T00:00:00",
-   "ozsermaye": 883904.294515
+   "ozsermaye": 883754.638189,
+   "nakit": 883754.638189,
+   "pozisyon_deger": 0
   },
   {
    "tarih": "2025-04-17T00:00:00",
-   "ozsermaye": 883904.294515
+   "ozsermaye": 883754.638189,
+   "nakit": 883754.638189,
+   "pozisyon_deger": 0
   },
   {
    "tarih": "2025-04-18T00:00:00",
-   "ozsermaye": 883904.294515
+   "ozsermaye": 883754.638189,
+   "nakit": 883754.638189,
+   "pozisyon_deger": 0
   },
   {
    "tarih": "2025-04-21T00:00:00",
-   "ozsermaye": 883904.294515
+   "ozsermaye": 883754.638189,
+   "nakit": 883754.638189,
+   "pozisyon_deger": 0
   },
   {
    "tarih": "2025-04-22T00:00:00",
-   "ozsermaye": 883904.294515
+   "ozsermaye": 883754.638189,
+   "nakit": 883754.638189,
+   "pozisyon_deger": 0
   },
   {
    "tarih": "2025-04-24T00:00:00",
-   "ozsermaye": 883904.294515
+   "ozsermaye": 883754.638189,
+   "nakit": 883754.638189,
+   "pozisyon_deger": 0
   },
   {
    "tarih": "2025-04-25T00:00:00",
-   "ozsermaye": 883904.294515
+   "ozsermaye": 883754.638189,
+   "nakit": 883754.638189,
+   "pozisyon_deger": 0
   },
   {
    "tarih": "2025-04-28T00:00:00",
-   "ozsermaye": 883904.294515
+   "ozsermaye": 883754.638189,
+   "nakit": 883754.638189,
+   "pozisyon_deger": 0
   },
   {
    "tarih": "2025-04-29T00:00:00",
-   "ozsermaye": 883904.294515
+   "ozsermaye": 883754.638189,
+   "nakit": 883754.638189,
+   "pozisyon_deger": 0
   },
   {
    "tarih": "2025-04-30T00:00:00",
-   "ozsermaye": 883904.294515
+   "ozsermaye": 883754.638189,
+   "nakit": 883754.638189,
+   "pozisyon_deger": 0
   },
   {
    "tarih": "2025-05-02T00:00:00",
-   "ozsermaye": 883904.294515
+   "ozsermaye": 883754.638189,
+   "nakit": 883754.638189,
+   "pozisyon_deger": 0
   },
   {
    "tarih": "2025-05-05T00:00:00",
-   "ozsermaye": 883904.294515
+   "ozsermaye": 883754.638189,
+   "nakit": 883754.638189,
+   "pozisyon_deger": 0
   },
   {
    "tarih": "2025-05-06T00:00:00",
-   "ozsermaye": 883904.294515
+   "ozsermaye": 883754.638189,
+   "nakit": 883754.638189,
+   "pozisyon_deger": 0
   },
   {
    "tarih": "2025-05-07T00:00:00",
-   "ozsermaye": 883904.294515
+   "ozsermaye": 883754.638189,
+   "nakit": 883754.638189,
+   "pozisyon_deger": 0
   },
   {
    "tarih": "2025-05-08T00:00:00",
-   "ozsermaye": 883904.294515
+   "ozsermaye": 883754.638189,
+   "nakit": 883754.638189,
+   "pozisyon_deger": 0
   },
   {
    "tarih": "2025-05-09T00:00:00",
-   "ozsermaye": 883904.294515
+   "ozsermaye": 883754.638189,
+   "nakit": 883754.638189,
+   "pozisyon_deger": 0
   },
   {
    "tarih": "2025-05-12T00:00:00",
-   "ozsermaye": 883904.294515
+   "ozsermaye": 883754.638189,
+   "nakit": 883754.638189,
+   "pozisyon_deger": 0
   },
   {
    "tarih": "2025-05-13T00:00:00",
-   "ozsermaye": 883904.294515
+   "ozsermaye": 883754.638189,
+   "nakit": 883754.638189,
+   "pozisyon_deger": 0
   },
   {
    "tarih": "2025-05-14T00:00:00",
-   "ozsermaye": 883904.294515
+   "ozsermaye": 883754.638189,
+   "nakit": 883754.638189,
+   "pozisyon_deger": 0
   },
   {
    "tarih": "2025-05-15T00:00:00",
-   "ozsermaye": 883904.294515
+   "ozsermaye": 883754.638189,
+   "nakit": 883754.638189,
+   "pozisyon_deger": 0
   },
   {
    "tarih": "2025-05-16T00:00:00",
-   "ozsermaye": 883904.294515
+   "ozsermaye": 883754.638189,
+   "nakit": 883754.638189,
+   "pozisyon_deger": 0
   },
   {
    "tarih": "2025-05-20T00:00:00",
-   "ozsermaye": 883904.294515
+   "ozsermaye": 883754.638189,
+   "nakit": 883754.638189,
+   "pozisyon_deger": 0
   },
   {
    "tarih": "2025-05-21T00:00:00",
-   "ozsermaye": 883904.294515
+   "ozsermaye": 883754.638189,
+   "nakit": 883754.638189,
+   "pozisyon_deger": 0
   },
   {
    "tarih": "2025-05-22T00:00:00",
-   "ozsermaye": 883904.294515
+   "ozsermaye": 883754.638189,
+   "nakit": 883754.638189,
+   "pozisyon_deger": 0
   },
   {
    "tarih": "2025-05-23T00:00:00",
-   "ozsermaye": 883904.294515
+   "ozsermaye": 883754.638189,
+   "nakit": 883754.638189,
+   "pozisyon_deger": 0
   },
   {
    "tarih": "2025-05-26T00:00:00",
-   "ozsermaye": 883904.294515
+   "ozsermaye": 883754.638189,
+   "nakit": 883754.638189,
+   "pozisyon_deger": 0
   },
   {
    "tarih": "2025-05-27T00:00:00",
-   "ozsermaye": 883904.294515
+   "ozsermaye": 883754.638189,
+   "nakit": 883754.638189,
+   "pozisyon_deger": 0
   },
   {
    "tarih": "2025-05-28T00:00:00",
-   "ozsermaye": 883904.294515
+   "ozsermaye": 883754.638189,
+   "nakit": 883754.638189,
+   "pozisyon_deger": 0
   },
   {
    "tarih": "2025-05-29T00:00:00",
-   "ozsermaye": 883904.294515
+   "ozsermaye": 883754.638189,
+   "nakit": 883754.638189,
+   "pozisyon_deger": 0
   },
   {
    "tarih": "2025-05-30T00:00:00",
-   "ozsermaye": 883904.294515
+   "ozsermaye": 883754.638189,
+   "nakit": 883754.638189,
+   "pozisyon_deger": 0
   },
   {
    "tarih": "2025-06-02T00:00:00",
-   "ozsermaye": 883904.294515
+   "ozsermaye": 883754.638189,
+   "nakit": 883754.638189,
+   "pozisyon_deger": 0
   },
   {
    "tarih": "2025-06-03T00:00:00",
-   "ozsermaye": 883904.294515
+   "ozsermaye": 883754.638189,
+   "nakit": 883754.638189,
+   "pozisyon_deger": 0
   },
   {
    "tarih": "2025-06-04T00:00:00",
-   "ozsermaye": 883904.294515
+   "ozsermaye": 883754.638189,
+   "nakit": 883754.638189,
+   "pozisyon_deger": 0
   },
   {
    "tarih": "2025-06-05T00:00:00",
-   "ozsermaye": 883904.294515
+   "ozsermaye": 883754.638189,
+   "nakit": 883754.638189,
+   "pozisyon_deger": 0
   },
   {
    "tarih": "2025-06-10T00:00:00",
-   "ozsermaye": 883904.294515
+   "ozsermaye": 883754.638189,
+   "nakit": 883754.638189,
+   "pozisyon_deger": 0
   },
   {
    "tarih": "2025-06-11T00:00:00",
-   "ozsermaye": 883904.294515
+   "ozsermaye": 883754.638189,
+   "nakit": 883754.638189,
+   "pozisyon_deger": 0
   },
   {
    "tarih": "2025-06-12T00:00:00",
-   "ozsermaye": 883904.294515
+   "ozsermaye": 883754.638189,
+   "nakit": 883754.638189,
+   "pozisyon_deger": 0
   },
   {
    "tarih": "2025-06-13T00:00:00",
-   "ozsermaye": 883904.294515
+   "ozsermaye": 883754.638189,
+   "nakit": 883754.638189,
+   "pozisyon_deger": 0
   },
   {
    "tarih": "2025-06-16T00:00:00",
-   "ozsermaye": 883904.294515
+   "ozsermaye": 883754.638189,
+   "nakit": 883754.638189,
+   "pozisyon_deger": 0
   },
   {
    "tarih": "2025-06-17T00:00:00",
-   "ozsermaye": 883904.294515
+   "ozsermaye": 883754.638189,
+   "nakit": 883754.638189,
+   "pozisyon_deger": 0
   },
   {
    "tarih": "2025-06-18T00:00:00",
-   "ozsermaye": 883904.294515
+   "ozsermaye": 883754.638189,
+   "nakit": 883754.638189,
+   "pozisyon_deger": 0
   },
   {
    "tarih": "2025-06-19T00:00:00",
-   "ozsermaye": 883904.294515
+   "ozsermaye": 883754.638189,
+   "nakit": 883754.638189,
+   "pozisyon_deger": 0
   },
   {
    "tarih": "2025-06-20T00:00:00",
-   "ozsermaye": 883904.294515
+   "ozsermaye": 883754.638189,
+   "nakit": 883754.638189,
+   "pozisyon_deger": 0
   },
   {
    "tarih": "2025-06-23T00:00:00",
-   "ozsermaye": 883904.294515
+   "ozsermaye": 883754.638189,
+   "nakit": 883754.638189,
+   "pozisyon_deger": 0
   },
   {
    "tarih": "2025-06-24T00:00:00",
-   "ozsermaye": 883904.294515
+   "ozsermaye": 883754.638189,
+   "nakit": 883754.638189,
+   "pozisyon_deger": 0
   },
   {
    "tarih": "2025-06-25T00:00:00",
-   "ozsermaye": 883904.294515
+   "ozsermaye": 883754.638189,
+   "nakit": 883754.638189,
+   "pozisyon_deger": 0
   },
   {
    "tarih": "2025-06-26T00:00:00",
-   "ozsermaye": 883904.294515
+   "ozsermaye": 883754.638189,
+   "nakit": 883754.638189,
+   "pozisyon_deger": 0
   },
   {
    "tarih": "2025-06-27T00:00:00",
-   "ozsermaye": 883904.294515
+   "ozsermaye": 883754.638189,
+   "nakit": 883754.638189,
+   "pozisyon_deger": 0
   },
   {
    "tarih": "2025-06-30T00:00:00",
-   "ozsermaye": 883904.294515
+   "ozsermaye": 883754.638189,
+   "nakit": 883754.638189,
+   "pozisyon_deger": 0
   },
   {
    "tarih": "2025-07-01T00:00:00",
-   "ozsermaye": 883904.294515
+   "ozsermaye": 883754.638189,
+   "nakit": 883754.638189,
+   "pozisyon_deger": 0
   },
   {
    "tarih": "2025-07-02T00:00:00",
-   "ozsermaye": 883904.294515
+   "ozsermaye": 883754.638189,
+   "nakit": 883754.638189,
+   "pozisyon_deger": 0
   },
   {
    "tarih": "2025-07-03T00:00:00",
-   "ozsermaye": 883904.294515
+   "ozsermaye": 883754.638189,
+   "nakit": 883754.638189,
+   "pozisyon_deger": 0
   },
   {
    "tarih": "2025-07-04T00:00:00",
-   "ozsermaye": 883904.294515
+   "ozsermaye": 883754.638189,
+   "nakit": 883754.638189,
+   "pozisyon_deger": 0
   },
   {
    "tarih": "2025-07-07T00:00:00",
-   "ozsermaye": 883904.294515
+   "ozsermaye": 883754.638189,
+   "nakit": 883754.638189,
+   "pozisyon_deger": 0
   },
   {
    "tarih": "2025-07-08T00:00:00",
-   "ozsermaye": 883904.294515
+   "ozsermaye": 883754.638189,
+   "nakit": 883754.638189,
+   "pozisyon_deger": 0
   },
   {
    "tarih": "2025-07-09T00:00:00",
-   "ozsermaye": 883904.294515
+   "ozsermaye": 883754.638189,
+   "nakit": 883754.638189,
+   "pozisyon_deger": 0
   },
   {
    "tarih": "2025-07-10T00:00:00",
-   "ozsermaye": 883904.294515
+   "ozsermaye": 883754.638189,
+   "nakit": 883754.638189,
+   "pozisyon_deger": 0
   },
   {
    "tarih": "2025-07-11T00:00:00",
-   "ozsermaye": 883904.294515
+   "ozsermaye": 883754.638189,
+   "nakit": 883754.638189,
+   "pozisyon_deger": 0
   },
   {
    "tarih": "2025-07-14T00:00:00",
-   "ozsermaye": 883904.294515
+   "ozsermaye": 883754.638189,
+   "nakit": 883754.638189,
+   "pozisyon_deger": 0
   },
   {
    "tarih": "2025-07-16T00:00:00",
-   "ozsermaye": 883904.294515
+   "ozsermaye": 883754.638189,
+   "nakit": 883754.638189,
+   "pozisyon_deger": 0
   },
   {
    "tarih": "2025-07-17T00:00:00",
-   "ozsermaye": 887231.907826
+   "ozsermaye": 887094.85295,
+   "nakit": 5.111436,
+   "pozisyon_deger": 887089.741514
   },
   {
    "tarih": "2025-07-18T00:00:00",
-   "ozsermaye": 895015.097961
+   "ozsermaye": 894885.283029,
+   "nakit": 5.111436,
+   "pozisyon_deger": 894880.171593
   },
   {
    "tarih": "2025-07-21T00:00:00",
-   "ozsermaye": 917070.380695
+   "ozsermaye": 916929.845849,
+   "nakit": 5.111436,
+   "pozisyon_deger": 916924.734413
   },
   {
    "tarih": "2025-07-22T00:00:00",
-   "ozsermaye": 918095.799064
+   "ozsermaye": 918032.824223,
+   "nakit": 5.111436,
+   "pozisyon_deger": 918027.712787
   },
   {
    "tarih": "2025-07-23T00:00:00",
-   "ozsermaye": 910932.337998
+   "ozsermaye": 910886.613161,
+   "nakit": 5.111436,
+   "pozisyon_deger": 910881.501724
   },
   {
    "tarih": "2025-07-24T00:00:00",
-   "ozsermaye": 918540.898603
+   "ozsermaye": 918467.20366,
+   "nakit": 5.111436,
+   "pozisyon_deger": 918462.092224
   },
   {
    "tarih": "2025-07-25T00:00:00",
-   "ozsermaye": 924461.451978
+   "ozsermaye": 924311.017151,
+   "nakit": 5.111436,
+   "pozisyon_deger": 924305.905715
   },
   {
    "tarih": "2025-07-28T00:00:00",
-   "ozsermaye": 926054.151351
+   "ozsermaye": 925886.386225,
+   "nakit": 5.111436,
+   "pozisyon_deger": 925881.274789
   },
   {
    "tarih": "2025-07-29T00:00:00",
-   "ozsermaye": 912882.320668
+   "ozsermaye": 912675.705689,
+   "nakit": 5.111436,
+   "pozisyon_deger": 912670.594253
   },
   {
    "tarih": "2025-07-30T00:00:00",
-   "ozsermaye": 928474.581694
+   "ozsermaye": 928255.62671,
+   "nakit": 5.111436,
+   "pozisyon_deger": 928250.515274
   },
   {
    "tarih": "2025-07-31T00:00:00",
-   "ozsermaye": 934051.351298
+   "ozsermaye": 933829.496156,
+   "nakit": 5.111436,
+   "pozisyon_deger": 933824.38472
   },
   {
    "tarih": "2025-08-01T00:00:00",
-   "ozsermaye": 931485.841115
+   "ozsermaye": 931238.386076,
+   "nakit": 5.111436,
+   "pozisyon_deger": 931233.27464
   },
   {
    "tarih": "2025-08-04T00:00:00",
-   "ozsermaye": 941624.292081
+   "ozsermaye": 941395.647054,
+   "nakit": 5.111436,
+   "pozisyon_deger": 941390.535618
   },
   {
    "tarih": "2025-08-05T00:00:00",
-   "ozsermaye": 940893.947556
+   "ozsermaye": 940613.672614,
+   "nakit": 5.111436,
+   "pozisyon_deger": 940608.561178
   },
   {
    "tarih": "2025-08-06T00:00:00",
-   "ozsermaye": 948251.173264
+   "ozsermaye": 947923.028232,
+   "nakit": 5.111436,
+   "pozisyon_deger": 947917.916796
   },
   {
    "tarih": "2025-08-07T00:00:00",
-   "ozsermaye": 951858.02414
+   "ozsermaye": 951582.719142,
+   "nakit": 5.111436,
+   "pozisyon_deger": 951577.607706
   },
   {
    "tarih": "2025-08-08T00:00:00",
-   "ozsermaye": 963159.671843
+   "ozsermaye": 962870.616892,
+   "nakit": 5.111436,
+   "pozisyon_deger": 962865.505456
   },
   {
    "tarih": "2025-08-11T00:00:00",
-   "ozsermaye": 970605.110762
+   "ozsermaye": 970254.175847,
+   "nakit": 5.111436,
+   "pozisyon_deger": 970249.064411
   },
   {
    "tarih": "2025-08-12T00:00:00",
-   "ozsermaye": 965317.101888
+   "ozsermaye": 964894.226713,
+   "nakit": 5.111436,
+   "pozisyon_deger": 964889.115276
   },
   {
    "tarih": "2025-08-13T00:00:00",
-   "ozsermaye": 960417.651893
+   "ozsermaye": 960088.736949,
+   "nakit": 5.111436,
+   "pozisyon_deger": 960083.625513
   },
   {
    "tarih": "2025-08-14T00:00:00",
-   "ozsermaye": 957646.859933
+   "ozsermaye": 957190.75364,
+   "nakit": 19626.574887,
+   "pozisyon_deger": 937564.178754
   },
   {
    "tarih": "2025-08-15T00:00:00",
-   "ozsermaye": 970010.773226
+   "ozsermaye": 969534.207238,
+   "nakit": 19626.574887,
+   "pozisyon_deger": 949907.632351
   },
   {
    "tarih": "2025-08-18T00:00:00",
-   "ozsermaye": 976067.143635
+   "ozsermaye": 975552.73764,
+   "nakit": 19626.574887,
+   "pozisyon_deger": 955926.162753
   },
   {
    "tarih": "2025-08-19T00:00:00",
-   "ozsermaye": 979575.033694
+   "ozsermaye": 978982.437593,
+   "nakit": 19626.574887,
+   "pozisyon_deger": 959355.862706
   },
   {
    "tarih": "2025-08-20T00:00:00",
-   "ozsermaye": 999747.001412
+   "ozsermaye": 999153.715427,
+   "nakit": 19626.574887,
+   "pozisyon_deger": 979527.14054
   },
   {
    "tarih": "2025-08-21T00:00:00",
-   "ozsermaye": 1011811.110064
+   "ozsermaye": 1011166.243929,
+   "nakit": 19626.574887,
+   "pozisyon_deger": 991539.669043
   },
   {
    "tarih": "2025-08-22T00:00:00",
-   "ozsermaye": 1017478.970061
+   "ozsermaye": 1016735.063967,
+   "nakit": 19626.574887,
+   "pozisyon_deger": 997108.48908
   },
   {
    "tarih": "2025-08-25T00:00:00",
-   "ozsermaye": 1017622.575194
+   "ozsermaye": 1016886.978986,
+   "nakit": 19626.574887,
+   "pozisyon_deger": 997260.404099
   },
   {
    "tarih": "2025-08-26T00:00:00",
-   "ozsermaye": 1003999.644011
+   "ozsermaye": 1003443.418009,
+   "nakit": 19626.574887,
+   "pozisyon_deger": 983816.843122
   },
   {
    "tarih": "2025-08-27T00:00:00",
-   "ozsermaye": 993708.949294
+   "ozsermaye": 993083.433265,
+   "nakit": 19626.574887,
+   "pozisyon_deger": 973456.858378
   },
   {
    "tarih": "2025-08-28T00:00:00",
-   "ozsermaye": 1002200.371449
+   "ozsermaye": 1001539.015298,
+   "nakit": 19626.574887,
+   "pozisyon_deger": 981912.440412
   },
   {
    "tarih": "2025-08-29T00:00:00",
-   "ozsermaye": 1007338.830195
+   "ozsermaye": 1006614.38404,
+   "nakit": 19626.574887,
+   "pozisyon_deger": 986987.809154
   },
   {
    "tarih": "2025-09-01T00:00:00",
-   "ozsermaye": 1016636.972952
+   "ozsermaye": 1015875.476687,
+   "nakit": 19626.574887,
+   "pozisyon_deger": 996248.9018
   },
   {
    "tarih": "2025-09-02T00:00:00",
-   "ozsermaye": 1002250.662976
+   "ozsermaye": 1001366.926893,
+   "nakit": 19626.574887,
+   "pozisyon_deger": 981740.352006
   },
   {
    "tarih": "2025-09-03T00:00:00",
-   "ozsermaye": 1006593.634768
+   "ozsermaye": 1005644.138765,
+   "nakit": 19626.574887,
+   "pozisyon_deger": 986017.563878
   },
   {
    "tarih": "2025-09-04T00:00:00",
-   "ozsermaye": 1026686.249405
+   "ozsermaye": 1025691.363175,
+   "nakit": 19626.574887,
+   "pozisyon_deger": 1006064.788288
   },
   {
    "tarih": "2025-09-05T00:00:00",
-   "ozsermaye": 1017822.632714
+   "ozsermaye": 1016761.316629,
+   "nakit": 19626.574887,
+   "pozisyon_deger": 997134.741742
   },
   {
    "tarih": "2025-09-08T00:00:00",
-   "ozsermaye": 997996.964247
+   "ozsermaye": 997060.948116,
+   "nakit": 19626.574887,
+   "pozisyon_deger": 977434.373229
   },
   {
    "tarih": "2025-09-09T00:00:00",
-   "ozsermaye": 1001242.943616
+   "ozsermaye": 1000237.937713,
+   "nakit": 19626.574887,
+   "pozisyon_deger": 980611.362826
   },
   {
    "tarih": "2025-09-10T00:00:00",
-   "ozsermaye": 1010303.694461
+   "ozsermaye": 1009284.078317,
+   "nakit": 19626.574887,
+   "pozisyon_deger": 989657.50343
   },
   {
    "tarih": "2025-09-11T00:00:00",
-   "ozsermaye": 966198.165277
+   "ozsermaye": 965247.503731,
+   "nakit": 3.069593,
+   "pozisyon_deger": 965244.434138
   },
   {
    "tarih": "2025-09-12T00:00:00",
-   "ozsermaye": 976679.484556
+   "ozsermaye": 975985.19564,
+   "nakit": 52429.425218,
+   "pozisyon_deger": 923555.770422
   },
   {
    "tarih": "2025-09-15T00:00:00",
-   "ozsermaye": 1025455.436093
+   "ozsermaye": 1027813.152589,
+   "nakit": 52429.425218,
+   "pozisyon_deger": 975383.727371
   },
   {
    "tarih": "2025-09-16T00:00:00",
-   "ozsermaye": 1029943.329008
+   "ozsermaye": 1032838.221258,
+   "nakit": 52429.425218,
+   "pozisyon_deger": 980408.796041
   },
   {
    "tarih": "2025-09-17T00:00:00",
-   "ozsermaye": 1012594.500841
+   "ozsermaye": 1014149.040725,
+   "nakit": 52429.425218,
+   "pozisyon_deger": 961719.615507
   },
   {
    "tarih": "2025-09-18T00:00:00",
-   "ozsermaye": 1007778.516439
+   "ozsermaye": 1008367.836912,
+   "nakit": 52429.425218,
+   "pozisyon_deger": 955938.411695
   },
   {
    "tarih": "2025-09-19T00:00:00",
-   "ozsermaye": 1025263.26324
+   "ozsermaye": 1026454.376888,
+   "nakit": 52429.425218,
+   "pozisyon_deger": 974024.95167
   },
   {
    "tarih": "2025-09-22T00:00:00",
-   "ozsermaye": 1042072.021354
+   "ozsermaye": 1046367.337301,
+   "nakit": 52429.425218,
+   "pozisyon_deger": 993937.912083
   },
   {
    "tarih": "2025-09-23T00:00:00",
-   "ozsermaye": 1028498.315296
+   "ozsermaye": 1030208.280237,
+   "nakit": 52429.425218,
+   "pozisyon_deger": 977778.85502
   },
   {
    "tarih": "2025-09-24T00:00:00",
-   "ozsermaye": 1029639.028947
+   "ozsermaye": 1030371.593225,
+   "nakit": 52429.425218,
+   "pozisyon_deger": 977942.168007
   },
   {
    "tarih": "2025-09-25T00:00:00",
-   "ozsermaye": 1034797.780186
+   "ozsermaye": 1035252.463167,
+   "nakit": 52429.425218,
+   "pozisyon_deger": 982823.03795
   },
   {
    "tarih": "2025-09-26T00:00:00",
-   "ozsermaye": 1015398.340441
+   "ozsermaye": 1011033.3344,
+   "nakit": 52429.425218,
+   "pozisyon_deger": 958603.909183
   },
   {
    "tarih": "2025-09-29T00:00:00",
-   "ozsermaye": 997240.212988
+   "ozsermaye": 996191.227023,
+   "nakit": 52429.425218,
+   "pozisyon_deger": 943761.801805
   },
   {
    "tarih": "2025-09-30T00:00:00",
-   "ozsermaye": 978253.284984
+   "ozsermaye": 977888.929772,
+   "nakit": 52429.425218,
+   "pozisyon_deger": 925459.504554
   },
   {
    "tarih": "2025-10-01T00:00:00",
-   "ozsermaye": 1003658.94398
+   "ozsermaye": 1005153.041114,
+   "nakit": 52429.425218,
+   "pozisyon_deger": 952723.615896
   },
   {
    "tarih": "2025-10-02T00:00:00",
-   "ozsermaye": 993926.244759
+   "ozsermaye": 996912.587292,
+   "nakit": 52429.425218,
+   "pozisyon_deger": 944483.162074
   },
   {
    "tarih": "2025-10-03T00:00:00",
-   "ozsermaye": 979325.701923
+   "ozsermaye": 982401.80203,
+   "nakit": 52429.425218,
+   "pozisyon_deger": 929972.376812
   },
   {
    "tarih": "2025-10-06T00:00:00",
-   "ozsermaye": 973784.065936
+   "ozsermaye": 968092.43705,
+   "nakit": 52429.425218,
+   "pozisyon_deger": 915663.011832
   },
   {
    "tarih": "2025-10-07T00:00:00",
-   "ozsermaye": 1003913.004442
+   "ozsermaye": 997542.352959,
+   "nakit": 52429.425218,
+   "pozisyon_deger": 945112.927741
   },
   {
    "tarih": "2025-10-08T00:00:00",
-   "ozsermaye": 1004744.96884
+   "ozsermaye": 1001999.111182,
+   "nakit": 52429.425218,
+   "pozisyon_deger": 949569.685964
   },
   {
    "tarih": "2025-10-09T00:00:00",
-   "ozsermaye": 996033.838929
+   "ozsermaye": 994077.405147,
+   "nakit": 108561.027493,
+   "pozisyon_deger": 885516.377654
   },
   {
    "tarih": "2025-10-10T00:00:00",
-   "ozsermaye": 992579.12243
+   "ozsermaye": 992153.316,
+   "nakit": 108561.027493,
+   "pozisyon_deger": 883592.288507
   },
   {
    "tarih": "2025-10-13T00:00:00",
-   "ozsermaye": 971246.167872
+   "ozsermaye": 972420.215954,
+   "nakit": 108561.027493,
+   "pozisyon_deger": 863859.18846
   },
   {
    "tarih": "2025-10-14T00:00:00",
-   "ozsermaye": 949069.756176
+   "ozsermaye": 951483.39099,
+   "nakit": 108561.027493,
+   "pozisyon_deger": 842922.363497
   },
   {
    "tarih": "2025-10-15T00:00:00",
-   "ozsermaye": 946945.66494
+   "ozsermaye": 950174.183412,
+   "nakit": 738608.883414,
+   "pozisyon_deger": 211565.299997
   },
   {
    "tarih": "2025-10-16T00:00:00",
-   "ozsermaye": 944573.13702
+   "ozsermaye": 948655.824243,
+   "nakit": 738608.883414,
+   "pozisyon_deger": 210046.940828
   },
   {
    "tarih": "2025-10-17T00:00:00",
-   "ozsermaye": 932555.963378
+   "ozsermaye": 938757.881636,
+   "nakit": 738608.883414,
+   "pozisyon_deger": 200148.998221
   },
   {
    "tarih": "2025-10-20T00:00:00",
-   "ozsermaye": 946691.068771
+   "ozsermaye": 948142.718511,
+   "nakit": 738608.883414,
+   "pozisyon_deger": 209533.835096
   },
   {
    "tarih": "2025-10-21T00:00:00",
-   "ozsermaye": 948379.860887
+   "ozsermaye": 949599.795631,
+   "nakit": 738608.883414,
+   "pozisyon_deger": 210990.912216
   },
   {
    "tarih": "2025-10-22T00:00:00",
-   "ozsermaye": 946853.122697
+   "ozsermaye": 949655.516792,
+   "nakit": 738608.883414,
+   "pozisyon_deger": 211046.633378
   },
   {
    "tarih": "2025-10-23T00:00:00",
-   "ozsermaye": 946247.757398
+   "ozsermaye": 948623.547107,
+   "nakit": 738608.883414,
+   "pozisyon_deger": 210014.663692
   },
   {
    "tarih": "2025-10-24T00:00:00",
-   "ozsermaye": 948563.574662
+   "ozsermaye": 949681.82209,
+   "nakit": 738608.883414,
+   "pozisyon_deger": 211072.938676
   },
   {
    "tarih": "2025-10-27T00:00:00",
-   "ozsermaye": 955052.389561
+   "ozsermaye": 956061.754921,
+   "nakit": 738608.883414,
+   "pozisyon_deger": 217452.871507
   },
   {
    "tarih": "2025-10-28T00:00:00",
-   "ozsermaye": 955748.200592
+   "ozsermaye": 957645.680318,
+   "nakit": 738608.883414,
+   "pozisyon_deger": 219036.796904
   },
   {
    "tarih": "2025-10-30T00:00:00",
-   "ozsermaye": 955152.828363
+   "ozsermaye": 956813.153091,
+   "nakit": 738608.883414,
+   "pozisyon_deger": 218204.269676
   },
   {
    "tarih": "2025-10-31T00:00:00",
-   "ozsermaye": 956900.045224
+   "ozsermaye": 957009.930973,
+   "nakit": 738608.883414,
+   "pozisyon_deger": 218401.047559
   },
   {
    "tarih": "2025-11-03T00:00:00",
-   "ozsermaye": 959662.601276
+   "ozsermaye": 960452.117253,
+   "nakit": 738608.883414,
+   "pozisyon_deger": 221843.233839
   },
   {
    "tarih": "2025-11-04T00:00:00",
-   "ozsermaye": 952392.45712
+   "ozsermaye": 954473.626225,
+   "nakit": 738608.883414,
+   "pozisyon_deger": 215864.74281
   },
   {
    "tarih": "2025-11-05T00:00:00",
-   "ozsermaye": 950991.031399
+   "ozsermaye": 951692.945306,
+   "nakit": 738608.883414,
+   "pozisyon_deger": 213084.061892
   },
   {
    "tarih": "2025-11-06T00:00:00",
-   "ozsermaye": 946600.248009
+   "ozsermaye": 947369.418377,
+   "nakit": 738608.883414,
+   "pozisyon_deger": 208760.534963
   },
   {
    "tarih": "2025-11-07T00:00:00",
-   "ozsermaye": 921831.108329
+   "ozsermaye": 926785.64337,
+   "nakit": 235676.121008,
+   "pozisyon_deger": 691109.522362
   },
   {
    "tarih": "2025-11-10T00:00:00",
-   "ozsermaye": 910583.050312
+   "ozsermaye": 918242.384523,
+   "nakit": 235676.121008,
+   "pozisyon_deger": 682566.263515
   },
   {
    "tarih": "2025-11-11T00:00:00",
-   "ozsermaye": 900503.767704
+   "ozsermaye": 907861.050456,
+   "nakit": 235676.121008,
+   "pozisyon_deger": 672184.929448
   },
   {
    "tarih": "2025-11-12T00:00:00",
-   "ozsermaye": 898806.317917
+   "ozsermaye": 907950.239411,
+   "nakit": 235676.121008,
+   "pozisyon_deger": 672274.118402
   },
   {
    "tarih": "2025-11-13T00:00:00",
-   "ozsermaye": 886606.811382
+   "ozsermaye": 899424.499589,
+   "nakit": 645855.397522,
+   "pozisyon_deger": 253569.102067
   },
   {
    "tarih": "2025-11-14T00:00:00",
-   "ozsermaye": 879645.935384
+   "ozsermaye": 897642.990886,
+   "nakit": 645855.397522,
+   "pozisyon_deger": 251787.593364
   },
   {
    "tarih": "2025-11-17T00:00:00",
-   "ozsermaye": 891731.969193
+   "ozsermaye": 908698.394371,
+   "nakit": 645855.397522,
+   "pozisyon_deger": 262842.996849
   },
   {
    "tarih": "2025-11-18T00:00:00",
-   "ozsermaye": 894133.308421
+   "ozsermaye": 909548.907239,
+   "nakit": 645855.397522,
+   "pozisyon_deger": 263693.509717
   },
   {
    "tarih": "2025-11-19T00:00:00",
-   "ozsermaye": 896135.315926
+   "ozsermaye": 912752.779734,
+   "nakit": 645855.397522,
+   "pozisyon_deger": 266897.382212
   },
   {
    "tarih": "2025-11-20T00:00:00",
-   "ozsermaye": 896338.600783
+   "ozsermaye": 916346.95923,
+   "nakit": 645855.397522,
+   "pozisyon_deger": 270491.561708
   },
   {
    "tarih": "2025-11-21T00:00:00",
-   "ozsermaye": 895048.342651
+   "ozsermaye": 915062.896663,
+   "nakit": 645855.397522,
+   "pozisyon_deger": 269207.49914
   },
   {
    "tarih": "2025-11-24T00:00:00",
-   "ozsermaye": 896469.655575
+   "ozsermaye": 915527.378756,
+   "nakit": 645855.397522,
+   "pozisyon_deger": 269671.981234
   },
   {
    "tarih": "2025-11-25T00:00:00",
-   "ozsermaye": 892329.430418
+   "ozsermaye": 913097.560798,
+   "nakit": 645855.397522,
+   "pozisyon_deger": 267242.163275
   },
   {
    "tarih": "2025-11-26T00:00:00",
-   "ozsermaye": 889834.429993
+   "ozsermaye": 912829.05683,
+   "nakit": 645855.397522,
+   "pozisyon_deger": 266973.659307
   },
   {
    "tarih": "2025-11-27T00:00:00",
-   "ozsermaye": 892407.067061
+   "ozsermaye": 915877.752125,
+   "nakit": 677754.250616,
+   "pozisyon_deger": 238123.501509
   },
   {
    "tarih": "2025-11-28T00:00:00",
-   "ozsermaye": 892227.806712
+   "ozsermaye": 915755.347683,
+   "nakit": 677754.250616,
+   "pozisyon_deger": 238001.097067
   },
   {
    "tarih": "2025-12-01T00:00:00",
-   "ozsermaye": 896474.326461
+   "ozsermaye": 919890.550232,
+   "nakit": 677754.250616,
+   "pozisyon_deger": 242136.299616
   },
   {
    "tarih": "2025-12-02T00:00:00",
-   "ozsermaye": 897279.904189
+   "ozsermaye": 921431.048605,
+   "nakit": 677754.250616,
+   "pozisyon_deger": 243676.797989
   },
   {
    "tarih": "2025-12-03T00:00:00",
-   "ozsermaye": 896106.826144
+   "ozsermaye": 920935.849917,
+   "nakit": 677754.250616,
+   "pozisyon_deger": 243181.5993
   },
   {
    "tarih": "2025-12-04T00:00:00",
-   "ozsermaye": 892301.827411
+   "ozsermaye": 916845.650101,
+   "nakit": 677754.250616,
+   "pozisyon_deger": 239091.399485
   },
   {
    "tarih": "2025-12-05T00:00:00",
-   "ozsermaye": 894038.993389
+   "ozsermaye": 920039.613298,
+   "nakit": 172589.689445,
+   "pozisyon_deger": 747449.923853
   },
   {
    "tarih": "2025-12-08T00:00:00",
-   "ozsermaye": 893586.055595
+   "ozsermaye": 919645.246786,
+   "nakit": 172589.689445,
+   "pozisyon_deger": 747055.557341
   },
   {
    "tarih": "2025-12-09T00:00:00",
-   "ozsermaye": 902909.013358
+   "ozsermaye": 929559.917257,
+   "nakit": 172589.689445,
+   "pozisyon_deger": 756970.227812
   },
   {
    "tarih": "2025-12-10T00:00:00",
-   "ozsermaye": 902272.822828
+   "ozsermaye": 930190.307523,
+   "nakit": 172589.689445,
+   "pozisyon_deger": 757600.618078
   },
   {
    "tarih": "2025-12-11T00:00:00",
-   "ozsermaye": 899528.604582
+   "ozsermaye": 929728.070582,
+   "nakit": 172589.689445,
+   "pozisyon_deger": 757138.381137
   },
   {
    "tarih": "2025-12-12T00:00:00",
-   "ozsermaye": 908321.282622
+   "ozsermaye": 938250.519277,
+   "nakit": 172589.689445,
+   "pozisyon_deger": 765660.829833
   },
   {
    "tarih": "2025-12-15T00:00:00",
-   "ozsermaye": 909688.253703
+   "ozsermaye": 942605.38804,
+   "nakit": 172589.689445,
+   "pozisyon_deger": 770015.698595
   },
   {
    "tarih": "2025-12-16T00:00:00",
-   "ozsermaye": 907657.029628
+   "ozsermaye": 936391.992697,
+   "nakit": 172589.689445,
+   "pozisyon_deger": 763802.303252
   },
   {
    "tarih": "2025-12-17T00:00:00",
-   "ozsermaye": 900423.509698
+   "ozsermaye": 929640.772479,
+   "nakit": 172589.689445,
+   "pozisyon_deger": 757051.083035
   },
   {
    "tarih": "2025-12-18T00:00:00",
-   "ozsermaye": 904094.18942
+   "ozsermaye": 932678.092111,
+   "nakit": 172589.689445,
+   "pozisyon_deger": 760088.402666
   },
   {
    "tarih": "2025-12-19T00:00:00",
-   "ozsermaye": 913048.105439
+   "ozsermaye": 938990.011421,
+   "nakit": 172589.689445,
+   "pozisyon_deger": 766400.321976
   },
   {
    "tarih": "2025-12-22T00:00:00",
-   "ozsermaye": 909950.939138
+   "ozsermaye": 936261.836153,
+   "nakit": 172589.689445,
+   "pozisyon_deger": 763672.146708
   },
   {
    "tarih": "2025-12-23T00:00:00",
-   "ozsermaye": 916217.39566
+   "ozsermaye": 943435.677054,
+   "nakit": 172589.689445,
+   "pozisyon_deger": 770845.987609
   },
   {
    "tarih": "2025-12-24T00:00:00",
-   "ozsermaye": 916248.286053
+   "ozsermaye": 943933.409455,
+   "nakit": 172589.689445,
+   "pozisyon_deger": 771343.72001
   },
   {
    "tarih": "2025-12-26T00:00:00",
-   "ozsermaye": 920232.821346
+   "ozsermaye": 947388.478317,
+   "nakit": 172589.689445,
+   "pozisyon_deger": 774798.788872
   },
   {
    "tarih": "2025-12-29T00:00:00",
-   "ozsermaye": 899734.82358
+   "ozsermaye": 928700.339656,
+   "nakit": 172589.689445,
+   "pozisyon_deger": 756110.650211
   },
   {
    "tarih": "2025-12-30T00:00:00",
-   "ozsermaye": 904181.773443
+   "ozsermaye": 929120.678521,
+   "nakit": 172589.689445,
+   "pozisyon_deger": 756530.989076
   },
   {
    "tarih": "2025-12-31T00:00:00",
-   "ozsermaye": 908792.152495
+   "ozsermaye": 934496.355223,
+   "nakit": 172589.689445,
+   "pozisyon_deger": 761906.665778
   },
   {
    "tarih": "2026-01-02T00:00:00",
-   "ozsermaye": 915782.125652
+   "ozsermaye": 942376.46921,
+   "nakit": 172589.689445,
+   "pozisyon_deger": 769786.779765
   },
   {
    "tarih": "2026-01-05T00:00:00",
-   "ozsermaye": 927348.404544
+   "ozsermaye": 950816.53775,
+   "nakit": 172589.689445,
+   "pozisyon_deger": 778226.848305
   },
   {
    "tarih": "2026-01-06T00:00:00",
-   "ozsermaye": 948867.395577
+   "ozsermaye": 972331.857815,
+   "nakit": 124050.746231,
+   "pozisyon_deger": 848281.111584
   },
   {
    "tarih": "2026-01-07T00:00:00",
-   "ozsermaye": 946224.757396
+   "ozsermaye": 968554.801223,
+   "nakit": 124050.746231,
+   "pozisyon_deger": 844504.054992
   },
   {
    "tarih": "2026-01-08T00:00:00",
-   "ozsermaye": 949597.715929
+   "ozsermaye": 968937.071354,
+   "nakit": 124050.746231,
+   "pozisyon_deger": 844886.325123
   },
   {
    "tarih": "2026-01-09T00:00:00",
-   "ozsermaye": 957227.024915
+   "ozsermaye": 976170.81627,
+   "nakit": 124050.746231,
+   "pozisyon_deger": 852120.070039
   },
   {
    "tarih": "2026-01-12T00:00:00",
-   "ozsermaye": 970950.713417
+   "ozsermaye": 991904.165314,
+   "nakit": 124050.746231,
+   "pozisyon_deger": 867853.419084
   },
   {
    "tarih": "2026-01-13T00:00:00",
-   "ozsermaye": 985663.246823
+   "ozsermaye": 1005068.844897,
+   "nakit": 124050.746231,
+   "pozisyon_deger": 881018.098667
   },
   {
    "tarih": "2026-01-14T00:00:00",
-   "ozsermaye": 984524.977566
+   "ozsermaye": 1005341.548724,
+   "nakit": 124050.746231,
+   "pozisyon_deger": 881290.802493
   },
   {
    "tarih": "2026-01-15T00:00:00",
-   "ozsermaye": 998666.509055
+   "ozsermaye": 1017785.028781,
+   "nakit": 124050.746231,
+   "pozisyon_deger": 893734.28255
   },
   {
    "tarih": "2026-01-16T00:00:00",
-   "ozsermaye": 1010852.679495
+   "ozsermaye": 1022127.071154,
+   "nakit": 124050.746231,
+   "pozisyon_deger": 898076.324924
   },
   {
    "tarih": "2026-01-19T00:00:00",
-   "ozsermaye": 1016355.777327
+   "ozsermaye": 1028160.039756,
+   "nakit": 124050.746231,
+   "pozisyon_deger": 904109.293526
   },
   {
    "tarih": "2026-01-20T00:00:00",
-   "ozsermaye": 1035202.26821
+   "ozsermaye": 1046061.704757,
+   "nakit": 124050.746231,
+   "pozisyon_deger": 922010.958526
   },
   {
    "tarih": "2026-01-21T00:00:00",
-   "ozsermaye": 1016027.417705
+   "ozsermaye": 1025954.731776,
+   "nakit": 124050.746231,
+   "pozisyon_deger": 901903.985546
   },
   {
    "tarih": "2026-01-22T00:00:00",
-   "ozsermaye": 1030158.162848
+   "ozsermaye": 1046996.640937,
+   "nakit": 124050.746231,
+   "pozisyon_deger": 922945.894706
   },
   {
    "tarih": "2026-01-23T00:00:00",
-   "ozsermaye": 1037934.838466
+   "ozsermaye": 1054717.769169,
+   "nakit": 124050.746231,
+   "pozisyon_deger": 930667.022938
   },
   {
    "tarih": "2026-01-26T00:00:00",
-   "ozsermaye": 1065167.326697
+   "ozsermaye": 1081697.109431,
+   "nakit": 124050.746231,
+   "pozisyon_deger": 957646.3632
   },
   {
    "tarih": "2026-01-27T00:00:00",
-   "ozsermaye": 1066520.605673
+   "ozsermaye": 1087635.755804,
+   "nakit": 124050.746231,
+   "pozisyon_deger": 963585.009573
   },
   {
    "tarih": "2026-01-28T00:00:00",
-   "ozsermaye": 1077332.771428
+   "ozsermaye": 1101549.061059,
+   "nakit": 124050.746231,
+   "pozisyon_deger": 977498.314828
   },
   {
    "tarih": "2026-01-29T00:00:00",
-   "ozsermaye": 1104747.179807
+   "ozsermaye": 1126388.95879,
+   "nakit": 124050.746231,
+   "pozisyon_deger": 1002338.21256
   },
   {
    "tarih": "2026-01-30T00:00:00",
-   "ozsermaye": 1099288.289757
+   "ozsermaye": 1122129.809553,
+   "nakit": 124050.746231,
+   "pozisyon_deger": 998079.063323
   },
   {
    "tarih": "2026-02-02T00:00:00",
-   "ozsermaye": 1084210.220941
+   "ozsermaye": 1100418.923917,
+   "nakit": 124050.746231,
+   "pozisyon_deger": 976368.177686
   },
   {
    "tarih": "2026-02-03T00:00:00",
-   "ozsermaye": 1103004.09781
+   "ozsermaye": 1126887.118474,
+   "nakit": 89535.124633,
+   "pozisyon_deger": 1037351.993841
   },
   {
    "tarih": "2026-02-04T00:00:00",
-   "ozsermaye": 1113437.009938
+   "ozsermaye": 1141405.93106,
+   "nakit": 89535.124633,
+   "pozisyon_deger": 1051870.806427
   },
   {
    "tarih": "2026-02-05T00:00:00",
-   "ozsermaye": 1080248.530353
+   "ozsermaye": 1105545.191131,
+   "nakit": 89535.124633,
+   "pozisyon_deger": 1016010.066498
   },
   {
    "tarih": "2026-02-06T00:00:00",
-   "ozsermaye": 1063535.117969
+   "ozsermaye": 1086721.590514,
+   "nakit": 89535.124633,
+   "pozisyon_deger": 997186.465881
   },
   {
    "tarih": "2026-02-09T00:00:00",
-   "ozsermaye": 1079746.160696
+   "ozsermaye": 1101310.975332,
+   "nakit": 89535.124633,
+   "pozisyon_deger": 1011775.850699
   },
   {
    "tarih": "2026-02-10T00:00:00",
-   "ozsermaye": 1082963.273498
+   "ozsermaye": 1097953.891239,
+   "nakit": 89535.124633,
+   "pozisyon_deger": 1008418.766606
   },
   {
    "tarih": "2026-02-11T00:00:00",
-   "ozsermaye": 1080082.331832
+   "ozsermaye": 1098806.404201,
+   "nakit": 89535.124633,
+   "pozisyon_deger": 1009271.279568
   },
   {
    "tarih": "2026-02-12T00:00:00",
-   "ozsermaye": 1109848.389963
+   "ozsermaye": 1128879.795974,
+   "nakit": 89535.124633,
+   "pozisyon_deger": 1039344.671341
   },
   {
    "tarih": "2026-02-13T00:00:00",
-   "ozsermaye": 1116520.863373
+   "ozsermaye": 1134672.849067,
+   "nakit": 89535.124633,
+   "pozisyon_deger": 1045137.724434
   },
   {
    "tarih": "2026-02-16T00:00:00",
-   "ozsermaye": 1122300.360332
+   "ozsermaye": 1142776.500598,
+   "nakit": 89535.124633,
+   "pozisyon_deger": 1053241.375965
   },
   {
    "tarih": "2026-02-17T00:00:00",
-   "ozsermaye": 1107866.140976
+   "ozsermaye": 1124503.285828,
+   "nakit": 89535.124633,
+   "pozisyon_deger": 1034968.161195
   },
   {
    "tarih": "2026-02-18T00:00:00",
-   "ozsermaye": 1099620.029624
+   "ozsermaye": 1110820.462882,
+   "nakit": 89535.124633,
+   "pozisyon_deger": 1021285.338249
   },
   {
    "tarih": "2026-02-19T00:00:00",
-   "ozsermaye": 1067379.015495
+   "ozsermaye": 1081229.310015,
+   "nakit": 89535.124633,
+   "pozisyon_deger": 991694.185382
   },
   {
    "tarih": "2026-02-20T00:00:00",
-   "ozsermaye": 1067621.40782
+   "ozsermaye": 1084473.090043,
+   "nakit": 89535.124633,
+   "pozisyon_deger": 994937.96541
   },
   {
    "tarih": "2026-02-23T00:00:00",
-   "ozsermaye": 1079161.874495
+   "ozsermaye": 1100720.814761,
+   "nakit": 89535.124633,
+   "pozisyon_deger": 1011185.690128
   },
   {
    "tarih": "2026-02-24T00:00:00",
-   "ozsermaye": 1064869.065035
+   "ozsermaye": 1085050.409644,
+   "nakit": 89535.124633,
+   "pozisyon_deger": 995515.285011
   },
   {
    "tarih": "2026-02-25T00:00:00",
-   "ozsermaye": 1048396.567654
+   "ozsermaye": 1062493.77697,
+   "nakit": 89535.124633,
+   "pozisyon_deger": 972958.652337
   },
   {
    "tarih": "2026-02-26T00:00:00",
-   "ozsermaye": 1056676.866125
+   "ozsermaye": 1071026.703807,
+   "nakit": 89535.124633,
+   "pozisyon_deger": 981491.579174
   },
   {
    "tarih": "2026-02-27T00:00:00",
-   "ozsermaye": 1051075.381962
+   "ozsermaye": 1068212.843373,
+   "nakit": 89535.124633,
+   "pozisyon_deger": 978677.71874
   },
   {
    "tarih": "2026-03-02T00:00:00",
-   "ozsermaye": 1039675.775505
+   "ozsermaye": 1059892.836656,
+   "nakit": 89535.124633,
+   "pozisyon_deger": 970357.712023
   },
   {
    "tarih": "2026-03-03T00:00:00",
-   "ozsermaye": 1023434.745515
+   "ozsermaye": 1043598.452803,
+   "nakit": 29711.613758,
+   "pozisyon_deger": 1013886.839046
   },
   {
    "tarih": "2026-03-04T00:00:00",
-   "ozsermaye": 1019973.765957
+   "ozsermaye": 1037751.424831,
+   "nakit": 29711.613758,
+   "pozisyon_deger": 1008039.811073
   },
   {
    "tarih": "2026-03-05T00:00:00",
-   "ozsermaye": 1035281.752507
+   "ozsermaye": 1055614.160983,
+   "nakit": 29711.613758,
+   "pozisyon_deger": 1025902.547225
   },
   {
    "tarih": "2026-03-06T00:00:00",
-   "ozsermaye": 1026990.662004
+   "ozsermaye": 1045872.82651,
+   "nakit": 29711.613758,
+   "pozisyon_deger": 1016161.212752
   },
   {
    "tarih": "2026-03-09T00:00:00",
-   "ozsermaye": 1014672.639931
+   "ozsermaye": 1034689.359217,
+   "nakit": 29711.613758,
+   "pozisyon_deger": 1004977.74546
   },
   {
    "tarih": "2026-03-10T00:00:00",
-   "ozsermaye": 1044950.973684
+   "ozsermaye": 1061537.483901,
+   "nakit": 29711.613758,
+   "pozisyon_deger": 1031825.870143
   },
   {
    "tarih": "2026-03-11T00:00:00",
-   "ozsermaye": 1046270.996041
+   "ozsermaye": 1055550.516832,
+   "nakit": 29711.613758,
+   "pozisyon_deger": 1025838.903074
   },
   {
    "tarih": "2026-03-12T00:00:00",
-   "ozsermaye": 1067718.973353
+   "ozsermaye": 1082479.989562,
+   "nakit": 29711.613758,
+   "pozisyon_deger": 1052768.375805
   },
   {
    "tarih": "2026-03-13T00:00:00",
-   "ozsermaye": 1067648.486058
+   "ozsermaye": 1084229.810637,
+   "nakit": 29711.613758,
+   "pozisyon_deger": 1054518.196879
   },
   {
    "tarih": "2026-03-16T00:00:00",
-   "ozsermaye": 1046525.883338
+   "ozsermaye": 1063194.877528,
+   "nakit": 29711.613758,
+   "pozisyon_deger": 1033483.26377
   },
   {
    "tarih": "2026-03-17T00:00:00",
-   "ozsermaye": 1065177.521989
+   "ozsermaye": 1082730.314717,
+   "nakit": 29711.613758,
+   "pozisyon_deger": 1053018.700959
   },
   {
    "tarih": "2026-03-18T00:00:00",
-   "ozsermaye": 1057787.194461
+   "ozsermaye": 1078716.874913,
+   "nakit": 29711.613758,
+   "pozisyon_deger": 1049005.261155
   },
   {
    "tarih": "2026-03-19T00:00:00",
-   "ozsermaye": 1059595.587171
+   "ozsermaye": 1070094.836658,
+   "nakit": 29711.613758,
+   "pozisyon_deger": 1040383.2229
   },
   {
    "tarih": "2026-03-23T00:00:00",
-   "ozsermaye": 1045328.085359
+   "ozsermaye": 1068534.280437,
+   "nakit": 29711.613758,
+   "pozisyon_deger": 1038822.666679
   },
   {
    "tarih": "2026-03-24T00:00:00",
-   "ozsermaye": 1036028.284207
+   "ozsermaye": 1058006.201184,
+   "nakit": 29711.613758,
+   "pozisyon_deger": 1028294.587426
   },
   {
    "tarih": "2026-03-25T00:00:00",
-   "ozsermaye": 1045842.469945
+   "ozsermaye": 1063412.728584,
+   "nakit": 29711.613758,
+   "pozisyon_deger": 1033701.114826
   },
   {
    "tarih": "2026-03-26T00:00:00",
-   "ozsermaye": 1020164.820648
+   "ozsermaye": 1033217.252648,
+   "nakit": 29711.613758,
+   "pozisyon_deger": 1003505.63889
   },
   {
    "tarih": "2026-03-27T00:00:00",
-   "ozsermaye": 1011339.564968
+   "ozsermaye": 1023966.562928,
+   "nakit": 29711.613758,
+   "pozisyon_deger": 994254.94917
   },
   {
    "tarih": "2026-03-30T00:00:00",
-   "ozsermaye": 1016196.738997
+   "ozsermaye": 1033019.080188,
+   "nakit": 29711.613758,
+   "pozisyon_deger": 1003307.466431
   },
   {
    "tarih": "2026-03-31T00:00:00",
-   "ozsermaye": 1015891.519722
+   "ozsermaye": 1038448.570116,
+   "nakit": 29711.613758,
+   "pozisyon_deger": 1008736.956358
   },
   {
    "tarih": "2026-04-01T00:00:00",
-   "ozsermaye": 1028941.326907
+   "ozsermaye": 1052464.596325,
+   "nakit": 157212.476999,
+   "pozisyon_deger": 895252.119326
   },
   {
    "tarih": "2026-04-02T00:00:00",
-   "ozsermaye": 1040916.807038
+   "ozsermaye": 1063223.697825,
+   "nakit": 157212.476999,
+   "pozisyon_deger": 906011.220825
   },
   {
    "tarih": "2026-04-03T00:00:00",
-   "ozsermaye": 1033355.20437
+   "ozsermaye": 1054029.091175,
+   "nakit": 157212.476999,
+   "pozisyon_deger": 896816.614176
   },
   {
    "tarih": "2026-04-06T00:00:00",
-   "ozsermaye": 1041808.490951
+   "ozsermaye": 1065524.775635,
+   "nakit": 157212.476999,
+   "pozisyon_deger": 908312.298635
   },
   {
    "tarih": "2026-04-07T00:00:00",
-   "ozsermaye": 1034096.014954
+   "ozsermaye": 1055553.005831,
+   "nakit": 157212.476999,
+   "pozisyon_deger": 898340.528831
   },
   {
    "tarih": "2026-04-08T00:00:00",
-   "ozsermaye": 1065988.737919
+   "ozsermaye": 1088853.489182,
+   "nakit": 157212.476999,
+   "pozisyon_deger": 931641.012182
   },
   {
    "tarih": "2026-04-09T00:00:00",
-   "ozsermaye": 1078075.172063
+   "ozsermaye": 1098445.147246,
+   "nakit": 157212.476999,
+   "pozisyon_deger": 941232.670246
   },
   {
    "tarih": "2026-04-10T00:00:00",
-   "ozsermaye": 1094031.311101
+   "ozsermaye": 1122233.943072,
+   "nakit": 157212.476999,
+   "pozisyon_deger": 965021.466073
   },
   {
    "tarih": "2026-04-13T00:00:00",
-   "ozsermaye": 1099792.919579
+   "ozsermaye": 1125156.497597,
+   "nakit": 157212.476999,
+   "pozisyon_deger": 967944.020597
   },
   {
    "tarih": "2026-04-14T00:00:00",
-   "ozsermaye": 1103530.832397
+   "ozsermaye": 1135427.876565,
+   "nakit": 157212.476999,
+   "pozisyon_deger": 978215.399566
   },
   {
    "tarih": "2026-04-15T00:00:00",
-   "ozsermaye": 1101915.426841
+   "ozsermaye": 1132977.684927,
+   "nakit": 157212.476999,
+   "pozisyon_deger": 975765.207928
   },
   {
    "tarih": "2026-04-16T00:00:00",
-   "ozsermaye": 1096420.178258
+   "ozsermaye": 1127456.940647,
+   "nakit": 157212.476999,
+   "pozisyon_deger": 970244.463648
   },
   {
    "tarih": "2026-04-17T00:00:00",
-   "ozsermaye": 1107179.554188
+   "ozsermaye": 1142287.31949,
+   "nakit": 157212.476999,
+   "pozisyon_deger": 985074.84249
   },
   {
    "tarih": "2026-04-20T00:00:00",
-   "ozsermaye": 1093350.472073
+   "ozsermaye": 1127024.445382,
+   "nakit": 157212.476999,
+   "pozisyon_deger": 969811.968383
   },
   {
    "tarih": "2026-04-21T00:00:00",
-   "ozsermaye": 1078000.982505
+   "ozsermaye": 1108318.175795,
+   "nakit": 157212.476999,
+   "pozisyon_deger": 951105.698795
   },
   {
    "tarih": "2026-04-22T00:00:00",
-   "ozsermaye": 1074315.890964
+   "ozsermaye": 1105794.808697,
+   "nakit": 157212.476999,
+   "pozisyon_deger": 948582.331697
   },
   {
    "tarih": "2026-04-24T00:00:00",
-   "ozsermaye": 1079502.223514
+   "ozsermaye": 1109063.91087,
+   "nakit": 157212.476999,
+   "pozisyon_deger": 951851.43387
   },
   {
    "tarih": "2026-04-27T00:00:00",
-   "ozsermaye": 1088716.610026
+   "ozsermaye": 1120347.928416,
+   "nakit": 157212.476999,
+   "pozisyon_deger": 963135.451417
   },
   {
    "tarih": "2026-04-28T00:00:00",
-   "ozsermaye": 1076302.226938
+   "ozsermaye": 1106913.789251,
+   "nakit": 157212.476999,
+   "pozisyon_deger": 949701.312251
   },
   {
    "tarih": "2026-04-29T00:00:00",
-   "ozsermaye": 1082730.801437
+   "ozsermaye": 1116093.509094,
+   "nakit": 157212.476999,
+   "pozisyon_deger": 958881.032095
   },
   {
    "tarih": "2026-04-30T00:00:00",
-   "ozsermaye": 1085436.392031
+   "ozsermaye": 1118539.474094,
+   "nakit": 72616.981876,
+   "pozisyon_deger": 1045922.492218
   },
   {
    "tarih": "2026-05-04T00:00:00",
-   "ozsermaye": 1097439.335308
+   "ozsermaye": 1131955.861452,
+   "nakit": 72616.981876,
+   "pozisyon_deger": 1059338.879577
   },
   {
    "tarih": "2026-05-05T00:00:00",
-   "ozsermaye": 1096589.570038
+   "ozsermaye": 1133325.702305,
+   "nakit": 72616.981876,
+   "pozisyon_deger": 1060708.720429
   },
   {
    "tarih": "2026-05-06T00:00:00",
-   "ozsermaye": 1114615.542562
+   "ozsermaye": 1153458.057493,
+   "nakit": 72616.981876,
+   "pozisyon_deger": 1080841.075617
   },
   {
    "tarih": "2026-05-07T00:00:00",
-   "ozsermaye": 1123084.501329
+   "ozsermaye": 1160941.376944,
+   "nakit": 72616.981876,
+   "pozisyon_deger": 1088324.395068
   },
   {
    "tarih": "2026-05-08T00:00:00",
-   "ozsermaye": 1121680.881691
+   "ozsermaye": 1159620.351433,
+   "nakit": 72616.981876,
+   "pozisyon_deger": 1087003.369557
   },
   {
    "tarih": "2026-05-11T00:00:00",
-   "ozsermaye": 1127408.958262
+   "ozsermaye": 1155471.648344,
+   "nakit": 72616.981876,
+   "pozisyon_deger": 1082854.666469
   },
   {
    "tarih": "2026-05-12T00:00:00",
-   "ozsermaye": 1100659.920356
+   "ozsermaye": 1123007.635471,
+   "nakit": 72616.981876,
+   "pozisyon_deger": 1050390.653595
   },
   {
    "tarih": "2026-05-13T00:00:00",
-   "ozsermaye": 1092193.209974
+   "ozsermaye": 1117482.32286,
+   "nakit": 72616.981876,
+   "pozisyon_deger": 1044865.340984
   },
   {
    "tarih": "2026-05-14T00:00:00",
-   "ozsermaye": 1119547.04148
+   "ozsermaye": 1144474.929984,
+   "nakit": 72616.981876,
+   "pozisyon_deger": 1071857.948109
   },
   {
    "tarih": "2026-05-15T00:00:00",
-   "ozsermaye": 1107760.168626
+   "ozsermaye": 1130132.825473,
+   "nakit": 72616.981876,
+   "pozisyon_deger": 1057515.843597
   },
   {
    "tarih": "2026-05-18T00:00:00",
-   "ozsermaye": 1082884.115931
+   "ozsermaye": 1101792.56621,
+   "nakit": 72616.981876,
+   "pozisyon_deger": 1029175.584334
   },
   {
    "tarih": "2026-05-20T00:00:00",
-   "ozsermaye": 1072558.946644
+   "ozsermaye": 1094988.991496,
+   "nakit": 72616.981876,
+   "pozisyon_deger": 1022372.009621
   },
   {
    "tarih": "2026-05-21T00:00:00",
-   "ozsermaye": 1012331.643484
+   "ozsermaye": 1035968.516913,
+   "nakit": 72616.981876,
+   "pozisyon_deger": 963351.535037
   },
   {
    "tarih": "2026-05-22T00:00:00",
-   "ozsermaye": 1067818.915029
+   "ozsermaye": 1094078.510418,
+   "nakit": 72616.981876,
+   "pozisyon_deger": 1021461.528543
   },
   {
    "tarih": "2026-05-25T00:00:00",
-   "ozsermaye": 1077317.323815
+   "ozsermaye": 1096963.624415,
+   "nakit": 72616.981876,
+   "pozisyon_deger": 1024346.642539
   },
   {
    "tarih": "2026-05-26T00:00:00",
-   "ozsermaye": 1067137.151832
+   "ozsermaye": 1086941.45943,
+   "nakit": 72616.981876,
+   "pozisyon_deger": 1014324.477554
   },
   {
    "tarih": "2026-06-01T00:00:00",
-   "ozsermaye": 1072872.314334
+   "ozsermaye": 1088114.958179,
+   "nakit": 72616.981876,
+   "pozisyon_deger": 1015497.976303
   },
   {
    "tarih": "2026-06-02T00:00:00",
-   "ozsermaye": 1102353.477689
+   "ozsermaye": 1110286.036277,
+   "nakit": 72616.981876,
+   "pozisyon_deger": 1037669.054401
   },
   {
    "tarih": "2026-06-03T00:00:00",
-   "ozsermaye": 1077480.242148
+   "ozsermaye": 1082568.316537,
+   "nakit": 72616.981876,
+   "pozisyon_deger": 1009951.334661
   },
   {
    "tarih": "2026-06-04T00:00:00",
-   "ozsermaye": 1066915.818865
+   "ozsermaye": 1073331.944742,
+   "nakit": 72616.981876,
+   "pozisyon_deger": 1000714.962867
   },
   {
    "tarih": "2026-06-05T00:00:00",
-   "ozsermaye": 1053418.839596
+   "ozsermaye": 1057998.702993,
+   "nakit": 72616.981876,
+   "pozisyon_deger": 985381.721117
   },
   {
    "tarih": "2026-06-08T00:00:00",
-   "ozsermaye": 1059696.109023
+   "ozsermaye": 1067067.271341,
+   "nakit": 72616.981876,
+   "pozisyon_deger": 994450.289465
   },
   {
    "tarih": "2026-06-09T00:00:00",
-   "ozsermaye": 1044245.292734
+   "ozsermaye": 1053740.716596,
+   "nakit": 72616.981876,
+   "pozisyon_deger": 981123.73472
   },
   {
    "tarih": "2026-06-10T00:00:00",
-   "ozsermaye": 1042795.995655
+   "ozsermaye": 1050662.75169,
+   "nakit": 72616.981876,
+   "pozisyon_deger": 978045.769814
   },
   {
    "tarih": "2026-06-11T00:00:00",
-   "ozsermaye": 1039671.337436
+   "ozsermaye": 1045054.534334,
+   "nakit": 72616.981876,
+   "pozisyon_deger": 972437.552459
   },
   {
    "tarih": "2026-06-12T00:00:00",
-   "ozsermaye": 1055935.199507
+   "ozsermaye": 1061039.90432,
+   "nakit": 72616.981876,
+   "pozisyon_deger": 988422.922444
   },
   {
    "tarih": "2026-06-15T00:00:00",
-   "ozsermaye": 1088480.612254
+   "ozsermaye": 1094358.926611,
+   "nakit": 72616.981876,
+   "pozisyon_deger": 1021741.944736
   },
   {
    "tarih": "2026-06-16T00:00:00",
-   "ozsermaye": 1096484.229655
+   "ozsermaye": 1102050.417395,
+   "nakit": 72616.981876,
+   "pozisyon_deger": 1029433.435519
   },
   {
    "tarih": "2026-06-17T00:00:00",
-   "ozsermaye": 1083371.817052
+   "ozsermaye": 1090709.46989,
+   "nakit": 72616.981876,
+   "pozisyon_deger": 1018092.488014
   },
   {
    "tarih": "2026-06-18T00:00:00",
-   "ozsermaye": 1118372.810642
+   "ozsermaye": 1127960.704902,
+   "nakit": 72616.981876,
+   "pozisyon_deger": 1055343.723026
   },
   {
    "tarih": "2026-06-19T00:00:00",
-   "ozsermaye": 1111467.379663
+   "ozsermaye": 1119043.92119,
+   "nakit": 72616.981876,
+   "pozisyon_deger": 1046426.939314
   },
   {
    "tarih": "2026-06-22T00:00:00",
-   "ozsermaye": 1116051.02464
+   "ozsermaye": 1120670.269258,
+   "nakit": 72616.981876,
+   "pozisyon_deger": 1048053.287382
   },
   {
    "tarih": "2026-06-23T00:00:00",
-   "ozsermaye": 1100792.727729
+   "ozsermaye": 1104562.757089,
+   "nakit": 72616.981876,
+   "pozisyon_deger": 1031945.775213
   },
   {
    "tarih": "2026-06-24T00:00:00",
-   "ozsermaye": 1087712.56023
+   "ozsermaye": 1088854.263877,
+   "nakit": 72616.981876,
+   "pozisyon_deger": 1016237.282001
   },
   {
    "tarih": "2026-06-25T00:00:00",
-   "ozsermaye": 1085793.755229
+   "ozsermaye": 1090052.16583,
+   "nakit": 72616.981876,
+   "pozisyon_deger": 1017435.183954
   },
   {
    "tarih": "2026-06-26T00:00:00",
-   "ozsermaye": 1069163.871268
+   "ozsermaye": 1071224.553028,
+   "nakit": 72616.981876,
+   "pozisyon_deger": 998607.571153
   },
   {
    "tarih": "2026-06-29T00:00:00",
-   "ozsermaye": 1072207.47167
+   "ozsermaye": 1077190.851169,
+   "nakit": 72616.981876,
+   "pozisyon_deger": 1004573.869293
   },
   {
    "tarih": "2026-06-30T00:00:00",
-   "ozsermaye": 1062696.974556
+   "ozsermaye": 1065996.731673,
+   "nakit": 72616.981876,
+   "pozisyon_deger": 993379.749797
   },
   {
    "tarih": "2026-07-01T00:00:00",
-   "ozsermaye": 1087596.65806
+   "ozsermaye": 1094103.093856,
+   "nakit": 72616.981876,
+   "pozisyon_deger": 1021486.11198
   },
   {
    "tarih": "2026-07-02T00:00:00",
-   "ozsermaye": 1105155.865105
+   "ozsermaye": 1111072.599176,
+   "nakit": 47394.864913,
+   "pozisyon_deger": 1063677.734262
   },
   {
    "tarih": "2026-07-03T00:00:00",
-   "ozsermaye": 1122903.061877
+   "ozsermaye": 1132435.670291,
+   "nakit": 47394.864913,
+   "pozisyon_deger": 1085040.805378
   },
   {
    "tarih": "2026-07-06T00:00:00",
-   "ozsermaye": 1134740.318474
+   "ozsermaye": 1143281.413262,
+   "nakit": 47394.864913,
+   "pozisyon_deger": 1095886.548349
   },
   {
    "tarih": "2026-07-07T00:00:00",
-   "ozsermaye": 1140350.129359
+   "ozsermaye": 1151408.228696,
+   "nakit": 47394.864913,
+   "pozisyon_deger": 1104013.363783
   },
   {
    "tarih": "2026-07-08T00:00:00",
-   "ozsermaye": 1123875.492125
+   "ozsermaye": 1134458.536845,
+   "nakit": 47394.864913,
+   "pozisyon_deger": 1087063.671932
   },
   {
    "tarih": "2026-07-09T00:00:00",
-   "ozsermaye": 1108613.668879
+   "ozsermaye": 1120309.73941,
+   "nakit": 47394.864913,
+   "pozisyon_deger": 1072914.874496
   },
   {
    "tarih": "2026-07-10T00:00:00",
-   "ozsermaye": 1124528.377488
+   "ozsermaye": 1136097.392334,
+   "nakit": 840533.487255,
+   "pozisyon_deger": 295563.905079
   },
   {
    "tarih": "2026-07-13T00:00:00",
-   "ozsermaye": 1115201.21721
+   "ozsermaye": 1126993.152066,
+   "nakit": 840533.487255,
+   "pozisyon_deger": 286459.66481
   },
   {
    "tarih": "2026-07-14T00:00:00",
-   "ozsermaye": 1120083.399724
+   "ozsermaye": 1131795.074837,
+   "nakit": 840533.487255,
+   "pozisyon_deger": 291261.587582
   },
   {
    "tarih": "2026-07-16T00:00:00",
-   "ozsermaye": 1118235.785149
+   "ozsermaye": 1129855.200077,
+   "nakit": 840533.487255,
+   "pozisyon_deger": 289321.712822
   },
   {
    "tarih": "2026-07-17T00:00:00",
-   "ozsermaye": 1117692.858153
+   "ozsermaye": 1129007.133318,
+   "nakit": 840533.487255,
+   "pozisyon_deger": 288473.646063
   },
   {
    "tarih": "2026-07-20T00:00:00",
-   "ozsermaye": 1102857.151032
+   "ozsermaye": 1114801.1661,
+   "nakit": 840533.487255,
+   "pozisyon_deger": 274267.678844
   },
   {
    "tarih": "2026-07-21T00:00:00",
-   "ozsermaye": 1091608.499644
+   "ozsermaye": 1103982.974417,
+   "nakit": 840533.487255,
+   "pozisyon_deger": 263449.487162
   },
   {
    "tarih": "2026-07-22T00:00:00",
-   "ozsermaye": 1080370.721797
+   "ozsermaye": 1093128.796839,
+   "nakit": 840533.487255,
+   "pozisyon_deger": 252595.309584
   },
   {
    "tarih": "2026-07-23T00:00:00",
-   "ozsermaye": 1072919.074684
+   "ozsermaye": 1086018.149627,
+   "nakit": 840533.487255,
+   "pozisyon_deger": 245484.662372
   },
   {
    "tarih": "2026-07-24T00:00:00",
-   "ozsermaye": 1057811.61291
+   "ozsermaye": 1071303.507914,
+   "nakit": 840533.487255,
+   "pozisyon_deger": 230770.020658
   },
   {
    "tarih": "2026-07-27T00:00:00",
-   "ozsermaye": 1045194.084817
+   "ozsermaye": 1059030.759754,
+   "nakit": 840533.487255,
+   "pozisyon_deger": 218497.272499
   },
   {
    "tarih": "2026-07-28T00:00:00",
-   "ozsermaye": 1032596.73193
+   "ozsermaye": 1046708.906966,
+   "nakit": 840533.487255,
+   "pozisyon_deger": 206175.419711
   },
   {
    "tarih": "2026-07-29T00:00:00",
-   "ozsermaye": 1024870.001199
+   "ozsermaye": 1039252.636261,
+   "nakit": 840533.487255,
+   "pozisyon_deger": 198719.149006
   },
   {
    "tarih": "2026-07-30T00:00:00",
-   "ozsermaye": 1022120.289321
+   "ozsermaye": 1036714.544447,
+   "nakit": 840533.487255,
+   "pozisyon_deger": 196181.057192
   },
   {
    "tarih": "2026-07-31T00:00:00",
-   "ozsermaye": 1019299.040027
+   "ozsermaye": 1034088.815129,
+   "nakit": 840533.487255,
+   "pozisyon_deger": 193555.327874
   },
   {
    "tarih": "2026-08-03T00:00:00",
-   "ozsermaye": 969966.836355
+   "ozsermaye": 986395.91499,
+   "nakit": 840533.487255,
+   "pozisyon_deger": 145862.427735
   },
   {
    "tarih": "2026-08-04T00:00:00",
-   "ozsermaye": 973016.458651
+   "ozsermaye": 989493.724751,
+   "nakit": 913503.474751,
+   "pozisyon_deger": 75990.25
   },
   {
    "tarih": "2026-08-05T00:00:00",
-   "ozsermaye": 975054.208651
+   "ozsermaye": 991564.474751,
+   "nakit": 913503.474751,
+   "pozisyon_deger": 78061.0
   },
   {
    "tarih": "2026-08-06T00:00:00",
-   "ozsermaye": 977091.958651
+   "ozsermaye": 993635.224751,
+   "nakit": 913503.474751,
+   "pozisyon_deger": 80131.75
   },
   {
    "tarih": "2026-08-07T00:00:00",
-   "ozsermaye": 974436.708651
+   "ozsermaye": 990936.974751,
+   "nakit": 913503.474751,
+   "pozisyon_deger": 77433.5
   },
   {
    "tarih": "2026-08-10T00:00:00",
-   "ozsermaye": 973757.458651
+   "ozsermaye": 990246.724751,
+   "nakit": 913503.474751,
+   "pozisyon_deger": 76743.25
   },
   {
    "tarih": "2026-08-11T00:00:00",
-   "ozsermaye": 972769.458651
+   "ozsermaye": 989242.724751,
+   "nakit": 913503.474751,
+   "pozisyon_deger": 75739.25
   },
   {
    "tarih": "2026-08-12T00:00:00",
-   "ozsermaye": 980179.458651
+   "ozsermaye": 996772.724751,
+   "nakit": 913503.474751,
+   "pozisyon_deger": 83269.25
   },
   {
    "tarih": "2026-08-13T00:00:00",
-   "ozsermaye": 983575.708651
+   "ozsermaye": 1000223.974751,
+   "nakit": 913503.474751,
+   "pozisyon_deger": 86720.5
   },
   {
    "tarih": "2026-08-14T00:00:00",
-   "ozsermaye": 982772.958651
+   "ozsermaye": 999408.224751,
+   "nakit": 913503.474751,
+   "pozisyon_deger": 85904.75
   },
   {
    "tarih": "2026-08-17T00:00:00",
-   "ozsermaye": 982093.708651
+   "ozsermaye": 998717.974751,
+   "nakit": 913503.474751,
+   "pozisyon_deger": 85214.5
   },
   {
    "tarih": "2026-08-18T00:00:00",
-   "ozsermaye": 977400.708651
+   "ozsermaye": 993948.974751,
+   "nakit": 913503.474751,
+   "pozisyon_deger": 80445.5
   },
   {
    "tarih": "2026-08-19T00:00:00",
-   "ozsermaye": 980117.708651
+   "ozsermaye": 996709.974751,
+   "nakit": 913503.474751,
+   "pozisyon_deger": 83206.5
   },
   {
    "tarih": "2026-08-20T00:00:00",
-   "ozsermaye": 979067.958651
+   "ozsermaye": 995643.224751,
+   "nakit": 913503.474751,
+   "pozisyon_deger": 82139.75
   },
   {
    "tarih": "2026-08-21T00:00:00",
-   "ozsermaye": 981167.458651
+   "ozsermaye": 997776.724751,
+   "nakit": 913503.474751,
+   "pozisyon_deger": 84273.25
   },
   {
    "tarih": "2026-08-24T00:00:00",
-   "ozsermaye": 982525.958651
+   "ozsermaye": 999157.224751,
+   "nakit": 913503.474751,
+   "pozisyon_deger": 85653.75
   },
   {
    "tarih": "2026-08-25T00:00:00",
-   "ozsermaye": 981970.208651
+   "ozsermaye": 998592.474751,
+   "nakit": 913503.474751,
+   "pozisyon_deger": 85089.0
   },
   {
    "tarih": "2026-08-26T00:00:00",
-   "ozsermaye": 981908.458651
+   "ozsermaye": 998529.724751,
+   "nakit": 913503.474751,
+   "pozisyon_deger": 85026.25
   },
   {
    "tarih": "2026-08-27T00:00:00",
-   "ozsermaye": 984440.208651
+   "ozsermaye": 1001102.474751,
+   "nakit": 913503.474751,
+   "pozisyon_deger": 87599.0
   },
   {
    "tarih": "2026-08-28T00:00:00",
-   "ozsermaye": 990050.949489
+   "ozsermaye": 1006805.284904,
+   "nakit": 3723.014396,
+   "pozisyon_deger": 1003082.270508
   },
   {
    "tarih": "2026-08-31T00:00:00",
-   "ozsermaye": 963654.178703
+   "ozsermaye": 979960.143935,
+   "nakit": 3723.014396,
+   "pozisyon_deger": 976237.129539
   },
   {
    "tarih": "2026-09-01T00:00:00",
-   "ozsermaye": 946595.625217
+   "ozsermaye": 962616.450729,
+   "nakit": 3723.014396,
+   "pozisyon_deger": 958893.436333
   },
   {
    "tarih": "2026-09-02T00:00:00",
-   "ozsermaye": 937435.383579
+   "ozsermaye": 953301.679061,
+   "nakit": 3723.014396,
+   "pozisyon_deger": 949578.664665
   },
   {
    "tarih": "2026-09-03T00:00:00",
-   "ozsermaye": 917831.627145
+   "ozsermaye": 933371.522521,
+   "nakit": 3723.014396,
+   "pozisyon_deger": 929648.508125
   },
   {
    "tarih": "2026-09-04T00:00:00",
-   "ozsermaye": 915762.820319
+   "ozsermaye": 931270.99979,
+   "nakit": 69677.117389,
+   "pozisyon_deger": 861593.882401
   },
   {
    "tarih": "2026-09-07T00:00:00",
-   "ozsermaye": 68489.207959
+   "ozsermaye": 931270.99979,
+   "nakit": 69677.117389,
+   "pozisyon_deger": 861593.882401
   },
   {
    "tarih": "2026-09-08T00:00:00",
-   "ozsermaye": 938992.552197
+   "ozsermaye": 954888.36153,
+   "nakit": 69677.117389,
+   "pozisyon_deger": 885211.244141
   },
   {
    "tarih": "2026-09-09T00:00:00",
-   "ozsermaye": null
+   "ozsermaye": 961248.539798,
+   "nakit": 69677.117389,
+   "pozisyon_deger": 891571.422409
   }
  ],
  "test_al_tut_ozsermaye_egrisi": [
