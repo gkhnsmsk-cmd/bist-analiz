@@ -176,5 +176,29 @@
     "komisyon": 238.2,
     "puan": 62.5,
     "gerekce": "birikim skoru en yüksek adaylardan (CMF +0.406, MA200 üstünde, Puan 62)"
+  },
+  {
+    "tarih": "2026-09-10",
+    "sembol": "ETYAT",
+    "yon": "SAT",
+    "adet": 10894.1208,
+    "fiyat": 14.07,
+    "tutar": 153280.28,
+    "komisyon": 229.92,
+    "puan": 59.2,
+    "tutma_gunu": 9,
+    "gerekce": "takas: AHGAZ birikim skoru +0.388, bu pozisyonunki +0.193 (marj: 0.10)",
+    "getiri_yuzde": -7.8
+  },
+  {
+    "tarih": "2026-09-10",
+    "sembol": "AHGAZ",
+    "yon": "AL",
+    "adet": 3904.4656,
+    "fiyat": 39.14,
+    "tutar": 153050.36,
+    "komisyon": 229.58,
+    "puan": 77.0,
+    "gerekce": "birikim skoru en yüksek adaylardan (CMF +0.388, MA200 üstünde, Puan 77)"
   }
 ]
