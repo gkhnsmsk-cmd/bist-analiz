@@ -1,12 +1,21 @@
 # -*- coding: utf-8 -*-
 """
-v2/rejim.py — Pusula V2 rejim kapısı (§2).
+v2/rejim.py — Pusula rejim kapısı (V3 §7'ye göre GÜNCELLENDİ).
 
 XU100.IS (BIST100) endeksine göre R1-R4 rejimini ve hedef yatırım oranını
 belirler; evrenin genişlik (breadth) durumuna göre rejimi bir kademe aşağı
-çekebilir. Ağ çağrısı YAPMAZ — endeks verisi çağıran taraf (motor.py) veya
-veri.fiyat_indir("XU100.IS", ...) tarafından önceden indirilip parametre
-olarak buraya verilir. Saf fonksiyon → test edilebilir.
+çekebilir. Ağ çağrısı YAPMAZ — endeks verisi çağıran taraf (v3_backtest.py)
+veya veri.fiyat_indir("XU100.IS", ...) tarafından önceden indirilip
+parametre olarak buraya verilir. Saf fonksiyon → test edilebilir.
+
+V3 GÜNCELLEMESİ (STRATEJI_V3.md §7): R1/R2 hedef oranları yükseltildi
+(%100/%60 → %100/%80) çünkü V2'nin asıl kaybı boğa piyasasında düşük
+maruziyetten kaynaklanıyordu (bkz. STRATEJI_V3.md §0). Genişlik eşiği de
+%35'ten %30'a çekildi. Fonksiyon imzası (rejim_hesapla) DEĞİŞMEDİ — yalnız
+iç sabitler güncellendi; günde en fazla %33 puanlık kademeli yaklaşma kuralı
+(rejim yükselirken) daha önce olduğu gibi bu fonksiyonun kapsamı DIŞINDA,
+çağıran tarafın (v3_backtest.py) sorumluluğudur — bu fonksiyon yalnız o
+günün "hedef" durumunu saf biçimde hesaplar, geçmiş pozisyon durumuna bakmaz.
 """
 
 from __future__ import annotations
@@ -14,14 +23,15 @@ from __future__ import annotations
 import numpy as np
 import pandas as pd
 
-_HEDEF_ORANLAR = {"R1": 1.00, "R2": 0.60, "R3": 0.25, "R4": 0.00}
+# V3 §7: R1 %100, R2 %80, R3 %30, R4 %0.
+_HEDEF_ORANLAR = {"R1": 1.00, "R2": 0.80, "R3": 0.30, "R4": 0.00}
 _KADEME_SIRASI = ["R1", "R2", "R3", "R4"]
 
-# Genişlik eşiği: evrenin bu oranın altında bir kısmı 50 günlük ortalamanın
-# üzerinde kapatıyorsa, endeks başlığı iyi görünse bile piyasanın altı
-# çürük demektir (birkaç ağır endeks hissesi taşıyor olabilir) — rejim bir
-# kademe aşağı çekilir.
-_GENISLIK_ESIGI = 0.35
+# Genişlik eşiği (V3 §7: %30): evrenin bu oranın altında bir kısmı 50 günlük
+# ortalamanın üzerinde kapatıyorsa, endeks başlığı iyi görünse bile piyasanın
+# altı çürük demektir (birkaç ağır endeks hissesi taşıyor olabilir) — rejim
+# bir kademe aşağı çekilir.
+_GENISLIK_ESIGI = 0.30
 
 # §2'deki MA200/MA50, XU100 endeksinin KENDİ kapanışından hesaplanan basit
 # (aritmetik) hareketli ortalamalardır — veri.gostergeler()'in ürettiği
@@ -40,14 +50,14 @@ def _sma(seri: pd.Series, pencere: int) -> pd.Series:
 def rejim_hesapla(endeks_df: pd.DataFrame, evren_verileri: dict, tarih) -> dict:
     """XU100'e göre R1-R4 rejimini, hedef yatırım oranını ve genişliği hesaplar.
 
-    Kurallar (§2):
+    Kurallar (V3 §7):
       R1 Risk Açık : Kapanış > MA200 VE MA50 > MA50[-5]      → hedef %100
-      R2 Temkinli  : Kapanış > MA200 VE MA50 <= MA50[-5]     → hedef %60
-      R3 Savunma   : Kapanış < MA200                          → hedef %25
+      R2 Temkinli  : Kapanış > MA200 VE MA50 <= MA50[-5]     → hedef %80
+      R3 Savunma   : Kapanış < MA200                          → hedef %30
       R4 Nakit     : Kapanış < MA200 VE Kapanış < MA200[-10]*0.97 (hızlanan düşüş) → hedef %0
 
     Genişlik teyidi: evrende (evren_verileri) kendi EMA50'sinin üzerinde
-    kapatan hisse oranı < %35 ise rejim bir kademe aşağı çekilir
+    kapatan hisse oranı < %30 ise rejim bir kademe aşağı çekilir
     (R1→R2, R2→R3, R3→R4; R4 zaten en alt kademe, değişmez).
 
     NOT: Rejim yükselirken kademeli yaklaşma (günde en fazla %25 puan) ve
@@ -191,7 +201,7 @@ if __name__ == "__main__":
     dusus = 200 - np.arange(len(tarihler)) * 0.6
     sonuc2 = rejim_hesapla(_endeks_df(dusus), {}, tarih_son)
     assert sonuc2["rejim"] in ("R3", "R4"), f"Beklenen R3/R4, gelen: {sonuc2}"
-    assert sonuc2["hedef_oran"] <= 0.25
+    assert sonuc2["hedef_oran"] <= 0.30
 
     # Senaryo 3: yükseliş trendinde ama evren çürük (Close < EMA50) → bir
     # kademe aşağı (R1 yerine R2) düşmeli.
