@@ -17,15 +17,15 @@
       "adet": 605.1515151515151,
       "maliyet": 330.0,
       "eklenme_tarihi": "2026-08-28T11:25:31.617995",
-      "son_fiyat": 390.75,
-      "en_yuksek": 396.5
+      "son_fiyat": 397.25,
+      "en_yuksek": 397.25
     },
     {
       "sembol": "KRGYO",
       "adet": 52114.19538096358,
       "maliyet": 3.19,
       "eklenme_tarihi": "2026-09-01T11:53:00.577173",
-      "son_fiyat": 3.559999942779541,
+      "son_fiyat": 3.5899999141693115,
       "en_yuksek": 3.62
     },
     {
@@ -33,7 +33,7 @@
       "adet": 5486.627956936015,
       "maliyet": 28.9,
       "eklenme_tarihi": "2026-09-09T10:37:40.030395",
-      "son_fiyat": 31.3799991607666,
+      "son_fiyat": 31.059999465942383,
       "en_yuksek": 31.78
     },
     {
@@ -41,8 +41,8 @@
       "adet": 3904.4655995518533,
       "maliyet": 39.14,
       "eklenme_tarihi": "2026-09-10T12:20:48.363412",
-      "son_fiyat": 39.14,
-      "en_yuksek": 39.14
+      "son_fiyat": 39.18000030517578,
+      "en_yuksek": 39.18
     }
   ],
   "son_rebalans_tarihi": "2026-09-10",
