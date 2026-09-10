@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Risk Bekçisi</title>
+<style>
+  :root {
+    --bg: #0b0f14; --panel: #131a22; --panel2: #1a232d; --text: #e6edf3;
+    --muted: #8b98a5; --border: #26313c; --green: #22c55e; --red: #ef4444;
+    --orange: #f59e0b; --blue: #3b82f6; --accent: #4f7cff;
+  }
+  @media (prefers-color-scheme: light) {
+    :root {
+      --bg: #f5f7fa; --panel: #ffffff; --panel2: #f0f2f5; --text: #1a2330;
+      --muted: #64748b; --border: #dde3ea; --green: #16a34a; --red: #dc2626;
+      --orange: #d97706; --blue: #2563eb; --accent: #3760e0;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--bg); color: var(--text);
+    font-family: -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+    padding: 12px;
+  }
+  .kap { max-width: 900px; margin: 0 auto; }
+  header { text-align: center; padding: 10px 0 18px; }
+  header h1 { margin: 0 0 6px; font-size: 26px; }
+  header p { margin: 0; color: var(--muted); font-size: 13px; }
+  .kart { background: var(--panel); border: 1px solid var(--border); border-radius: 14px; padding: 16px; margin-bottom: 14px; }
+  .kart h2 { margin: 0 0 12px; font-size: 15px; color: var(--muted); text-transform: uppercase; letter-spacing: .04em; }
+  .ozet-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; }
+  .ozet-item { background: var(--panel2); border-radius: 10px; padding: 10px 12px; }
+  .ozet-item .lbl { font-size: 12px; color: var(--muted); margin-bottom: 4px; }
+  .ozet-item .val { font-size: 18px; font-weight: 700; }
+  .pos { color: var(--green); } .neg { color: var(--red); }
+  .uyari-kart { border-radius: 12px; padding: 12px 14px; margin-bottom: 10px; font-size: 14px; display: flex; gap: 10px; align-items: flex-start; }
+  .uyari-kirmizi { background: rgba(239,68,68,.12); border: 1px solid var(--red); }
+  .uyari-turuncu { background: rgba(245,158,11,.12); border: 1px solid var(--orange); }
+  .uyari-yesil { background: rgba(34,197,94,.12); border: 1px solid var(--green); }
+  .uyari-ikon { font-size: 18px; }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th, td { text-align: right; padding: 8px 6px; border-bottom: 1px solid var(--border); white-space: nowrap; }
+  th:first-child, td:first-child { text-align: left; }
+  th { color: var(--muted); font-weight: 600; font-size: 11px; text-transform: uppercase; }
+  tr.yogun { background: rgba(245,158,11,.08); }
+  .tbl-wrap { overflow-x: auto; }
+  .bar-row { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; font-size: 13px; }
+  .bar-lbl { width: 70px; flex-shrink: 0; }
+  .bar-track { flex: 1; background: var(--panel2); border-radius: 6px; height: 16px; overflow: hidden; }
+  .bar-fill { height: 100%; background: var(--accent); border-radius: 6px; }
+  .bar-val { width: 50px; flex-shrink: 0; text-align: right; color: var(--muted); }
+  .btn { background: var(--accent); color: #fff; border: none; border-radius: 8px; padding: 10px 18px; font-size: 14px; cursor: pointer; }
+  .btn:active { opacity: .8; }
+  .durum { text-align: center; color: var(--muted); padding: 20px; font-size: 14px; }
+  footer { text-align: center; color: var(--muted); font-size: 12px; padding: 16px 0 30px; }
+  .top-satir { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
+  .kiyas-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+</style>
+</head>
+<body>
+<div class="kap">
+  <header>
+    <h1>Risk Bekçisi</h1>
+    <p>Bu ekran al/sat tavsiyesi vermez. Portföyünün risklerini gösterir.</p>
+  </header>
+
+  <div style="text-align:center; margin-bottom:14px;">
+    <button class="btn" id="yenileBtn">Yenile</button>
+  </div>
+
+  <div id="icerik">
+    <div class="durum">Yükleniyor...</div>
+  </div>
+
+  <footer id="altbilgi"></footer>
+</div>
+
+<script>
+// Ayarlar
+var API_KOK = "https://pusula-canli-fiyat.gkhnsmsk.workers.dev";
+var ANAHTAR = "JZqAxGtXdcZAyzXGxR0S7TtU";
+
+// Sektor haritasi (sektor_haritasi.py'den JS'e aktarilmis kismi esleme)
+var SEKTOR_HARITASI = {
+  "AKBNK":"Bankacılık","GARAN":"Bankacılık","ISCTR":"Bankacılık","YKBNK":"Bankacılık",
+  "VAKBN":"Bankacılık","HALKB":"Bankacılık","SKBNK":"Bankacılık","ICBCT":"Bankacılık",
+  "QNBTR":"Bankacılık","TSKB":"Bankacılık","ALBRK":"Bankacılık",
+  "KCHOL":"Holding","SAHOL":"Holding","DOHOL":"Holding","AGHOL":"Holding","TKFEN":"Holding",
+  "ALARK":"Holding","GLYHO":"Holding","GSDHO":"Holding","SISE":"Holding / Cam","ENKAI":"Holding",
+  "THYAO":"Havacılık/Ulaştırma","PGSUS":"Havacılık/Ulaştırma","TAVHL":"Havacılık/Ulaştırma",
+  "CLEBI":"Havacılık/Ulaştırma","DOCO":"Havacılık/Ulaştırma",
+  "TOASO":"Otomotiv","FROTO":"Otomotiv","DOAS":"Otomotiv","OTKAR":"Otomotiv","ASUZU":"Otomotiv",
+  "KARSN":"Otomotiv","TTRAK":"Otomotiv",
+  "EREGL":"Demir-Çelik/Metal","KRDMD":"Demir-Çelik/Metal","KRDMA":"Demir-Çelik/Metal",
+  "KRDMB":"Demir-Çelik/Metal","ISDMR":"Demir-Çelik/Metal","BRSAN":"Demir-Çelik/Metal",
+  "TUPRS":"Enerji","AKSEN":"Enerji","AYGAZ":"Enerji","ENJSA":"Enerji","ZOREN":"Enerji",
+  "ODAS":"Enerji","GWIND":"Enerji","CWENE":"Enerji","AKFYE":"Enerji","NTGAZ":"Enerji",
+  "BIMAS":"Perakende","MGROS":"Perakende","SOKM":"Perakende","VESBE":"Perakende",
+  "MAVI":"Perakende","BIZIM":"Perakende",
+  "ASELS":"Savunma","OTKAR2":"Savunma",
+  "GUBRF":"Kimya/Gübre","HEKTS":"Kimya/Gübre","BAGFS":"Kimya/Gübre","SASA":"Kimya/Gübre",
+  "PETKM":"Kimya/Gübre","AKSA":"Kimya/Gübre",
+  "CIMSA":"Çimento","AKCNS":"Çimento","OYAKC":"Çimento","BUCIM":"Çimento","CMENT":"Çimento",
+  "INVES":"Yatırım Ortaklığı","ISMEN":"Yatırım Ortaklığı","IHLGM":"Yatırım Ortaklığı",
+  "ANSGR":"Sigorta","AGESA":"Sigorta","TURSG":"Sigorta","RAYSG":"Sigorta",
+  "EKGYO":"GYO","EMLAK":"GYO","ISGYO":"GYO","TRGYO":"GYO",
+  "ARCLK":"Dayanıklı Tüketim","VESTL":"Dayanıklı Tüketim",
+  "KOZAL":"Madencilik","KOZAA":"Madencilik","IPEKE":"Madencilik",
+  "TCELL":"Telekom","TTKOM":"Telekom",
+  "ASTOR":"Elektrik Ekipmanları"
+};
+
+var el = document.getElementById("icerik");
+var altbilgi = document.getElementById("altbilgi");
+
+document.getElementById("yenileBtn").addEventListener("click", yukle);
+yukle();
+
+function nrm(sayi, ondalik) {
+  if (sayi == null || isNaN(sayi)) return "-";
+  var basamak = ondalik == null ? 2 : ondalik;
+  return sayi.toLocaleString("tr-TR", { minimumFractionDigits: basamak, maximumFractionDigits: basamak });
+}
+
+function yukle() {
+  el.innerHTML = '<div class="durum">Yükleniyor...</div>';
+  fetch(API_KOK + "/portfoy?anahtar=" + encodeURIComponent(ANAHTAR))
+    .then(function (r) { return r.json(); })
+    .then(function (veri) {
+      var portfoy = Array.isArray(veri.portfoy) ? veri.portfoy : [];
+      if (portfoy.length === 0) {
+        el.innerHTML = '<div class="durum">Portföyünde henüz pozisyon yok.</div>';
+        return;
+      }
+      var semboller = portfoy.map(function (p) { return p.symbol; });
+      var fiyatIstek = fetch(API_KOK + "/?semboller=" + encodeURIComponent(semboller.join(",")))
+        .then(function (r) { return r.json(); })
+        .catch(function () { return null; });
+      var endeksIstek = fetch(API_KOK + "/?sembol=XU100")
+        .then(function (r) { return r.ok ? r.json() : null; })
+        .catch(function () { return null; });
+      Promise.all([fiyatIstek, endeksIstek]).then(function (sonuclar) {
+        cizVeYaz(portfoy, sonuclar[0], sonuclar[1]);
+      });
+    })
+    .catch(function () {
+      el.innerHTML = '<div class="durum">Portföy verisi alınamadı. Bağlantını kontrol edip yeniden dene.</div>';
+    });
+}
+
+function cizVeYaz(portfoy, fiyatVeri, endeksVeri) {
+  var fiyatlar = (fiyatVeri && fiyatVeri.fiyatlar) ? fiyatVeri.fiyatlar : {};
+
+  var satirlar = portfoy.map(function (p) {
+    var f = fiyatlar[p.symbol];
+    var guncelFiyat = (f && f.fiyat != null) ? f.fiyat : p.maliyet;
+    var oncekiKapanis = (f && f.oncekiKapanis != null) ? f.oncekiKapanis : guncelFiyat;
+    var deger = guncelFiyat * p.adet;
+    var maliyetToplam = p.maliyet * p.adet;
+    var karZarar = deger - maliyetToplam;
+    var karZararYuzde = maliyetToplam ? (karZarar / maliyetToplam) * 100 : 0;
+    var gunlukDeger = oncekiKapanis * p.adet;
+    var sektor = SEKTOR_HARITASI[p.symbol] || "Diğer / Sınıflandırılmamış";
+    return {
+      symbol: p.symbol, adet: p.adet, maliyet: p.maliyet, guncelFiyat: guncelFiyat,
+      oncekiKapanis: oncekiKapanis, deger: deger, maliyetToplam: maliyetToplam,
+      karZarar: karZarar, karZararYuzde: karZararYuzde, gunlukDeger: gunlukDeger,
+      sektor: sektor, veriYok: !f || f.fiyat == null
+    };
+  });
+
+  var toplamDeger = satirlar.reduce(function (s, x) { return s + x.deger; }, 0);
+  var toplamMaliyet = satirlar.reduce(function (s, x) { return s + x.maliyetToplam; }, 0);
+  var toplamKarZarar = toplamDeger - toplamMaliyet;
+  var toplamKarZararYuzde = toplamMaliyet ? (toplamKarZarar / toplamMaliyet) * 100 : 0;
+  var toplamGunlukDeger = satirlar.reduce(function (s, x) { return s + x.gunlukDeger; }, 0);
+  var bugunkuDegisimTutar = toplamDeger - toplamGunlukDeger;
+  var bugunkuDegisimYuzde = toplamGunlukDeger ? (bugunkuDegisimTutar / toplamGunlukDeger) * 100 : 0;
+
+  satirlar.forEach(function (s) { s.agirlik = toplamDeger ? (s.deger / toplamDeger) * 100 : 0; });
+
+  var sektorAgirlik = {};
+  satirlar.forEach(function (s) {
+    sektorAgirlik[s.sektor] = (sektorAgirlik[s.sektor] || 0) + s.agirlik;
+  });
+
+  var uyarilar = [];
+  satirlar.forEach(function (s) {
+    if (s.agirlik > 20) {
+      uyarilar.push({ tip: "kirmizi", metin: "Yoğunlaşma riski: " + s.symbol + " hissesi portföyün %" + nrm(s.agirlik, 1) + "'i" });
+    }
+  });
+  Object.keys(sektorAgirlik).forEach(function (sek) {
+    if (sektorAgirlik[sek] > 40) {
+      uyarilar.push({ tip: "turuncu", metin: "Sektör yoğunlaşması: " + sek + " sektörü portföyün %" + nrm(sektorAgirlik[sek], 1) + "'i" });
+    }
+  });
+  satirlar.forEach(function (s) {
+    if (s.karZararYuzde < -20) {
+      uyarilar.push({ tip: "kirmizi", metin: s.symbol + " pozisyonu maliyetinin %" + nrm(Math.abs(s.karZararYuzde), 1) + " altında" });
+    }
+  });
+  var sektorSayisi = Object.keys(sektorAgirlik).length;
+  if (satirlar.length < 3 || sektorSayisi === 1) {
+    uyarilar.push({ tip: "turuncu", metin: "Çeşitlendirme uyarısı: portföyde " + satirlar.length + " hisse / " + sektorSayisi + " sektör var, dağılım dar" });
+  }
+
+  var h = "";
+
+  h += '<div class="kart"><h2>Portföy Özeti</h2><div class="ozet-grid">';
+  h += ozetKutu("Toplam Değer", nrm(toplamDeger, 0) + " ₺", null);
+  h += ozetKutu("Toplam Maliyet", nrm(toplamMaliyet, 0) + " ₺", null);
+  h += ozetKutu("Kâr / Zarar", nrm(toplamKarZarar, 0) + " ₺ (%" + nrm(toplamKarZararYuzde, 2) + ")", toplamKarZarar >= 0 ? "pos" : "neg");
+  h += ozetKutu("Bugünkü Değişim", nrm(bugunkuDegisimTutar, 0) + " ₺ (%" + nrm(bugunkuDegisimYuzde, 2) + ")", bugunkuDegisimTutar >= 0 ? "pos" : "neg");
+  h += '</div></div>';
+
+  h += '<div class="kart"><h2>Risk Uyarıları</h2>';
+  if (uyarilar.length === 0) {
+    h += '<div class="uyari-kart uyari-yesil"><span class="uyari-ikon">✔</span><span>Belirgin risk görünmüyor.</span></div>';
+  } else {
+    uyarilar.forEach(function (u) {
+      var sinif = u.tip === "kirmizi" ? "uyari-kirmizi" : "uyari-turuncu";
+      var ikon = u.tip === "kirmizi" ? "⚠" : "ⓘ";
+      h += '<div class="uyari-kart ' + sinif + '"><span class="uyari-ikon">' + ikon + '</span><span>' + u.metin + '</span></div>';
+    });
+  }
+  h += '</div>';
+
+  h += '<div class="kart"><h2>Pozisyonlar</h2><div class="tbl-wrap"><table><thead><tr>';
+  h += '<th>Sembol</th><th>Adet</th><th>Maliyet</th><th>Güncel</th><th>Değer</th><th>Ağırlık</th><th>K/Z %</th><th>Sektör</th>';
+  h += '</tr></thead><tbody>';
+  satirlar.forEach(function (s) {
+    var satirSinif = s.agirlik > 20 ? ' class="yogun"' : '';
+    var kzSinif = s.karZarar >= 0 ? "pos" : "neg";
+    h += '<tr' + satirSinif + '>';
+    h += '<td>' + s.symbol + (s.veriYok ? ' <span style="color:var(--muted);font-size:11px;">(fiyat yok)</span>' : '') + '</td>';
+    h += '<td>' + nrm(s.adet, 0) + '</td>';
+    h += '<td>' + nrm(s.maliyet, 2) + '</td>';
+    h += '<td>' + nrm(s.guncelFiyat, 2) + '</td>';
+    h += '<td>' + nrm(s.deger, 0) + '</td>';
+    h += '<td>%' + nrm(s.agirlik, 1) + '</td>';
+    h += '<td class="' + kzSinif + '">%' + nrm(s.karZararYuzde, 1) + '</td>';
+    h += '<td>' + s.sektor + '</td>';
+    h += '</tr>';
+  });
+  h += '</tbody></table></div></div>';
+
+  h += '<div class="kart"><h2>Ağırlık Dağılımı</h2>';
+  var siraliSatirlar = satirlar.slice().sort(function (a, b) { return b.agirlik - a.agirlik; });
+  siraliSatirlar.forEach(function (s) {
+    h += '<div class="bar-row"><div class="bar-lbl">' + s.symbol + '</div>';
+    h += '<div class="bar-track"><div class="bar-fill" style="width:' + Math.min(s.agirlik, 100) + '%;"></div></div>';
+    h += '<div class="bar-val">%' + nrm(s.agirlik, 1) + '</div></div>';
+  });
+  h += '</div>';
+
+  if (endeksVeri && endeksVeri.fiyat != null && endeksVeri.oncekiKapanis != null) {
+    var endeksDegisim = ((endeksVeri.fiyat - endeksVeri.oncekiKapanis) / endeksVeri.oncekiKapanis) * 100;
+    h += '<div class="kart"><h2>Endeks Kıyası (Bugün)</h2><div class="kiyas-grid">';
+    h += ozetKutu("Portföyün", "%" + nrm(bugunkuDegisimYuzde, 2), bugunkuDegisimYuzde >= 0 ? "pos" : "neg");
+    h += ozetKutu("BIST100", "%" + nrm(endeksDegisim, 2), endeksDegisim >= 0 ? "pos" : "neg");
+    h += '</div></div>';
+  }
+
+  el.innerHTML = h;
+  altbilgi.textContent = "Son güncelleme: " + new Date().toLocaleString("tr-TR") + " · Yatırım tavsiyesi değildir.";
+}
+
+function ozetKutu(etiket, deger, sinif) {
+  return '<div class="ozet-item"><div class="lbl">' + etiket + '</div><div class="val ' + (sinif || '') + '">' + deger + '</div></div>';
+}
+</script>
+</body>
+</html>
