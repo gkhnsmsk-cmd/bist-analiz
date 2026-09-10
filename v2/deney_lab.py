@@ -422,21 +422,17 @@ def _kazananlar(satirlar: list[dict]) -> list[str]:
 # ═════════════════════════════════════════════════════════════════════════
 def _tablo(satirlar: list[dict]) -> str:
     basliklar = ("| Varyant | CAGR | Maks düşüş | Sharpe (yıllık) | İşlem sayısı "
-                 "| Piyasada kalma % |
-"
-                 "|---|---:|---:|---:|---:|---:|
-")
+                 "| Piyasada kalma % |\n"
+                 "|---|---:|---:|---:|---:|---:|\n")
     govde = ""
     for s in satirlar:
         ad = s["varyant"] + (" (referans)" if s["varyant"] == "AL_TUT" else "")
         if s.get("hata"):
-            govde += f"| {ad} | HATA | HATA | HATA | - | - |
-"
+            govde += f"| {ad} | HATA | HATA | HATA | - | - |\n"
             continue
         govde += (f"| {ad} | {_yuzde(s['cagr'])} | {_yuzde(s['maks_dusus'])} | "
                   f"{_sayi(s['sharpe'])} | {s['islem_sayisi']} | "
-                  f"{_yuzde(s['piyasada_kalma_yuzde'], 1)} |
-")
+                  f"{_yuzde(s['piyasada_kalma_yuzde'], 1)} |\n")
     return basliklar + govde
 
 
