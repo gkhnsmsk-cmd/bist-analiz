@@ -1,0 +1,73 @@
+name: V5 Akıl Hocası Backtest (V2 mimarisi + sıkı giriş/geniş stop)
+
+# NEDEN: V2'nin test PF'si 0.99 (neredeyse başabaş) çıkmıştı — kabul edilemez.
+# Kullanıcının yeni ölçütü "endeksi her dönem yen" DEĞİL: pozitif expectancy,
+# PF>=1.3, kontrollü düşüş (<=%25), pozitif CAGR, Sharpe>0.8 (tercihen). V5 bu
+# ölçütle, V2 mimarisi üzerinde SIKILAŞTIRILMIŞ giriş filtresi + GENİŞ stop
+# (3.5xATR) deniyor. V2/V3/V4 dosyalarının hiçbiri değiştirilmedi.
+
+on:
+  workflow_dispatch:
+    inputs:
+      ozsermaye:
+        description: "Başlangıç özsermayesi (TL)"
+        required: false
+        default: "1000000"
+
+permissions:
+  contents: write
+
+jobs:
+  backtest:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Bağımlılıkları kur
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r v2/requirements.txt
+
+      - name: Modül öz-testleri (ağ gerektirmeyenler)
+        continue-on-error: true
+        run: |
+          cd v2
+          echo "--- sinyal.py ---";  python sinyal.py  || echo "sinyal testi BAŞARISIZ"
+          echo "--- risk.py ---";    python risk.py    || echo "risk testi BAŞARISIZ"
+          echo "--- pozisyon.py ---"; python pozisyon.py || echo "pozisyon testi BAŞARISIZ"
+          echo "--- rejim.py ---";   python rejim.py   || echo "rejim testi BAŞARISIZ"
+          echo "--- v5_backtest.py (look-ahead + filtre sıkılaştırma testi) ---"
+          python v5_backtest.py || echo "v5_backtest öz-testi BAŞARISIZ"
+
+      - name: Walk-forward backtest (V5 — akıl hocası kriterleri)
+        run: |
+          cd v2
+          python -u calistir_v5.py --ozsermaye "${{ github.event.inputs.ozsermaye || '1000000' }}"
+
+      - name: Sonuçları commit et
+        run: |
+          git config user.name  "bist-otomasyon"
+          git config user.email "bist-otomasyon@users.noreply.github.com"
+          git add -A -- 'v2/sonuclar_v5/*'
+          if git diff --staged --quiet; then
+            echo "Değişiklik yok."
+          else
+            git commit -m "V5 backtest sonucu: $(date -u '+%Y-%m-%d %H:%M UTC')"
+            git pull --rebase --autostash origin "${GITHUB_REF_NAME}"
+            git push origin "HEAD:${GITHUB_REF_NAME}"
+          fi
+
+      - name: Özeti iş akışı sayfasında göster
+        if: always()
+        run: |
+          if [ -f v2/sonuclar_v5/ozet.md ]; then
+            cat v2/sonuclar_v5/ozet.md >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "Özet dosyası üretilemedi." >> "$GITHUB_STEP_SUMMARY"
+          fi
