@@ -103,6 +103,7 @@ _STOP_SAYILAN_NEDENLER = ("stop", "trailing")
 # ─────────────────────────────────────────────────────────────────────────
 # V5'E ÖZGÜ DEĞİŞİKLİKLER (bkz. modül başı dokümantasyonu).
 # ─────────────────────────────────────────────────────────────────────────
+<<<<<<< HEAD
 # DENEME 2 NOTU: ilk deneme (kirilim-yalnız + göreli güç>=85 + uzama<=1.2)
 # BIST100 evreninde 5 yıl boyunca SIFIR işlem üretti — üç filtrenin AYNI ANDA
 # uygulanması pratikte boş küme veriyordu (aşırı sıkılaştırma, kabul
@@ -115,6 +116,12 @@ _V5_STOP_ATR_KATSAYI = 3.5          # V2: 2.5 — whipsaw azaltmak için genişl
 _V5_MIN_GORELI_GUC = 80.0           # V2: 75.0 — hafif sıkılaştırma (85 çok sertti)
 _V5_MAKS_UZAMA = 1.6                # V2: 2.0 — hafif sıkılaştırma (1.2 çok sertti)
 _V5_IZIN_VERILEN_KURULUMLAR = ("kirilim", "geri_cekilme")  # V2 ile AYNI (değiştirilmedi)
+=======
+_V5_STOP_ATR_KATSAYI = 3.5          # V2: 2.5 — whipsaw azaltmak için genişletildi
+_V5_MIN_GORELI_GUC = 85.0           # V2: 75.0 — yalnız evrenin en güçlü %15'i
+_V5_MAKS_UZAMA = 1.2                # V2: 2.0 — yalnız taze/az uzamış kırılımlar
+_V5_IZIN_VERILEN_KURULUMLAR = ("kirilim",)  # V2: kirilim + geri_cekilme
+>>>>>>> 814e7b23fae176dcf700d5f8089f95b99b47d6ce
 
 # risk.py ile aynı diğer sabitler (yalnız stop çarpanı farklı).
 _RISK_ORANI = 0.01
@@ -753,8 +760,11 @@ if __name__ == "__main__":
     print(f"  Senaryo A toplam işlem: {len(sonuc_a['islemler'])}")
     print(f"  Senaryo A metrikleri: {sonuc_a['metrikler']}")
 
+<<<<<<< HEAD
     # V5 filtresinin V2'den DAHA AZ/EŞİT aday ürettiğini doğrula (sıkılaştırma
     # gerçekten kısıtlayıcı, gevşetici değil).
+=======
+>>>>>>> 814e7b23fae176dcf700d5f8089f95b99b47d6ce
     evren_test = evren.evren_olustur(veriler_a, tarihler[300])
     v2_adaylar = sinyal.giris_adaylari(veriler_a, evren_test, tarihler[300])
     v5_adaylar = _v5_giris_adaylari(veriler_a, evren_test, tarihler[300])

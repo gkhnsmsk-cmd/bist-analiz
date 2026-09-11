@@ -71,3 +71,7 @@ jobs:
           else
             echo "Özet dosyası üretilemedi." >> "$GITHUB_STEP_SUMMARY"
           fi
+<<<<<<< HEAD
+=======
+
+>>>>>>> 814e7b23fae176dcf700d5f8089f95b99b47d6ce

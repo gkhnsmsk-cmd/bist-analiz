@@ -1,0 +1,74 @@
+name: v2.1 Dinamik & Defansif Backtest
+
+# NEDEN: v2.1, kullanıcının kendi tasarladığı TAM şartnameyi (v2.1) birebir
+# uygular — Risk-On/Risk-Off rejim şalteri (§2), CMF/hacim/getiri tabanlı
+# hisse seçimi (§3), 2 dilimli limit alım (§4), ATR tabanlı pozisyon
+# boyutlandırma (§5), sert stop + kısmi kâr al + iz süren Donchian stop +
+# zaman/momentum stopu (§6) ve haftalık tarama + 3-ay risksiz-altı kuralı (§7).
+# Rapor v2.1 / BIST100 al-tut / risksiz-faiz-varsayımı ÜÇ sütunlu kıyas gösterir.
+
+on:
+  workflow_dispatch:
+    inputs:
+      ozsermaye:
+        description: "Başlangıç özsermayesi (TL)"
+        required: false
+        default: "1000000"
+
+permissions:
+  contents: write
+
+jobs:
+  backtest:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Bağımlılıkları kur
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r v2/requirements.txt
+
+      - name: Modül öz-testleri (ağ gerektirmeyenler)
+        continue-on-error: true
+        run: |
+          cd v2
+          echo "--- v21_gosterge.py ---"; python v21_gosterge.py || echo "v21_gosterge testi BAŞARISIZ"
+          echo "--- v21_rejim.py ---";    python v21_rejim.py    || echo "v21_rejim testi BAŞARISIZ"
+          echo "--- v21_secim.py ---";    python v21_secim.py    || echo "v21_secim testi BAŞARISIZ"
+          echo "--- v21_portfoy.py ---";  python v21_portfoy.py  || echo "v21_portfoy testi BAŞARISIZ"
+          echo "--- v21_backtest.py (look-ahead testi) ---"
+          python v21_backtest.py || echo "v21_backtest öz-testi BAŞARISIZ"
+
+      - name: Walk-forward backtest (v2.1 + BIST100/risksiz-faiz kıyası)
+        run: |
+          cd v2
+          python -u calistir_v21.py --ozsermaye "${{ github.event.inputs.ozsermaye || '1000000' }}"
+
+      - name: Sonuçları commit et
+        run: |
+          git config user.name  "bist-otomasyon"
+          git config user.email "bist-otomasyon@users.noreply.github.com"
+          git add -A -- 'v2/sonuclar_v21/*'
+          if git diff --staged --quiet; then
+            echo "Değişiklik yok."
+          else
+            git commit -m "v2.1 backtest sonucu: $(date -u '+%Y-%m-%d %H:%M UTC')"
+            git pull --rebase --autostash origin "${GITHUB_REF_NAME}"
+            git push origin "HEAD:${GITHUB_REF_NAME}"
+          fi
+
+      - name: Özeti iş akışı sayfasında göster
+        if: always()
+        run: |
+          if [ -f v2/sonuclar_v21/ozet.md ]; then
+            cat v2/sonuclar_v21/ozet.md >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "Özet dosyası üretilemedi." >> "$GITHUB_STEP_SUMMARY"
+          fi
