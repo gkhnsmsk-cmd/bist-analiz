@@ -48,11 +48,20 @@ _YIL_ISLEM_GUNU = 252
 # ─────────────────────────────────────────────────────────────────────────
 # V6'ya özgü sert şart eşikleri.
 # ─────────────────────────────────────────────────────────────────────────
-_HACIM_PATLAMA_ESIGI = 2.0     # bugünün hacmi >= önceki-20g-ortalamanın 2 katı
+_HACIM_PATLAMA_ESIGI = 1.6     # bugünün hacmi >= önceki-20g-ortalamanın 1.6 katı
 _ZIRVE_PENCERE = 252           # ~52 hafta işlem günü
 _ZIRVE_PENCERE_MIN = 200       # en az bu kadar günlük geçmişle hesaplanabilir
-_ZIRVE_YAKINLIK_ESIGI = 0.95   # kapanış, 52 hafta zirvesinin >= %95'inde
-_ATR_ORAN_TAVANI = 0.09        # ATR14/Kapanış bu oranı aşarsa çok oynak
+_ZIRVE_YAKINLIK_ESIGI = 0.92   # kapanış, 52 hafta zirvesinin >= %92'sinde
+_ATR_ORAN_TAVANI = 0.10        # ATR14/Kapanış bu oranı aşarsa çok oynak
+
+# v6.1 İNCE AYAR (ilk çalıştırma sonucu: test CAGR %19.2 << hedef %55, maksimum
+# düşüş %29.0 > hedef %25). Tanı: sinyal dört şartı BİRLİKTE arıyordu ama eşikler
+# (2.0x hacim, %95 zirve) o kadar sertti ki aday sayısı çok azaldı — sermaye çoğu
+# zaman nakitte/az pozisyonda bekledi (düşük CAGR) VE eldeki az sayıdaki pozisyon
+# yine de büyük ağırlıkla (%20-33) açılıp tek isim hareketiyle sert düşüşe
+# girebiliyordu (yüksek düşüş). Eşikler hafifçe gevşetildi (1.6x / %92) — daha
+# sık, hâlâ seçici, sinyal üretsin diye. Stop/kâr hedefi tarafındaki ayarlar için
+# bkz. v6_portfoy.py.
 
 # Likidite ön-eleme (v3_skor.py'deki AYNI YORUM KARARI mantığı, ama
 # konsantre portföy N=3-5 pozisyon + tavan ağırlık %33 varsayımıyla):
