@@ -1,0 +1,57 @@
+[
+  {
+    "tarih": "2026-09-11",
+    "sembol": "SELEC",
+    "yon": "AL",
+    "adet": 554.7222,
+    "fiyat": 360.0,
+    "tutar": 200000.0,
+    "komisyon": 300.0,
+    "puan": 77.0,
+    "gerekce": "birikim skoru en yüksek adaylardan (CMF +0.513, MA200 üstünde, Puan 77)"
+  },
+  {
+    "tarih": "2026-09-11",
+    "sembol": "MARTI",
+    "yon": "AL",
+    "adet": 73690.0369,
+    "fiyat": 2.71,
+    "tutar": 200000.0,
+    "komisyon": 300.0,
+    "puan": 61.4,
+    "gerekce": "birikim skoru en yüksek adaylardan (CMF +0.423, MA200 üstünde, Puan 61)"
+  },
+  {
+    "tarih": "2026-09-11",
+    "sembol": "AHGAZ",
+    "yon": "AL",
+    "adet": 4950.4214,
+    "fiyat": 40.34,
+    "tutar": 200000.0,
+    "komisyon": 300.0,
+    "puan": 77.0,
+    "gerekce": "birikim skoru en yüksek adaylardan (CMF +0.366, MA200 üstünde, Puan 77)"
+  },
+  {
+    "tarih": "2026-09-11",
+    "sembol": "KUYAS",
+    "yon": "AL",
+    "adet": 2715.1598,
+    "fiyat": 73.55,
+    "tutar": 200000.0,
+    "komisyon": 300.0,
+    "puan": 53.3,
+    "gerekce": "birikim skoru en yüksek adaylardan (CMF +0.349, MA200 üstünde, Puan 53)"
+  },
+  {
+    "tarih": "2026-09-11",
+    "sembol": "BIMAS",
+    "yon": "AL",
+    "adet": 459.6087,
+    "fiyat": 434.5,
+    "tutar": 200000.0,
+    "komisyon": 300.0,
+    "puan": 76.0,
+    "gerekce": "birikim skoru en yüksek adaylardan (CMF +0.346, MA200 üstünde, Puan 76)"
+  }
+]
