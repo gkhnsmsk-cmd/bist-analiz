@@ -1,0 +1,71 @@
+name: Deney Lab (rejim / zamanlama)
+
+# NEDEN: V2 ve V3 mimarilerinin İKİSİ de BIST100'ü al-tut etmekten daha kötü
+# sonuç verdi. Bu iş akışı tek bir soruyu sınar: değer kaynağı HANGİ HİSSEYİ
+# seçtiğin mi, yoksa PİYASADA OLUP OLMAMA ZAMANLAMAN mı? 7 varyant, aynı
+# dönemler, aynı maliyet modeli. Sonuç dosyası kendi manşetini kendisi yazar.
+
+on:
+  workflow_dispatch:
+    inputs:
+      ozsermaye:
+        description: "Başlangıç özsermayesi (TL)"
+        required: false
+        default: "1000000"
+
+permissions:
+  contents: write
+
+jobs:
+  deney:
+    runs-on: ubuntu-latest
+    # 7 varyant × 2 dönem; rotasyon varyantları tam V3 motorunu koşturduğu
+    # için v3_backtest.yml'den (60 dk) daha uzun bir pencere gerekiyor.
+    timeout-minutes: 120
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Bağımlılıkları kur
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r v2/requirements.txt
+
+      - name: Regresyon kontrolü — mevcut V3 davranışı bozulmamış olmalı
+        continue-on-error: true
+        run: |
+          cd v2
+          echo "--- v3_portfoy.py ---"; python v3_portfoy.py || echo "v3_portfoy testi BAŞARISIZ"
+          echo "--- v3_backtest.py (look-ahead sızıntı testi) ---"
+          python v3_backtest.py || echo "v3_backtest öz-testi BAŞARISIZ"
+
+      - name: Deney laboratuvarı (7 varyant × 2 dönem)
+        run: |
+          cd v2
+          python -u deney_lab.py --ozsermaye "${{ github.event.inputs.ozsermaye || '1000000' }}"
+
+      - name: Sonuçları commit et
+        run: |
+          git config user.name  "bist-otomasyon"
+          git config user.email "bist-otomasyon@users.noreply.github.com"
+          git add -A -- 'v2/sonuclar_lab/*'
+          if git diff --staged --quiet; then
+            echo "Değişiklik yok."
+          else
+            git commit -m "Deney lab sonucu: $(date -u '+%Y-%m-%d %H:%M UTC')"
+            git pull --rebase --autostash origin "${GITHUB_REF_NAME}"
+            git push origin "HEAD:${GITHUB_REF_NAME}"
+          fi
+
+      - name: Özeti iş akışı sayfasında göster
+        if: always()
+        run: |
+          if [ -f v2/sonuclar_lab/ozet.md ]; then
+            cat v2/sonuclar_lab/ozet.md >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "Özet dosyası üretilemedi." >> "$GITHUB_STEP_SUMMARY"
+          fi

@@ -1,0 +1,82 @@
+# ═══════════════════════════════════════════════════════════════════════════
+# GÜNLÜK OTOMASYON (v2) — V1'deki gunluk_otomasyon.yml'nin v2/ kopyası.
+# ═══════════════════════════════════════════════════════════════════════════
+# NEDEN AYRI: v2/ altındaki motor dosyaları (arka_plan_tarama.py,
+# gunluk_sanal_yatirim.py, ...) V1'den bağımsız kendi veri dosyalarını
+# (v2/*.json) ve kendi statik çıktısını (docs/v2/data/*.json) üretir. V1'in
+# kendi otomasyonu (gunluk_otomasyon.yml) hiç değiştirilmedi, dokunulmadı.
+#
+# NOT: Bu dosya V1'in davranışının birebir kopyasıdır — SADECE script yolları
+# v2/ öneki ile ve commit edilen veri yolları v2'ye göre güncellendi. Algoritma
+# (arka_plan_tarama.py, gunluk_sanal_yatirim.py içeriği) DEĞİŞTİRİLMEDİ.
+
+name: Günlük BIST otomasyonu (v2)
+
+on:
+  schedule:
+    - cron: "20 7 * * 1-5"
+    - cron: "0 11 * * 1-5"
+    - cron: "0 16 * * 1-5"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: gunluk-otomasyon-v2
+  cancel-in-progress: false
+
+jobs:
+  otomasyon:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+
+    steps:
+      - name: Depoyu indir
+        uses: actions/checkout@v4
+
+      - name: Python kur
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Paketleri kur
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements-otomasyon.txt
+
+      - name: Arka plan taraması (tüm BIST + tavsiye kaydı) — v2
+        id: tarama
+        continue-on-error: true
+        working-directory: v2
+        run: python arka_plan_tarama.py
+
+      - name: Sanal portföy günlük izleme — v2
+        id: sanal
+        continue-on-error: true
+        working-directory: v2
+        run: python gunluk_sanal_yatirim.py
+
+      - name: Sonuçları depoya kaydet
+        run: |
+          git config user.name  "bist-otomasyon"
+          git config user.email "bist-otomasyon@users.noreply.github.com"
+          git add -A -- 'v2/*.json' 'docs/v2/data' || true
+          if git diff --staged --quiet; then
+            echo "Değişen kayıt yok — commit atlanıyor."
+          else
+            git commit -m "Otomatik kayıt (v2): $(date -u '+%Y-%m-%d %H:%M UTC')"
+            git pull --rebase --autostash origin "${GITHUB_REF_NAME}" || true
+            git push origin "HEAD:${GITHUB_REF_NAME}"
+          fi
+
+      - name: Çalışma özeti
+        if: always()
+        run: |
+          {
+            echo "### Günlük otomasyon (v2) sonucu"
+            echo ""
+            echo "- Tarama adımı: ${{ steps.tarama.outcome }}"
+            echo "- Sanal portföy adımı: ${{ steps.sanal.outcome }}"
+          } >> "$GITHUB_STEP_SUMMARY"

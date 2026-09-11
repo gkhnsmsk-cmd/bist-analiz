@@ -1,0 +1,70 @@
+name: V3 Rotasyon Backtest
+
+# NEDEN: V3 (göreli güç rotasyonu) tek bir soruya cevap vermek için var:
+# BIST100'ü al-ve-tut etmekten DAHA İYİ mi? Rapor bu kıyası zorunlu gösterir.
+# Endeksi yenemiyorsa sistem TAVSIYE_VERME modunda kalır.
+
+on:
+  workflow_dispatch:
+    inputs:
+      ozsermaye:
+        description: "Başlangıç özsermayesi (TL)"
+        required: false
+        default: "1000000"
+
+permissions:
+  contents: write
+
+jobs:
+  backtest:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Bağımlılıkları kur
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r v2/requirements.txt
+
+      - name: Modül öz-testleri (ağ gerektirmeyenler)
+        continue-on-error: true
+        run: |
+          cd v2
+          echo "--- v3_skor.py ---";     python v3_skor.py     || echo "v3_skor testi BAŞARISIZ"
+          echo "--- v3_portfoy.py ---";  python v3_portfoy.py  || echo "v3_portfoy testi BAŞARISIZ"
+          echo "--- rejim.py ---";       python rejim.py       || echo "rejim testi BAŞARISIZ"
+          echo "--- v3_backtest.py (look-ahead sızıntı testi) ---"
+          python v3_backtest.py || echo "v3_backtest öz-testi BAŞARISIZ"
+
+      - name: Walk-forward backtest (V3 + al-tut kıyası)
+        run: |
+          cd v2
+          python -u calistir_v3.py --ozsermaye "${{ github.event.inputs.ozsermaye || '1000000' }}"
+
+      - name: Sonuçları commit et
+        run: |
+          git config user.name  "bist-otomasyon"
+          git config user.email "bist-otomasyon@users.noreply.github.com"
+          git add -A -- 'v2/sonuclar_v3/*'
+          if git diff --staged --quiet; then
+            echo "Değişiklik yok."
+          else
+            git commit -m "V3 backtest sonucu: $(date -u '+%Y-%m-%d %H:%M UTC')"
+            git pull --rebase --autostash origin "${GITHUB_REF_NAME}"
+            git push origin "HEAD:${GITHUB_REF_NAME}"
+          fi
+
+      - name: Özeti iş akışı sayfasında göster
+        if: always()
+        run: |
+          if [ -f v2/sonuclar_v3/ozet.md ]; then
+            cat v2/sonuclar_v3/ozet.md >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "Özet dosyası üretilemedi." >> "$GITHUB_STEP_SUMMARY"
+          fi

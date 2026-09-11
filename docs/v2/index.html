@@ -1,0 +1,2626 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover" />
+<title>Pusula — BIST Mobil</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+<script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+<script src="https://unpkg.com/@babel/standalone@7.24.7/babel.min.js"></script>
+<style>
+  html, body { margin: 0; overscroll-behavior-y: none; background: #f9fafb; }
+  * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
+  input, select, textarea, button { font-size: 16px; } /* iOS otomatik yakınlaştırmayı engeller */
+  .no-scrollbar::-webkit-scrollbar { display: none; }
+  .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+  @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes popIn { from { opacity: 0; transform: translateY(6px) scale(.97); } to { opacity: 1; transform: none; } }
+  .detay-anim { animation: slideUp .24s cubic-bezier(.22,.9,.35,1); }
+  .fade-anim { animation: fadeIn .18s ease; }
+  .pop-anim { animation: popIn .18s cubic-bezier(.22,.9,.35,1); }
+  /* "Anlık" fiyat güncellenince döviz.com tarzı yanıp-sönme (flash) —
+     yükseldiyse yeşile, düştüyse kırmızıya kısa bir parlama yapıp normale
+     döner. Sadece renk/arka plan animasyonu, metin sıçramaz (layout shift yok). */
+  @keyframes flashYesil { 0% { background-color: rgba(16,185,129,.28); } 100% { background-color: transparent; } }
+  @keyframes flashKirmizi { 0% { background-color: rgba(239,68,68,.28); } 100% { background-color: transparent; } }
+  .fiyat-flash-yukari { animation: flashYesil 900ms ease-out; border-radius: .5rem; }
+  .fiyat-flash-asagi { animation: flashKirmizi 900ms ease-out; border-radius: .5rem; }
+  .safe-bottom { padding-bottom: env(safe-area-inset-bottom, 0px); }
+  .safe-top { padding-top: env(safe-area-inset-top, 0px); }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel" data-presets="react">
+const { useState, useMemo, useEffect, useRef } = React;
+
+// Anlık fiyat sorgulama sıklığı — döviz.com tarzı "yanıp sönen" his için
+// yeterince sık, ama Cloudflare Worker'ın ücretsiz kotasını (günde 100.000
+// istek) zorlamayacak kadar seyrek. Panel açık olduğu sürece çalışır,
+// kapanınca durur.
+const CANLI_FIYAT_YENILEME_MS = 5000;
+
+/* ═══════════════════════════════════════════════════════════════════════
+   PUSULA — BIST mobil arayüzü (React SPA, Streamlit'in yerini alır)
+   ───────────────────────────────────────────────────────────────────────
+   NEDEN BU DOSYA VAR: Streamlit her dokunuşta sayfayı Python tarafında
+   baştan çiziyor (rerun) — bu, mobilde ekran geçişlerinin "anlık" değil
+   "yenileniyor" hissi vermesinin, iç içe kaydırma kutularının ve menünün
+   içerik altında kaybolmasının kök nedeniydi. CSS yamalarıyla düzelmiyor,
+   çünkü mimari sorun. Bu dosya YERİNE geçen bağımsız bir SPA: ekran
+   geçişleri saf React state ile (Python'a hiç gidilmeden) anında olur.
+
+   VERİ KAYNAĞI (MOCK DEĞİL): Bu sayfa docs/pusula/data/*.json dosyalarını
+   fetch() ile okur. O dosyalar pusula_veri_uret.py tarafından
+   tarama_onbellek.json (Öne Çıkan + Yükselebilecek taramaları) ve
+   sanal_portfoy.json'dan üretilir — arka_plan_tarama.py ve
+   gunluk_sanal_yatirim.py her çalıştığında (Görev Zamanlayıcı / GitHub
+   Actions) otomatik tazelenir. Ağ isteği başarısız olursa (ör. dosyalar
+   henüz commit'lenmemişse) sayfa MOCK_HISSELER'e düşer ki boş kalmasın. */
+
+const MOCK_HISSELER = [
+  { symbol: 'PGSUS', ad: 'Pegasus Hava Taşımacılığı', fiyat: 985.50, degisim: 3.2, trend: 'Al', favori: true },
+  { symbol: 'ASTOR', ad: 'Astor Enerji',               fiyat: 112.40, degisim: -1.1, trend: 'Tut',      favori: true },
+  { symbol: 'THYAO', ad: 'Türk Hava Yolları',           fiyat: 315.25, degisim: 1.8, trend: 'Al',        favori: true },
+  { symbol: 'TUPRS', ad: 'Tüpraş',                      fiyat: 178.90, degisim: -2.4, trend: 'Sat',       favori: false },
+  { symbol: 'GARAN', ad: 'Garanti BBVA',                fiyat: 142.10, degisim: 0.6, trend: 'Al',        favori: false },
+  { symbol: 'AKBNK', ad: 'Akbank',                      fiyat: 98.35,  degisim: -0.4, trend: 'Tut',      favori: false },
+  { symbol: 'ASELS', ad: 'Aselsan',                     fiyat: 210.75, degisim: 4.1, trend: 'Al',  favori: false },
+  { symbol: 'BIMAS', ad: 'BİM Mağazalar',               fiyat: 645.00, degisim: -3.7, trend: 'Güçlü Sat', favori: false },
+  { symbol: 'EREGL', ad: 'Ereğli Demir Çelik',          fiyat: 56.20,  degisim: 1.2, trend: 'Al',        favori: false },
+  { symbol: 'KCHOL', ad: 'Koç Holding',                 fiyat: 298.60, degisim: 0.2, trend: 'Tut',       favori: false },
+];
+
+/* Gerçek veriyi Pusula'nın beklediği alan adlarına çevirir. Kaynak
+   (pusula_veri_uret.py) 'degisim1ay' üretir — gerçek anlık günlük değişim
+   önbellekte yok, bu yüzden rozetler 1 aylık değişimi gösterir; ekran
+   başlıklarında bu açıkça belirtilir (aşağıya bkz.). */
+/* "Bu veri ne kadar taze?" — kullanıcı isteği: hisseye tıklayınca ne zaman
+   güncellendiğini (X dakika/saat/gün önce + tam tarih-saat) görebilsin.
+   ISO zaman damgasını göreli metne çevirir; null/parse edilemezse null döner
+   (çağıran taraf o zaman hiçbir şey göstermez, "Invalid Date" YAZDIRMAZ). */
+function _goreliZaman(isoZaman) {
+  if (!isoZaman) return null;
+  const t = new Date(isoZaman);
+  if (isNaN(t.getTime())) return null;
+  const farkSn = Math.max(0, (Date.now() - t.getTime()) / 1000);
+  let goreli;
+  if (farkSn < 60) goreli = 'az önce';
+  else if (farkSn < 3600) goreli = `${Math.floor(farkSn / 60)} dakika önce`;
+  else if (farkSn < 86400) goreli = `${Math.floor(farkSn / 3600)} saat önce`;
+  else goreli = `${Math.floor(farkSn / 86400)} gün önce`;
+  return { goreli, tamTarih: t.toLocaleString('tr-TR') };
+}
+
+function _apiHisseUyarla(x, favoriSet) {
+  return {
+    symbol: x.symbol,
+    ad: x.ad || x.symbol,
+    fiyat: x.fiyat || 0,
+    degisim: x.degisim1ay || 0,
+    degisim1hafta: x.degisim1hafta,
+    degisim3ay: x.degisim3ay,
+    degisim1yil: x.degisim1yil,
+    puan: x.puan,
+    karar: x.karar,
+    hacim: x.hacim,
+    spark: x.spark,
+    trend: x.trend || 'Tut',
+    favori: favoriSet.has(x.symbol),
+  };
+}
+
+const FAVORI_ANAHTAR = 'pusula_favoriler';
+
+/* Kullanıcı isteği: hisseye tıklayınca ANLIK fiyat da görülsün. Pusula
+   statik bir sayfa olduğu için Yahoo Finance'e doğrudan istek atamıyoruz
+   (CORS engelli) — bu yüzden küçük, ücretsiz bir aracı fonksiyon (Cloudflare
+   Worker) kullanıyoruz; bkz. cloudflare_worker_canli_fiyat.js.
+   BOŞ BIRAKILIRSA (henüz kurulmadıysa) özellik SESSİZCE devre dışı kalır —
+   DetayEkran normal (son taramadan gelen) fiyatı göstermeye devam eder,
+   hiçbir hata/kırık ekran çıkmaz. Worker kurulunca buraya adresi yapıştır:
+   örn. 'https://pusula-canli-fiyat.KULLANICI-ADIN.workers.dev' */
+const CANLI_FIYAT_API_URL = 'https://pusula-canli-fiyat.gkhnsmsk.workers.dev';
+function _favorileriOku() {
+  try {
+    const ham = localStorage.getItem(FAVORI_ANAHTAR);
+    return ham ? new Set(JSON.parse(ham)) : new Set(['PGSUS', 'ASTOR', 'THYAO']);
+  } catch (e) { return new Set(['PGSUS', 'ASTOR', 'THYAO']); }
+}
+function _favorileriYaz(set) {
+  try { localStorage.setItem(FAVORI_ANAHTAR, JSON.stringify([...set])); } catch (e) {}
+}
+
+/* ── Kullanıcı Portföyü (26.08.2026 kullanıcı isteği) ────────────────────
+   Sanal Portföy'den TAMAMEN AYRI: burası algoritmanın yönetmediği, kullanıcının
+   KENDİ gerçek/manuel takip ettiği hisselerini elle girip izleyebildiği bir
+   yer. Hiçbir otomasyon bu listeye dokunmaz, sadece kullanıcı ekler/siler.
+   Tarayıcının localStorage'ında saklanır (favoriler gibi) — sunucuya
+   gitmez, cihaza özeldir. */
+const KULLANICI_PORTFOY_ANAHTAR = 'pusula_kullanici_portfoy';
+function _kullaniciPortfoyOku() {
+  try {
+    const ham = localStorage.getItem(KULLANICI_PORTFOY_ANAHTAR);
+    return ham ? JSON.parse(ham) : [];
+  } catch (e) { return []; }
+}
+function _kullaniciPortfoyYaz(liste) {
+  try { localStorage.setItem(KULLANICI_PORTFOY_ANAHTAR, JSON.stringify(liste)); } catch (e) {}
+}
+
+/* ── Bulut senkronu (telefon ↔ PC) — Task #24, kullanıcı isteği: "telefondaki
+   portföy ile PC'deki senkron olmuyor... herşey senkron olabilir". localStorage
+   sadece cihaza özel kalıyordu; şimdi aynı anahtar Cloudflare Worker'daki
+   /portfoy ucu üzerinden KV'ye de yazılıyor/oradan okunuyor — tek kullanıcı
+   olduğu için tüm cihazlar aynı KV kaydını paylaşır.
+   NOT: Anahtar önce window.prompt() ile cihaz başına elle giriliyordu — bu,
+   kullanıcının telefon/PC'de FARKLI değer girmesine (ya da prompt'u yanlışlıkla
+   iptal edip sessizce senkronsuz kalmasına) açıktı ve "senkron olmuyor"
+   şikayetinin asıl sebebiydi. Tek kullanıcılı bir uygulamada bu passphrase zaten
+   sadece worker URL'sini herkese açık bulan birinin portföyü okumasını/üzerine
+   yazmasını engellemek içindi — CANLI_FIYAT_API_URL gibi diğer sabitler de
+   zaten herkese açık istemci kodunda. Bu yüzden tüm cihazlarda OTOMATİK aynı
+   değeri kullansın diye sabit koda gömüldü; kullanıcıdan hiçbir giriş istemez. */
+const SENKRON_ANAHTARI_SABIT = 'JZqAxGtXdcZAyzXGxR0S7TtU';
+function _senkronAnahtariGetir() {
+  return SENKRON_ANAHTARI_SABIT;
+}
+
+/* ── "Şimdi Güncelle" butonu (01.09.2026, kullanıcı isteği) ──────────────
+   NEDEN: gunluk_otomasyon.yml günde 3 kez otomatik çalışıyor ama GitHub'ın
+   cron zamanlayıcısı yoğunlukta saatlerce gecikebiliyor — kullanıcı "veri
+   bir gün öncesini gösteriyor" diye şikayet etti. Bu buton, worker'daki
+   /tetikle-tarama ucuna POST atıp AYNI otomasyonu (gunluk_otomasyon.yml)
+   elle tetikler. Anahtar SENKRON_ANAHTARI ile AYNI gerekçeyle sabit koda
+   gömülü — tek kullanıcılı uygulamada gerçek bir sır değil, sadece worker
+   URL'sini bulan rastgele birinin Actions dakikalarını boşa harcamasını
+   önleyen hafif bir bariyer. Worker tarafında AYNI değer TETIKLE_ANAHTARI
+   secret'ı olarak girilmelidir (bkz. cloudflare_worker_canli_fiyat.js). */
+const TETIKLE_ANAHTARI_SABIT = 'uy21YaLDoOT6JSL53HxR57KJ';
+const TETIKLE_SOGUMA_ANAHTAR = 'pusula_son_tetikleme';
+async function _portfoyBulutaYaz(liste) {
+  if (!CANLI_FIYAT_API_URL) return;
+  const anahtar = _senkronAnahtariGetir();
+  if (!anahtar) return;
+  try {
+    await fetch(`${CANLI_FIYAT_API_URL}/portfoy`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ anahtar, portfoy: liste }),
+    });
+  } catch (e) { /* sessiz — internet yoksa localStorage zaten yedek */ }
+}
+async function _portfoyBulutanOku() {
+  if (!CANLI_FIYAT_API_URL) return null;
+  const anahtar = _senkronAnahtariGetir();
+  if (!anahtar) return null;
+  try {
+    const r = await fetch(`${CANLI_FIYAT_API_URL}/portfoy?anahtar=${encodeURIComponent(anahtar)}`);
+    const veri = await r.json();
+    return Array.isArray(veri.portfoy) ? veri.portfoy : null;
+  } catch (e) { return null; }
+}
+
+/* ── Liste ekranlarında (Favoriler, Yükselecek Hisseler, Portföy) da anlık
+   fiyat — kullanıcı isteği: "sadece tıklayınca değil, gösterilen hisselerin
+   hepsinin anlık fiyatı sürekli yanıp sönmeli". Worker'ın toplu (?semboller=)
+   modunu kullanır — TEK istekte onlarca sembolü birden çeker (Cloudflare
+   ücretsiz katmanın istek başına 50 alt-istek sınırı yüzünden 45'te kesilir,
+   bkz. cloudflare_worker_canli_fiyat.js). CANLI_FIYAT_API_URL boşsa (worker
+   kurulmadıysa) hiçbir şey yapmaz — liste her zaman son taramadan gelen
+   fiyatı göstermeye devam eder. */
+const CANLI_LISTE_YENILEME_MS = 15000;
+function useCanliFiyatlar(semboller) {
+  const [canliMap, setCanliMap] = useState({});
+  // semboller dizisi her render'da yeni referans olabilir (useMemo olmadan
+  // çağrılırsa) — içerik aynıysa efekt yeniden kurulmasın diye JSON anahtarı
+  // kullanılıyor.
+  const anahtar = semboller.join(',');
+  useEffect(() => {
+    if (!CANLI_FIYAT_API_URL || semboller.length === 0) return;
+    let iptal = false;
+    function sorgula() {
+      fetch(`${CANLI_FIYAT_API_URL}?semboller=${encodeURIComponent(semboller.join(','))}`)
+        .then(r => r.ok ? r.json() : Promise.reject())
+        .then(d => {
+          if (iptal || !d || !d.fiyatlar) return;
+          setCanliMap(prev => {
+            const sonraki = { ...prev };
+            for (const [sembol, veri] of Object.entries(d.fiyatlar)) {
+              if (veri && veri.fiyat != null) sonraki[sembol] = veri;
+            }
+            return sonraki;
+          });
+        })
+        .catch(() => {}); // sessizce yok say — statik fiyat gösterime devam eder
+    }
+    sorgula();
+    const id = setInterval(sorgula, CANLI_LISTE_YENILEME_MS);
+    return () => { iptal = true; clearInterval(id); };
+  }, [anahtar]);
+  return canliMap;
+}
+
+/* Bir satırdaki fiyat GERÇEKTEN değiştiğinde (aynı sayı tekrar gelirse
+   tekrar tetiklenmez) kısa süreliğine 'yukari'/'asagi' döner — döviz.com
+   tarzı yanıp sönen ticker efekti için. Her liste satırı bileşeni kendi
+   değerini izler (useRef ile), bu yüzden her satır bağımsız yanıp söner. */
+function useFlashOnChange(deger) {
+  const [yon, setYon] = useState(null);
+  const oncekiRef = useRef(deger);
+  useEffect(() => {
+    if (deger == null) return;
+    if (oncekiRef.current != null && deger !== oncekiRef.current) {
+      setYon(deger > oncekiRef.current ? 'yukari' : 'asagi');
+      const t = setTimeout(() => setYon(null), 900);
+      oncekiRef.current = deger;
+      return () => clearTimeout(t);
+    }
+    oncekiRef.current = deger;
+  }, [deger]);
+  return yon;
+}
+function _flashSinifi(yon) {
+  return yon === 'yukari' ? 'fiyat-flash-yukari' : yon === 'asagi' ? 'fiyat-flash-asagi' : '';
+}
+
+// NOT (28.08.2026): "Güçlü Al" ayrıcalıklı etiketi kaldırıldı — backtest'te bu
+// kova AL kovasından daha kötü performans gösteriyordu (bkz. analiz_motoru.py
+// karar_ver() üzerindeki not). Yeni üretilen veri artık "Güçlü Al" döndürmüyor;
+// bu satır SADECE eski/önbelleğe alınmış kayıtlarla uyumluluk için duruyor —
+// öyle bir etiket görülürse 'Al' ile aynı, öne çıkarılmamış stille gösterilir.
+const TREND_STIL = {
+  'Güçlü Al': 'bg-green-100 text-green-700 ring-1 ring-green-200',
+  'Al':       'bg-green-100 text-green-700 ring-1 ring-green-200',
+  'Tut':      'bg-amber-100 text-amber-700 ring-1 ring-amber-200',
+  'Sat':      'bg-red-100 text-red-700 ring-1 ring-red-200',
+  'Güçlü Sat':'bg-red-200 text-red-800 ring-1 ring-red-300',
+};
+
+const TREND_FILTRELERI = ['Tümü', 'Al', 'Tut', 'Sat', 'Güçlü Sat'];
+
+function DegisimEtiketi({ deger, kucuk }) {
+  const pozitif = deger >= 0;
+  return (
+    <span className={"font-semibold tabular-nums " + (kucuk ? "text-[10px] " : "") + (pozitif ? "text-emerald-600" : "text-red-600")}>
+      {pozitif ? "+" : ""}{deger.toFixed(1)}%
+    </span>
+  );
+}
+
+/* Detay ekranındaki "Anlık / 1 Hafta / 1 Ay / 3 Ay / 1 Yıl" değişim
+   çipleri — kullanıcı isteği: "tıklayınca anlık, haftalık, aylık, yıllık
+   fiyat değişimini görebilmeliyim". */
+function DegisimCipi({ etiket, deger }) {
+  const pozitif = deger >= 0;
+  return (
+    <div className="shrink-0 bg-white rounded-xl shadow-sm ring-1 ring-gray-100 px-2.5 py-1.5 text-center min-w-[64px]">
+      <div className="text-[10px] text-gray-400 uppercase tracking-wide">{etiket}</div>
+      <div className={"text-sm font-bold tabular-nums " + (pozitif ? "text-emerald-600" : "text-red-600")}>
+        {pozitif ? "+" : ""}{deger.toFixed(1)}%
+      </div>
+    </div>
+  );
+}
+
+function TrendRozeti({ trend, buyuk }) {
+  const boyut = buyuk ? "text-sm px-3 py-1.5" : "text-xs px-2.5 py-1";
+  return (
+    <span className={"inline-block rounded-full font-semibold whitespace-nowrap " + boyut + " " + (TREND_STIL[trend] || "bg-gray-100 text-gray-600")}>
+      {trend}
+    </span>
+  );
+}
+
+/* NAVİGASYON ÖGELERİ — hem alt (mobil) hem yan (masaüstü) menü aynı listeyi
+   kullanır, tek kaynak (iki ayrı yerde elle senkron tutmaya gerek kalmaz). */
+const NAV_OGELERI = [
+  { key: 'ana', ikon: '🏠', etiket: 'Ana' },
+  { key: 'tarama', ikon: '🔎', etiket: 'Tarama' },
+  { key: 'yukselecek', ikon: '📈', etiket: 'Yükselecek' },
+  { key: 'portfoy', ikon: '💼', etiket: 'Portföy' },
+  { key: 'ara', ikon: '🔍', etiket: 'Ara' },
+];
+
+/* ── Alt navigasyon — SADECE MOBİLDE (md ve üstünde gizli, yerini sol
+   sabit menü alır). Detay ekranı açıkken o da gizlenir. ─────────────── */
+function AltNav({ aktif, setAktif }) {
+  return (
+    <nav className="md:hidden fixed inset-x-0 bottom-0 z-40 bg-white/95 backdrop-blur border-t border-gray-200 safe-bottom">
+      <div className="max-w-md mx-auto grid grid-cols-5">
+        {NAV_OGELERI.map(o => (
+          <button
+            key={o.key}
+            onClick={() => setAktif(o.key)}
+            className={"flex flex-col items-center justify-center gap-0.5 py-2 min-h-[56px] active:bg-gray-100 transition-colors " +
+                       (aktif === o.key ? "text-indigo-600" : "text-gray-400")}
+          >
+            <span className="text-xl leading-none">{o.ikon}</span>
+            <span className="text-[11px] font-medium leading-none">{o.etiket}</span>
+          </button>
+        ))}
+      </div>
+    </nav>
+  );
+}
+
+/* ── Yan navigasyon — SADECE MASAÜSTÜNDE (md ve üstü). PC'de de aynı
+   akıcı SPA davranışı istendiği için mobildeki bottom-nav'ın birebir
+   masaüstü karşılığı: sabit, her zaman görünür, Python'a gitmeden
+   anında sekme değiştirir. Detay ekranı açıkken de görünür kalır —
+   masaüstünde detay bir MODAL olarak açılır (bkz. DetayEkran), o yüzden
+   arkadaki menüyü gizlemeye gerek yok. ───────────────────────────────── */
+function YanNav({ aktif, setAktif }) {
+  return (
+    <nav className="hidden md:flex md:flex-col md:fixed md:inset-y-0 md:left-0 md:w-56 md:border-r md:border-gray-200 md:bg-white md:z-40">
+      <div className="px-5 pt-6 pb-4">
+        <div className="text-xl font-bold text-gray-900">🧭 Pusula</div>
+        <div className="text-xs text-gray-400 mt-0.5">BIST mobil &amp; masaüstü</div>
+      </div>
+      <div className="flex flex-col gap-1 px-3">
+        {NAV_OGELERI.map(o => (
+          <button
+            key={o.key}
+            onClick={() => setAktif(o.key)}
+            className={"flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold transition-colors text-left " +
+                       (aktif === o.key ? "bg-indigo-50 text-indigo-700" : "text-gray-500 hover:bg-gray-50")}
+          >
+            <span className="text-lg leading-none">{o.ikon}</span>
+            {o.etiket}
+          </button>
+        ))}
+      </div>
+    </nav>
+  );
+}
+
+/* ── Favoriler — yatay kayan chip kartlar (13 kart alt alta YIĞILMAZ) ── */
+/* Kullanıcı isteği: "favoriler 5'ten fazla gösterilmiyor, kartları küçült,
+   aynı anda ~10 görünsün, ama veri kaybı olmasın". Kod tarafında favori
+   sayısına bir üst sınır (slice/cap) YOKTU — tüm favoriler zaten
+   localStorage'da saklanıp render ediliyordu (_favorileriOku/_favorileriYaz).
+   Algılanan sorun kart genişliğiydi: 128px + boşluk yüzünden bir telefon
+   ekranında aynı anda ~2-3 kart sığıyor, geri kalanı yatay kaydırma
+   gerektiriyordu — kullanıcı bunu "sadece 5 tane var" sanmış olabilir. Kartı
+   küçültüp (128px → 84px), boşluğu daraltıp, rozet satırını kaldırarak aynı
+   anda görünen kart sayısını belirgin şekilde artırdık; HİÇBİR favori verisi
+   silinmedi/kırpılmadı — favoriler listesi olduğu gibi tam render ediliyor. */
+function FavoriKart({ h, onSec }) {
+  const flashYon = useFlashOnChange(h.fiyat);
+  return (
+    <button
+      onClick={() => onSec(h.symbol)}
+      className="snap-start shrink-0 w-[84px] bg-white rounded-xl shadow-sm ring-1 ring-gray-100 px-2 py-2 text-left active:scale-[.97] transition-transform min-h-[44px]"
+    >
+      <div className="font-bold text-gray-900 text-xs truncate">{h.symbol}</div>
+      <div className={"text-xs text-gray-500 mt-0.5 tabular-nums transition-colors truncate " + _flashSinifi(flashYon)}>{h.fiyat.toFixed(2)} ₺</div>
+      <div className="mt-1"><DegisimEtiketi deger={h.degisim} kucuk /></div>
+    </button>
+  );
+}
+
+function FavorilerSeridi({ hisseler, onSec }) {
+  const favoriler = hisseler.filter(h => h.favori);
+  if (favoriler.length === 0) {
+    return <p className="text-sm text-gray-400 px-4">Henüz favori eklenmedi — bir hissenin ⭐ ikonuna dokunun.</p>;
+  }
+  return (
+    <div className="flex gap-1.5 overflow-x-auto no-scrollbar px-4 pb-1 -mx-0 snap-x snap-mandatory">
+      {favoriler.map(h => <FavoriKart key={h.symbol} h={h} onSec={onSec} />)}
+    </div>
+  );
+}
+
+/* ── Piyasa özeti — dikey liste satırı (tek dikey kaydırma) ──────────── */
+function HisseSatiri({ h, onSec, onYildiz }) {
+  // NEDEN <div role="button"> (gerçek <button> DEĞİL): yıldız da bir
+  // <button>; HTML'de <button> içine <button> KONULAMAZ (jsdom testinde
+  // "cannot appear as a descendant" uyarısıyla yakalandı — geçersiz iç içe
+  // buton gerçek tarayıcılarda dokunma davranışını tutarsız yapabilirdi).
+  const flashYon = useFlashOnChange(h.fiyat);
+  return (
+    <div
+      role="button"
+      tabIndex={0}
+      onClick={() => onSec(h.symbol)}
+      onKeyDown={(e) => { if (e.key === 'Enter') onSec(h.symbol); }}
+      className="relative w-full flex items-center gap-3 bg-white rounded-2xl shadow-sm ring-1 ring-gray-100 px-4 py-3 min-h-[44px] active:bg-gray-50 transition-colors text-left cursor-pointer"
+    >
+      <button
+        onClick={(e) => { e.stopPropagation(); onYildiz(h.symbol); }}
+        className="text-xl w-11 h-11 -ml-1 flex items-center justify-center shrink-0"
+        aria-label="Favori"
+      >
+        {h.favori ? '⭐' : '☆'}
+      </button>
+      <div className="flex-1 min-w-0">
+        <div className="font-bold text-gray-900 truncate">{h.symbol}</div>
+        <div className="text-xs text-gray-400 truncate">{h.ad}</div>
+      </div>
+      <div className="text-right shrink-0">
+        <div className={"font-semibold text-gray-900 tabular-nums transition-colors " + _flashSinifi(flashYon)}>{h.fiyat.toFixed(2)} ₺</div>
+        <DegisimEtiketi deger={h.degisim} />
+        {/* Sadece takip edilen sınırlı listeler (Favoriler/Portföy/Yükselebilecek/
+           Dipten Dönenler) canlı fiyat alıyor — bkz. App'teki canliSemboller notu.
+           Diğer tüm hisseler için bu etiket, fiyatın son taramadan geldiğini
+           açıkça belirtir (kullanıcı isteği: "yanıltıcı oluyor"). */}
+        {h.canli === false && <div className="text-[10px] text-gray-400 mt-0.5">son tarama</div>}
+      </div>
+      <TrendRozeti trend={h.trend} />
+      {/* Doğrulanmış = MA200 üstünde + para akışı (CMF) pozitif — depoda
+          walk-forward doğrulanmış TEK sinyal (korelasyon ~+0,079, Genel
+          Puan'ın ~6 katı; bkz. analiz_motoru.secim_skoru). 31.08.2026:
+          önceden sadece "Yükselebilecek Hisseler" sekmesinde vardı, artık
+          kullanıcının en çok gördüğü ana listede de rozet olarak gösteriliyor. */}
+      {h.dogrulanmis && (
+        <span className="absolute top-1.5 right-1.5 text-[13px]" title={"Doğrulanmış sinyal — MA200 üstü + para akışı pozitif (CMF " + (h.cmf != null ? h.cmf.toFixed(3) : '—') + ")"}>✅</span>
+      )}
+    </div>
+  );
+}
+
+/* ── Ekran 1: Ana ─────────────────────────────────────────────────────── */
+/* ── Sistem Durumu — küçük, katlanabilir bilgi kartı. Ağ isteği yapmaz,
+   sadece pusula_veri_uret.sistem_durumu_uret()'in ürettiği zaten-hazır
+   zaman damgalarını gösterir. Orijinal app.py'deki "ℹ️ Durum" sekmesinin
+   hafifletilmiş karşılığı. ─────────────────────────────────────────────── */
+/* ── Tarama bayatlığı uyarısı — kullanıcı isteği: "yükselecek hisseler eski
+   gözüküyor" derken sebep, arka plandaki GitHub Actions taraması o gün henüz
+   çalışmamıştı ("son tarama" bilgisi zaten vardı ama küçük gri yazıyla,
+   kapalı bir akordeonun içindeydi — kimse fark etmiyordu). Bu, o bilgiyi
+   HER ZAMAN görünür, göze çarpan bir uyarı şeridine taşır: hafta içi, günün
+   geç saatinde (taramanın normalde bitmiş olması gereken saatten sonra) hâlâ
+   dünkü/daha eski veri gösteriliyorsa turuncu bir şerit çıkar. */
+/* "Şimdi Güncelle" — bkz. TETIKLE_ANAHTARI_SABIT üzerindeki not. 3 dakikalık
+   soğuma hem worker tarafında (edge cache) hem burada (localStorage) tutulur
+   — worker tarafı GERÇEK sınır (Actions dakikasını korur), buradaki sadece
+   kullanıcıya "az önce tıkladın" geri bildirimini worker'a hiç gitmeden
+   anında verir. */
+function SimdiGuncelleButonu() {
+  const [durum, setDurum] = useState('bos'); // bos | gonderiliyor | tamam | hata | soguma
+  const [mesaj, setMesaj] = useState('');
+
+  useEffect(() => {
+    const son = Number(localStorage.getItem(TETIKLE_SOGUMA_ANAHTAR) || 0);
+    if (Date.now() - son < 3 * 60 * 1000) setDurum('soguma');
+  }, []);
+
+  async function tikla() {
+    if (durum === 'gonderiliyor' || durum === 'soguma') return;
+    if (!CANLI_FIYAT_API_URL) {
+      setDurum('hata'); setMesaj('Worker adresi ayarlı değil.'); return;
+    }
+    setDurum('gonderiliyor');
+    try {
+      const yanit = await fetch(`${CANLI_FIYAT_API_URL}/tetikle-tarama`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ anahtar: TETIKLE_ANAHTARI_SABIT }),
+      });
+      const veri = await yanit.json().catch(() => ({}));
+      if (yanit.ok && veri.tamam) {
+        localStorage.setItem(TETIKLE_SOGUMA_ANAHTAR, String(Date.now()));
+        setDurum('tamam'); setMesaj(veri.mesaj || 'Tetiklendi.');
+        setTimeout(() => setDurum('soguma'), 2000);
+      } else {
+        setDurum('hata');
+        setMesaj(veri.hata || `İstek başarısız (${yanit.status}).`);
+      }
+    } catch (e) {
+      setDurum('hata'); setMesaj('Bağlantı hatası: ' + (e.message || e));
+    }
+  }
+
+  return (
+    <div className="px-4 -mt-1 mb-3">
+      <button
+        onClick={tikla}
+        disabled={durum === 'gonderiliyor' || durum === 'soguma'}
+        className={"w-full min-h-[40px] rounded-xl text-xs font-semibold transition-colors ring-1 " +
+                   (durum === 'tamam' ? "bg-emerald-50 text-emerald-700 ring-emerald-200"
+                    : durum === 'hata' ? "bg-red-50 text-red-600 ring-red-200"
+                    : "bg-indigo-50 text-indigo-700 ring-indigo-200") +
+                   (durum === 'gonderiliyor' || durum === 'soguma' ? " opacity-60" : " active:scale-[.98]")}
+      >
+        {durum === 'gonderiliyor' ? '⏳ Tetikleniyor...'
+          : durum === 'tamam' ? '✅ Tetiklendi — birazdan tazelenir'
+          : durum === 'soguma' ? '🔄 Az önce güncellendi'
+          : '🔄 Şimdi Güncelle'}
+      </button>
+      {mesaj && durum === 'hata' && (
+        <p className="text-[11px] mt-1.5 leading-relaxed text-red-500">{mesaj}</p>
+      )}
+    </div>
+  );
+}
+
+function TaramaBayatUyarisi({ durum }) {
+  if (!durum || !durum.tarama || !durum.tarama.zaman) return null;
+  const simdi = new Date();
+  const taramaZamani = new Date(durum.tarama.zaman);
+  const farkSaat = (simdi - taramaZamani) / 3600000;
+  const gunAdi = simdi.getDay(); // 0=Pazar, 6=Cumartesi
+  const hafkaIci = gunAdi >= 1 && gunAdi <= 5;
+  const gunGecSaat = simdi.getHours() >= 20; // 19:15 TR'deki planlı taramadan sonra, pay bırakılmış
+  if (!(hafkaIci && gunGecSaat && farkSaat > 24)) return null;
+  return (
+    <div className="mx-4 mb-3 rounded-xl bg-orange-50 ring-1 ring-orange-200 px-3 py-2 text-xs text-orange-800 flex items-start gap-2">
+      <span>⚠️</span>
+      <span>
+        Veriler {Math.floor(farkSaat / 24) >= 1 ? Math.floor(farkSaat / 24) + " gün" : Math.floor(farkSaat) + " saat"} önceki
+        taramadan — bugünkü otomatik tarama henüz tamamlanmamış olabilir. Fiyatlar (varsa favoriler/liste canlı fiyatı)
+        güncel olsa da puan/trend bilgileri dünkü olabilir.
+      </span>
+    </div>
+  );
+}
+
+function SistemDurumuKarti({ durum }) {
+  const [acik, setAcik] = useState(false);
+  if (!durum) return null;
+  return (
+    <div className="px-4 mt-2">
+      <button
+        onClick={() => setAcik(a => !a)}
+        className="w-full flex items-center justify-between text-xs text-gray-400 px-1 py-1"
+      >
+        <span>ℹ️ Sistem Durumu {durum.tarama?.zaman ? "· son tarama " + new Date(durum.tarama.zaman).toLocaleString('tr-TR') : ""}</span>
+        <span>{acik ? '▲' : '▼'}</span>
+      </button>
+      {acik && (
+        <div className="bg-white rounded-2xl shadow-sm ring-1 ring-gray-100 p-3 mt-1 flex flex-col gap-1.5 text-xs pop-anim">
+          {durum.tarama && (
+            <div className="flex justify-between"><span className="text-gray-400">Son tarama</span>
+              <span className="font-medium text-gray-700">{new Date(durum.tarama.zaman).toLocaleString('tr-TR')} · {durum.tarama.kapsam}</span></div>
+          )}
+          {durum.sanalPortfoy && (
+            <div className="flex justify-between"><span className="text-gray-400">Sanal portföy</span>
+              <span className="font-medium text-gray-700">
+                {durum.sanalPortfoy.aktif ? "aktif" : "pasif"} · {durum.sanalPortfoy.pozisyonSayisi} pozisyon
+                {durum.sanalPortfoy.sonRebalansTarihi ? " · rebalans " + durum.sanalPortfoy.sonRebalansTarihi : ""}
+              </span></div>
+          )}
+          {durum.tavsiyeSayisi != null && (
+            <div className="flex justify-between"><span className="text-gray-400">Toplam tavsiye kaydı</span>
+              <span className="font-medium text-gray-700">{durum.tavsiyeSayisi}</span></div>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function AnaEkran({ hisseler, onSec, onYildiz, zaman, sistemDurumu }) {
+  return (
+    <div className="pb-4">
+      <div className="px-4 pt-2 pb-3">
+        <h1 className="text-2xl font-bold text-gray-900">Pusula</h1>
+        <p className="text-sm text-gray-400">BIST özet{zaman ? " — tarama: " + zaman : ""} · değişim = 1 aylık</p>
+      </div>
+
+      <SimdiGuncelleButonu />
+      <TaramaBayatUyarisi durum={sistemDurumu} />
+
+      <h2 className="px-4 text-sm font-semibold text-gray-500 uppercase tracking-wide mb-2">⭐ Favoriler</h2>
+      <p className="px-4 text-xs text-gray-400 -mt-1 mb-2">Takip ettiğin hisseler — bir karta ☆ ile ekleyip buradan hızlı göz atabilirsin.</p>
+      <FavorilerSeridi hisseler={hisseler} onSec={onSec} />
+
+      <h2 className="px-4 text-sm font-semibold text-gray-500 uppercase tracking-wide mt-6 mb-2">Piyasa Özeti</h2>
+      <p className="px-4 text-xs text-gray-400 -mt-1 mb-2">Tüm hisseler puana göre sıralı — detay için bir karta dokun.</p>
+      <div className="px-4 flex flex-col gap-2 md:grid md:grid-cols-2 md:gap-3">
+        {hisseler.map(h => <HisseSatiri key={h.symbol} h={h} onSec={onSec} onYildiz={onYildiz} />)}
+      </div>
+
+      <SistemDurumuKarti durum={sistemDurumu} />
+    </div>
+  );
+}
+
+/* ── Ekran 2: Tarama — trend filtreli liste ──────────────────────────── */
+/* Takas satırı — HisseSatiri'ye benzer ama sağda takas puanı gösterir
+   (yabancı/kurumsal birikim vekil göstergesi — bkz. analiz_motoru.takas_analizi). */
+function TakasSatiri({ h, onSec, onYildiz }) {
+  return (
+    <div
+      role="button" tabIndex={0}
+      onClick={() => onSec(h.symbol)}
+      onKeyDown={(e) => { if (e.key === 'Enter') onSec(h.symbol); }}
+      className="w-full flex items-center gap-3 bg-white rounded-2xl shadow-sm ring-1 ring-gray-100 px-4 py-3 min-h-[44px] active:bg-gray-50 transition-colors text-left cursor-pointer"
+    >
+      <button onClick={(e) => { e.stopPropagation(); onYildiz(h.symbol); }}
+              className="text-xl w-11 h-11 -ml-1 flex items-center justify-center shrink-0" aria-label="Favori">
+        {h.favori ? '⭐' : '☆'}
+      </button>
+      <div className="flex-1 min-w-0">
+        <div className="font-bold text-gray-900 truncate">{h.symbol}</div>
+        <div className="text-xs text-gray-400 truncate">{h.ad}</div>
+      </div>
+      <div className="text-right shrink-0">
+        <div className="text-[11px] text-gray-400 uppercase tracking-wide">Takas Puan</div>
+        <div className={"font-bold tabular-nums " + (h.takasPuan >= 60 ? "text-emerald-600" : h.takasPuan <= 40 ? "text-red-600" : "text-amber-600")}>
+          {(h.takasPuan || 0).toFixed(0)}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* Fon & Kurumsal — TEFAS'ın yerli yatırım fonlarındaki ortalama hisse
+   ağırlığı (aylık, makro seviyeli). Artıyorsa yerli fonlar borsaya para
+   sokuyor demektir. Bkz. veri_katmani.tefas_hisse_trendi + pusula_veri_uret.py. */
+function FonKurumsalEkran({ fonKurumsal }) {
+  const trend = fonKurumsal?.tefasTrend || [];
+  if (trend.length < 2) {
+    return (
+      <div className="px-4">
+        <p className="text-sm text-gray-400 py-8 text-center">
+          TEFAS fon verisi henüz üretilmedi ya da geçici olarak erişilemiyor.
+          Bir sonraki otomatik taramada tekrar denenecek.
+        </p>
+      </div>
+    );
+  }
+  const genislik = 320, yukseklik = 110, dolgu = 8;
+  const degerler = trend.map(t => t.deger);
+  const minD = Math.min(...degerler), maxD = Math.max(...degerler);
+  const aralik = (maxD - minD) || 1;
+  const yol = trend.map((t, i) => {
+    const x = dolgu + (i / (trend.length - 1)) * (genislik - 2 * dolgu);
+    const y = yukseklik - dolgu - ((t.deger - minD) / aralik) * (yukseklik - 2 * dolgu);
+    return `${x},${y}`;
+  }).join(' ');
+  const ilk = trend[0].deger, son = trend[trend.length - 1].deger;
+  const artis = son >= ilk;
+  return (
+    <div className="px-4">
+      <div className="bg-white rounded-2xl shadow-sm ring-1 ring-gray-100 p-4">
+        <div className="text-xs text-gray-400 uppercase tracking-wide">Yerli Fonlarda Ortalama Hisse Ağırlığı</div>
+        <div className={"text-2xl font-bold tabular-nums mt-1 " + (artis ? "text-emerald-600" : "text-red-600")}>
+          %{son.toFixed(1)}
+        </div>
+        <svg viewBox={`0 0 ${genislik} ${yukseklik}`} className="w-full h-28 mt-2">
+          <polyline points={yol} fill="none" stroke={artis ? "#059669" : "#dc2626"} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+        <p className="text-xs text-gray-400 mt-2 leading-relaxed">
+          {artis
+            ? "Son aylarda yerli fonlar borsaya PARA SOKUYOR — hisse ağırlığı artıyor."
+            : "Son aylarda yerli fonlar borsadan PARA ÇEKİYOR — hisse ağırlığı azalıyor."}
+          {" "}(TEFAS, aylık örneklem)
+        </p>
+      </div>
+    </div>
+  );
+}
+
+function TaramaEkran({ hisseler, onSec, onYildiz, fonKurumsal }) {
+  const [altSekme, setAltSekme] = useState('one_cikan');
+  const [filtre, setFiltre] = useState('Tümü');
+  const filtreli = useMemo(
+    () => filtre === 'Tümü' ? hisseler : hisseler.filter(h => h.trend === filtre),
+    [hisseler, filtre]
+  );
+  const takasSirali = useMemo(() => [...hisseler].sort((a, b) => (b.takasPuan || 0) - (a.takasPuan || 0)), [hisseler]);
+
+  return (
+    <div className="pb-4">
+      <div className="px-4 pt-2 pb-3">
+        <h1 className="text-2xl font-bold text-gray-900">Tarama</h1>
+        <p className="text-sm text-gray-400">
+          {altSekme === 'one_cikan' ? filtreli.length + " hisse — motorun puanına göre en güçlüden zayıfa sıralı" :
+           altSekme === 'takas' ? "Yabancı/kurumsal para hangi hisseye giriyor? Yüksek takas puanı bir işaret — tek başına al/sat sinyali değil." :
+           "Yerli yatırım fonları (TEFAS) hangi hisseyi artırıyor/azaltıyor"}
+        </p>
+      </div>
+
+      <div className="flex gap-2 px-4 pb-3">
+        {[['one_cikan', '🚀 Öne Çıkan'], ['takas', '🤝 Takas'], ['fon', '🏦 Fon & Kurumsal']].map(([k, etiket]) => (
+          <button
+            key={k}
+            onClick={() => setAltSekme(k)}
+            className={"flex-1 min-h-[40px] rounded-xl text-xs sm:text-sm font-semibold transition-colors " +
+                       (altSekme === k ? "bg-indigo-600 text-white" : "bg-white text-gray-600 ring-1 ring-gray-200")}
+          >
+            {etiket}
+          </button>
+        ))}
+      </div>
+
+      {altSekme === 'one_cikan' && (
+        <>
+          <div className="flex gap-2 overflow-x-auto no-scrollbar px-4 pb-1">
+            {TREND_FILTRELERI.map(f => (
+              <button
+                key={f}
+                onClick={() => setFiltre(f)}
+                className={"shrink-0 min-h-[44px] px-4 rounded-full text-sm font-semibold transition-colors " +
+                           (filtre === f ? "bg-indigo-600 text-white" : "bg-white text-gray-600 ring-1 ring-gray-200")}
+              >
+                {f}
+              </button>
+            ))}
+          </div>
+          <div className="px-4 flex flex-col gap-2 md:grid md:grid-cols-2 md:gap-3 mt-3">
+            {filtreli.length === 0
+              ? <p className="text-sm text-gray-400 py-6 text-center col-span-2">Bu filtreye uyan hisse yok.</p>
+              : filtreli.map(h => <HisseSatiri key={h.symbol} h={h} onSec={onSec} onYildiz={onYildiz} />)}
+          </div>
+        </>
+      )}
+
+      {altSekme === 'takas' && (
+        <div className="px-4 flex flex-col gap-2 md:grid md:grid-cols-2 md:gap-3">
+          {takasSirali.slice(0, 60).map(h => <TakasSatiri key={h.symbol} h={h} onSec={onSec} onYildiz={onYildiz} />)}
+        </div>
+      )}
+
+      {altSekme === 'fon' && <FonKurumsalEkran fonKurumsal={fonKurumsal} />}
+    </div>
+  );
+}
+
+/* ── Ekran: Yükselebilecek Hisseler — Kısa/Orta/Uzun vade sinyalleri ─────
+   Kaynak: tarama_onbellek.json:"yukselecek_vade" (arka_plan_tarama.py günde
+   1-2 kez tüm BIST'i tarayıp yazıyor). Genel Puan, üç vadenin ağırlıklı
+   ortalamasıdır — yüksek puan, üç vadede de tutarlı pozitif sinyal demektir. */
+function VadeRozeti({ metin }) {
+  const pozitif = (metin || '').includes('🟢');
+  const notr = (metin || '').includes('🟡') || (metin || '').toUpperCase().includes('NÖTR');
+  const stil = pozitif ? 'bg-emerald-50 text-emerald-700' : notr ? 'bg-amber-50 text-amber-700' : 'bg-red-50 text-red-700';
+  return <span className={"text-[11px] font-semibold px-2 py-0.5 rounded-lg whitespace-nowrap " + stil}>{metin || '—'}</span>;
+}
+
+function YukselecekSatiri({ h, onSec }) {
+  const flashYon = useFlashOnChange(h.fiyat);
+  // Kullanıcı geri bildirimi (28.08.2026): "Kısa vade UZAK DUR yazıyor ama
+  // altında yeşil 'Doğrulanmış sinyal' de var — çelişkili duruyor". İkisi
+  // gerçekten FARKLI şeyler ölçüyor (Kısa/Orta/Uzun = vade_karari puanı,
+  // Doğrulanmış = ayrı bir CMF+MA200 filtresi) ama yan yana durunca kafa
+  // karıştırıyor. Kısa vade kırmızıysa (UZAK DUR) rozeti yeşilden nötr
+  // maviye çevirip metne açıkça "kısa vadede temkinli ol" uyarısı ekliyoruz.
+  const kisaOlumsuz = (h.kisa || '').includes('🔴');
+  const dogrulanmaRengi = kisaOlumsuz
+    ? 'text-sky-700 bg-sky-50'
+    : 'text-emerald-700 bg-emerald-50';
+  return (
+    <div
+      role="button"
+      tabIndex={0}
+      onClick={() => onSec(h.symbol)}
+      onKeyDown={(e) => { if (e.key === 'Enter') onSec(h.symbol); }}
+      className="w-full bg-white rounded-2xl shadow-sm ring-1 ring-gray-100 px-4 py-3 min-h-[44px] active:bg-gray-50 transition-colors cursor-pointer"
+    >
+      <div className="flex items-center justify-between gap-3">
+        <div className="min-w-0">
+          <div className="font-bold text-gray-900 truncate">{h.symbol}</div>
+          <div className="text-xs text-gray-400 truncate">{h.ad}</div>
+        </div>
+        <div className="text-right shrink-0">
+          <div className={"font-semibold text-gray-900 tabular-nums transition-colors " + _flashSinifi(flashYon)}>{h.fiyat.toFixed(2)} ₺</div>
+          <div className="text-xs text-gray-400">Genel Puan <span className="font-bold text-indigo-600">{h.genelPuan.toFixed(0)}</span></div>
+        </div>
+      </div>
+      <div className="mt-2 flex items-center gap-1.5 flex-wrap">
+        <span className="text-[10px] text-gray-400 uppercase tracking-wide mr-0.5">Kısa</span>
+        <VadeRozeti metin={h.kisa} />
+        <span className="text-[10px] text-gray-400 uppercase tracking-wide ml-1 mr-0.5">Orta</span>
+        <VadeRozeti metin={h.orta} />
+        <span className="text-[10px] text-gray-400 uppercase tracking-wide ml-1 mr-0.5">Uzun</span>
+        <VadeRozeti metin={h.uzun} />
+      </div>
+      {/* Doğrulanmış = MA200 üstünde + para akışı (CMF) pozitif — depoda
+          walk-forward doğrulanmış TEK sinyal (bkz. analiz_motoru.secim_skoru).
+          Garanti değil, sadece listenin üst sırasına neden bu hissenin
+          geldiğinin açıklaması. */}
+      {h.dogrulanmis && (
+        <div className={"mt-2 text-xs font-semibold rounded-lg px-2.5 py-1.5 " + dogrulanmaRengi}>
+          {kisaOlumsuz ? '🔷' : '✅'} Doğrulanmış sinyal — MA200 üstünde + para akışı pozitif (CMF {h.cmf != null ? h.cmf.toFixed(3) : '—'})
+          {kisaOlumsuz && ' — ama kısa vadede sinyal zayıf, aceleyle girmeyin.'}
+        </div>
+      )}
+      {/* StochRSI — bilgi amaçlı ek sinyal, puanı etkilemez (bkz. Task #17). */}
+      {h.stochRsiSinyal === 'AL' && (
+        <div className="mt-1.5 text-xs font-semibold text-sky-700 bg-sky-50 rounded-lg px-2.5 py-1.5">
+          🌀 {h.stochRsiAciklama}
+        </div>
+      )}
+    </div>
+  );
+}
+
+/* ── Düşeni Kıran Hisseler (dip dönüşü) — bkz. pusula_veri_uret.py:
+   _dip_donusu_satirlari. "3 ay % çok negatif AMA kısa vade puanı zaten
+   toparlanmaya başlamış" mantığıyla seçilen sürpriz adaylar. ────────────── */
+function DipDonusuSatiri({ h, onSec }) {
+  const flashYon = useFlashOnChange(h.fiyat);
+  return (
+    <div
+      role="button"
+      tabIndex={0}
+      onClick={() => onSec(h.symbol)}
+      onKeyDown={(e) => { if (e.key === 'Enter') onSec(h.symbol); }}
+      className="w-full bg-white rounded-2xl shadow-sm ring-1 ring-gray-100 px-4 py-3 min-h-[44px] active:bg-gray-50 transition-colors cursor-pointer"
+    >
+      <div className="flex items-center justify-between gap-3">
+        <div className="min-w-0">
+          <div className="font-bold text-gray-900 truncate">{h.symbol}</div>
+          <div className="text-xs text-gray-400 truncate">{h.ad}</div>
+        </div>
+        <div className="text-right shrink-0">
+          <div className={"font-semibold text-gray-900 tabular-nums transition-colors " + _flashSinifi(flashYon)}>{h.fiyat.toFixed(2)} ₺</div>
+          <div className="text-xs text-gray-400">3 ay <span className="font-semibold text-red-600">{h.degisim3ay.toFixed(1)}%</span></div>
+        </div>
+      </div>
+      <div className="mt-2 flex items-center gap-3 text-xs">
+        <span className="text-gray-400">1 ay <span className={"font-semibold " + (h.degisim1ay >= 0 ? "text-emerald-600" : "text-red-600")}>{h.degisim1ay >= 0 ? "+" : ""}{h.degisim1ay.toFixed(1)}%</span></span>
+        <span className="text-gray-300">·</span>
+        <span className="text-gray-400">Kısa puan <span className="font-semibold text-indigo-600">{h.kisaPuan.toFixed(0)}</span></span>
+        <span className="text-gray-300">·</span>
+        <span className="text-gray-400">Dönüş gücü <span className="font-semibold text-emerald-600">+{h.donusGucu.toFixed(0)}</span></span>
+      </div>
+      {/* Güvenlik teyidi: CMF + hacim + ardışık yükseliş — henüz sert filtre
+          değil, sadece uyarı. h.guvenliDonus null ise veri henüz birikmedi. */}
+      {h.guvenliDonus === true && (
+        <div className="mt-2 text-xs font-semibold text-emerald-700 bg-emerald-50 rounded-lg px-2.5 py-1.5">
+          ✅ Teyitli dönüş — {h.guvenlikNedeni}
+        </div>
+      )}
+      {h.guvenliDonus === false && (
+        <div className="mt-2 text-xs font-semibold text-amber-700 bg-amber-50 rounded-lg px-2.5 py-1.5">
+          ⚠️ Teyitsiz, temkinli olun — {h.guvenlikNedeni}
+        </div>
+      )}
+    </div>
+  );
+}
+
+/* MA Kırılım Taraması (Task #19) — puanlamadan bağımsız, salt bilgi amaçlı.
+   Kaynak: analiz_motoru.ma_kirilim_taramasi -> ma_kirilim.json. */
+const MA_KIRILIM_ETIKET = {
+  fiyat_5: 'Fiyat 5g ort. kırdı', fiyat_10: 'Fiyat 10g ort. kırdı',
+  fiyat_22: 'Fiyat 22g ort. kırdı', fiyat_50: 'Fiyat 50g ort. kırdı',
+  ma_5_10: '5g ort., 10g ort.\'yu kırdı', ma_10_22: '10g ort., 22g ort.\'yu kırdı',
+};
+function KirilimGrubu({ baslik, liste, onSec }) {
+  if (!liste || liste.length === 0) return null;
+  return (
+    <div className="bg-white rounded-2xl shadow-sm ring-1 ring-gray-100 p-3 mb-2">
+      <div className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1.5">{baslik} ({liste.length})</div>
+      <div className="flex flex-wrap gap-1.5">
+        {liste.map(h => (
+          <button key={h.symbol} onClick={() => onSec(h.symbol)}
+            className="text-xs font-semibold text-indigo-700 bg-indigo-50 rounded-lg px-2 py-1 hover:bg-indigo-100">
+            {h.symbol}
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+}
+function KirilimEkran({ kirilim, onSec }) {
+  if (!kirilim) {
+    return <p className="text-sm text-gray-400 py-8 text-center px-4">Henüz kırılım taraması üretilmedi.</p>;
+  }
+  const f = kirilim.fiyatKiriyor || {}, m = kirilim.maKiriyor || {};
+  return (
+    <div className="px-4">
+      <p className="text-xs text-gray-400 leading-relaxed mb-3">
+        Fiyatın/ortalamanın kendi hareketli ortalamasını BUGÜN yukarı yönde yeni kırdığı hisseler.
+        Puanlamadan bağımsız, ham bir momentum-başlangıcı bilgisidir — tek başına al/sat kararı değildir.
+      </p>
+      <KirilimGrubu baslik={MA_KIRILIM_ETIKET.fiyat_5} liste={f['5']} onSec={onSec} />
+      <KirilimGrubu baslik={MA_KIRILIM_ETIKET.fiyat_10} liste={f['10']} onSec={onSec} />
+      <KirilimGrubu baslik={MA_KIRILIM_ETIKET.fiyat_22} liste={f['22']} onSec={onSec} />
+      <KirilimGrubu baslik={MA_KIRILIM_ETIKET.fiyat_50} liste={f['50']} onSec={onSec} />
+      <KirilimGrubu baslik={MA_KIRILIM_ETIKET.ma_5_10} liste={m['5_10']} onSec={onSec} />
+      <KirilimGrubu baslik={MA_KIRILIM_ETIKET.ma_10_22} liste={m['10_22']} onSec={onSec} />
+      {Object.values(f).every(v => !v || v.length === 0) && Object.values(m).every(v => !v || v.length === 0) && (
+        <p className="text-sm text-gray-400 py-6 text-center">Bugün kırılım kriterine uyan hisse yok.</p>
+      )}
+    </div>
+  );
+}
+
+function YukselecekEkran({ hisseler, dipDonusu, kirilim, onSec, zaman, sistemDurumu }) {
+  const [altSekme, setAltSekme] = useState('yukselecek');
+  // Backend (analiz_motoru.vade_taramasi) doğrulanmış adayları (MA200 üstü +
+  // CMF pozitif) zaten üste koyup gönderiyor — burada TEKRAR sadece genelPuan'a
+  // göre sıralarsak bu öncelik bozulurdu. Aynı iki aşamalı mantığı frontend'de
+  // de uyguluyoruz: doğrulanmış üstte (CMF azalan), diğerleri altta (Genel
+  // Puan azalan).
+  const siralı = useMemo(() => {
+    const dogrulanmis = hisseler.filter(h => h.dogrulanmis).sort((a, b) => (b.cmf ?? -Infinity) - (a.cmf ?? -Infinity));
+    const digerleri = hisseler.filter(h => !h.dogrulanmis).sort((a, b) => b.genelPuan - a.genelPuan);
+    return [...dogrulanmis, ...digerleri];
+  }, [hisseler]);
+  const dogrulanmisSayisi = useMemo(() => hisseler.filter(h => h.dogrulanmis).length, [hisseler]);
+  const dipSirali = useMemo(() => [...dipDonusu].sort((a, b) => b.donusGucu - a.donusGucu), [dipDonusu]);
+  return (
+    <div className="pb-4">
+      <div className="px-4 pt-2 pb-3">
+        <h1 className="text-2xl font-bold text-gray-900">
+          {altSekme === 'yukselecek' ? 'Yükselebilecek Hisseler' : altSekme === 'dip' ? 'Düşeni Kıran Hisseler' : 'Ortalama Kırılımları'}
+        </h1>
+        <p className="text-sm text-gray-400">
+          {altSekme === 'yukselecek'
+            ? siralı.length + " aday · doğrulanmış sinyali olanlar en üstte, sonra Genel Puan'a göre"
+            : altSekme === 'dip'
+            ? dipSirali.length + " aday · düşmüş ama kısa vadede dönüş sinyali veren hisseler"
+            : "puanlamadan bağımsız, bugün oluşan ortalama kırılımları"}
+          {zaman ? " · tarama: " + zaman : ""}
+        </p>
+        {altSekme === 'yukselecek' && (
+          <p className="text-xs text-gray-400 mt-1 leading-relaxed">
+            {dogrulanmisSayisi > 0
+              ? `✅ ${dogrulanmisSayisi} hissede doğrulanmış sinyal var (MA200 üstü + para akışı pozitif) — bunlar listenin en üstünde.`
+              : "Şu an doğrulanmış sinyalli aday yok — liste Genel Puan'a göre sıralı."}
+            {" "}Bu bir garanti değildir, sadece depoda test edilmiş tek göstergeye göre önceliklendirmedir; piyasa riski her zaman vardır.
+          </p>
+        )}
+      </div>
+      <TaramaBayatUyarisi durum={sistemDurumu} />
+      <div className="flex gap-2 px-4 pb-3">
+        <button
+          onClick={() => setAltSekme('yukselecek')}
+          className={"flex-1 min-h-[40px] rounded-xl text-sm font-semibold transition-colors " +
+                     (altSekme === 'yukselecek' ? "bg-indigo-600 text-white" : "bg-white text-gray-600 ring-1 ring-gray-200")}
+        >
+          📈 Yükselebilecek
+        </button>
+        <button
+          onClick={() => setAltSekme('dip')}
+          className={"flex-1 min-h-[40px] rounded-xl text-sm font-semibold transition-colors " +
+                     (altSekme === 'dip' ? "bg-indigo-600 text-white" : "bg-white text-gray-600 ring-1 ring-gray-200")}
+        >
+          🔄 Dipten Dönenler
+        </button>
+        <button
+          onClick={() => setAltSekme('kirilim')}
+          className={"flex-1 min-h-[40px] rounded-xl text-sm font-semibold transition-colors " +
+                     (altSekme === 'kirilim' ? "bg-indigo-600 text-white" : "bg-white text-gray-600 ring-1 ring-gray-200")}
+        >
+          ⚡ Kırılımlar
+        </button>
+      </div>
+
+      {altSekme === 'yukselecek' ? (
+        <div className="px-4 flex flex-col gap-2 md:grid md:grid-cols-2 md:gap-3">
+          {siralı.length === 0
+            ? <p className="text-sm text-gray-400 py-6 text-center col-span-2">Henüz tarama verisi yok.</p>
+            : siralı.map(h => <YukselecekSatiri key={h.symbol} h={h} onSec={onSec} />)}
+        </div>
+      ) : altSekme === 'dip' ? (
+        <div className="px-4 flex flex-col gap-2 md:grid md:grid-cols-2 md:gap-3">
+          {dipSirali.length === 0
+            ? <p className="text-sm text-gray-400 py-6 text-center col-span-2">Şu an dip dönüşü kriterine uyan hisse yok.</p>
+            : dipSirali.map(h => <DipDonusuSatiri key={h.symbol} h={h} onSec={onSec} />)}
+        </div>
+      ) : (
+        <KirilimEkran kirilim={kirilim} onSec={onSec} />
+      )}
+    </div>
+  );
+}
+
+/* ── Ekran 3: Ara ─────────────────────────────────────────────────────── */
+/* Kod bilmeden de bulunsun diye: harfe göre gözat + en çok işlem görenler.
+   Kullanıcı "sadece kısa kod olmasın" dedi — arama kutusu hâlâ kod/ad
+   yazmayı destekler ama artık BOŞKEN de bir şeyler gösterir, ayrıca A-Z
+   harf şeridiyle tıklayarak da gözatılabilir. */
+function AraEkran({ hisseler, onSec, onYildiz }) {
+  const [metin, setMetin] = useState('');
+  const [harf, setHarf] = useState(null);
+
+  const harfler = useMemo(() => {
+    const s = new Set();
+    hisseler.forEach(h => { if (h.symbol) s.add(h.symbol[0].toUpperCase()); });
+    return Array.from(s).sort();
+  }, [hisseler]);
+
+  const enCokIslemGoren = useMemo(() => {
+    return [...hisseler].sort((a, b) => (b.hacim || 0) - (a.hacim || 0)).slice(0, 20);
+  }, [hisseler]);
+
+  const sonuclar = useMemo(() => {
+    const q = metin.trim().toLowerCase();
+    if (q) {
+      return hisseler.filter(h => h.symbol.toLowerCase().includes(q) || h.ad.toLowerCase().includes(q));
+    }
+    if (harf) {
+      return hisseler.filter(h => h.symbol.toUpperCase().startsWith(harf))
+        .sort((a, b) => a.symbol.localeCompare(b.symbol));
+    }
+    return enCokIslemGoren;
+  }, [hisseler, metin, harf, enCokIslemGoren]);
+
+  const bosDurum = !metin && !harf;
+
+  return (
+    <div className="pb-4">
+      <div className="px-4 pt-2 pb-3">
+        <h1 className="text-2xl font-bold text-gray-900">Ara</h1>
+        <p className="text-sm text-gray-400">Kod ya da şirket adı yazın, ya da harfe/listeye göz atın — kodu bilmenize gerek yok</p>
+      </div>
+      <div className="px-4">
+        <input
+          value={metin}
+          onChange={e => { setMetin(e.target.value); if (e.target.value) setHarf(null); }}
+          placeholder="Hisse ara… (ör. thy, garanti)"
+          className="w-full min-h-[44px] rounded-2xl bg-white ring-1 ring-gray-200 px-4 focus:outline-none focus:ring-2 focus:ring-indigo-400"
+        />
+      </div>
+      {!metin && (
+        <div className="px-4 mt-3 flex flex-wrap gap-1.5">
+          <button
+            onClick={() => setHarf(null)}
+            className={`px-2.5 py-1 rounded-lg text-xs font-semibold ${!harf ? 'bg-indigo-600 text-white' : 'bg-white ring-1 ring-gray-200 text-gray-500'}`}
+          >
+            En çok işlem gören
+          </button>
+          {harfler.map(hf => (
+            <button
+              key={hf}
+              onClick={() => setHarf(hf)}
+              className={`w-7 h-7 rounded-lg text-xs font-semibold ${harf === hf ? 'bg-indigo-600 text-white' : 'bg-white ring-1 ring-gray-200 text-gray-500'}`}
+            >
+              {hf}
+            </button>
+          ))}
+        </div>
+      )}
+      <div className="px-4 flex flex-col gap-2 md:grid md:grid-cols-2 md:gap-3 mt-3">
+        {bosDurum && (
+          <p className="text-xs text-gray-400 col-span-2 -mb-1">📈 En çok işlem gören 20 hisse (aşağıdan da bir harf seçebilirsiniz)</p>
+        )}
+        {metin && sonuclar.length === 0 && (
+          <p className="text-sm text-gray-400 py-6 text-center col-span-2">"{metin}" için sonuç yok.</p>
+        )}
+        {harf && sonuclar.length === 0 && (
+          <p className="text-sm text-gray-400 py-6 text-center col-span-2">"{harf}" ile başlayan hisse yok.</p>
+        )}
+        {sonuclar.map(h => <HisseSatiri key={h.symbol} h={h} onSec={onSec} onYildiz={onYildiz} />)}
+      </div>
+    </div>
+  );
+}
+
+/* ── Ekran 4: Portföy — GERÇEK sanal portföy verisi (sanal_portfoy.json)
+   Kaynak: gunluk_sanal_yatirim.py her çalıştığında (haftalık rebalans +
+   günlük stop kontrolü) pozisyonları günceller, pusula_veri_uret.py da
+   sonucu buraya taşır. 'nakit' ve 'baslangicButce' gerçek portföy
+   durumundan gelir; elle ekle/çıkar bu üstüne DENEME amaçlı yapılır (sadece
+   tarayıcıda kalır, gerçek portföyü etkilemez). ───────────────────────── */
+/* ── Basit SVG eşit-eğri grafiği — kütüphane yok, tek polyline. Portföy
+   değerini endeksle (XU100) karşılaştırıyor: dürüst performans bakışı. ── */
+function EsitEgrisi({ veri }) {
+  if (!veri || veri.length < 2) {
+    return <p className="text-xs text-gray-400 py-6 text-center">Yeterli geçmiş veri birikmedi.</p>;
+  }
+  const genislik = 320, yukseklik = 100, dolgu = 6;
+  const degerler = veri.map(v => v.deger);
+  const endeksler = veri.filter(v => v.endeks != null).map(v => v.endeks);
+  const minD = Math.min(...degerler), maxD = Math.max(...degerler);
+  const aralikD = (maxD - minD) || 1;
+  const nokta = (i, deger) => {
+    const x = dolgu + (i / (veri.length - 1)) * (genislik - 2 * dolgu);
+    const y = yukseklik - dolgu - ((deger - minD) / aralikD) * (yukseklik - 2 * dolgu);
+    return [x, y];
+  };
+  const portfoyYolu = veri.map((v, i) => nokta(i, v.deger).join(',')).join(' ');
+  let endeksYolu = null;
+  if (endeksler.length === veri.length) {
+    const minE = Math.min(...endeksler), maxE = Math.max(...endeksler);
+    const aralikE = (maxE - minE) || 1;
+    endeksYolu = veri.map((v, i) => {
+      const x = dolgu + (i / (veri.length - 1)) * (genislik - 2 * dolgu);
+      const y = yukseklik - dolgu - ((v.endeks - minE) / aralikE) * (yukseklik - 2 * dolgu);
+      return `${x},${y}`;
+    }).join(' ');
+  }
+  return (
+    <svg viewBox={`0 0 ${genislik} ${yukseklik}`} className="w-full h-28">
+      {endeksYolu && <polyline points={endeksYolu} fill="none" stroke="#cbd5e1" strokeWidth="2" strokeDasharray="4,3" />}
+      <polyline points={portfoyYolu} fill="none" stroke="#4f46e5" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
+function PerformansEkran({ performans }) {
+  const getiri = performans?.getiriYuzde;
+  const endeksGetiri = performans?.endeksGetiriYuzde;
+  const farkVar = getiri != null && endeksGetiri != null;
+  return (
+    <div>
+      <div className="bg-white rounded-2xl shadow-sm ring-1 ring-gray-100 p-4">
+        <div className="flex items-center justify-between mb-2">
+          <div>
+            <div className="text-xs text-gray-400 uppercase tracking-wide">Sanal Portföy</div>
+            <div className={"text-lg font-bold tabular-nums " + (getiri >= 0 ? "text-emerald-600" : "text-red-600")}>
+              {getiri != null ? (getiri >= 0 ? "+" : "") + getiri.toFixed(2) + "%" : "—"}
+            </div>
+          </div>
+          <div className="text-right">
+            <div className="text-xs text-gray-400 uppercase tracking-wide">BIST 100 (aynı dönem)</div>
+            <div className="text-lg font-bold text-gray-500 tabular-nums">
+              {endeksGetiri != null ? (endeksGetiri >= 0 ? "+" : "") + endeksGetiri.toFixed(2) + "%" : "—"}
+            </div>
+          </div>
+        </div>
+        <EsitEgrisi veri={performans?.esitegri} />
+        {farkVar && (
+          <p className={"text-xs mt-1 " + (getiri >= endeksGetiri ? "text-emerald-600" : "text-amber-600")}>
+            {getiri >= endeksGetiri
+              ? "✓ Endeksin ÜSTÜNDE performans."
+              : "⚠️ Endeksin GERİSİNDE — dürüst rapor, gizlenmez."}
+          </p>
+        )}
+      </div>
+
+      <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mt-5 mb-2">
+        Son Tavsiyeler {performans?.toplamTavsiyeSayisi ? `(toplam ${performans.toplamTavsiyeSayisi} kayıt)` : ""}
+      </h2>
+      <div className="flex flex-col gap-2">
+        {(performans?.sonTavsiyeler || []).length === 0
+          ? <p className="text-sm text-gray-400 py-4 text-center">Henüz tavsiye kaydı yok.</p>
+          : performans.sonTavsiyeler.map((t, i) => (
+              <div key={i} className="bg-white rounded-xl shadow-sm ring-1 ring-gray-100 px-3 py-2 flex items-center justify-between">
+                <div className="min-w-0">
+                  <div className="font-semibold text-gray-900 text-sm">{t.sembol}</div>
+                  <div className="text-[11px] text-gray-400 truncate">{t.kaynak} · {t.tarih}</div>
+                </div>
+                <div className="text-xs font-semibold text-right shrink-0 ml-2">{t.sinyal}</div>
+              </div>
+            ))}
+      </div>
+    </div>
+  );
+}
+
+/* ── Backtest / Doğrulama — elle çalıştırılan BACKTEST_CALISTIR.bat'ın
+   sonucu (backtest_sonuc.txt). Günlük otomasyona DAHİL DEĞİL (TÜM BIST × 5
+   yıl sürdüğü için) — burada gösterilen sonuç kullanıcı en son ne zaman
+   çalıştırdıysa o tarihe ait bir ANLIK GÖRÜNTÜ. Dürüstlük ilkesi: pozitif
+   VEYA negatif sonuç fark etmeksizin olduğu gibi gösterilir. ──────────── */
+/* Öğrenme motorunun (ogrenme_motoru.py) ürettiği hata sınıflandırması +
+   ADAY öneri raporu. Kullanıcı isteği: "backtest'te tavsiyeler kötü çıkıyorsa
+   bundan ders çıkartmalı" — bu kart, motorun geçmiş tavsiyelerdeki hatalardan
+   çıkardığı istatistiksel bulguları gösterir. ÖNEMLİ: bu bulgular sadece
+   ÖNERİdir, hiçbir puanlama kuralı otomatik değişmez (bkz. ogrenme_motoru.py
+   başındaki tasarım kararı). */
+function OgrenmeKarti({ ogrenme }) {
+  const h = ogrenme?.hipotez;
+  if (!h || h.durum === 'veri yok') {
+    return (
+      <div className="bg-gray-50 rounded-2xl ring-1 ring-gray-200 p-4 mt-4">
+        <div className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">🎓 Öğrenme Motoru</div>
+        <p className="text-xs text-gray-500 leading-relaxed">
+          {h?.mesaj || "Henüz yeterli olgunlaşmış tavsiye yok — bilgisayarında HAFTALIK_KONTROL.bat çalıştıkça bu bölüm dolmaya başlayacak."}
+        </p>
+      </div>
+    );
+  }
+  const bulgular = (h.bulgular || []).filter(b => b.ornek_sayisi > 0);
+  return (
+    <div className="mt-4">
+      <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-2">🎓 Öğrenme Motoru — geçmiş hatalardan ders</h2>
+      <div className="bg-white rounded-2xl shadow-sm ring-1 ring-gray-100 p-4">
+        <p className="text-xs text-gray-500 leading-relaxed">
+          {(ogrenme.ufuk || 10)} günlük ufukta olgunlaşan <b>{h.toplam_olgun_karar}</b> tavsiye incelendi.
+          Genel başarı oranı <b className={h.genel_basari_orani >= 50 ? "text-emerald-600" : "text-red-600"}>%{h.genel_basari_orani}</b>
+          {" "}(güven aralığı %{h.genel_basari_guven_araligi?.[0]}–%{h.genel_basari_guven_araligi?.[1]}),
+          ortalama getiri <b className={h.ortalama_getiri >= 0 ? "text-emerald-600" : "text-red-600"}>{h.ortalama_getiri >= 0 ? "+" : ""}{h.ortalama_getiri}%</b>.
+        </p>
+        {!h.yeterli_veri_mi && (
+          <p className="text-[11px] text-amber-600 mt-2 leading-relaxed">⚠️ Örneklem henüz küçük — bulgular tesadüf olabilir, karar vermek için kullanma.</p>
+        )}
+      </div>
+
+      {bulgular.length > 0 && (
+        <div className="flex flex-col gap-2 mt-2">
+          {bulgular.map((b, i) => {
+            const fark = b.fark_puan;
+            const renk = fark == null ? "gray" : fark < -10 ? "red" : fark < 0 ? "amber" : "emerald";
+            const renkSinifi = {
+              red: "ring-red-200 bg-red-50", amber: "ring-amber-200 bg-amber-50",
+              emerald: "ring-emerald-200 bg-emerald-50", gray: "ring-gray-200 bg-gray-50",
+            }[renk];
+            return (
+              <div key={i} className={"rounded-xl ring-1 p-3 " + renkSinifi}>
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-semibold text-gray-800">{b.aciklama}</span>
+                  <span className="text-[10px] text-gray-400">n={b.ornek_sayisi}</span>
+                </div>
+                <div className="text-[11px] text-gray-500 mt-1">
+                  Başarı %{b.basari_orani} [{b.guven_araligi?.[0]}–{b.guven_araligi?.[1]}] · ort. getiri {b.ortalama_getiri >= 0 ? "+" : ""}{b.ortalama_getiri}%
+                  {b.fark_puan != null && <> · koşulsuz gruba göre {b.fark_puan >= 0 ? "+" : ""}{b.fark_puan} puan fark</>}
+                </div>
+                {b.aday_oneri && (
+                  <div className="text-[11px] text-gray-700 mt-1.5 leading-relaxed">💡 {b.aday_oneri}</div>
+                )}
+                {b.not && (
+                  <div className="text-[11px] text-gray-400 mt-1.5 leading-relaxed">{b.not}</div>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      )}
+
+      {(h.uyarilar || []).map((u, i) => (
+        <p key={i} className="text-[11px] text-gray-400 mt-2 leading-relaxed">⚠️ {u}</p>
+      ))}
+    </div>
+  );
+}
+
+function BacktestEkran({ backtest, ogrenme }) {
+  if (!backtest) {
+    return (
+      <div>
+        <p className="text-sm text-gray-400 py-8 text-center">Henüz backtest sonucu üretilmedi. Bilgisayarında BACKTEST_CALISTIR.bat'ı çalıştırdığında burada görünecek.</p>
+        <OgrenmeKarti ogrenme={ogrenme} />
+      </div>
+    );
+  }
+  const kovalar = backtest.kovalar || [];
+  return (
+    <div>
+      <div className="bg-white rounded-2xl shadow-sm ring-1 ring-gray-100 p-4">
+        <div className="text-xs text-gray-400 uppercase tracking-wide">Son Çalıştırma</div>
+        <div className="text-sm font-semibold text-gray-800 mt-0.5">{backtest.calistirmaZamani || '—'}</div>
+        <div className="text-xs text-gray-400 mt-1">
+          {backtest.kapsam} · {backtest.yil} yıl · {backtest.hisseSayisi} hisse · {(backtest.toplamNokta || 0).toLocaleString('tr-TR')} puanlama noktası
+        </div>
+        {backtest.korelasyon10g != null && (
+          <div className="mt-3 pt-3 border-t border-gray-100">
+            <div className="text-xs text-gray-400 uppercase tracking-wide">10 Günlük Korelasyon</div>
+            <div className="text-lg font-bold text-gray-900 tabular-nums">{backtest.korelasyon10g >= 0 ? "+" : ""}{backtest.korelasyon10g.toFixed(3)}</div>
+            <p className="text-xs text-gray-500 mt-1 leading-relaxed">{backtest.korelasyonYorumu}</p>
+          </div>
+        )}
+      </div>
+
+      {kovalar.length > 0 && (
+        <>
+          <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mt-5 mb-2">Puan Kovalarına Göre İleri Getiri (10 gün)</h2>
+          {/* Basit çubuk görünüm (Task #12, 28.08.2026 — kullanıcı isteği:
+              "puan kovalarına göre getiri okumak çok zor, daha basit ama
+              detaylı bir görünüm olsun"). Çubuk uzunluğu |getiri10g|'ye
+              orantılı; kovalar arasında monoton bir artış YOKSA (bkz. altındaki
+              korelasyon notu) bu görsel de bunu açıkça gösterir — gizlenmez. */}
+          <div className="bg-white rounded-2xl shadow-sm ring-1 ring-gray-100 p-3">
+            {(() => {
+              const maks = Math.max(1, ...kovalar.map(k => Math.abs(k.getiri10g)));
+              return kovalar.map((k, i) => (
+                <div key={i} className={i > 0 ? "mt-2.5" : ""}>
+                  <div className="flex items-center justify-between text-xs mb-0.5">
+                    <span className="font-semibold text-gray-700">{k.etiket} <span className="text-gray-400 font-normal">({k.aralik})</span></span>
+                    <span className={"font-bold tabular-nums " + (k.getiri10g >= 0 ? "text-emerald-600" : "text-red-600")}>
+                      {k.getiri10g >= 0 ? "+" : ""}{k.getiri10g}%
+                    </span>
+                  </div>
+                  <div className="h-2.5 bg-gray-100 rounded-full overflow-hidden">
+                    <div
+                      className={"h-full rounded-full " + (k.getiri10g >= 0 ? "bg-emerald-500" : "bg-red-500")}
+                      style={{ width: (Math.abs(k.getiri10g) / maks * 100) + "%" }}
+                    />
+                  </div>
+                  <div className="text-[10px] text-gray-400 mt-0.5">n={k.n.toLocaleString('tr-TR')} · %{k.pozOran10g} pozitif kapandı</div>
+                </div>
+              ));
+            })()}
+          </div>
+
+          <details className="mt-2">
+            <summary className="text-xs text-indigo-600 font-semibold cursor-pointer">5g / 20g ufuklarını da göster</summary>
+            <div className="flex flex-col gap-2 mt-2">
+              {kovalar.map((k, i) => (
+                <div key={i} className="bg-white rounded-xl shadow-sm ring-1 ring-gray-100 px-3 py-2">
+                  <div className="text-sm font-semibold text-gray-800">{k.etiket} <span className="text-[11px] text-gray-400 font-normal">({k.aralik})</span></div>
+                  <div className="flex gap-4 mt-1 text-xs">
+                    <span className="text-gray-500">5g <b className={k.getiri5g >= 0 ? "text-emerald-600" : "text-red-600"}>{k.getiri5g >= 0 ? "+" : ""}{k.getiri5g}%</b> (%{k.pozOran5g} pozitif)</span>
+                    <span className="text-gray-500">20g <b className={k.getiri20g >= 0 ? "text-emerald-600" : "text-red-600"}>{k.getiri20g >= 0 ? "+" : ""}{k.getiri20g}%</b> (%{k.pozOran20g} pozitif)</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </details>
+        </>
+      )}
+
+      {(backtest.walkForwardIlkYari != null) && (
+        <p className="text-xs text-gray-400 mt-4 leading-relaxed">
+          Walk-forward kontrolü — ilk yarı korelasyon: {backtest.walkForwardIlkYari.toFixed(3)}, ikinci yarı: {backtest.walkForwardIkinciYari.toFixed(3)}.
+        </p>
+      )}
+
+      <details className="mt-4">
+        <summary className="text-xs text-indigo-600 font-semibold cursor-pointer">Tam raporu göster (ham metin)</summary>
+        <pre className="text-[11px] text-gray-500 whitespace-pre-wrap bg-white rounded-xl ring-1 ring-gray-100 p-3 mt-2 leading-relaxed">{backtest.hamMetin}</pre>
+      </details>
+
+      <OgrenmeKarti ogrenme={ogrenme} />
+    </div>
+  );
+}
+
+/* Portföydeki her pozisyon satırı — güncel değeri anlık fiyata göre değişince
+   yanıp söner (kullanıcı isteği: "bu pozisyon da anlık değişmeli"). */
+// Kar/zarar yüzdesine göre kısa, somut bir yorum üretir (Task #11c — kullanıcı
+// isteği: "portföyde kar zarar vb. daha detaylı yorumlar bilgiler yer almalı").
+function _karZararYorumu(yuzde) {
+  if (yuzde == null || !isFinite(yuzde)) return null;
+  if (yuzde >= 15) return { metin: "Güçlü kârda — kâr realizasyonunu düşünebilirsin.", renk: "text-emerald-700 bg-emerald-50" };
+  if (yuzde >= 5) return { metin: "Kârda, sağlıklı seyrediyor.", renk: "text-emerald-700 bg-emerald-50" };
+  if (yuzde >= -5) return { metin: "Başabaş civarında — henüz belirgin bir yön yok.", renk: "text-gray-600 bg-gray-50" };
+  if (yuzde >= -15) return { metin: "Zararda — yakından izlemekte fayda var.", renk: "text-amber-700 bg-amber-50" };
+  return { metin: "Belirgin zararda — pozisyonu gözden geçirmeyi düşün.", renk: "text-red-700 bg-red-50" };
+}
+
+function PozisyonSatiri({ p, onSec }) {
+  const flashYon = useFlashOnChange(p.guncelFiyat);
+  const yorum = _karZararYorumu(p.karZararYuzde);
+  return (
+    <div
+      role="button" tabIndex={0}
+      onClick={() => onSec && onSec(p.symbol)}
+      onKeyDown={(e) => { if (e.key === 'Enter' && onSec) onSec(p.symbol); }}
+      className="bg-white rounded-2xl shadow-sm ring-1 ring-gray-100 px-4 py-3 active:bg-gray-50 transition-colors cursor-pointer"
+    >
+      <div className="flex items-center justify-between">
+        <div className="min-w-0">
+          <div className="font-bold text-gray-900 truncate">{p.symbol}</div>
+          <div className="text-xs text-gray-400 truncate">{p.ad || p.symbol} · {p.adet.toFixed(2)} adet · maliyet {p.maliyet.toFixed(2)} ₺</div>
+        </div>
+        <div className="text-right">
+          <div className={"font-semibold text-gray-900 tabular-nums transition-colors " + _flashSinifi(flashYon)}>
+            {p.deger.toLocaleString('tr-TR', {maximumFractionDigits: 2})} ₺
+          </div>
+          <div className={"text-sm font-semibold tabular-nums " + (p.karZarar >= 0 ? "text-emerald-600" : "text-red-600")}>
+            {p.karZarar >= 0 ? "+" : ""}{p.karZararYuzde.toFixed(1)}%
+          </div>
+        </div>
+      </div>
+      {yorum && (
+        <div className={"mt-2 rounded-lg px-2.5 py-1.5 text-xs " + yorum.renk}>{yorum.metin}</div>
+      )}
+    </div>
+  );
+}
+
+/* Sanal Portföy sıfırlama butonu (Task #10, 28.08.2026). Worker'daki
+   /sifirla ucuna POST atar — GitHub PAT'i asla bu koda gömülmez, sadece
+   kullanıcının kendi belirlediği bir anahtar (passphrase) gönderilir; worker
+   tarafında bu anahtar bir Cloudflare secret'la karşılaştırılır (bkz.
+   cloudflare_worker_canli_fiyat.js). Anahtar henüz kurulmadıysa worker 501
+   döner — bu durumda eski yol (GitHub Actions sekmesinden elle) hâlâ geçerli. */
+function SifirlaButonu() {
+  const [durum, setDurum] = useState('bos');   // bos | onayBekliyor | gonderiliyor | tamam | hata
+  const [mesaj, setMesaj] = useState('');
+
+  async function tikla() {
+    if (durum !== 'onayBekliyor') { setDurum('onayBekliyor'); return; }
+    if (!CANLI_FIYAT_API_URL) {
+      setDurum('hata'); setMesaj('Worker adresi ayarlı değil.'); return;
+    }
+    const anahtar = window.prompt(
+      'Portföyü sıfırlamak GERİ ALINAMAZ. Onaylamak için sıfırlama anahtarını gir:'
+    );
+    if (!anahtar) { setDurum('bos'); return; }
+    setDurum('gonderiliyor');
+    try {
+      const yanit = await fetch(`${CANLI_FIYAT_API_URL}/sifirla`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ anahtar }),
+      });
+      const veri = await yanit.json().catch(() => ({}));
+      if (yanit.ok && veri.tamam) {
+        setDurum('tamam'); setMesaj(veri.mesaj || 'Tetiklendi.');
+      } else {
+        setDurum('hata');
+        setMesaj(veri.hata || `İstek başarısız (${yanit.status}).`);
+      }
+    } catch (e) {
+      setDurum('hata'); setMesaj('Bağlantı hatası: ' + (e.message || e));
+    }
+  }
+
+  return (
+    <div className="mt-3">
+      <button
+        onClick={tikla}
+        disabled={durum === 'gonderiliyor' || durum === 'tamam'}
+        className={"w-full min-h-[40px] rounded-xl text-xs font-semibold transition-colors " +
+                   (durum === 'onayBekliyor' ? "bg-red-600 text-white" : "bg-white text-red-600 ring-1 ring-red-200") +
+                   (durum === 'gonderiliyor' || durum === 'tamam' ? " opacity-60" : "")}
+      >
+        {durum === 'gonderiliyor' ? '⏳ Gönderiliyor...'
+          : durum === 'tamam' ? '✅ Tetiklendi'
+          : durum === 'onayBekliyor' ? '⚠️ Emin misin? Tekrar dokun'
+          : '🔄 Portföyü Sıfırla'}
+      </button>
+      {mesaj && (
+        <p className={"text-[11px] mt-1.5 leading-relaxed " + (durum === 'hata' ? "text-red-500" : "text-gray-400")}>
+          {mesaj}
+          {durum === 'hata' && (
+            <> — alternatif: GitHub'da repo → "Actions" → "Sanal Portföy Sıfırlama" → Run workflow.</>
+          )}
+        </p>
+      )}
+    </div>
+  );
+}
+
+function PortfoyEkran({ hisseler, portfoy, gercekPortfoy, performans, backtest, ogrenme, kullaniciPortfoy, setKullaniciPortfoy, onSec }) {
+  const [altSekme, setAltSekme] = useState('pozisyonlar');
+
+  const satirlar = useMemo(() => portfoy.map(p => {
+    const h = hisseler.find(x => x.symbol === p.symbol);
+    const guncelFiyat = h ? h.fiyat : (p.sonFiyat || p.maliyet);
+    const deger = guncelFiyat * p.adet;
+    const maliyetToplam = p.maliyet * p.adet;
+    const karZarar = deger - maliyetToplam;
+    const karZararYuzde = maliyetToplam ? (karZarar / maliyetToplam) * 100 : 0;
+    return { ...p, ad: h?.ad || p.ad || p.symbol, guncelFiyat, deger, karZarar, karZararYuzde };
+  }), [portfoy, hisseler]);
+
+  const toplamPozisyonDegeri = satirlar.reduce((s, x) => s + x.deger, 0);
+  const nakit = gercekPortfoy?.nakit ?? 0;
+  const toplamDeger = toplamPozisyonDegeri + nakit;
+  const toplamKarZarar = satirlar.reduce((s, x) => s + x.karZarar, 0);
+  const baslangicButce = gercekPortfoy?.baslangicButce || 0;
+  const genelGetiriYuzde = baslangicButce ? ((toplamDeger - baslangicButce) / baslangicButce) * 100 : null;
+
+  return (
+    <div className="pb-4">
+      <div className="px-4 pt-2 pb-3">
+        <h1 className="text-2xl font-bold text-gray-900">Sanal Portföy</h1>
+        <p className="text-sm text-gray-400">
+          {altSekme === 'pozisyonlar' ? satirlar.length + " pozisyon · algoritma kendi kararıyla al-sat yapıyor, ⚠️ gerçek para kullanılmıyor" :
+           altSekme === 'performans' ? "Sanal Portföy'ün zaman içindeki getirisi, benchmark ile karşılaştırmalı" :
+           altSekme === 'backtest' ? "Algoritma geçmiş verilerde denenirse nasıl sonuç verirdi?" :
+           "Senin kendi elle girdiğin, gerçek/takip ettiğin pozisyonlar — algoritma buna karışmaz"}
+        </p>
+      </div>
+
+      <div className="flex gap-2 px-4 pb-3">
+        <button
+          onClick={() => setAltSekme('pozisyonlar')}
+          className={"flex-1 min-h-[40px] rounded-xl text-xs sm:text-sm font-semibold transition-colors " +
+                     (altSekme === 'pozisyonlar' ? "bg-indigo-600 text-white" : "bg-white text-gray-600 ring-1 ring-gray-200")}
+        >
+          💼 Pozisyonlar
+        </button>
+        <button
+          onClick={() => setAltSekme('performans')}
+          className={"flex-1 min-h-[40px] rounded-xl text-xs sm:text-sm font-semibold transition-colors " +
+                     (altSekme === 'performans' ? "bg-indigo-600 text-white" : "bg-white text-gray-600 ring-1 ring-gray-200")}
+        >
+          📊 Performans
+        </button>
+        <button
+          onClick={() => setAltSekme('backtest')}
+          className={"flex-1 min-h-[40px] rounded-xl text-xs sm:text-sm font-semibold transition-colors " +
+                     (altSekme === 'backtest' ? "bg-indigo-600 text-white" : "bg-white text-gray-600 ring-1 ring-gray-200")}
+        >
+          🧪 Backtest
+        </button>
+        <button
+          onClick={() => setAltSekme('kullanici')}
+          className={"flex-1 min-h-[40px] rounded-xl text-xs sm:text-sm font-semibold transition-colors " +
+                     (altSekme === 'kullanici' ? "bg-indigo-600 text-white" : "bg-white text-gray-600 ring-1 ring-gray-200")}
+        >
+          👤 Portföyüm
+        </button>
+      </div>
+
+      {altSekme === 'performans' ? (
+        <div className="px-4">
+          <PerformansEkran performans={performans} />
+        </div>
+      ) : altSekme === 'backtest' ? (
+        <div className="px-4">
+          <BacktestEkran backtest={backtest} ogrenme={ogrenme} />
+        </div>
+      ) : altSekme === 'kullanici' ? (
+        <div className="px-4">
+          <KullaniciPortfoyEkran hisseler={hisseler} kullaniciPortfoy={kullaniciPortfoy} setKullaniciPortfoy={setKullaniciPortfoy} onSec={onSec} />
+        </div>
+      ) : (
+      <>
+      <div className="px-4">
+        <div className="bg-white rounded-2xl shadow-sm ring-1 ring-gray-100 p-4">
+          <div className="flex items-center justify-between">
+            <div>
+              <div className="text-xs text-gray-400 uppercase tracking-wide">Toplam Değer</div>
+              <div className="text-xl font-bold text-gray-900 tabular-nums">{toplamDeger.toLocaleString('tr-TR', {maximumFractionDigits: 2})} ₺</div>
+              {genelGetiriYuzde !== null && (
+                <div className={"text-xs font-semibold tabular-nums " + (genelGetiriYuzde >= 0 ? "text-emerald-600" : "text-red-600")}>
+                  başlangıca göre {genelGetiriYuzde >= 0 ? "+" : ""}{genelGetiriYuzde.toFixed(1)}%
+                </div>
+              )}
+            </div>
+            <div className="text-right">
+              <div className="text-xs text-gray-400 uppercase tracking-wide">Pozisyon K/Z</div>
+              <div className={"text-xl font-bold tabular-nums " + (toplamKarZarar >= 0 ? "text-emerald-600" : "text-red-600")}>
+                {toplamKarZarar >= 0 ? "+" : ""}{toplamKarZarar.toLocaleString('tr-TR', {maximumFractionDigits: 2})} ₺
+              </div>
+            </div>
+          </div>
+          <div className="mt-3 pt-3 border-t border-gray-100 flex items-center justify-between text-sm">
+            <span className="text-gray-400">Nakit</span>
+            <span className="font-semibold text-gray-700 tabular-nums">{nakit.toLocaleString('tr-TR', {maximumFractionDigits: 2})} ₺</span>
+          </div>
+        </div>
+      </div>
+
+      <div className="px-4 flex flex-col gap-2 mt-4">
+        {satirlar.map(p => <PozisyonSatiri key={p.symbol} p={p} onSec={onSec} />)}
+      </div>
+
+      <div className="px-4 mt-4">
+        <div className="bg-gray-50 rounded-2xl ring-1 ring-gray-200 p-4">
+          <div className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">Kendi kontrolün: sadece sıfırlama</div>
+          <p className="text-xs text-gray-500 leading-relaxed">
+            Bu portföye elle pozisyon ekleyip çıkaramazsın — al/sat, nakde geçme ve
+            zamanlama kararlarını tamamen algoritma kendi başına verir; bu, motorun
+            kendi haline bırakıldığında ne yaptığının bir testidir. Tek kontrolün,
+            portföyü baştan başlatmak (nakit + pozisyonsuz). Bu işlem geri alınamaz.
+          </p>
+          <SifirlaButonu />
+        </div>
+      </div>
+      </>
+      )}
+    </div>
+  );
+}
+
+/* ── Kullanıcı Portföyü — Sanal Portföy'den bağımsız, kullanıcının kendi
+   gerçek/manuel takip ettiği hisseleri. Algoritma buraya dokunmaz, sadece
+   kullanıcı ekler/siler. localStorage'da saklanır (bkz. App() içindeki
+   _kullaniciPortfoyOku/Yaz). */
+// Kullanıcı isteği (28.08.2026): "kullanıcı portföyünde hisse arama yapmak
+// çok zor" — düz <select> içinde 600+ hisseyi elle kaydırmak yerine, kod
+// veya şirket adıyla anında filtrelenen aranabilir bir seçici. Klavyeden
+// yazdıkça eşleşenler listelenir; bir satıra dokununca seçim tamamlanır.
+function AramaliHisseSecici({ hisseler, secili, onSec }) {
+  const [sorgu, setSorgu] = useState('');
+  const [acik, setAcik] = useState(false);
+  const kutuRef = useRef(null);
+
+  useEffect(() => {
+    function disariTikla(e) {
+      if (kutuRef.current && !kutuRef.current.contains(e.target)) setAcik(false);
+    }
+    document.addEventListener('mousedown', disariTikla);
+    document.addEventListener('touchstart', disariTikla);
+    return () => {
+      document.removeEventListener('mousedown', disariTikla);
+      document.removeEventListener('touchstart', disariTikla);
+    };
+  }, []);
+
+  const seciliHisse = hisseler.find(h => h.symbol === secili);
+  const sonuclar = useMemo(() => {
+    const q = sorgu.trim().toLocaleUpperCase('tr-TR');
+    if (!q) return hisseler.slice(0, 30);
+    return hisseler.filter(h =>
+      h.symbol.toLocaleUpperCase('tr-TR').includes(q) ||
+      (h.ad || '').toLocaleUpperCase('tr-TR').includes(q)
+    ).slice(0, 30);
+  }, [hisseler, sorgu]);
+
+  return (
+    <div className="relative" ref={kutuRef}>
+      <input
+        type="text"
+        inputMode="search"
+        placeholder="Kod veya şirket adı yaz… (örn. THYAO, Türk Hava)"
+        value={acik ? sorgu : (seciliHisse ? `${seciliHisse.symbol} — ${seciliHisse.ad}` : secili)}
+        onFocus={() => { setSorgu(''); setAcik(true); }}
+        onChange={e => setSorgu(e.target.value)}
+        className="w-full min-h-[44px] rounded-xl bg-gray-50 ring-1 ring-gray-200 px-3"
+      />
+      {acik && (
+        <div className="absolute z-20 left-0 right-0 mt-1 max-h-64 overflow-y-auto bg-white rounded-xl shadow-lg ring-1 ring-gray-200">
+          {sonuclar.length === 0 ? (
+            <div className="px-3 py-3 text-sm text-gray-400">Eşleşen hisse bulunamadı.</div>
+          ) : sonuclar.map(h => (
+            <button
+              key={h.symbol}
+              type="button"
+              onClick={() => { onSec(h.symbol); setSorgu(''); setAcik(false); }}
+              className="w-full text-left px-3 py-2.5 min-h-[44px] flex items-center justify-between gap-2 active:bg-gray-50 border-b border-gray-50 last:border-b-0"
+            >
+              <span className="font-semibold text-gray-900 shrink-0">{h.symbol}</span>
+              <span className="text-xs text-gray-400 truncate">{h.ad}</span>
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function KullaniciPortfoyEkran({ hisseler, kullaniciPortfoy, setKullaniciPortfoy, onSec }) {
+  const [formAcik, setFormAcik] = useState(false);
+  // null = "Yeni Pozisyon" ekleniyor (form en altta); bir sembol ise O
+  // POZİSYONUN KARTININ ALTINDA açılır — kullanıcı isteği: "editleme sayfası
+  // en altta çıkıyor, bulunduğu yerde çıkmalı, kafa karıştırıyor".
+  const [duzenlenenSembol, setDuzenlenenSembol] = useState(null);
+  const [ySembol, setYSembol] = useState(hisseler[0]?.symbol || '');
+  const [yAdet, setYAdet] = useState('');
+  const [yMaliyet, setYMaliyet] = useState('');
+
+  const satirlar = useMemo(() => kullaniciPortfoy.map(p => {
+    const h = hisseler.find(x => x.symbol === p.symbol);
+    const guncelFiyat = h ? h.fiyat : (p.sonFiyat || p.maliyet);
+    const deger = guncelFiyat * p.adet;
+    const maliyetToplam = p.maliyet * p.adet;
+    const karZarar = deger - maliyetToplam;
+    const karZararYuzde = maliyetToplam ? (karZarar / maliyetToplam) * 100 : 0;
+    return {
+      ...p, ad: h?.ad || p.ad || p.symbol, guncelFiyat, deger, karZarar, karZararYuzde,
+      puan: h ? h.puan : null, trend: h ? h.trend : null, karar: h ? h.karar : null,
+    };
+  }), [kullaniciPortfoy, hisseler]);
+
+  const toplamDeger = satirlar.reduce((s, x) => s + x.deger, 0);
+  const toplamMaliyet = satirlar.reduce((s, x) => s + x.maliyet * x.adet, 0);
+  const toplamKarZarar = toplamDeger - toplamMaliyet;
+  const toplamKarZararYuzde = toplamMaliyet ? (toplamKarZarar / toplamMaliyet) * 100 : 0;
+
+  // ── Detaylı tavsiye motoru — kullanıcı isteği: "önceki yazılımda vardı,
+  // bu hisseyi sat, onun yerine şu hisseyi al gibi fonksiyonlar eklenmeli".
+  // Sadece zaten var olan tarama puanlarını (hisseler[].puan/trend) kullanır —
+  // yeni bir hesaplama/indirme gerektirmez. ROTASYON_MARJI: bir pozisyonun
+  // puanı, portföyde OLMAYAN en güçlü adaydan bu kadar düşükse "yerine şunu
+  // düşün" önerisi verilir (aynı mantık sanal_yatirimci.py'nin takas
+  // eşiğiyle tutarlı, orada da ~10 puanlık bir marj kullanılıyor).
+  const ROTASYON_MARJI = 15;
+  const enIyiAdaylar = useMemo(() => {
+    const sahipSemboller = new Set(kullaniciPortfoy.map(p => p.symbol));
+    return [...hisseler]
+      .filter(h => !sahipSemboller.has(h.symbol) && h.puan != null)
+      .sort((a, b) => b.puan - a.puan)
+      .slice(0, 5);
+  }, [hisseler, kullaniciPortfoy]);
+
+  const tavsiyeler = useMemo(() => satirlar.map(p => {
+    if (p.puan == null) {
+      return { symbol: p.symbol, metin: 'Bu hisse için güncel tarama verisi yok — puanlanamıyor.', renk: 'gray' };
+    }
+    const zayifSat = p.trend === 'Sat' || p.trend === 'Güçlü Sat';
+    const guclu = p.trend === 'Al' || p.trend === 'Güçlü Al';
+    const enIyiAday = enIyiAdaylar.find(a => a.puan - p.puan >= ROTASYON_MARJI);
+
+    if (zayifSat) {
+      if (enIyiAday) {
+        return {
+          symbol: p.symbol, renk: 'red',
+          metin: `Sinyal zayıf (Puan ${p.puan.toFixed(0)}) — ${p.symbol} yerine ${enIyiAday.symbol} (Puan ${enIyiAday.puan.toFixed(0)}) değerlendirilebilir.`,
+        };
+      }
+      return { symbol: p.symbol, renk: 'red', metin: `Sinyal zayıf (Puan ${p.puan.toFixed(0)}) — azaltmayı düşünebilirsin.` };
+    }
+    if (guclu) {
+      return { symbol: p.symbol, renk: 'emerald', metin: `Sinyal güçlü (Puan ${p.puan.toFixed(0)}) — pozisyonu korumak mantıklı görünüyor.` };
+    }
+    if (enIyiAday) {
+      return {
+        symbol: p.symbol, renk: 'amber',
+        metin: `Nötr (Puan ${p.puan.toFixed(0)}) — ${enIyiAday.symbol} (Puan ${enIyiAday.puan.toFixed(0)}) daha güçlü bir alternatif olabilir.`,
+      };
+    }
+    return { symbol: p.symbol, renk: 'gray', metin: `Nötr sinyal (Puan ${p.puan.toFixed(0)}) — bekle-gör.` };
+  }), [satirlar, enIyiAdaylar]);
+  const tavsiyeHaritasi = useMemo(() => {
+    const m = {};
+    tavsiyeler.forEach(t => { m[t.symbol] = t; });
+    return m;
+  }, [tavsiyeler]);
+  const renkSinifi = { red: 'bg-red-50 text-red-700', emerald: 'bg-emerald-50 text-emerald-700',
+                        amber: 'bg-amber-50 text-amber-700', gray: 'bg-gray-50 text-gray-500' };
+
+  function ekle() {
+    const adet = parseFloat(yAdet);
+    const maliyet = parseFloat(yMaliyet);
+    if (!ySembol || !adet || !maliyet || adet <= 0 || maliyet <= 0) return;
+    setKullaniciPortfoy(prev => [...prev.filter(p => p.symbol !== ySembol),
+      { symbol: ySembol, adet, maliyet, eklemeTarihi: new Date().toISOString() }]);
+    setYAdet(''); setYMaliyet(''); setFormAcik(false); setDuzenlenenSembol(null);
+  }
+  function sil(symbol) {
+    // Buton büyütüldü (Task: "silme butonları küçük"), yanlışlıkla dokunmaya
+    // karşı basit bir onay eklendi.
+    if (!window.confirm(`${symbol} pozisyonunu silmek istediğine emin misin?`)) return;
+    setKullaniciPortfoy(prev => prev.filter(p => p.symbol !== symbol));
+    if (duzenlenenSembol === symbol) { setFormAcik(false); setDuzenlenenSembol(null); }
+  }
+  // Kullanıcı isteği: "kullanıcı portföyünü istediği gibi editleyebilmeli" —
+  // mevcut bir pozisyonun adet/maliyetini değiştirmek için formu o pozisyonun
+  // değerleriyle önceden doldurup açar; ekle() zaten aynı sembolü değiştirip
+  // üzerine yazdığı için (upsert) bu doğrudan bir "düzenle" gibi çalışır.
+  // duzenlenenSembol set edilerek form o pozisyonun KARTININ ALTINDA açılır
+  // (kullanıcı isteği: "edit sayfası en altta çıkıyor, bulunduğu yerde
+  // çıkmalı, kafa karıştırıyor").
+  function duzenle(p) {
+    if (formAcik && duzenlenenSembol === p.symbol) {
+      // Aynı satırın ✎'sine tekrar dokununca formu kapat (iptal kısayolu).
+      setFormAcik(false); setDuzenlenenSembol(null);
+      return;
+    }
+    setYSembol(p.symbol);
+    setYAdet(String(p.adet));
+    setYMaliyet(String(p.maliyet));
+    setDuzenlenenSembol(p.symbol);
+    setFormAcik(true);
+  }
+  function iptal() { setFormAcik(false); setDuzenlenenSembol(null); }
+
+  // Ekle/Düzenle formunun ortak gövdesi — hem satırın altında (düzenlerken)
+  // hem de listenin en altında (yeni eklerken) aynı JSX kullanılır.
+  // ÖNEMLİ: Bu fonksiyon JSX içinde <PozisyonFormu/> ETİKETİ olarak DEĞİL,
+  // düz bir fonksiyon çağrısı ({PozisyonFormu({...})}) olarak kullanılmalı.
+  // NEDEN: Render gövdesi içinde tanımlanan bir bileşen, JSX etiketi olarak
+  // kullanılırsa her render'da YENİ bir fonksiyon kimliği (=YENİ bileşen tipi)
+  // olur; React bunu eski input'u SÖKÜP YENİDEN KURMAK olarak görür. Sonuç:
+  // kullanıcı input'a her karakter yazdığında (onChange → setYAdet → yeniden
+  // render) input DOM'dan silinip yeniden oluşturuluyor, focus/klavye kayboluyor
+  // — kullanıcı raporu: "editlerken rakam yazılamıyor, daha yazamadan kapanıyor".
+  // Düz fonksiyon çağrısı bu remount'u önler çünkü DOM ağacı aynı ebeveynin
+  // render çıktısına dahil olur, ayrı bir bileşen olarak değerlendirilmez.
+  function PozisyonFormu({ baslik }) {
+    return (
+      <div className="bg-white rounded-2xl shadow-sm ring-1 ring-gray-100 p-4 flex flex-col gap-3 pop-anim">
+        <div className="text-sm font-semibold text-gray-700">{baslik}</div>
+        <AramaliHisseSecici hisseler={hisseler} secili={ySembol} onSec={setYSembol} />
+        <div className="flex gap-2">
+          <input type="number" inputMode="decimal" placeholder="Adet" value={yAdet}
+                 onChange={e => setYAdet(e.target.value)}
+                 className="w-1/2 min-h-[44px] rounded-xl bg-gray-50 ring-1 ring-gray-200 px-3" />
+          <input type="number" inputMode="decimal" placeholder="Maliyet (₺)" value={yMaliyet}
+                 onChange={e => setYMaliyet(e.target.value)}
+                 className="w-1/2 min-h-[44px] rounded-xl bg-gray-50 ring-1 ring-gray-200 px-3" />
+        </div>
+        <div className="flex gap-2">
+          <button onClick={iptal} className="flex-1 min-h-[44px] rounded-xl bg-gray-100 text-gray-600 font-semibold">İptal</button>
+          <button onClick={ekle} className="flex-1 min-h-[44px] rounded-xl bg-indigo-600 text-white font-semibold active:bg-indigo-700">Kaydet</button>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="pb-2">
+      <p className="text-xs text-gray-400 mb-3">
+        Bu, senin kendi elle girdiğin/gerçek portföyün — Sanal Portföy'den bağımsız,
+        algoritma buna karışmaz. Sadece bu cihazda saklanır.
+      </p>
+
+      {satirlar.length === 0 ? (
+        <div className="bg-white rounded-2xl shadow-sm ring-1 ring-gray-100 p-4 text-sm text-gray-400 text-center">
+          Henüz hisse eklemedin. Aşağıdaki "+ Ekle" ile başla.
+        </div>
+      ) : (
+        <>
+          <div className="bg-white rounded-2xl shadow-sm ring-1 ring-gray-100 p-4 mb-3">
+            <div className="flex items-center justify-between">
+              <div>
+                <div className="text-xs text-gray-400 uppercase tracking-wide">Toplam Değer</div>
+                <div className="text-xl font-bold text-gray-900 tabular-nums">{toplamDeger.toLocaleString('tr-TR', {maximumFractionDigits: 2})} ₺</div>
+              </div>
+              <div className="text-right">
+                <div className="text-xs text-gray-400 uppercase tracking-wide">Kar/Zarar</div>
+                <div className={"text-xl font-bold tabular-nums " + (toplamKarZarar >= 0 ? "text-emerald-600" : "text-red-600")}>
+                  {toplamKarZarar >= 0 ? "+" : ""}{toplamKarZarar.toLocaleString('tr-TR', {maximumFractionDigits: 2})} ₺
+                  <span className="text-sm ml-1">({toplamKarZararYuzde >= 0 ? "+" : ""}{toplamKarZararYuzde.toFixed(1)}%)</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="flex flex-col gap-2">
+            {satirlar.map(p => {
+              const tavsiye = tavsiyeHaritasi[p.symbol];
+              const buSatirDuzenleniyor = formAcik && duzenlenenSembol === p.symbol;
+              return (
+                <div key={p.symbol} className="flex flex-col gap-2">
+                  <div className="bg-white rounded-2xl shadow-sm ring-1 ring-gray-100 p-3">
+                    <div className="flex items-center gap-2">
+                      <div
+                        role="button" tabIndex={0}
+                        onClick={() => onSec && onSec(p.symbol)}
+                        onKeyDown={(e) => { if (e.key === 'Enter' && onSec) onSec(p.symbol); }}
+                        className="cursor-pointer min-w-0 flex-1"
+                      >
+                        <div className="font-bold text-gray-900 truncate">{p.symbol}</div>
+                        <div className="text-xs text-gray-400 truncate">{p.ad || p.symbol} · {p.adet} adet · maliyet {p.maliyet.toLocaleString('tr-TR')} ₺</div>
+                      </div>
+                      <div className="text-right shrink-0">
+                        <div className="font-semibold text-gray-900 tabular-nums">{p.deger.toLocaleString('tr-TR', {maximumFractionDigits: 2})} ₺</div>
+                        <div className={"text-xs font-semibold tabular-nums " + (p.karZarar >= 0 ? "text-emerald-600" : "text-red-600")}>
+                          {p.karZarar >= 0 ? "+" : ""}{p.karZararYuzde.toFixed(1)}%
+                        </div>
+                      </div>
+                      <div className="shrink-0 flex items-center gap-1.5">
+                        <button type="button" onClick={(e) => { e.stopPropagation(); duzenle(p); }}
+                                className={"min-h-[44px] min-w-[44px] shrink-0 flex items-center justify-center text-lg rounded-xl ring-1 " +
+                                           (buSatirDuzenleniyor ? "text-indigo-600 bg-indigo-50 ring-indigo-200" : "text-gray-500 bg-gray-50 ring-gray-200 active:bg-gray-100")}
+                                aria-label="Düzenle">
+                          ✎
+                        </button>
+                        <button type="button" onClick={(e) => { e.stopPropagation(); sil(p.symbol); }}
+                                className="min-h-[44px] min-w-[44px] shrink-0 flex items-center justify-center text-lg text-red-500 bg-red-50 ring-1 ring-red-200 active:bg-red-100 rounded-xl"
+                                aria-label="Sil">
+                          ✕
+                        </button>
+                      </div>
+                    </div>
+                    {(() => { const y = _karZararYorumu(p.karZararYuzde); return y && (
+                      <div className={"mt-2 rounded-lg px-2.5 py-1.5 text-xs " + y.renk}>{y.metin}</div>
+                    ); })()}
+                    {tavsiye && (
+                      <div className={"mt-2 rounded-lg px-2.5 py-1.5 text-xs " + renkSinifi[tavsiye.renk]}>
+                        {tavsiye.metin}
+                      </div>
+                    )}
+                  </div>
+                  {/* Düzenleme formu TAM BURADA, ilgili kartın hemen altında açılır
+                      (kullanıcı isteği: "edit sayfası en altta çıkıyor, bulunduğu
+                      yerde çıkmalı"). */}
+                  {buSatirDuzenleniyor && PozisyonFormu({ baslik: `${p.symbol} — Düzenle` })}
+                </div>
+              );
+            })}
+          </div>
+        </>
+      )}
+
+      <div className="mt-4">
+        {!formAcik ? (
+          <button
+            onClick={() => { setYSembol(hisseler[0]?.symbol || ''); setYAdet(''); setYMaliyet(''); setDuzenlenenSembol(null); setFormAcik(true); }}
+            className="w-full min-h-[44px] rounded-2xl bg-indigo-600 text-white font-semibold active:bg-indigo-700 transition-colors"
+          >
+            + Pozisyon Ekle
+          </button>
+        ) : duzenlenenSembol === null ? (
+          PozisyonFormu({ baslik: "Yeni Pozisyon" })
+        ) : null}
+      </div>
+    </div>
+  );
+}
+
+/* ── Hisse detay — TAM EKRAN overlay, alttan kayarak açılır ("push")
+   NEDEN bottom nav'ı gizliyoruz: gerçek native app'lerde detay ekranı
+   önceki ekranın ÜSTÜNE gelir (push navigation); alt sekmeler kaybolur,
+   sadece "‹ Geri" ile dönülür. Bu Streamlit'te YAPILAMAYAN bir şeydi. ─── */
+/* Son ~15 kapanış fiyatından tek çizgi grafik — hisse.spark zaten
+   tarama_onbellek.json:"Trend" sütunundan geliyordu, önceden hiç
+   çizilmiyordu (sadece taşınıyordu). Kütüphane gerekmez, tek polyline. */
+function SparkGrafik({ veri }) {
+  if (!veri || veri.length < 2) return null;
+  const genislik = 320, yukseklik = 70, dolgu = 4;
+  const minV = Math.min(...veri), maxV = Math.max(...veri);
+  const aralik = (maxV - minV) || 1;
+  const artis = veri[veri.length - 1] >= veri[0];
+  const yol = veri.map((v, i) => {
+    const x = dolgu + (i / (veri.length - 1)) * (genislik - 2 * dolgu);
+    const y = yukseklik - dolgu - ((v - minV) / aralik) * (yukseklik - 2 * dolgu);
+    return `${x},${y}`;
+  }).join(' ');
+  return (
+    <svg viewBox={`0 0 ${genislik} ${yukseklik}`} className="w-full h-16 mt-3">
+      <polyline points={yol} fill="none" stroke={artis ? "#059669" : "#dc2626"} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
+// ── Detay ekranı için zenginleştirilmiş, dönem seçilebilir grafik ──────────
+// Kullanıcı isteği: "kullanıcı anlık haftalık vb basınca ilgili detaylı
+// grafikleri kolayca tarayabilsin". Çipler CANLI_FIYAT_API_URL üzerinden
+// worker'ın yeni ?grafik= modunu çağırır (bkz. cloudflare_worker_canli_fiyat.js
+// grafikVeriCek). Worker kurulmadıysa ya da istek başarısız olursa sessizce
+// eski, sade SparkGrafik'e (tarama verisindeki son 15 nokta) geri döner —
+// sayfa asla kırılmaz.
+const DONEM_CIPLERI = [
+  { anahtar: 'anlik', etiket: 'Anlık' },
+  { anahtar: 'hafta', etiket: '1 Hafta' },
+  { anahtar: 'ay', etiket: '1 Ay' },
+  { anahtar: 'uc_ay', etiket: '3 Ay' },
+  { anahtar: 'yil', etiket: '1 Yıl' },
+];
+
+// ── Destek / Direnç özeti — kullanıcı isteği: "kullanıcı karta tıklayınca
+// tavsiye niteliğinde destek direnç vb özet bir değerlendirme olsun".
+// Basit ama dürüst bir yaklaşım: son 3 aylık kapanış fiyatlarının en
+// düşük/en yüksek noktaları destek/direnç olarak alınır (klasik pivot analizi
+// değil — "bu aralıkta fiyat buradan buraya gitti" özeti). Worker kurulmadıysa
+// ya da veri gelmezse kart hiç gösterilmez.
+function DestekDirencOzet({ sembol, guncelFiyat }) {
+  const [veri, setVeri] = useState(null);
+
+  useEffect(() => {
+    setVeri(null);
+    if (!CANLI_FIYAT_API_URL || !sembol) return;
+    let iptal = false;
+    fetch(`${CANLI_FIYAT_API_URL}?sembol=${encodeURIComponent(sembol)}&grafik=uc_ay`)
+      .then(r => r.ok ? r.json() : Promise.reject())
+      .then(d => {
+        if (iptal || !d || d.hata || !Array.isArray(d.noktalar) || d.noktalar.length < 5) return;
+        const fiyatlar = d.noktalar.map(n => n.f);
+        setVeri({ destek: Math.min(...fiyatlar), direnc: Math.max(...fiyatlar) });
+      })
+      .catch(() => {});
+    return () => { iptal = true; };
+  }, [sembol]);
+
+  if (!veri || guncelFiyat == null) return null;
+  const { destek, direnc } = veri;
+  const araYuzde = direnc > destek ? ((guncelFiyat - destek) / (direnc - destek)) * 100 : 50;
+  let konumMetni;
+  if (araYuzde >= 85) konumMetni = "Direnç seviyesine yakın — aşım denemesi izlenebilir.";
+  else if (araYuzde <= 15) konumMetni = "Destek seviyesine yakın — kırılırsa aşağı risk artar.";
+  else konumMetni = "İki seviye arasında, orta bantta seyrediyor.";
+
+  return (
+    <div className="mt-3 bg-white rounded-2xl shadow-sm ring-1 ring-gray-100 p-4">
+      <div className="text-xs text-gray-400 uppercase tracking-wide mb-2">Destek / Direnç (son 3 ay)</div>
+      <div className="flex items-center gap-3 text-sm">
+        <div className="flex-1">
+          <div className="text-[11px] text-gray-400">Destek</div>
+          <div className="font-bold text-rose-600">{destek.toFixed(2)} ₺</div>
+        </div>
+        <div className="flex-1 h-1.5 rounded-full bg-gray-100 relative overflow-hidden">
+          <div className="absolute top-0 bottom-0 w-1 bg-indigo-600 rounded-full" style={{ left: `calc(${Math.min(100, Math.max(0, araYuzde))}% - 2px)` }} />
+        </div>
+        <div className="flex-1 text-right">
+          <div className="text-[11px] text-gray-400">Direnç</div>
+          <div className="font-bold text-emerald-600">{direnc.toFixed(2)} ₺</div>
+        </div>
+      </div>
+      <p className="text-xs text-gray-500 mt-2">{konumMetni}</p>
+    </div>
+  );
+}
+
+// Task #20 (28.08.2026, kullanıcı isteği: "hisseleri USD bazında da
+// değerlendir — TL'nin değer kaybı nominal TL getirisini şişiriyor, USD
+// bazlı daha gerçekçi sonuçlar veriyor"). Bir hisse fiyat noktası dizisini,
+// en yakın zaman damgalı USDTRY kur noktasına bölerek USD karşılığına
+// çevirir. İki seri farklı borsalardan geldiği için zaman damgaları BİREBİR
+// eşleşmez (BIST/FX tatil günleri farklı olabilir) — bu yüzden her nokta
+// için en yakın (en küçük zaman farkı) kur noktası aranır.
+function _usdSerisineCevir(noktalar, kurNoktalar) {
+  if (!kurNoktalar || kurNoktalar.length === 0) return null;
+  return noktalar.map(n => {
+    let enYakin = kurNoktalar[0];
+    let enKucukFark = Math.abs(n.t - enYakin.t);
+    for (let i = 1; i < kurNoktalar.length; i++) {
+      const fark = Math.abs(n.t - kurNoktalar[i].t);
+      if (fark < enKucukFark) { enKucukFark = fark; enYakin = kurNoktalar[i]; }
+    }
+    return enYakin.f ? n.f / enYakin.f : null;
+  });
+}
+
+function DetayGrafik({ sembol, sparkYedek }) {
+  const [donem, setDonem] = useState('ay');
+  const [birim, setBirim] = useState('try');   // 'try' | 'usd'
+  const [veri, setVeri] = useState(null);      // { noktalar: [{t,f}], ... } | null
+  const [kurVeri, setKurVeri] = useState(null); // USDTRY için aynı biçim
+  const [yukleniyor, setYukleniyor] = useState(false);
+  const [hataVar, setHataVar] = useState(false);
+
+  useEffect(() => {
+    if (!CANLI_FIYAT_API_URL || !sembol) return;
+    let iptal = false;
+    setYukleniyor(true);
+    setHataVar(false);
+    fetch(`${CANLI_FIYAT_API_URL}?sembol=${encodeURIComponent(sembol)}&grafik=${donem}`)
+      .then(r => r.ok ? r.json() : Promise.reject())
+      .then(d => {
+        if (iptal) return;
+        if (!d || d.hata || !Array.isArray(d.noktalar) || d.noktalar.length < 2) {
+          setHataVar(true); setVeri(null);
+        } else {
+          setVeri(d);
+        }
+      })
+      .catch(() => { if (!iptal) { setHataVar(true); setVeri(null); } })
+      .finally(() => { if (!iptal) setYukleniyor(false); });
+    return () => { iptal = true; };
+  }, [sembol, donem]);
+
+  // USD kuru sadece kullanıcı $ görünümünü seçtiğinde çekilir (gereksiz istek yok).
+  useEffect(() => {
+    if (!CANLI_FIYAT_API_URL || birim !== 'usd') return;
+    let iptal = false;
+    fetch(`${CANLI_FIYAT_API_URL}?kurGrafik=${donem}`)
+      .then(r => r.ok ? r.json() : Promise.reject())
+      .then(d => {
+        if (iptal) return;
+        if (d && !d.hata && Array.isArray(d.noktalar) && d.noktalar.length >= 2) setKurVeri(d);
+        else setKurVeri(null);
+      })
+      .catch(() => { if (!iptal) setKurVeri(null); });
+    return () => { iptal = true; };
+  }, [donem, birim]);
+
+  const noktalar = veri?.noktalar || null;
+  const usdDizisi = (birim === 'usd' && noktalar && kurVeri?.noktalar)
+    ? _usdSerisineCevir(noktalar, kurVeri.noktalar) : null;
+  const usdKullanilabilir = birim === 'usd' && Array.isArray(usdDizisi) && usdDizisi.every(v => v != null);
+  const fiyatDizisi = noktalar ? (usdKullanilabilir ? usdDizisi : noktalar.map(n => n.f)) : null;
+  const birimSimge = usdKullanilabilir ? '$' : '₺';
+
+  function _tarihEtiketi(saniyeZaman) {
+    if (!saniyeZaman) return '';
+    const d = new Date(saniyeZaman * 1000);
+    if (donem === 'anlik' || donem === 'hafta') {
+      return d.toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' });
+    }
+    return d.toLocaleDateString('tr-TR', { day: '2-digit', month: '2-digit', year: donem === 'yil' ? '2-digit' : undefined });
+  }
+
+  return (
+    <div className="mt-6 bg-white rounded-2xl shadow-sm ring-1 ring-gray-100 p-4">
+      <div className="flex items-center justify-between gap-2">
+        <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar">
+          {DONEM_CIPLERI.map(c => (
+            <button
+              key={c.anahtar}
+              onClick={() => setDonem(c.anahtar)}
+              className={"shrink-0 px-3 py-1.5 rounded-full text-xs font-semibold transition-colors " +
+                         (donem === c.anahtar ? "bg-indigo-600 text-white" : "bg-gray-100 text-gray-500")}
+            >
+              {c.etiket}
+            </button>
+          ))}
+        </div>
+        <div className="shrink-0 flex rounded-full bg-gray-100 p-0.5 text-xs font-semibold">
+          <button
+            onClick={() => setBirim('try')}
+            className={"px-2.5 py-1 rounded-full transition-colors " + (birim === 'try' ? "bg-white shadow-sm text-gray-900" : "text-gray-400")}
+          >₺</button>
+          <button
+            onClick={() => setBirim('usd')}
+            className={"px-2.5 py-1 rounded-full transition-colors " + (birim === 'usd' ? "bg-white shadow-sm text-gray-900" : "text-gray-400")}
+          >$</button>
+        </div>
+      </div>
+      {birim === 'usd' && (
+        <p className="text-[11px] text-gray-400 mt-1.5">
+          {usdKullanilabilir
+            ? "USD bazında — TL'nin değer kaybından arındırılmış, dönemsel getiriyi daha gerçekçi gösterir."
+            : "USD kuru şu an alınamadı, TL fiyat gösteriliyor."}
+        </p>
+      )}
+
+      {yukleniyor ? (
+        <div className="h-24 flex items-center justify-center text-xs text-gray-400">Yükleniyor…</div>
+      ) : fiyatDizisi && fiyatDizisi.length >= 2 ? (
+        <>
+          <SparkGrafik veri={fiyatDizisi} />
+          <div className="flex justify-between text-[11px] text-gray-400 mt-1">
+            <span>{_tarihEtiketi(noktalar[0].t)} · {fiyatDizisi[0].toFixed(fiyatDizisi[0] < 20 ? 3 : 2)} {birimSimge}</span>
+            <span>{_tarihEtiketi(noktalar[noktalar.length - 1].t)} · {fiyatDizisi[fiyatDizisi.length - 1].toFixed(fiyatDizisi[fiyatDizisi.length - 1] < 20 ? 3 : 2)} {birimSimge}</span>
+          </div>
+        </>
+      ) : hataVar ? (
+        <div className="mt-2">
+          {sparkYedek && sparkYedek.length >= 2 ? (
+            <>
+              <SparkGrafik veri={sparkYedek} />
+              <p className="text-[11px] text-gray-400 mt-1">Bu dönem için canlı veri alınamadı — son taramadan gösteriliyor.</p>
+            </>
+          ) : (
+            <p className="text-xs text-gray-400 h-24 flex items-center justify-center">Bu dönem için veri yok.</p>
+          )}
+        </div>
+      ) : (
+        <div className="h-24 flex items-center justify-center text-xs text-gray-400">Veri yok.</div>
+      )}
+    </div>
+  );
+}
+
+function DetayEkran({ hisse, onGeri, onYildiz, onPortfoyeEkle, zamanHam, akdVerisi }) {
+  const [eklendiGoster, setEklendiGoster] = useState(false);
+  // Panel açık kaldıkça "X dakika önce" bayatlamasın diye 60 sn'de bir
+  // yeniden hesaplat (sadece bir sayaç — gerçek veriyi yeniden çekmiyor).
+  const [, setTik] = useState(0);
+  useEffect(() => {
+    const id = setInterval(() => setTik(t => t + 1), 60000);
+    return () => clearInterval(id);
+  }, []);
+  // Anlık fiyat — CANLI_FIYAT_API_URL doluysa (aracı fonksiyon kurulduysa)
+  // panel AÇIK KALDIKÇA her birkaç saniyede bir sorar (döviz.com tarzı
+  // "yanıp sönen" ticker hissi için — kullanıcı isteği). Kurulmadıysa ya da
+  // istek başarısız olursa (worker henüz yok, ağ hatası, hafta sonu vb.)
+  // SESSİZCE hiçbir şey göstermez — sayfa asla kırılmaz, her zaman son
+  // taramadan gelen fiyat görünür durumda kalır.
+  const [canliFiyat, setCanliFiyat] = useState(null);
+  // flashYonu: 'yukari' | 'asagi' | null — sadece fiyat GERÇEKTEN değişince
+  // (aynı sayı tekrar gelirse flash TEKRARLANMAZ) kısa bir animasyon tetikler.
+  const [flashYonu, setFlashYonu] = useState(null);
+  const oncekiFiyatRef = useRef(null);
+  useEffect(() => {
+    setCanliFiyat(null);
+    setFlashYonu(null);
+    oncekiFiyatRef.current = null;
+    if (!CANLI_FIYAT_API_URL || !hisse) return;
+    let iptal = false;
+
+    function sorgula() {
+      fetch(`${CANLI_FIYAT_API_URL}?sembol=${encodeURIComponent(hisse.symbol)}`)
+        .then(r => r.ok ? r.json() : Promise.reject())
+        .then(d => {
+          if (iptal || !d || d.fiyat == null) return;
+          const onceki = oncekiFiyatRef.current;
+          if (onceki != null && d.fiyat !== onceki) {
+            const yon = d.fiyat > onceki ? 'yukari' : 'asagi';
+            setFlashYonu(yon);
+            setTimeout(() => { if (!iptal) setFlashYonu(null); }, 900);
+          }
+          oncekiFiyatRef.current = d.fiyat;
+          setCanliFiyat(d);
+        })
+        .catch(() => {}); // sessizce yok say — mevcut fiyat gösterime devam eder
+    }
+
+    sorgula(); // ilk sorgu hemen
+    const id = setInterval(sorgula, CANLI_FIYAT_YENILEME_MS);
+    return () => { iptal = true; clearInterval(id); };
+  }, [hisse && hisse.symbol]);
+
+  if (!hisse) return null;
+  const taze = _goreliZaman(zamanHam);
+  const canliTaze = canliFiyat ? _goreliZaman(canliFiyat.zaman) : null;
+  // AKD sadece favorilerde toplandığı için (bkz. akd_veri_toplama.py) çoğu
+  // hissede bulunmayabilir — o zaman kart hiç gösterilmez.
+  const akd = (akdVerisi || []).find(a => a.symbol === hisse.symbol);
+  const akdTaze = akd ? _goreliZaman(akd.zaman) : null;
+
+  function portfoyeEkleTikla() {
+    onPortfoyeEkle(hisse.symbol);
+    setEklendiGoster(true);
+    setTimeout(() => setEklendiGoster(false), 1600);
+  }
+
+  // NEDEN İKİ KATMANLI SARMALAYICI: mobilde tam ekran ("push" — bkz. yukarı),
+  // masaüstünde ORTALANMIŞ bir MODAL kartı (arkada karartılmış arka plan,
+  // dışına tıklayınca kapanır). Aynı bileşen, tek CSS ile iki farklı "native"
+  // his veriyor — PC'de de aynı akıcı SPA davranışı isteniyordu.
+  return (
+    <div
+      className="fixed inset-0 z-50 detay-anim md:bg-black/40 md:flex md:items-center md:justify-center md:p-6"
+      onClick={(e) => { if (e.target === e.currentTarget) onGeri(); }}
+    >
+      <div className="h-full md:h-auto md:max-h-[85vh] md:w-full md:max-w-xl bg-gray-50 flex flex-col md:rounded-3xl md:shadow-2xl md:overflow-hidden">
+        <div className="safe-top bg-white border-b border-gray-100 px-2 py-2 flex items-center gap-2 shrink-0">
+          <button onClick={onGeri} className="min-h-[44px] min-w-[44px] flex items-center justify-center text-2xl text-gray-700 active:bg-gray-100 rounded-xl">
+            ‹
+          </button>
+          <div className="font-bold text-gray-900 flex-1">{hisse.symbol}</div>
+          <button onClick={() => onYildiz(hisse.symbol)} className="min-h-[44px] min-w-[44px] flex items-center justify-center text-2xl">
+            {hisse.favori ? '⭐' : '☆'}
+          </button>
+        </div>
+
+        <div className="flex-1 overflow-y-auto px-4 py-5">
+          <div className="text-sm text-gray-400">
+            {hisse.ad}
+            {hisse.sektor && hisse.sektor !== 'Diğer / Sınıflandırılmamış' && (
+              <span className="ml-1.5 text-xs text-gray-400 bg-gray-100 rounded-full px-2 py-0.5 align-middle">{hisse.sektor}</span>
+            )}
+          </div>
+          <div
+            className={
+              "mt-1 inline-block px-1.5 -mx-1.5 text-4xl font-bold text-gray-900 tabular-nums transition-colors " +
+              (flashYonu === 'yukari' ? 'fiyat-flash-yukari' : flashYonu === 'asagi' ? 'fiyat-flash-asagi' : '')
+            }
+          >
+            {(canliFiyat ? canliFiyat.fiyat : hisse.fiyat).toFixed(2)} ₺
+          </div>
+          {/* Anlık fiyat bulunduysa rozet göster (aracı fonksiyon kuruluysa) —
+              yeşil nokta CANLI_FIYAT_YENILEME_MS aralığında nabız gibi atar,
+              kullanıcı verinin gerçekten periyodik yenilendiğini görsün. */}
+          {canliFiyat && (
+            <div className="mt-0.5 inline-flex items-center gap-1.5 text-xs font-semibold text-emerald-700 bg-emerald-50 rounded-full px-2 py-0.5">
+              <span className="relative flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+              </span>
+              Anlık{canliTaze ? ` · ${canliTaze.goreli}` : ''}
+            </div>
+          )}
+          <div className="mt-2 flex items-center gap-2">
+            <DegisimEtiketi deger={hisse.degisim} />
+            <span className="text-gray-300">·</span>
+            <TrendRozeti trend={hisse.trend} buyuk />
+          </div>
+          {/* Veri tazeliği (son tarama) — kullanıcı isteği: "kaç dk önce" +
+              tam tarih/saat. taze === null ise (henüz yüklenmediyse/parse
+              edilemediyse) HİÇBİR ŞEY gösterme; yanlış/sahte bir tazelik
+              iddiası vermemek için. */}
+          {taze && (
+            <div className="mt-1.5 text-xs text-gray-400">
+              🕒 Tarama verisi {taze.goreli} güncellendi · {taze.tamTarih}
+            </div>
+          )}
+
+          {/* Kullanıcı isteği: "tıklayınca anlık, haftalık, aylık, yıllık
+              fiyat değişimini görebilmeliyim". Anlık = worker'dan gelen son
+              fiyat vs. bir önceki kapanış (canliFiyat kurulduysa); diğerleri
+              tarama verisindeki kapanış fiyatlarından (analiz_motoru.py). Bir
+              dönem için veri yoksa (ör. hisse 1 yıldır işlem görmüyorsa) o
+              çip hiç gösterilmez. */}
+          {(canliFiyat || hisse.degisim1hafta != null || hisse.degisim != null ||
+            hisse.degisim3ay != null || hisse.degisim1yil != null) && (
+            <div className="mt-3 flex items-center gap-2 overflow-x-auto no-scrollbar">
+              {canliFiyat && canliFiyat.oncekiKapanis && (
+                <DegisimCipi etiket="Anlık" deger={100 * (canliFiyat.fiyat / canliFiyat.oncekiKapanis - 1)} />
+              )}
+              {hisse.degisim1hafta != null && <DegisimCipi etiket="1 Hafta" deger={hisse.degisim1hafta} />}
+              {hisse.degisim != null && <DegisimCipi etiket="1 Ay" deger={hisse.degisim} />}
+              {hisse.degisim3ay != null && <DegisimCipi etiket="3 Ay" deger={hisse.degisim3ay} />}
+              {hisse.degisim1yil != null && <DegisimCipi etiket="1 Yıl" deger={hisse.degisim1yil} />}
+            </div>
+          )}
+
+          <DetayGrafik sembol={hisse.symbol} sparkYedek={hisse.spark} />
+
+          <div className="mt-6 bg-white rounded-2xl shadow-sm ring-1 ring-gray-100 p-4">
+            <div className="text-xs text-gray-400 uppercase tracking-wide mb-2">Algoritma Kararı</div>
+            <div className="flex items-center gap-3">
+              <TrendRozeti trend={hisse.trend} buyuk />
+              <span className="text-sm text-gray-500">
+                {hisse.karar || (hisse.trend.includes('Al') ? 'Trend ve puanlama pozitif yönde.' :
+                 hisse.trend === 'Tut' ? 'Belirgin bir sinyal yok, bekle-gör.' :
+                 'Trend ve puanlama negatif yönde.')}
+              </span>
+            </div>
+          </div>
+
+          <DestekDirencOzet sembol={hisse.symbol} guncelFiyat={canliFiyat ? canliFiyat.fiyat : hisse.fiyat} />
+
+          {/* AKD (aracı kurum dağılımı) sinyali — sadece favoriler için,
+              Telegram'dan bulutta toplanır (bkz. akd_veri_toplama.py).
+              Veri yoksa (henüz toplanmadı / favori değil) kart HİÇ görünmez —
+              olmayan bir veriyi varmış gibi göstermemek için. */}
+          {akd && (
+            <div className="mt-3 bg-white rounded-2xl shadow-sm ring-1 ring-gray-100 p-4">
+              <div className="text-xs text-gray-400 uppercase tracking-wide mb-2">
+                AKD Sinyali (Aracı Kurum Dağılımı)
+              </div>
+              {akd.okunabildiMi === false ? (
+                <p className="text-sm text-gray-400">Veri çekildi ama tablo okunamadı.</p>
+              ) : (
+                <>
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm font-semibold text-gray-800">{akd.karar || '—'}</span>
+                    {akd.puan != null && (
+                      <span className="text-xs text-gray-400 tabular-nums">(puan {akd.puan > 0 ? '+' : ''}{akd.puan})</span>
+                    )}
+                  </div>
+                  {(akd.sebepler || []).length > 0 && (
+                    <ul className="mt-2 space-y-1">
+                      {akd.sebepler.map((s, i) => (
+                        <li key={i} className="text-xs text-gray-500">• {s}</li>
+                      ))}
+                    </ul>
+                  )}
+                </>
+              )}
+              {akdTaze && (
+                <div className="mt-2 text-[11px] text-gray-400">
+                  🕒 {akdTaze.goreli} · {akdTaze.tamTarih}
+                </div>
+              )}
+            </div>
+          )}
+
+          {(hisse.puan != null || hisse.degisim3ay != null || hisse.hacim != null ||
+            hisse.kisaPuan != null || hisse.donusGucu != null) && (
+            <div className="mt-3 grid grid-cols-2 gap-3">
+              {hisse.puan != null && (
+                <div className="bg-white rounded-2xl shadow-sm ring-1 ring-gray-100 p-3">
+                  <div className="text-[11px] text-gray-400 uppercase tracking-wide">Genel Puan</div>
+                  <div className="text-lg font-bold text-indigo-600 tabular-nums">{hisse.puan.toFixed(0)}</div>
+                </div>
+              )}
+              {hisse.kisaPuan != null && (
+                <div className="bg-white rounded-2xl shadow-sm ring-1 ring-gray-100 p-3">
+                  <div className="text-[11px] text-gray-400 uppercase tracking-wide">Kısa Vade Puan</div>
+                  <div className="text-lg font-bold text-indigo-600 tabular-nums">{hisse.kisaPuan.toFixed(0)}</div>
+                </div>
+              )}
+              {hisse.degisim3ay != null && (
+                <div className="bg-white rounded-2xl shadow-sm ring-1 ring-gray-100 p-3">
+                  <div className="text-[11px] text-gray-400 uppercase tracking-wide">3 Aylık Değişim</div>
+                  <div className={"text-lg font-bold tabular-nums " + (hisse.degisim3ay >= 0 ? "text-emerald-600" : "text-red-600")}>
+                    {hisse.degisim3ay >= 0 ? "+" : ""}{hisse.degisim3ay.toFixed(1)}%
+                  </div>
+                </div>
+              )}
+              {hisse.donusGucu != null && (
+                <div className="bg-white rounded-2xl shadow-sm ring-1 ring-gray-100 p-3">
+                  <div className="text-[11px] text-gray-400 uppercase tracking-wide">Dönüş Gücü</div>
+                  <div className="text-lg font-bold text-emerald-600 tabular-nums">+{hisse.donusGucu.toFixed(0)}</div>
+                </div>
+              )}
+              {hisse.hacim != null && (
+                <div className="bg-white rounded-2xl shadow-sm ring-1 ring-gray-100 p-3 col-span-2">
+                  <div className="text-[11px] text-gray-400 uppercase tracking-wide">Günlük Hacim</div>
+                  <div className="text-lg font-bold text-gray-900 tabular-nums">{hisse.hacim.toLocaleString('tr-TR', {maximumFractionDigits: 1})} M₺</div>
+                </div>
+              )}
+            </div>
+          )}
+
+          <p className="mt-6 text-xs text-gray-400 leading-relaxed">
+            Fiyat ve trend, en son arka plan taramasından (analiz_motoru.py)
+            gelir. Yüzde değişim şu an 1 aylık; günlük değişim önbellekte
+            henüz tutulmuyor.
+          </p>
+        </div>
+
+        <div className="shrink-0 px-4 pb-4 pt-2 safe-bottom relative">
+          {eklendiGoster && (
+            <div className="absolute -top-10 left-4 right-4 text-center text-sm font-semibold text-emerald-700 bg-emerald-50 ring-1 ring-emerald-200 rounded-xl py-2 fade-anim">
+              ✓ Portföye eklendi
+            </div>
+          )}
+          <button
+            onClick={portfoyeEkleTikla}
+            className="w-full min-h-[52px] rounded-2xl bg-indigo-600 text-white font-bold text-base active:bg-indigo-700 transition-colors"
+          >
+            Portföye Ekle
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ── Kök bileşen ──────────────────────────────────────────────────────── */
+function App() {
+  const [tab, setTab] = useState('ana');
+  const [yukleniyor, setYukleniyor] = useState(true);
+  const [hisseler, setHisseler] = useState(MOCK_HISSELER);
+  const [yukselecek, setYukselecek] = useState([]);
+  const [dipDonusu, setDipDonusu] = useState([]);
+  const [taramaZaman, setTaramaZaman] = useState(null);
+  const [taramaZamanHam, setTaramaZamanHam] = useState(null); // ISO — detay ekranında "X dk önce" için
+  const [detaySembol, setDetaySembol] = useState(null);
+  const [portfoy, setPortfoy] = useState([]);
+  const [kullaniciPortfoy, _setKullaniciPortfoy] = useState(() => _kullaniciPortfoyOku());
+  // Her değişiklikte localStorage'a yaz — sayfa kapansa/yenilense de kaybolmasın.
+  // Ayrıca buluta (Cloudflare KV) da yaz — telefon/PC arasında senkron olsun.
+  function setKullaniciPortfoy(guncelleyici) {
+    _setKullaniciPortfoy(prev => {
+      const sonraki = typeof guncelleyici === 'function' ? guncelleyici(prev) : guncelleyici;
+      _kullaniciPortfoyYaz(sonraki);
+      _portfoyBulutaYaz(sonraki);
+      return sonraki;
+    });
+  }
+  // Açılışta buluttan oku — başka bir cihazda eklenmiş pozisyonlar buraya da
+  // yansısın. Bulut boşsa (ilk kurulum) ama cihazda kayıt varsa, cihazdakini
+  // buluta gönderip ilk senkronu başlatır.
+  useEffect(() => {
+    let iptal = false;
+    _portfoyBulutanOku().then(bulut => {
+      if (iptal) return;
+      if (bulut && bulut.length) {
+        _setKullaniciPortfoy(bulut);
+        _kullaniciPortfoyYaz(bulut);
+      } else if (kullaniciPortfoy.length) {
+        _portfoyBulutaYaz(kullaniciPortfoy);
+      }
+    });
+    return () => { iptal = true; };
+  }, []);
+  const [gercekPortfoy, setGercekPortfoy] = useState(null);
+  const [performans, setPerformans] = useState(null);
+  const [fonKurumsal, setFonKurumsal] = useState(null);
+  const [sistemDurumu, setSistemDurumu] = useState(null);
+  const [backtest, setBacktest] = useState(null);
+  const [akdVerisi, setAkdVerisi] = useState(null);
+  const [ogrenme, setOgrenme] = useState(null);
+  const [kirilim, setKirilim] = useState(null);
+
+  // Gerçek veriyi çek — docs/pusula/data/*.json (bkz. pusula_veri_uret.py).
+  // Üçü de bağımsız başarısız olabilir (ör. henüz üretilmemişse); biri
+  // başarısız olursa diğerleri yine de yüklenir, sayfa çökmez.
+  useEffect(() => {
+    const favSet = _favorileriOku();
+
+    fetch('./data/tarama.json').then(r => r.ok ? r.json() : Promise.reject())
+      .then(d => {
+        setHisseler((d.hisseler || []).map(x => _apiHisseUyarla(x, favSet)));
+        setTaramaZaman(d.zaman ? new Date(d.zaman).toLocaleString('tr-TR') : null);
+        setTaramaZamanHam(d.zaman || null);
+      })
+      .catch(() => {}); // MOCK_HISSELER'de kalır
+
+    fetch('./data/yukselecek.json').then(r => r.ok ? r.json() : Promise.reject())
+      .then(d => setYukselecek(d.hisseler || []))
+      .catch(() => {});
+
+    fetch('./data/dip_donusu.json').then(r => r.ok ? r.json() : Promise.reject())
+      .then(d => setDipDonusu(d.hisseler || []))
+      .catch(() => {});
+
+    fetch('./data/portfoy.json').then(r => r.ok ? r.json() : Promise.reject())
+      .then(d => {
+        setGercekPortfoy(d);
+        setPortfoy((d.pozisyonlar || []).map(p => ({
+          symbol: p.symbol, ad: p.ad, adet: p.adet, maliyet: p.maliyet, sonFiyat: p.sonFiyat,
+        })));
+      })
+      .catch(() => {})
+      .finally(() => setYukleniyor(false));
+
+    fetch('./data/performans.json').then(r => r.ok ? r.json() : Promise.reject())
+      .then(d => setPerformans(d))
+      .catch(() => {});
+
+    fetch('./data/fon_kurumsal.json').then(r => r.ok ? r.json() : Promise.reject())
+      .then(d => setFonKurumsal(d))
+      .catch(() => {});
+
+    fetch('./data/sistem_durumu.json').then(r => r.ok ? r.json() : Promise.reject())
+      .then(d => setSistemDurumu(d))
+      .catch(() => {});
+
+    fetch('./data/backtest.json').then(r => r.ok ? r.json() : Promise.reject())
+      .then(d => setBacktest(d))
+      .catch(() => {});
+
+    // Öğrenme motoru — geçmiş tavsiyelerin hatalarından çıkarılan ADAY öneriler
+    // (bkz. ogrenme_motoru.py). Henüz üretilmemişse (haftalık kontrol hiç
+    // çalışmadıysa) sessizce boş kalır.
+    fetch('./data/ogrenme.json').then(r => r.ok ? r.json() : Promise.reject())
+      .then(d => setOgrenme(d))
+      .catch(() => {});
+
+    fetch('./data/ma_kirilim.json').then(r => r.ok ? r.json() : Promise.reject())
+      .then(d => setKirilim(d))
+      .catch(() => {});
+
+    // AKD (aracı kurum dağılımı) — sadece favoriler için üretilir (Görev #53).
+    // Dosya henüz yoksa (otomasyon hiç çalışmadıysa/secret eklenmediyse)
+    // sessizce boş kalır, DetayEkran'da AKD kartı hiç görünmez.
+    fetch('./data/akd.json').then(r => r.ok ? r.json() : Promise.reject())
+      .then(d => setAkdVerisi(d.hisseler || []))
+      .catch(() => {});
+  }, []);
+
+  function yildizToggle(symbol) {
+    setHisseler(prev => {
+      const sonraki = prev.map(h => h.symbol === symbol ? { ...h, favori: !h.favori } : h);
+      _favorileriYaz(new Set(sonraki.filter(h => h.favori).map(h => h.symbol)));
+      return sonraki;
+    });
+  }
+
+  // NOT: Detay ekranındaki "Portföye Ekle" düğmesi artık kullanıcının KENDİ
+  // takip listesine (Portföyüm / kullaniciPortfoy) ekler — Sanal Portföy'e
+  // DEĞİL. Sanal Portföy tamamen algoritmanın kontrolünde; kullanıcının tek
+  // müdahalesi ayrı bir sıfırlama akışı (bkz. PortfoyEkran'daki not).
+  function kullaniciPortfoyeEkle(symbol) {
+    if (kullaniciPortfoy.some(p => p.symbol === symbol)) return;
+    const h = hisseler.find(x => x.symbol === symbol) || yukselecek.find(x => x.symbol === symbol);
+    setKullaniciPortfoy(prev => [...prev, {
+      symbol, adet: 1, maliyet: h ? h.fiyat : 0, eklemeTarihi: new Date().toISOString(),
+    }]);
+  }
+
+  // Detay ekranı "Ana/Tarama/Ara", "Yükselecek" veya "Dipten Dönenler"
+  // listesindeki bir hisse için açılabilir — üç kaynağı birleştirip arıyoruz.
+  function _digerListedenBul(symbol) {
+    const y = yukselecek.find(h => h.symbol === symbol);
+    if (y) return { ...y, degisim: y.degisim1ay, favori: hisseler.some(h => h.symbol === symbol && h.favori) };
+    const d = dipDonusu.find(h => h.symbol === symbol);
+    if (d) return { ...d, degisim: d.degisim1ay, favori: hisseler.some(h => h.symbol === symbol && h.favori) };
+    return null;
+  }
+  const secilenHisse = detaySembol
+    ? (hisseler.find(h => h.symbol === detaySembol) || _digerListedenBul(detaySembol))
+    : null;
+
+  // ── Liste ekranlarında da anlık/yanıp sönen fiyat (kullanıcı isteği) ──
+  // "TÜM Piyasa Özeti" (~500+ hisse) canlı tutmak Yahoo/Cloudflare için
+  // güvenli değil (bkz. cloudflare_worker_canli_fiyat.js'teki 45 sembol
+  // sınırı notu) — bu yüzden sadece kullanıcının GERÇEKTEN takip ettiği,
+  // sınırlı sayıdaki listeler canlı: Favoriler, Portföy pozisyonları,
+  // Yükselebilecek Hisseler ve Dipten Dönenler (ikisi de zaten ≤40 aday).
+  // Bu semboller için çekilen anlık fiyat, aynı hisse Piyasa Özeti/Tarama
+  // listesinde de görünüyorsa OTOMATİK olarak orada da yansır (tek kaynak).
+  const canliSemboller = useMemo(() => {
+    const favSembol = hisseler.filter(h => h.favori).map(h => h.symbol);
+    const portfoySembol = portfoy.map(p => p.symbol);
+    const kullaniciPortfoySembol = kullaniciPortfoy.map(p => p.symbol);
+    const yukselecekSembol = yukselecek.slice(0, 40).map(h => h.symbol);
+    const dipSembol = dipDonusu.slice(0, 40).map(h => h.symbol);
+    return [...new Set([...favSembol, ...portfoySembol, ...kullaniciPortfoySembol, ...yukselecekSembol, ...dipSembol])];
+  }, [hisseler, portfoy, kullaniciPortfoy, yukselecek, dipDonusu]);
+  const canliMap = useCanliFiyatlar(canliSemboller);
+  const hisselerCanli = useMemo(
+    () => hisseler.map(h => canliMap[h.symbol] ? { ...h, fiyat: canliMap[h.symbol].fiyat, canli: true } : { ...h, canli: false }),
+    [hisseler, canliMap]
+  );
+  const yukselecekCanli = useMemo(
+    () => yukselecek.map(h => canliMap[h.symbol] ? { ...h, fiyat: canliMap[h.symbol].fiyat } : h),
+    [yukselecek, canliMap]
+  );
+  const dipDonusuCanli = useMemo(
+    () => dipDonusu.map(h => canliMap[h.symbol] ? { ...h, fiyat: canliMap[h.symbol].fiyat } : h),
+    [dipDonusu, canliMap]
+  );
+
+  return (
+    <div className="min-h-screen bg-gray-50">
+      {/* Masaüstü: sabit sol menü (mobilde gizli, bkz. YanNav içindeki
+         md:flex). Kullanıcı isteği: "pc'de de aynı akıcı arayüzü istiyorum"
+         — aynı state/aynı SPA, sadece PC'de menü sol tarafa taşınıyor. */}
+      <YanNav aktif={tab} setAktif={setTab} />
+
+      <div className="max-w-md md:max-w-3xl md:ml-56 mx-auto md:mx-0 md:px-8 pb-20 md:pb-10 md:pt-6 safe-top">
+        {yukleniyor && (
+          <p className="px-4 pt-3 text-xs text-gray-400">Gerçek veri yükleniyor…</p>
+        )}
+        {tab === 'ana' && <AnaEkran hisseler={hisselerCanli} onSec={setDetaySembol} onYildiz={yildizToggle} zaman={taramaZaman} sistemDurumu={sistemDurumu} />}
+        {tab === 'tarama' && <TaramaEkran hisseler={hisselerCanli} onSec={setDetaySembol} onYildiz={yildizToggle} fonKurumsal={fonKurumsal} />}
+        {tab === 'yukselecek' && <YukselecekEkran hisseler={yukselecekCanli} dipDonusu={dipDonusuCanli} kirilim={kirilim} onSec={setDetaySembol} zaman={taramaZaman} sistemDurumu={sistemDurumu} />}
+        {tab === 'ara' && <AraEkran hisseler={hisselerCanli} onSec={setDetaySembol} onYildiz={yildizToggle} />}
+        {tab === 'portfoy' && <PortfoyEkran hisseler={hisselerCanli} portfoy={portfoy} gercekPortfoy={gercekPortfoy} performans={performans} backtest={backtest} ogrenme={ogrenme} kullaniciPortfoy={kullaniciPortfoy} setKullaniciPortfoy={setKullaniciPortfoy} onSec={setDetaySembol} />}
+      </div>
+
+      {/* Masaüstünde YanNav zaten md:hidden olan AltNav'ın yerini alıyor;
+         mobilde ise detay ekranı açıkken alt nav'ı DOM'da tutmaya gerek yok
+         (detay tam ekran zaten üstünü kaplıyor) — orijinal davranış korundu. */}
+      {!secilenHisse && <AltNav aktif={tab} setAktif={setTab} />}
+
+      {secilenHisse && (
+        <DetayEkran
+          hisse={secilenHisse}
+          onGeri={() => setDetaySembol(null)}
+          onYildiz={yildizToggle}
+          onPortfoyeEkle={kullaniciPortfoyeEkle}
+          zamanHam={taramaZamanHam}
+          akdVerisi={akdVerisi}
+        />
+      )}
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+
+/* ═══════════════════════════════════════════════════════════════════════
+   VERİ ZİNCİRİ (gerçek, mock değil):
+   arka_plan_tarama.py / gunluk_sanal_yatirim.py (Görev Zamanlayıcı veya
+   GitHub Actions ile günde 1-2 kez) → tarama_onbellek.json / sanal_portfoy.json
+   → pusula_veri_uret.py → docs/v2/data/*.json → bu sayfa fetch() ile okur.
+   (v2 KOPYASI: fetch yolları zaten './data/...' göreli olduğu için hiçbir
+   değişiklik gerekmedi — bu sayfa docs/v2/index.html'de durduğu sürece
+   otomatik olarak docs/v2/data/ klasörünü okur. Paylaşılan Cloudflare Worker
+   adresi (CANLI_FIYAT_API_URL) V1 ile AYNI bırakıldı — ortak altyapı.)
+
+   KALAN SINIRLAMA: docs/v2/data/portfoy.json içindeki elle ekle/çıkar
+   işlemleri sadece tarayıcı state'inde yaşar (kalıcı değildir, sayfa
+   yenilenince kaybolur) — gerçek sanal portföyü değiştirmek için hâlâ
+   Streamlit uygulaması (app.py) kullanılmalı. Bunu kalıcı yapmak isterse
+   kullanıcı, bir yazma API'si (ör. Cloudflare Worker + GitHub API commit)
+   eklenebilir; şu an salt-okunur bir görünüm tercih edildi.
+   ═══════════════════════════════════════════════════════════════════════ */
+</script>
+</body>
+</html>

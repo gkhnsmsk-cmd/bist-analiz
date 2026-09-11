@@ -1,0 +1,104 @@
+# ═══════════════════════════════════════════════════════════════════════════
+# GÜNLÜK AKD TOPLAMA (v2) — V1'deki gunluk_akd.yml'nin v2/ kopyası.
+# ═══════════════════════════════════════════════════════════════════════════
+# ⚠️ BİLİNEN EKSİK: Bu iş akışının dayandığı akd_veri_toplama.py, kullanıcının
+# v2 için kopyalanmasını istediği 17 dosyalık listede YOKTU (kapsam dışı
+# bırakıldı) — bu yüzden bu workflow'un "AKD toplama (favoriler)" adımı,
+# v2/ klasöründe akd_veri_toplama.py bulunmadığı sürece HATA VERİR. Aynı
+# şekilde requirements-akd.txt de v2'ye özel kopyalanmadı — repo kökündeki
+# ortak dosya kullanılıyor (paylaşılan bağımlılık listesi, veri değil).
+# Kullanıcı v2 için ayrı bir AKD toplama akışı isterse akd_veri_toplama.py'yi
+# de v2/'ye kopyalayıp bu workflow'u etkinleştirmek gerekir; o âna kadar bu
+# dosya devre dışı bırakılmış (workflow_dispatch/cron TETİKLENMEYECEK şekilde
+# yorum satırına alınmış) durumda tutulur.
+#
+# NEDEN YİNE DE EKLENDİ: Görev tarifi "pusula/tarama ile ilgili workflow'ları
+# kopyala" dedi — bu dosya o setin bir parçası olduğu için iskelet hâlinde
+# eklendi, ama yukarıdaki eksik nedeniyle ETKİN DEĞİL (tetikleyiciler kapalı).
+
+name: Günlük AKD toplama (v2)
+
+on:
+  # Bilinçli olarak KAPALI bırakıldı — bkz. yukarıdaki "BİLİNEN EKSİK" notu.
+  # Etkinleştirmek için: akd_veri_toplama.py'yi v2/'ye taşı, sonra aşağıdaki
+  # satırların başındaki '#' işaretlerini kaldır.
+  # schedule:
+  #   - cron: "15 16 * * 1-5"
+  #   - cron: "15 19 * * 1-5"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: gunluk-akd-v2
+  cancel-in-progress: false
+
+jobs:
+  akd:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+
+    steps:
+      - name: Depoyu indir
+        uses: actions/checkout@v4
+
+      - name: Python kur
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Tesseract-OCR kur (sistem paketi)
+        run: sudo apt-get update && sudo apt-get install -y tesseract-ocr
+
+      - name: Paketleri kur
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements-akd.txt
+
+      - name: Telegram oturumunu geri yükle (secrets'tan)
+        env:
+          TELEGRAM_AYARLAR_JSON: ${{ secrets.TELEGRAM_AYARLAR_JSON }}
+          TELEGRAM_SESSION_B64: ${{ secrets.TELEGRAM_SESSION_B64 }}
+        working-directory: v2
+        run: |
+          if [ -z "$TELEGRAM_AYARLAR_JSON" ] || [ -z "$TELEGRAM_SESSION_B64" ]; then
+            echo "UYARI: secret'lar eklenmemiş — bu adım atlanacak."
+            exit 0
+          fi
+          echo "$TELEGRAM_AYARLAR_JSON" > telegram_ayarlar.json
+          echo "$TELEGRAM_SESSION_B64" | base64 -d > telegram_oturumu.session
+
+      - name: AKD toplama (favoriler) — v2
+        id: akd
+        continue-on-error: true
+        working-directory: v2
+        run: |
+          if [ ! -f telegram_ayarlar.json ] || [ ! -f akd_veri_toplama.py ]; then
+            echo "telegram_ayarlar.json veya akd_veri_toplama.py yok (v2'de kapsam dışı) — atlanıyor."
+            exit 0
+          fi
+          python akd_veri_toplama.py
+
+      - name: Sonuçları depoya kaydet
+        run: |
+          git config user.name  "bist-otomasyon"
+          git config user.email "bist-otomasyon@users.noreply.github.com"
+          git add -A -- v2/akd_egitim_verisi.csv 'docs/v2/data/akd.json' || true
+          if git diff --staged --quiet; then
+            echo "Değişen kayıt yok — commit atlanıyor."
+          else
+            git commit -m "Günlük AKD toplama v2: $(date -u '+%Y-%m-%d %H:%M UTC')"
+            git pull --rebase --autostash origin "${GITHUB_REF_NAME}" || true
+            git push origin "HEAD:${GITHUB_REF_NAME}"
+          fi
+
+      - name: Çalışma özeti
+        if: always()
+        run: |
+          {
+            echo "### Günlük AKD toplama (v2) sonucu"
+            echo ""
+            echo "- AKD toplama adımı: ${{ steps.akd.outcome }}"
+          } >> "$GITHUB_STEP_SUMMARY"

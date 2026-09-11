@@ -1,0 +1,94 @@
+# ═══════════════════════════════════════════════════════════════════════════
+# HAFTALIK BACKTEST (v2) — V1'deki haftalik_backtest.yml'nin v2/ kopyası.
+# ═══════════════════════════════════════════════════════════════════════════
+# ⚠️ BİLİNEN EKSİK: backtest_calistir.py, v2 için kopyalanması istenen 17
+# dosyalık listede YOKTU (kapsam dışı) — "Backtest çalıştır" adımı v2/'de bu
+# dosya olmadığı sürece atlanacak (continue-on-error zaten devrede). Diğer
+# adımlar (ogrenme_motoru.ogrenme_dongusu, pusula_veri_uret.backtest_uret/
+# ogrenme_uret) v2/ içinde mevcut ve v2/pusula_veri_uret.py zaten docs/v2/data
+# hedefine yazacak şekilde düzeltilmişti.
+
+name: Haftalık backtest (v2)
+
+on:
+  schedule:
+    - cron: "0 6 * * 6"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: haftalik-backtest-v2
+  cancel-in-progress: false
+
+jobs:
+  backtest:
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+
+    steps:
+      - name: Depoyu indir
+        uses: actions/checkout@v4
+
+      - name: Python kur
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Paketleri kur
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements-otomasyon.txt
+
+      - name: Backtest çalıştır (TÜM BIST, 5 yıl) — v2
+        id: backtest
+        continue-on-error: true
+        working-directory: v2
+        run: |
+          if [ ! -f backtest_calistir.py ]; then
+            echo "backtest_calistir.py v2'de yok (kapsam dışı) — atlanıyor."
+            exit 1
+          fi
+          python backtest_calistir.py
+
+      - name: Pusula verisine çevir — v2
+        if: steps.backtest.outcome == 'success'
+        working-directory: v2
+        run: python -c "import pusula_veri_uret as pvu; pvu.backtest_uret()"
+
+      - name: Öğrenme motoru — hata analizi + aday öneriler — v2
+        id: ogrenme
+        continue-on-error: true
+        working-directory: v2
+        run: python -c "import ogrenme_motoru as om; om.ogrenme_dongusu()"
+
+      - name: Öğrenme motoru verisini Pusula'ya çevir — v2
+        if: steps.ogrenme.outcome == 'success'
+        working-directory: v2
+        run: python -c "import pusula_veri_uret as pvu; pvu.ogrenme_uret()"
+
+      - name: Sonuçları depoya kaydet
+        run: |
+          git config user.name  "bist-otomasyon"
+          git config user.email "bist-otomasyon@users.noreply.github.com"
+          git add -A -- v2/backtest_sonuc.txt v2/backtest_sonuc.csv 'docs/v2/data/backtest.json' \
+                         v2/ogrenme_hata_log.json 'docs/v2/data/ogrenme.json' || true
+          if git diff --staged --quiet; then
+            echo "Değişen kayıt yok — commit atlanıyor."
+          else
+            git commit -m "Haftalık backtest (v2): $(date -u '+%Y-%m-%d %H:%M UTC')"
+            git pull --rebase --autostash origin "${GITHUB_REF_NAME}" || true
+            git push origin "HEAD:${GITHUB_REF_NAME}"
+          fi
+
+      - name: Çalışma özeti
+        if: always()
+        run: |
+          {
+            echo "### Haftalık backtest (v2) sonucu"
+            echo ""
+            echo "- Backtest adımı: ${{ steps.backtest.outcome }}"
+            echo "- Öğrenme motoru adımı: ${{ steps.ogrenme.outcome }}"
+          } >> "$GITHUB_STEP_SUMMARY"
