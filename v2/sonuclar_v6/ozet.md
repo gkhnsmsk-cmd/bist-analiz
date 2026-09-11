@@ -1,6 +1,6 @@
 # PUSULA V6 — Yoğunlaştırılmış (3-5 pozisyon) Walk-Forward Backtest Sonucu
 
-Çalıştırma: 11.09.2026 13:51 UTC · Başlangıç özsermayesi: 1,000,000 TL
+Çalıştırma: 11.09.2026 14:02 UTC · Başlangıç özsermayesi: 1,000,000 TL
 
 **Kullanıcı hedefi (pazarlık yok):** TEST döneminde CAGR >= %55, maksimum düşüş <= %25, profit factor >= 1.3 — üçü BİRDEN sağlanmalı.
 
@@ -10,8 +10,7 @@
 
 Aşağıdaki eşiklerden en az biri test döneminde sağlanmadı:
 
-- CAGR %19.23 — eşik: >=%55
-- Maksimum düşüş %29.0 — eşik: <=%25
+- CAGR %24.73 — eşik: >=%55
 
 ---
 
@@ -19,23 +18,23 @@ Aşağıdaki eşiklerden en az biri test döneminde sağlanmadı:
 
 | Metrik | V6 (bu sistem) | Kullanıcı hedefi | BIST100 al-ve-tut |
 |---|---|---|---|
-| **CAGR** | **%19.23** | >=%55 | %26.62 |
-| **Maksimum düşüş** | **%-29.0** | <=%25 | %-22.8 |
-| Profit factor | **1.41** | >=1.3 | — |
-| İşlem sayısı | 125 | — | — (tek alım) |
-| Kazanma oranı | %59.2 | — | — |
-| Endeks üstü CAGR farkı | %-7.43 | — | — |
+| **CAGR** | **%24.73** | >=%55 | %26.62 |
+| **Maksimum düşüş** | **%-19.4** | <=%25 | %-22.8 |
+| Profit factor | **1.50** | >=1.3 | — |
+| İşlem sayısı | 144 | — | — (tek alım) |
+| Kazanma oranı | %52.1 | — | — |
+| Endeks üstü CAGR farkı | %-1.94 | — | — |
 
 ### Geliştirme dönemi (2019-01-01 → 2023-12-31) — yalnız kıyas amaçlı
 
 | Metrik | V6 (bu sistem) | Kullanıcı hedefi | BIST100 al-ve-tut |
 |---|---|---|---|
-| **CAGR** | **%29.49** | >=%55 | %53.22 |
-| **Maksimum düşüş** | **%-23.9** | <=%25 | %-31.8 |
-| Profit factor | **1.73** | >=1.3 | — |
-| İşlem sayısı | 233 | — | — (tek alım) |
-| Kazanma oranı | %60.5 | — | — |
-| Endeks üstü CAGR farkı | %-23.74 | — | — |
+| **CAGR** | **%38.47** | >=%55 | %53.22 |
+| **Maksimum düşüş** | **%-30.8** | <=%25 | %-31.8 |
+| Profit factor | **1.89** | >=1.3 | — |
+| İşlem sayısı | 281 | — | — (tek alım) |
+| Kazanma oranı | %55.5 | — | — |
+| Endeks üstü CAGR farkı | %-14.76 | — | — |
 
 ---
 
