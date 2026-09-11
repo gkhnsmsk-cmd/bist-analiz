@@ -65,17 +65,24 @@ _STOP_SONRASI_BEKLEME_GUN = 20      # stop olan hisseye kısa süreli yeniden-gi
 # ─────────────────────────────────────────────────────────────────────────
 # Stop / kâr hedefi / trailing sabitleri.
 # ─────────────────────────────────────────────────────────────────────────
-_STOP_ATR_KATSAYI = 2.2
-_STOP_ORAN_TABANI = 0.08            # ATR-bazlı stop en az -%8
-_STOP_ORAN_TAVANI = 0.10            # ATR-bazlı stop en fazla -%10
+_STOP_ATR_KATSAYI = 2.0
+_STOP_ORAN_TABANI = 0.07            # ATR-bazlı stop en az -%7
+_STOP_ORAN_TAVANI = 0.09            # ATR-bazlı stop en fazla -%9
 
-_KAR_HEDEF_1_ORAN = 0.15            # +%15'te kısmi realize
-_KAR_HEDEF_1_SATIS_PAYI = 0.50      # pozisyonun yarısı satılır
-_KAR_HEDEF_2_ORAN = 0.25            # +%25'ten sonra trailing sıkılaşır
+_KAR_HEDEF_1_ORAN = 0.20            # +%20'de kısmi realize (v6.1: 15->20, daha geç kes)
+_KAR_HEDEF_1_SATIS_PAYI = 0.35      # pozisyonun ÜÇTE BİRİ satılır (v6.1: 0.50->0.35, kazananı büyüt)
+_KAR_HEDEF_2_ORAN = 0.35            # +%35'ten sonra trailing sıkılaşır (v6.1: 25->35)
 
 _TRAILING_AKTIVASYON_ORAN = 0.10    # +%10 kârdan sonra trailing devreye girer
 _CHANDELIER_ATR_KATSAYI = 2.5       # normal trailing mesafesi
-_CHANDELIER_ATR_KATSAYI_SIKI = 1.8  # +%25 sonrası sıkılaştırılmış trailing
+_CHANDELIER_ATR_KATSAYI_SIKI = 1.8  # +%35 sonrası sıkılaştırılmış trailing
+
+# v6.1 İNCE AYAR notu: ilk çalıştırmada (bkz. v6_skor.py) test CAGR %19.2 (hedef
+# %55) ve maksimum düşüş %29.0 (hedef %25) idi. Burada stop biraz SIKILAŞTIRILDI
+# (kayıpları daha hızlı kes -> düşüşü sınırla) ve kâr hedefi biraz GEVŞETİLDİ/
+# ERTELENDİ (kazananları daha uzun tut, daha az pay erken realize et -> CAGR'a
+# katkısı artsın). Pozisyon sayısı/ağırlık bandı (3-5, %20-33) ve rejim kapısı
+# BİLEREK değiştirilmedi — bunlar kullanıcının açık tasarım talimatıydı.
 
 _TREND_KIRILIM_GUN = 3              # bu kadar ardışık gün Kapanış<MA200 -> çık
 
@@ -91,12 +98,12 @@ def hedef_oran_hesapla(rejim_adi: str) -> float:
 
 
 def giris_stop_hesapla(giris_fiyati: float, atr: float) -> dict:
-    """ATR-bazlı ilk stopu [-%8, -%10] bandına sıkıştırır.
+    """ATR-bazlı ilk stopu [-%7, -%9] bandına sıkıştırır (v6.1: 8-10 -> 7-9, bkz. modül başı notu).
 
-    YÖNTEM: ATR14 * 2.2 mesafesinin girişe oranı hesaplanır, sonra bu oran
-    [%8, %10] bandına kırpılır (clip) — hem ATR'nin hissenin KENDİ
-    oynaklığını yansıtmasına izin verir hem de stopun şartnamedeki "-%8/-10
-    makul" aralığının dışına taşmasını engeller (çok dar/çok geniş stop).
+    YÖNTEM: ATR14 * 2.0 mesafesinin girişe oranı hesaplanır, sonra bu oran
+    [%7, %9] bandına kırpılır (clip) — hem ATR'nin hissenin KENDİ
+    oynaklığını yansıtmasına izin verir hem de stopun makul aralığın dışına
+    taşmasını engeller (çok dar/çok geniş stop).
     """
     if giris_fiyati is None or giris_fiyati <= 0 or atr is None or pd.isna(atr) or atr <= 0:
         return {"stop": giris_fiyati * (1.0 - _STOP_ORAN_TAVANI) if giris_fiyati else 0.0,
@@ -330,13 +337,13 @@ def portfoy_kisit_kontrol(aday: dict, acik_pozisyonlar: list[dict],
 if __name__ == "__main__":
     # Ağ çağrısı / dosya okuma içermeyen kendi kendine kontrol.
 
-    # ── giris_stop_hesapla: bant [%8,%10] içinde kalmalı. ───────────────────
-    s1 = giris_stop_hesapla(100.0, atr=1.0)   # 2.2*1/100=%2.2 -> tabana kırpılır (%8)
-    assert abs(s1["stop_orani"] - 0.08) < 1e-9, s1
-    s2 = giris_stop_hesapla(100.0, atr=6.0)   # 2.2*6/100=%13.2 -> tavana kırpılır (%10)
-    assert abs(s2["stop_orani"] - 0.10) < 1e-9, s2
-    s3 = giris_stop_hesapla(100.0, atr=4.0)   # 2.2*4/100=%8.8 -> bandın içinde, kırpılmaz
-    assert abs(s3["stop_orani"] - 0.088) < 1e-9, s3
+    # ── giris_stop_hesapla: bant [%7,%9] içinde kalmalı (v6.1: eşikler sıkılaştırıldı). ──
+    s1 = giris_stop_hesapla(100.0, atr=1.0)   # 2.0*1/100=%2.0 -> tabana kırpılır (%7)
+    assert abs(s1["stop_orani"] - 0.07) < 1e-9, s1
+    s2 = giris_stop_hesapla(100.0, atr=6.0)   # 2.0*6/100=%12.0 -> tavana kırpılır (%9)
+    assert abs(s2["stop_orani"] - 0.09) < 1e-9, s2
+    s3 = giris_stop_hesapla(100.0, atr=4.0)   # 2.0*4/100=%8.0 -> bandın içinde, kırpılmaz
+    assert abs(s3["stop_orani"] - 0.08) < 1e-9, s3
 
     # ── hedef_agirlik_hesapla: az pozisyonda tavana yakın, çok pozisyonda tabana. ──
     a_ilk = hedef_agirlik_hesapla(0, hedef_oran=1.0)   # bölen=max(1,3)=3 -> 1/3 -> tavan 0.33
@@ -361,7 +368,7 @@ if __name__ == "__main__":
     # likidite tavanı: %2 * 1.000.000 = 20.000 TL -> 20.000/50=400 adet (hedeften daha az)
     assert boyut_dusuk_likidite["deger"] < boyut_normal["deger"], boyut_dusuk_likidite
 
-    # ── trailing_guncelle: ASLA aşağı inmiyor, +%25 sonrası katsayı sıkılaşıyor. ──
+    # ── trailing_guncelle: ASLA aşağı inmiyor, +%35 sonrası katsayı sıkılaşıyor. ──
     giris_fiyati = 100.0
     ilk_stop = 90.0
     poz = {"sembol": "TEST", "giris_fiyati": giris_fiyati, "ilk_stop": ilk_stop,
@@ -377,9 +384,9 @@ if __name__ == "__main__":
         assert stop_gecmisi[i] >= stop_gecmisi[i - 1] - 1e-9, f"Trailing aşağı indi! {stop_gecmisi}"
     assert poz["guncel_stop"] > ilk_stop, "Trailing hiç devreye girmedi"
 
-    # ── kar_hedefi_kontrol: +%15'te tetiklenmeli, tek seferlik. ─────────────
+    # ── kar_hedefi_kontrol: +%20'de tetiklenmeli, tek seferlik (v6.1: 15->20). ──
     poz_kar = {"giris_fiyati": 100.0, "ilk_stop": 90.0, "guncel_stop": 90.0}
-    bugun_kar = pd.Series({"Close": 116.0})
+    bugun_kar = pd.Series({"Close": 121.0})
     sonuc_kar = kar_hedefi_kontrol(poz_kar, bugun_kar)
     assert sonuc_kar is not None and sonuc_kar["satis_payi"] == _KAR_HEDEF_1_SATIS_PAYI, sonuc_kar
     assert sonuc_kar["yeni_stop"] >= 100.0, sonuc_kar  # başabaşa çekilmiş
