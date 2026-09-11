@@ -1,0 +1,82 @@
+# ═══════════════════════════════════════════════════════════════════════════
+# SANAL PORTFÖY SIFIRLAMA (v2) — V1'deki sanal_portfoy_sifirla.yml'nin
+# v2/ kopyası. Elle tetiklenir, GERİ ALINAMAZ.
+# ═══════════════════════════════════════════════════════════════════════════
+# ⚠️ BİLİNEN EKSİK: sanal_portfoy_sifirla_cli.py, v2 için kopyalanması
+# istenen 17 dosyalık listede YOKTU (kapsam dışı) — bu workflow v2/'de bu
+# dosya eklenene kadar hata verip duracaktır (sıfırlama işlemi gerçekleşmez,
+# kullanıcı Actions loglarında bunu görecektir).
+
+name: Sanal Portföy Sıfırlama (v2)
+
+on:
+  workflow_dispatch:
+    inputs:
+      confirm:
+        description: 'Onaylamak için tam olarak SIFIRLA yazın (GERİ ALINAMAZ)'
+        required: true
+        default: ''
+
+permissions:
+  contents: write
+
+concurrency:
+  group: gunluk-otomasyon-v2
+  cancel-in-progress: false
+
+jobs:
+  sifirla:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Onayı kontrol et
+        run: |
+          if [ "${{ inputs.confirm }}" != "SIFIRLA" ]; then
+            echo "::error::Onay metni 'SIFIRLA' değil — hiçbir şey silinmedi/değiştirilmedi."
+            exit 1
+          fi
+          echo "Onaylandı — sıfırlama işlemine devam ediliyor."
+
+      - name: Depoyu indir
+        uses: actions/checkout@v4
+
+      - name: Python kur
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Paketleri kur
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements-otomasyon.txt
+
+      - name: Sanal portföyü sıfırla — v2
+        working-directory: v2
+        run: python sanal_portfoy_sifirla_cli.py
+
+      - name: Pusula verisini güncelle — v2
+        working-directory: v2
+        run: python pusula_veri_uret.py
+
+      - name: Sonuçları depoya kaydet
+        run: |
+          git config user.name  "bist-otomasyon"
+          git config user.email "bist-otomasyon@users.noreply.github.com"
+          git add -A -- 'v2/*.json' 'docs/v2/data' || true
+          if git diff --staged --quiet; then
+            echo "Değişen kayıt yok — commit atlanıyor."
+          else
+            git commit -m "Sanal Portföy sıfırlandı v2 (elle tetiklendi): $(date -u '+%Y-%m-%d %H:%M UTC')"
+            git pull --rebase --autostash origin "${GITHUB_REF_NAME}" || true
+            git push origin "HEAD:${GITHUB_REF_NAME}"
+          fi
+
+      - name: Çalışma özeti
+        if: always()
+        run: |
+          {
+            echo "### Sanal Portföy sıfırlama (v2) sonucu"
+            echo ""
+            echo "Sıfırlama tamamlandı. Pusula v2'de 'Sanal Portföy' sekmesini yenileyince yeni durumu göreceksin."
+          } >> "$GITHUB_STEP_SUMMARY"
