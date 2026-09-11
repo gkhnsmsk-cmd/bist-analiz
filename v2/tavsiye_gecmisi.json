@@ -2773,5 +2773,64 @@
       "piyasa_rejim_durumu": "RİSK AÇIK — Boğa ortamı"
     },
     "kayit_zamani": "2026-09-11T14:58:35"
+  },
+  {
+    "tarih": "2026-09-11",
+    "kaynak": "One Cikan Hisseler",
+    "sembol": "GMTAS",
+    "sinyal": "🟢 AL",
+    "puan": 78.4,
+    "kayit_anindaki_fiyat": 49.32,
+    "ek": {
+      "kisa": 76,
+      "orta": 74,
+      "uzun": 65,
+      "takas": 70,
+      "snapshot_durumu": "tam",
+      "rsi14": 60.1,
+      "macd_hist": 0.486,
+      "ma20_uzaklik_yuzde": 7.3,
+      "ma50_uzaklik_yuzde": 7.31,
+      "ma200_uzaklik_yuzde": 38.73,
+      "zirve52_uzaklik_yuzde": -4.23,
+      "onceki_1ay_getiri": 4.94,
+      "onceki_3ay_getiri": 11.33,
+      "trend_yonu": "yukselis",
+      "hacim_orani_5g_60g": 1.31,
+      "atr_yuzde": 4.44,
+      "yillik_volatilite": 59.3,
+      "piyasa_rejim_puani": 74.0,
+      "piyasa_rejim_durumu": "RİSK AÇIK — Boğa ortamı"
+    },
+    "kayit_zamani": "2026-09-11T19:00:09"
+  },
+  {
+    "tarih": "2026-09-11",
+    "kaynak": "Vade: Uzun (~6 ay)",
+    "sembol": "ETYAT",
+    "sinyal": "🟢 AL",
+    "puan": 65,
+    "kayit_anindaki_fiyat": 14.4,
+    "ek": {
+      "genel_puan": 72.0,
+      "bir_ay": -5.9,
+      "uc_ay": 16.7,
+      "snapshot_durumu": "tam",
+      "rsi14": 44.2,
+      "macd_hist": -0.189,
+      "ma20_uzaklik_yuzde": -6.22,
+      "ma50_uzaklik_yuzde": 0.66,
+      "ma200_uzaklik_yuzde": 42.57,
+      "zirve52_uzaklik_yuzde": -10.95,
+      "onceki_1ay_getiri": -5.88,
+      "onceki_3ay_getiri": 9.34,
+      "trend_yonu": "yukselis",
+      "hacim_orani_5g_60g": 1.35,
+      "atr_yuzde": 6.78,
+      "yillik_volatilite": 56.8,
+      "piyasa_rejim_puani": 74.0,
+      "piyasa_rejim_durumu": "RİSK AÇIK — Boğa ortamı"
+    },
+    "kayit_zamani": "2026-09-11T19:00:09"
   }
 ]
