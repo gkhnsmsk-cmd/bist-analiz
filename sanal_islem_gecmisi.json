@@ -224,5 +224,30 @@
     "komisyon": 246.86,
     "puan": 61.4,
     "gerekce": "birikim skoru en yüksek adaylardan (CMF +0.421, MA200 üstünde, Puan 61)"
+  },
+  {
+    "tarih": "2026-09-11",
+    "sembol": "ANELE",
+    "yon": "SAT",
+    "adet": 1093.6473,
+    "fiyat": 177.7,
+    "tutar": 194341.13,
+    "komisyon": 291.51,
+    "gerekce": "takip eden stop tetiklendi (fiyat 177.70 < stop 190.06; zirve 225.80)",
+    "puan": 69.5,
+    "tutma_gunu": 14,
+    "stop_cikisi": true,
+    "getiri_yuzde": -2.68
+  },
+  {
+    "tarih": "2026-09-11",
+    "sembol": "BIMAS",
+    "yon": "AL",
+    "adet": 446.9632,
+    "fiyat": 433.5,
+    "tutar": 194049.62,
+    "komisyon": 291.07,
+    "puan": 76.0,
+    "gerekce": "birikim skoru en yüksek adaylardan (CMF +0.340, MA200 üstünde, Puan 76)"
   }
 ]
