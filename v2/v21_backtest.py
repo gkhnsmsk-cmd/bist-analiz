@@ -61,6 +61,34 @@ _SINYAL_GECERLILIK_GUN = vpf._SINYAL_GECERLILIK_GUN                  # 3 işlem 
 _IKINCI_DILIM_MAKS_BEKLEME_GUN = vpf._IKINCI_DILIM_MAKS_BEKLEME_GUN   # 15 işlem günü
 _STOP_ATR_KATSAYI = vpf._STOP_ATR_KATSAYI
 
+# ── Nakit getirisi (risksiz faiz) ────────────────────────────────────────
+# ÖLÇÜM DÜZELTMESİ (2026-09-12): Bu tarihe kadar backtest'te nakit %0
+# kazanıyordu — `guncel_ozsermaye = cash + toplam_deger` idi ve `cash`
+# hiçbir yerde faizle büyütülmüyordu. Bu, ölçümü iki yönden bozuyordu:
+#
+#   1) HAKSIZ CEZA: Strateji zamanının çoğunu nakitte geçirir (§5 hisseye
+#      %70 tavan koyar, §2 Risk-Off'ta %20'ye indirir, §7 kilidi haftalarca
+#      yeni alımı durdurur). Gerçek hayatta o nakit mevduatta ~%40/yıl
+#      kazanacakken simülasyonda sıfır kazanıyordu. Ortalama %65 nakit
+#      ağırlıkla bu, yılda ~26 puanlık bir getiriyi ölçümden silmek demek.
+#      Raporlanan "CAGR %8.33 vs mevduat %40" karşılaştırması bu yüzden
+#      elmayla armut kıyaslamasıydı.
+#
+#   2) OPTİMİZASYON YANLILIĞI (asıl tehlike): Nakitte durmak yapay olarak
+#      cezalandırıldığı için ölçüm, sistematik biçimde "hep yatırımda kal"
+#      stratejilerini kayırıyordu. Bu bozuk hedef fonksiyonuyla bir
+#      parametre taraması çalıştırılsaydı, pervasız (sürekli tam pozisyon)
+#      bir çözümü "optimal" diye bulurdu — üstelik gerçek bir edge'i
+#      olduğu için değil, alternatifi sıfır faizle ölçtüğümüz için.
+#
+# Oran §7 ile AYNI kaynaktan (vpf._RISKSIZ_AYLIK_GETIRI, yıllık %40)
+# türetilir ki "risksizi geçtik mi" sorusu sistemin her yerinde aynı eşiğe
+# göre yanıtlansın. Faiz TAKVİM GÜNÜ üzerinden işler (mevduat hafta sonu da
+# kazandırır), bu yüzden ardışık iki işlem günü arasındaki gün farkı
+# kullanılır — işlem günü sayısı değil.
+_RISKSIZ_YILLIK_CARPAN = (1.0 + vpf._RISKSIZ_AYLIK_GETIRI) ** 12.0    # ~1.40
+_RISKSIZ_GUNLUK_GETIRI = _RISKSIZ_YILLIK_CARPAN ** (1.0 / 365.25) - 1.0
+
 
 def _kapanis_veya_maliyet(veriler: dict, sembol: str, T: pd.Timestamp, yedek: float) -> float:
     df = veriler.get(sembol)
@@ -121,6 +149,8 @@ def _calistir_ic(veriler: dict, endeks_df: pd.DataFrame, baslangic: str, bitis: 
             "endeks_metrikleri": _endeks_al_tut_metrikleri(endeks_df, baslangic_ts, bitis_ts),
             "risksiz_engelli_ay_sayisi": 0,
             "aylik_getiriler": [],
+            "mevduat_metrikleri": _mevduat_al_tut_metrikleri(takvim, float(ozsermaye)),
+            "sleeve_metrikleri": _sleeve_metrikleri([], takvim, 0.0, 0.0, 0.0),
         }
 
     cash = float(ozsermaye)
@@ -137,8 +167,27 @@ def _calistir_ic(veriler: dict, endeks_df: pd.DataFrame, baslangic: str, bitis: 
     risksiz_engelli_ay_sayisi = 0
     pozisyon_vardi_bu_ay = False  # BUG FİKSİ notu: bkz. adım 9 açıklaması
 
+    # ── Ölçüm sayaçları (karara GİRMEZ, yalnız raporlama) ────────────────
+    kumulatif_faiz = 0.0        # nakde işleyen toplam risksiz getiri (TL)
+    maruziyet_tl_gun = 0.0      # Σ (günlük hisse değeri) — "TL-gün" cinsinden
+    ozsermaye_tl_gun = 0.0      # Σ (günlük toplam özsermaye) — oran için payda
+    onceki_T = None
+
     toplam_gun = len(takvim)
     for idx, T in enumerate(takvim):
+        # ── 0) Nakde risksiz faiz işlet (bkz. modül başındaki ÖLÇÜM
+        #        DÜZELTMESİ notu). Alım/satımdan ÖNCE yapılır: o gün
+        #        harcanacak nakit, harcanana kadar geçen süre için faizini
+        #        zaten almış olmalı. İlk günde (onceki_T is None) faiz yok —
+        #        sermaye o gün yatırılmış sayılır. ──
+        if onceki_T is not None:
+            gecen_takvim_gunu = max((T - onceki_T).days, 0)
+            if gecen_takvim_gunu > 0 and cash > 0:
+                faiz = cash * ((1.0 + _RISKSIZ_GUNLUK_GETIRI) ** gecen_takvim_gunu - 1.0)
+                cash += faiz
+                kumulatif_faiz += faiz
+        onceki_T = T
+
         # ── 1) Sayaçları güncelle (gun_sayisi, cmf_ardisik_negatif, iz süren
         #        stop) — cikis_kontrol'den ÖNCE (pozisyon.py deseniyle aynı). ──
         for poz in acik_pozisyonlar:
@@ -400,6 +449,10 @@ def _calistir_ic(veriler: dict, endeks_df: pd.DataFrame, baslangic: str, bitis: 
         ozsermaye_egrisi.append({"tarih": T, "ozsermaye": guncel_ozsermaye})
         if acik_pozisyonlar:
             pozisyon_vardi_bu_ay = True
+        # Hisse maruziyeti ölçümü — "hisse tarafı, kullandığı sermaye
+        # üzerinden ne kazandırdı?" sorusunun paydası burada birikir.
+        maruziyet_tl_gun += toplam_deger
+        ozsermaye_tl_gun += guncel_ozsermaye
 
         # ── 9) §7 Aylık getiri takibi (yalnız TAMAMLANMIŞ aylar sayılır). ──
         # BUG FİKSİ (YORUM KARARI): tamamen NAKİTTE geçen bir ay (hiç açık
@@ -442,6 +495,73 @@ def _calistir_ic(veriler: dict, endeks_df: pd.DataFrame, baslangic: str, bitis: 
         "endeks_metrikleri": _endeks_al_tut_metrikleri(endeks_df, baslangic_ts, bitis_ts),
         "risksiz_engelli_ay_sayisi": risksiz_engelli_ay_sayisi,
         "aylik_getiriler": tamamlanan_aylik_getiriler,
+        "mevduat_metrikleri": _mevduat_al_tut_metrikleri(takvim, float(ozsermaye)),
+        "sleeve_metrikleri": _sleeve_metrikleri(
+            islemler=islemler, takvim=takvim, maruziyet_tl_gun=maruziyet_tl_gun,
+            ozsermaye_tl_gun=ozsermaye_tl_gun, kumulatif_faiz=kumulatif_faiz,
+        ),
+    }
+
+
+def _mevduat_al_tut_metrikleri(takvim, ozsermaye: float) -> dict:
+    """"Parayı hiç hisseye sokmayıp %100 mevduatta tutsaydım" eğrisi.
+
+    NEDEN VAR: Kullanıcının gerçek alternatifi BIST100 DEĞİL, mevduattır.
+    Endeksi geçen bir strateji bile mevduata kaybediyorsa hedefe hizmet
+    etmez; bu yüzden asıl kıyas ölçütü olarak rapora bu satır eklendi.
+    Yalnız RAPOR amaçlıdır, hiçbir karara girmez.
+    """
+    if len(takvim) < 2:
+        return {"son_deger": ozsermaye, "toplam_getiri": 0.0, "cagr": float("nan"), "gun": 0}
+    gun = max((takvim[-1] - takvim[0]).days, 1)
+    son_deger = ozsermaye * (1.0 + _RISKSIZ_GUNLUK_GETIRI) ** gun
+    yil = max(gun / 365.25, 1e-9)
+    return {
+        "son_deger": float(son_deger),
+        "toplam_getiri": float(son_deger / ozsermaye - 1.0),
+        "cagr": float((son_deger / ozsermaye) ** (1.0 / yil) - 1.0),
+        "gun": int(gun),
+    }
+
+
+def _sleeve_metrikleri(islemler: list[dict], takvim, maruziyet_tl_gun: float,
+                        ozsermaye_tl_gun: float, kumulatif_faiz: float) -> dict:
+    """ASIL SORU: hisse tarafı, KULLANDIĞI sermaye üzerinden ne kazandırdı?
+
+    Toplam CAGR yanıltıcıdır çünkü portföyün büyük kısmı çoğu zaman
+    mevduatta durur; toplam getiri bu yüzden ağırlıklı olarak faizden
+    gelir. Strateji seçiminin bir değeri olup olmadığını anlamak için
+    hisseye AYRILAN sermayenin getirisini ayrı ölçmek gerekir:
+
+        sleeve getirisi = toplam işlem K/Z  /  ortalama yatırılmış sermaye
+
+    Karar kuralı: bu sayı yıllık %40'ın (risksiz) ALTINDAysa, hisse
+    tarafı o sermayeyi mevduatta tutmaktan daha kötü kullanmış demektir —
+    yani seçim motorunun negatif katkısı var. ÜSTÜNDEyse gerçek bir edge
+    adayı var demektir.
+
+    Yıllıklandırma BASİT (bölme) yapılır, bileşik değil: sermaye kesintili
+    olarak yatırıldığı için bileşiklemek yanıltıcı olurdu.
+    """
+    gun_sayisi = len(takvim)
+    if gun_sayisi < 2:
+        return {"ortalama_hisse_agirligi": float("nan"), "ortalama_yatirilan_tl": float("nan"),
+                "toplam_islem_pnl_tl": 0.0, "sleeve_yillik_getiri": float("nan"),
+                "kumulatif_faiz_tl": float(kumulatif_faiz)}
+    yil = max((takvim[-1] - takvim[0]).days / 365.25, 1e-9)
+    toplam_pnl = float(sum(float(i.get("net_pnl_tl", 0.0)) for i in islemler))
+    ortalama_yatirilan = maruziyet_tl_gun / gun_sayisi
+    agirlik = (maruziyet_tl_gun / ozsermaye_tl_gun) if ozsermaye_tl_gun > 0 else float("nan")
+    if ortalama_yatirilan > 0:
+        sleeve_yillik = (toplam_pnl / ortalama_yatirilan) / yil
+    else:
+        sleeve_yillik = float("nan")
+    return {
+        "ortalama_hisse_agirligi": float(agirlik),
+        "ortalama_yatirilan_tl": float(ortalama_yatirilan),
+        "toplam_islem_pnl_tl": toplam_pnl,
+        "sleeve_yillik_getiri": float(sleeve_yillik),
+        "kumulatif_faiz_tl": float(kumulatif_faiz),
     }
 
 
