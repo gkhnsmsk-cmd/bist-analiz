@@ -135,6 +135,7 @@ def _calistir_ic(veriler: dict, endeks_df: pd.DataFrame, baslangic: str, bitis: 
     ay_sonu_deger_biriken = None
     tamamlanan_aylik_getiriler: list[float] = []
     risksiz_engelli_ay_sayisi = 0
+    pozisyon_vardi_bu_ay = False  # BUG FİKSİ notu: bkz. adım 9 açıklaması
 
     toplam_gun = len(takvim)
     for idx, T in enumerate(takvim):
@@ -390,17 +391,35 @@ def _calistir_ic(veriler: dict, endeks_df: pd.DataFrame, baslangic: str, bitis: 
         toplam_deger, _ = _portfoy_degerleri(acik_pozisyonlar, veriler, T)
         guncel_ozsermaye = cash + toplam_deger
         ozsermaye_egrisi.append({"tarih": T, "ozsermaye": guncel_ozsermaye})
+        if acik_pozisyonlar:
+            pozisyon_vardi_bu_ay = True
 
         # ── 9) §7 Aylık getiri takibi (yalnız TAMAMLANMIŞ aylar sayılır). ──
+        # BUG FİKSİ (YORUM KARARI): tamamen NAKİTTE geçen bir ay (hiç açık
+        # pozisyon yokken) §7'nin "3 ay üst üste risksiz altı" sayacına
+        # KATILMAZ. Aksi halde kendi kendini besleyen bir kısır döngü
+        # oluşuyordu: sistem henüz hiç pozisyon açmadan (örn. başlangıçta
+        # Risk-Off olduğu için) geçen aylar da ~%0 getiri ürettiğinden
+        # risksiz eşiğin altında sayılıyor, 3 ay sonra "yeni alım dur"
+        # kilidi devreye giriyor VE bir daha asla açılamıyor (kilit
+        # açıldığında hâlâ pozisyon yoksa getiri yine ~%0 kalır → sonsuza
+        # dek kilitli — geliştirme dönemi backtest'inde tam olarak bu
+        # yaşandı: 0 işlem, CAGR %0.00). §7'nin amacı "yatırılmış sermaye
+        # risksiz faizden kötü performans gösteriyorsa dur" demektir,
+        # "sermaye hiç yatırılmadıysa dur" değil — bu yüzden salt-nakit
+        # aylar sayaca dahil edilmez (ne kilitler ne serbest bırakır,
+        # yalnızca nötrdür/atlanır).
         ay_anahtari = (T.year, T.month)
         if mevcut_ay_anahtari is None:
             mevcut_ay_anahtari = ay_anahtari
             onceki_ay_sonu_deger = guncel_ozsermaye
         elif ay_anahtari != mevcut_ay_anahtari:
-            if onceki_ay_sonu_deger and onceki_ay_sonu_deger > 0 and ay_sonu_deger_biriken is not None:
+            if (pozisyon_vardi_bu_ay and onceki_ay_sonu_deger and onceki_ay_sonu_deger > 0
+                    and ay_sonu_deger_biriken is not None):
                 tamamlanan_aylik_getiriler.append(ay_sonu_deger_biriken / onceki_ay_sonu_deger - 1.0)
             onceki_ay_sonu_deger = ay_sonu_deger_biriken
             mevcut_ay_anahtari = ay_anahtari
+            pozisyon_vardi_bu_ay = bool(acik_pozisyonlar)
         ay_sonu_deger_biriken = guncel_ozsermaye
 
         if ilerleme and (idx % 100 == 0 or idx == toplam_gun - 1):
