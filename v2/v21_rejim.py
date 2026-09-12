@@ -18,21 +18,29 @@ Saf fonksiyon → test edilebilir. Yalnız `tarih <= T` verisine bakar
 
 YORUM KARARI — DURUM MAKİNESİ (HYSTERESIS): Şartname iki ayrı koşul tanımlıyor
 (Risk-On'a GİRİŞ şartı ve Risk-Off'a GEÇİŞ tetikleyicisi), ikisi arasındaki
-bölgede (örn. kapanış MA200'ün %0-%2 üzerinde ya da %0-%2 altında) ne
-yapılacağını açıkça söylemiyor. Burada STICKY bir durum makinesi kuruldu:
-sistem Risk-On'dayken yalnızca Risk-Off TETİKLEYİCİSİ (kapanış MA200'ün %2
-altına inmesi) gerçekleşince Risk-Off'a geçer; Risk-Off'tayken yalnızca
-Risk-On GİRİŞ şartları (3 gün %2 üstü + MA50>MA200) yeniden sağlanınca
-Risk-On'a döner. Bu, "olumsuz bir durum oluşmadığı sürece pozisyonda kal"
-felsefesiyle (şartname üst başlığı) tutarlıdır — küçük gürültülü
-dalgalanmalarda rejim gereksiz yere flip-flop yapmaz.
+bölgede ne yapılacağını açıkça söylemiyor. Burada STICKY bir durum makinesi
+kuruldu; sistem yalnızca Risk-Off TETİKLEYİCİSİ gerçekleşince Risk-Off'a
+geçer, yalnızca Risk-On GİRİŞ şartı yeniden sağlanınca Risk-On'a döner.
 
-Hedef ağırlıklar (şartname bir ARALIK veriyor: Risk-On hisse %60-%75,
-Risk-Off nakit %60-%100): burada sabit TEK bir nokta seçildi (aralığın
-ortasına yakın, YORUM KARARI, kod başka bir yerde bu aralığı dinamik
-daraltmıyor):
-  Risk-On  : hedef hisse ağırlığı %70, hedef nakit %30 (aralık içinde: 60-75/25-40)
-  Risk-Off : hedef hisse ağırlığı %20, hedef nakit %80 (aralık içinde: 0-40/60-100)
+REVİZYON (kullanıcı talebi, 2026-09-12): "yüksek risk olsun, yeter ki para
+kazansın." Birebir şartname uygulaması (3 gün %2 tamponu + MA50>MA200 girişi,
+Risk-On hedefi %70, Risk-Off hedefi %20) çok temkinli çıktı — walk-forward
+backtest'te sistem çoğu ayı NAKİTTE geçirdi (test döneminde 32 aydan
+yalnızca 11'inde pozisyon vardı) ve CAGR hem BIST100 al-tut'un hem risksiz
+faiz varsayımının belirgin altında kaldı. Bu yüzden §2'nin verdiği ARALIKLAR
+şartname sınırları İÇİNDE değil, kullanıcının açık isteğiyle aralığın DIŞINA
+taşan agresif uçta yeniden ayarlandı:
+  - Giriş tamponu 0'a indirildi, teyit 1 güne indirildi (Risk-On'a girmek
+    çok daha kolay/hızlı).
+  - Çıkış tetiği ASİMETRİK yapıldı: MA200'ün %2 değil %5 ALTINA inince
+    Risk-Off'a geçilir (kolay gir, zor çık — trend'de daha uzun kal).
+  - MA50>MA200 şartı KALDIRILDI (yalnız fiyat/MA200 konumuna bakılıyor) —
+    erken toparlanma evrelerinde daha hızlı katılım için.
+  - Risk-On hedef hisse ağırlığı %70 -> %95, Risk-Off hedefi %20 -> %40
+    (şartnamenin %60-75 / %0-40 aralığının tamamen dışında, bilinçli olarak).
+Bu artık "Dinamik & Defansif" değil "Dinamik & Agresif" bir yorumdur; düşük
+işlem hacmi/maruziyet sorununu gidermeyi, kısa vadeli whipsaw riskini kabul
+ederek hedefler.
 """
 
 from __future__ import annotations
@@ -42,14 +50,15 @@ import pandas as pd
 
 _MA200_PENCERE = 200
 _MA50_PENCERE = 50
-_TAMPON = 0.02          # %2
-_TEYIT_GUN = 3           # ard arda 3 gün
+_TAMPON_GIRIS = 0.00     # Risk-On girişi: kapanış MA200 üstünde olması yeterli (tampon yok)
+_TAMPON_CIKIS = 0.05     # Risk-Off tetiği: kapanış MA200'ün %5 ALTINA insin (asimetrik, kolay gir/zor çık)
+_TEYIT_GUN = 1            # tek gün teyit (hızlı giriş) — YORUM KARARI: yüksek risk talebi
 
-_RISK_ON_HISSE_HEDEF = 0.70   # şartname aralığı: %60-%75
-_RISK_OFF_HISSE_HEDEF = 0.20  # şartname aralığı: nakit %60-100 -> hisse %0-40
+_RISK_ON_HISSE_HEDEF = 0.95   # AGRESİF: şartname aralığı (%60-75) BİLİNÇLİ AŞILDI
+_RISK_OFF_HISSE_HEDEF = 0.40  # AGRESİF: şartname aralığı (%0-40) üst ucu seçildi
 
 _MAKRO_NOT = ("Makro teyit (mevduat faizi yatay/düşüş) VERİ YOK — bu koşul "
-              "ATLANDI, yalnız teknik koşullarla (MA200 tamponu + MA50>MA200) karar verildi.")
+              "ATLANDI, yalnız teknik koşullarla (MA200 konumu, agresif yorum) karar verildi.")
 
 
 def _sma(seri: pd.Series, pencere: int) -> pd.Series:
@@ -68,21 +77,22 @@ def _durum_serisi(gecmis: pd.DataFrame) -> tuple[pd.Series, pd.Series, pd.Series
     ma200 = _sma(kapanis, _MA200_PENCERE)
     ma50 = _sma(kapanis, _MA50_PENCERE)
 
-    ust_esik = ma200 * (1.0 + _TAMPON)
-    alt_esik = ma200 * (1.0 - _TAMPON)
+    # AGRESİF revizyon: giriş/çıkış eşikleri artık ASİMETRİK (bkz. modül başı
+    # notu) — kolay gir (tampon yok, tek gün teyit, MA50 şartı yok), zor çık
+    # (kapanış MA200'ün %5 ALTINA insin).
+    ust_esik = ma200 * (1.0 + _TAMPON_GIRIS)
+    alt_esik = ma200 * (1.0 - _TAMPON_CIKIS)
 
     uzerinde = kapanis > ust_esik
-    uzerinde_3gun = uzerinde.rolling(_TEYIT_GUN, min_periods=_TEYIT_GUN).sum() == _TEYIT_GUN
-    ma50_ustun = ma50 > ma200
+    uzerinde_teyit = uzerinde.rolling(_TEYIT_GUN, min_periods=_TEYIT_GUN).sum() == _TEYIT_GUN
 
-    risk_on_giris = (uzerinde_3gun.fillna(False)) & (ma50_ustun.fillna(False))
+    risk_on_giris = uzerinde_teyit.fillna(False)
     risk_off_tetik = (kapanis < alt_esik).fillna(False)
 
     olay = pd.Series(np.nan, index=gecmis.index)
     # Aynı gün ikisi de teorik olarak gerçekleşemez (biri "MA200 üstü", diğeri
-    # "MA200 altı" gerektirir) ama güvenlik için risk_off_tetik ÖNCE yazılır,
-    # risk_on_giris SONRA üzerine yazılır (agresif tarafa geçiş için üç günlük
-    # teyit zaten daha "sıkı" bir koşul olduğundan öncelik ona verilir).
+    # "MA200'ün %5 altı" gerektirir) ama güvenlik için risk_off_tetik ÖNCE
+    # yazılır, risk_on_giris SONRA üzerine yazılır.
     olay[risk_off_tetik] = 0.0
     olay[risk_on_giris] = 1.0
 
@@ -127,14 +137,14 @@ def rejim_hesapla(endeks_df: pd.DataFrame, tarih) -> dict:
 
     if bugun_durum == 1.0:
         durum = "Risk-On"
-        gerekce = (f"XU100 ({bugun_kapanis:.0f}) MA200'ün (%{bugun_ma200:.0f}) en az %2 üzerinde "
-                   f"ard arda {_TEYIT_GUN} gündür kalıyor VE MA50>MA200 — Risk-On sürüyor "
-                   f"(Risk-Off tetikleyicisi henüz gerçekleşmedi).")
+        gerekce = (f"XU100 ({bugun_kapanis:.0f}) MA200'ün ({bugun_ma200:.0f}) üzerinde — Risk-On "
+                   f"sürüyor (AGRESİF: Risk-Off tetiği ancak %{_TAMPON_CIKIS*100:.0f} altına inince "
+                   f"gerçekleşir, henüz gerçekleşmedi).")
         hedef_hisse = _RISK_ON_HISSE_HEDEF
     else:
         durum = "Risk-Off"
-        gerekce = (f"XU100 ({bugun_kapanis:.0f}) MA200'ün (%{bugun_ma200:.0f}) %2 altına indi ya da "
-                   f"Risk-On giriş şartları henüz oluşmadı — Risk-Off (savunma) sürüyor.")
+        gerekce = (f"XU100 ({bugun_kapanis:.0f}) MA200'ün ({bugun_ma200:.0f}) %{_TAMPON_CIKIS*100:.0f} "
+                   f"altına indi ya da Risk-On giriş şartı henüz oluşmadı — Risk-Off (savunma) sürüyor.")
         hedef_hisse = _RISK_OFF_HISSE_HEDEF
 
     return {

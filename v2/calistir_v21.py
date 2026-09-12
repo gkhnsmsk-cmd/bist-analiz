@@ -85,7 +85,7 @@ def _kiyas_tablosu(baslik: str, v21_m: dict, endeks_m: dict, aylik_getiriler: li
         f"| Expectancy (R) | {_sayi(v21_m.get('expectancy_R'), 3)} | — | — |",
         f"| Ortalama tutma (gün) | {_sayi(v21_m.get('ortalama_tutma_gun'), 1)} | — | — |",
         f"| Aylık getiri, risksiz ALTINDA kalan ay | {altinda}/{toplam_ay} | — | — |",
-        f"| §7: yeni alım engellenen ay sayısı (3 ay üst üste risksiz altı) | {risksiz_engelli_ay} | — | — |",
+        f"| §7: kilit aktif olsaydı engellenecek hafta sayısı (BİLGİ AMAÇLI — artık fiilen engellemiyor) | {risksiz_engelli_ay} | — | — |",
         "",
     ]
     return "\n".join(satirlar)
@@ -119,10 +119,26 @@ def _ozet_yaz(sonuc: dict, ozsermaye: float) -> str:
         "",
         "---",
         "",
-        "## Şartname uygulaması — atlanan/veri-yok kısımlar",
+        "## AGRESİF REVİZYON (kullanıcı talebi, 2026-09-12): \"yüksek risk olsun, yeter ki "
+        "para kazansın\"",
         "",
-        "- **§2 Makro teyit** (mevduat faizi yatay/düşüş) — VERİ YOK, atlandı; yalnız teknik "
-        "koşullarla (MA200 %2 tamponu + MA50>MA200) karar verildi.",
+        "Bu koşum artık şartnamenin BİREBİR uygulaması DEĞİL. Birebir uygulama çok düşük "
+        "piyasa maruziyeti üretti (test döneminde 32 aydan yalnızca 11'inde pozisyon "
+        "vardı) ve CAGR risksiz faizin altında kaldı. Kullanıcının açık talimatıyla "
+        "aşağıdaki noktalarda şartname sınırlarının DIŞINA çıkıldı:",
+        "- **§2 Rejim**: giriş tamponu/teyidi gevşetildi (kolay gir), çıkış tetiği "
+        "MA200'ün %5 altına çekildi (zor çık), MA50>MA200 şartı kaldırıldı, Risk-On/"
+        "Risk-Off hedef hisse oranları %95/%40'a yükseltildi (eskiden %70/%20).",
+        "- **§3.B Seçim**: getiri20 aralığı -%10..+%60'a genişletildi, CMF eşiği >-0.05'e, "
+        "hacim teyidi >=%80'e gevşetildi, MA50>MA200 şartı kaldırıldı.",
+        "- **§5/§6 Pozisyon**: işlem riski %1.5->%3.0, tek hisse tavanı %15->%25, sektör "
+        "tavanı %30->%45, sert stop 2.0->2.5xATR, Hedef1 3.0->4.0xATR, zaman stopu "
+        "25->40 gün.",
+        "- **§7 Kilidi**: artık yeni alımları ENGELLEMİYOR, yalnız bilgi amaçlı raporlanıyor.",
+        "",
+        "## Şartname uygulaması — veri yokluğundan atlanan kısımlar (değişmedi)",
+        "",
+        "- **§2 Makro teyit** (mevduat faizi yatay/düşüş) — VERİ YOK, atlandı.",
         "- **§3.A Temel Sağlık Filtresi** (Cari Oran>1.2, Net Borç/FAVÖK<3.5) — VERİ YOK "
         "(KAP API erişilemiyor), sert eleme yapılmadı.",
         "- **§3.C Kurumsal/TEFAS fon payı artışı** — VERİ YOK, skor artırıcı olarak "
