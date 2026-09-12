@@ -1,12 +1,20 @@
 # PUSULA v2.1 — Dinamik & Defansif BIST İşlem Algoritması — Walk-Forward Backtest Sonucu
 
-Çalıştırma: 12.09.2026 08:37 UTC · Başlangıç özsermayesi: 1,000,000 TL
+Çalıştırma: 12.09.2026 09:02 UTC · Başlangıç özsermayesi: 1,000,000 TL
 
 ---
 
-## Şartname uygulaması — atlanan/veri-yok kısımlar
+## AGRESİF REVİZYON (kullanıcı talebi, 2026-09-12): "yüksek risk olsun, yeter ki para kazansın"
 
-- **§2 Makro teyit** (mevduat faizi yatay/düşüş) — VERİ YOK, atlandı; yalnız teknik koşullarla (MA200 %2 tamponu + MA50>MA200) karar verildi.
+Bu koşum artık şartnamenin BİREBİR uygulaması DEĞİL. Birebir uygulama çok düşük piyasa maruziyeti üretti (test döneminde 32 aydan yalnızca 11'inde pozisyon vardı) ve CAGR risksiz faizin altında kaldı. Kullanıcının açık talimatıyla aşağıdaki noktalarda şartname sınırlarının DIŞINA çıkıldı:
+- **§2 Rejim**: giriş tamponu/teyidi gevşetildi (kolay gir), çıkış tetiği MA200'ün %5 altına çekildi (zor çık), MA50>MA200 şartı kaldırıldı, Risk-On/Risk-Off hedef hisse oranları %95/%40'a yükseltildi (eskiden %70/%20).
+- **§3.B Seçim**: getiri20 aralığı -%10..+%60'a genişletildi, CMF eşiği >-0.05'e, hacim teyidi >=%80'e gevşetildi, MA50>MA200 şartı kaldırıldı.
+- **§5/§6 Pozisyon**: işlem riski %1.5->%3.0, tek hisse tavanı %15->%25, sektör tavanı %30->%45, sert stop 2.0->2.5xATR, Hedef1 3.0->4.0xATR, zaman stopu 25->40 gün.
+- **§7 Kilidi**: artık yeni alımları ENGELLEMİYOR, yalnız bilgi amaçlı raporlanıyor.
+
+## Şartname uygulaması — veri yokluğundan atlanan kısımlar (değişmedi)
+
+- **§2 Makro teyit** (mevduat faizi yatay/düşüş) — VERİ YOK, atlandı.
 - **§3.A Temel Sağlık Filtresi** (Cari Oran>1.2, Net Borç/FAVÖK<3.5) — VERİ YOK (KAP API erişilemiyor), sert eleme yapılmadı.
 - **§3.C Kurumsal/TEFAS fon payı artışı** — VERİ YOK, skor artırıcı olarak değerlendirilmedi (yalnız RS pozitifliği skoru etkiliyor).
 
@@ -22,33 +30,33 @@ Test döneminde (dokunulmamış) v2.1'in CAGR'ı BIST100 al-ve-tut'un altında k
 
 | Metrik | v2.1 (Dinamik & Defansif) | BIST100 al-ve-tut | Risksiz faiz varsayımı (%40/yıl) |
 |---|---|---|---|
-| **CAGR** | **%8.33** | %26.87 | %40.00 |
-| **Maksimum düşüş** | **%-7.3** | %-22.9 | %0.0 (varsayım) |
-| İşlem sayısı (giriş+kısmi+tam çıkış satırları) | 64 | — (tek alım) | — |
-| Kazanma oranı | %56.2 | — | — |
-| Profit factor | 2.72 | — | — |
-| Expectancy (R) | 0.590 | — | — |
-| Ortalama tutma (gün) | 17.1 | — | — |
-| Aylık getiri, risksiz ALTINDA kalan ay | 7/11 | — | — |
-| §7: yeni alım engellenen ay sayısı (3 ay üst üste risksiz altı) | 93 | — | — |
+| **CAGR** | **%3.13** | %26.87 | %40.00 |
+| **Maksimum düşüş** | **%-35.9** | %-22.9 | %0.0 (varsayım) |
+| İşlem sayısı (giriş+kısmi+tam çıkış satırları) | 847 | — (tek alım) | — |
+| Kazanma oranı | %41.8 | — | — |
+| Profit factor | 1.02 | — | — |
+| Expectancy (R) | 0.289 | — | — |
+| Ortalama tutma (gün) | 18.1 | — | — |
+| Aylık getiri, risksiz ALTINDA kalan ay | 20/32 | — | — |
+| §7: kilit aktif olsaydı engellenecek hafta sayısı (BİLGİ AMAÇLI — artık fiilen engellemiyor) | 31 | — | — |
 
 ### Geliştirme dönemi (2019-01-01 → 2023-12-31) — yalnız kıyas amaçlı
 
 | Metrik | v2.1 (Dinamik & Defansif) | BIST100 al-ve-tut | Risksiz faiz varsayımı (%40/yıl) |
 |---|---|---|---|
-| **CAGR** | **%-0.32** | %53.23 | %40.00 |
-| **Maksimum düşüş** | **%-3.8** | %-31.8 | %0.0 (varsayım) |
-| İşlem sayısı (giriş+kısmi+tam çıkış satırları) | 11 | — (tek alım) | — |
-| Kazanma oranı | %27.3 | — | — |
-| Profit factor | 0.55 | — | — |
-| Expectancy (R) | -0.181 | — | — |
-| Ortalama tutma (gün) | 12.8 | — | — |
-| Aylık getiri, risksiz ALTINDA kalan ay | 5/5 | — | — |
-| §7: yeni alım engellenen ay sayısı (3 ay üst üste risksiz altı) | 199 | — | — |
+| **CAGR** | **%42.43** | %53.23 | %40.00 |
+| **Maksimum düşüş** | **%-31.3** | %-31.8 | %0.0 (varsayım) |
+| İşlem sayısı (giriş+kısmi+tam çıkış satırları) | 1356 | — (tek alım) | — |
+| Kazanma oranı | %57.2 | — | — |
+| Profit factor | 1.84 | — | — |
+| Expectancy (R) | 0.751 | — | — |
+| Ortalama tutma (gün) | 20.2 | — | — |
+| Aylık getiri, risksiz ALTINDA kalan ay | 30/58 | — | — |
+| §7: kilit aktif olsaydı engellenecek hafta sayısı (BİLGİ AMAÇLI — artık fiilen engellemiyor) | 52 | — | — |
 
 ### Test döneminde en kötü tek işlem
 
-- Sembol: GWIND, Sonuç: -1.25R, Net PnL: -8,419 TL, Çıkış nedeni: sert_stop
+- Sembol: SKBNK, Sonuç: -5.91R, Net PnL: -123,449 TL, Çıkış nedeni: sert_stop
 
 ---
 
