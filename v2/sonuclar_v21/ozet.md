@@ -1,6 +1,6 @@
 # PUSULA v2.1 — Dinamik & Defansif BIST İşlem Algoritması — Walk-Forward Backtest Sonucu
 
-Çalıştırma: 11.09.2026 23:11 UTC · Başlangıç özsermayesi: 1,000,000 TL
+Çalıştırma: 12.09.2026 08:37 UTC · Başlangıç özsermayesi: 1,000,000 TL
 
 ---
 
@@ -22,29 +22,29 @@ Test döneminde (dokunulmamış) v2.1'in CAGR'ı BIST100 al-ve-tut'un altında k
 
 | Metrik | v2.1 (Dinamik & Defansif) | BIST100 al-ve-tut | Risksiz faiz varsayımı (%40/yıl) |
 |---|---|---|---|
-| **CAGR** | **%8.34** | %26.66 | %40.00 |
+| **CAGR** | **%8.33** | %26.87 | %40.00 |
 | **Maksimum düşüş** | **%-7.3** | %-22.9 | %0.0 (varsayım) |
 | İşlem sayısı (giriş+kısmi+tam çıkış satırları) | 64 | — (tek alım) | — |
 | Kazanma oranı | %56.2 | — | — |
 | Profit factor | 2.72 | — | — |
 | Expectancy (R) | 0.590 | — | — |
 | Ortalama tutma (gün) | 17.1 | — | — |
-| Aylık getiri, risksiz ALTINDA kalan ay | 28/32 | — | — |
-| §7: yeni alım engellenen ay sayısı (3 ay üst üste risksiz altı) | 92 | — | — |
+| Aylık getiri, risksiz ALTINDA kalan ay | 7/11 | — | — |
+| §7: yeni alım engellenen ay sayısı (3 ay üst üste risksiz altı) | 93 | — | — |
 
 ### Geliştirme dönemi (2019-01-01 → 2023-12-31) — yalnız kıyas amaçlı
 
 | Metrik | v2.1 (Dinamik & Defansif) | BIST100 al-ve-tut | Risksiz faiz varsayımı (%40/yıl) |
 |---|---|---|---|
-| **CAGR** | **%0.00** | %53.23 | %40.00 |
-| **Maksimum düşüş** | **%0.0** | %-31.8 | %0.0 (varsayım) |
-| İşlem sayısı (giriş+kısmi+tam çıkış satırları) | 0 | — (tek alım) | — |
-| Kazanma oranı | — | — | — |
-| Profit factor | — | — | — |
-| Expectancy (R) | — | — | — |
-| Ortalama tutma (gün) | — | — | — |
-| Aylık getiri, risksiz ALTINDA kalan ay | 59/59 | — | — |
-| §7: yeni alım engellenen ay sayısı (3 ay üst üste risksiz altı) | 233 | — | — |
+| **CAGR** | **%-0.32** | %53.23 | %40.00 |
+| **Maksimum düşüş** | **%-3.8** | %-31.8 | %0.0 (varsayım) |
+| İşlem sayısı (giriş+kısmi+tam çıkış satırları) | 11 | — (tek alım) | — |
+| Kazanma oranı | %27.3 | — | — |
+| Profit factor | 0.55 | — | — |
+| Expectancy (R) | -0.181 | — | — |
+| Ortalama tutma (gün) | 12.8 | — | — |
+| Aylık getiri, risksiz ALTINDA kalan ay | 5/5 | — | — |
+| §7: yeni alım engellenen ay sayısı (3 ay üst üste risksiz altı) | 199 | — | — |
 
 ### Test döneminde en kötü tek işlem
 
