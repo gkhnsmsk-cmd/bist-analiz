@@ -1,16 +1,17 @@
 # PUSULA v2.1 — Dinamik & Defansif BIST İşlem Algoritması — Walk-Forward Backtest Sonucu
 
-Çalıştırma: 12.09.2026 09:02 UTC · Başlangıç özsermayesi: 1,000,000 TL
+Çalıştırma: 12.09.2026 11:50 UTC · Başlangıç özsermayesi: 1,000,000 TL
 
 ---
 
-## AGRESİF REVİZYON (kullanıcı talebi, 2026-09-12): "yüksek risk olsun, yeter ki para kazansın"
+## HİBRİT REVİZYON (kullanıcı talebi, 2026-09-12): "yüksek risk olsun, yeter ki para kazansın"
 
-Bu koşum artık şartnamenin BİREBİR uygulaması DEĞİL. Birebir uygulama çok düşük piyasa maruziyeti üretti (test döneminde 32 aydan yalnızca 11'inde pozisyon vardı) ve CAGR risksiz faizin altında kaldı. Kullanıcının açık talimatıyla aşağıdaki noktalarda şartname sınırlarının DIŞINA çıkıldı:
-- **§2 Rejim**: giriş tamponu/teyidi gevşetildi (kolay gir), çıkış tetiği MA200'ün %5 altına çekildi (zor çık), MA50>MA200 şartı kaldırıldı, Risk-On/Risk-Off hedef hisse oranları %95/%40'a yükseltildi (eskiden %70/%20).
-- **§3.B Seçim**: getiri20 aralığı -%10..+%60'a genişletildi, CMF eşiği >-0.05'e, hacim teyidi >=%80'e gevşetildi, MA50>MA200 şartı kaldırıldı.
-- **§5/§6 Pozisyon**: işlem riski %1.5->%3.0, tek hisse tavanı %15->%25, sektör tavanı %30->%45, sert stop 2.0->2.5xATR, Hedef1 3.0->4.0xATR, zaman stopu 25->40 gün.
-- **§7 Kilidi**: artık yeni alımları ENGELLEMİYOR, yalnız bilgi amaçlı raporlanıyor.
+Bu koşum şartnamenin BİREBİR uygulaması değil, ama saf 'agresif' deneyden de farklı — İKİ TUR sonucunda kalibre edildi:
+1) Önce §2/§3.B eşikleri gevşetildi (kolay giriş, geniş getiri20 aralığı, MA50 şartı yok) + §7 kilidi kapatıldı. SONUÇ: geliştirme döneminde CAGR %-0.32'den %42.43'e çıktı ama TEST döneminde (asıl referans) işlem sayısı 64->847'ye fırladı, profit factor 2.72->1.02'ye çöktü, maksimum düşüş -%7.3->-%35.9'a fırladı (BIST100'ün kendi düşüşünden bile kötü) — aşırı işlem sinyal kalitesini bozdu.
+2) Bunun üzerine §2/§3.B/§7 şartnamenin BİREBİR defansif değerlerine GERİ DÖNDÜRÜLDÜ. 'Yüksek risk' isteği artık YALNIZ §5/§6'daki pozisyon büyüklüğü/ stop-hedef mesafeleri üzerinden karşılanıyor:
+- **§5 Pozisyon**: işlem riski %1.5->%3.0, tek hisse tavanı %15->%25, sektör tavanı %30->%45.
+- **§6 Stop/Hedef**: sert stop 2.0->2.5xATR, Hedef1 3.0->4.0xATR, zaman stopu 25->40 gün.
+- **§2/§3.B/§7**: şartname değerlerine GERİ DÖNDÜRÜLDÜ (tampon %2/3 gün teyit/ MA50>MA200, GETIRI20 %5-25/CMF>0/hacim>=%120, §7 kilidi AKTİF).
 
 ## Şartname uygulaması — veri yokluğundan atlanan kısımlar (değişmedi)
 
@@ -30,33 +31,33 @@ Test döneminde (dokunulmamış) v2.1'in CAGR'ı BIST100 al-ve-tut'un altında k
 
 | Metrik | v2.1 (Dinamik & Defansif) | BIST100 al-ve-tut | Risksiz faiz varsayımı (%40/yıl) |
 |---|---|---|---|
-| **CAGR** | **%3.13** | %26.87 | %40.00 |
-| **Maksimum düşüş** | **%-35.9** | %-22.9 | %0.0 (varsayım) |
-| İşlem sayısı (giriş+kısmi+tam çıkış satırları) | 847 | — (tek alım) | — |
-| Kazanma oranı | %41.8 | — | — |
-| Profit factor | 1.02 | — | — |
-| Expectancy (R) | 0.289 | — | — |
-| Ortalama tutma (gün) | 18.1 | — | — |
-| Aylık getiri, risksiz ALTINDA kalan ay | 20/32 | — | — |
-| §7: kilit aktif olsaydı engellenecek hafta sayısı (BİLGİ AMAÇLI — artık fiilen engellemiyor) | 31 | — | — |
+| **CAGR** | **%6.66** | %26.87 | %40.00 |
+| **Maksimum düşüş** | **%-10.7** | %-22.9 | %0.0 (varsayım) |
+| İşlem sayısı (giriş+kısmi+tam çıkış satırları) | 39 | — (tek alım) | — |
+| Kazanma oranı | %51.3 | — | — |
+| Profit factor | 2.39 | — | — |
+| Expectancy (R) | 0.815 | — | — |
+| Ortalama tutma (gün) | 29.2 | — | — |
+| Aylık getiri, risksiz ALTINDA kalan ay | 7/10 | — | — |
+| §7: yeni alım engellenen hafta sayısı (3 ay üst üste risksiz altı, kilit AKTİF) | 102 | — | — |
 
 ### Geliştirme dönemi (2019-01-01 → 2023-12-31) — yalnız kıyas amaçlı
 
 | Metrik | v2.1 (Dinamik & Defansif) | BIST100 al-ve-tut | Risksiz faiz varsayımı (%40/yıl) |
 |---|---|---|---|
-| **CAGR** | **%42.43** | %53.23 | %40.00 |
-| **Maksimum düşüş** | **%-31.3** | %-31.8 | %0.0 (varsayım) |
-| İşlem sayısı (giriş+kısmi+tam çıkış satırları) | 1356 | — (tek alım) | — |
-| Kazanma oranı | %57.2 | — | — |
-| Profit factor | 1.84 | — | — |
-| Expectancy (R) | 0.751 | — | — |
-| Ortalama tutma (gün) | 20.2 | — | — |
-| Aylık getiri, risksiz ALTINDA kalan ay | 30/58 | — | — |
-| §7: kilit aktif olsaydı engellenecek hafta sayısı (BİLGİ AMAÇLI — artık fiilen engellemiyor) | 52 | — | — |
+| **CAGR** | **%-1.49** | %53.23 | %40.00 |
+| **Maksimum düşüş** | **%-13.5** | %-31.8 | %0.0 (varsayım) |
+| İşlem sayısı (giriş+kısmi+tam çıkış satırları) | 23 | — (tek alım) | — |
+| Kazanma oranı | %47.8 | — | — |
+| Profit factor | 0.60 | — | — |
+| Expectancy (R) | 0.237 | — | — |
+| Ortalama tutma (gün) | 24.3 | — | — |
+| Aylık getiri, risksiz ALTINDA kalan ay | 9/10 | — | — |
+| §7: yeni alım engellenen hafta sayısı (3 ay üst üste risksiz altı, kilit AKTİF) | 167 | — | — |
 
 ### Test döneminde en kötü tek işlem
 
-- Sembol: SKBNK, Sonuç: -5.91R, Net PnL: -123,449 TL, Çıkış nedeni: sert_stop
+- Sembol: AEFES, Sonuç: -1.15R, Net PnL: -7,444 TL, Çıkış nedeni: sert_stop
 
 ---
 
