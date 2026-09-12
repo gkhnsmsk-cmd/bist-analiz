@@ -58,33 +58,32 @@ import math
 
 import pandas as pd
 
-# ── §5 pozisyon büyüklüğü sabitleri ─────────────────────────────────────
-# REVİZYON (kullanıcı talebi, 2026-09-12): "yüksek risk olsun, yeter ki para
-# kazansın." Şartnamenin birebir verdiği %1.5/%15/%30 çok küçük pozisyonlara
-# yol açıyordu (kazanan işlemler bile portföyü belirgin büyütemiyordu).
-# Sabitler BİLİNÇLİ olarak şartname değerlerinin ÜZERİNE çıkarıldı.
-# NOT (HİBRİT REVİZYON sonrası, aynı gün): giriş/seçim eşikleri (v21_rejim.py,
-# v21_secim.py) ve §7 kilidi defansif değerlere geri döndürüldü — ama BU
-# BLOKTAKİ (§5) ve aşağıdaki §6 sabitleri KASITLI olarak agresif KALDI.
-# "Yüksek risk" artık yalnız burada, aynı kaliteli sinyalde daha büyük
-# pozisyon/daha geniş stop-hedef mesafesi olarak uygulanıyor.
-_RISK_ORANI = 0.030               # eskiden %1.5 -> %3.0 (işlem başına 2x risk)
-_TEK_HISSE_TAVAN = 0.25            # eskiden %15 -> %25
-_SEKTOR_TAVAN = 0.45                # eskiden %30 -> %45
-# Risk-On döneminde toplam hisse ağırlığı artık ~%95'e kadar çıkabilir — bu
-# üst sınır, rejimin kendi hedef_hisse_orani'sı (v21_rejim.py,
-# _RISK_ON_HISSE_HEDEF) üzerinden zaten uygulanıyor.
+# ── §5 pozisyon büyüklüğü sabitleri (şartnameyle birebir) ──────────────────
+# REVİZYON GEÇMİŞİ (2026-09-12): "yüksek risk olsun, yeter ki para kazansın"
+# talebiyle önce bu sabitler büyütüldü (%3.0/%25/%45) ve §6'daki stop/hedef
+# mesafeleri genişletildi. Walk-forward SONUCU (hibrit tur — giriş filtreleri
+# defansif, yalnız pozisyon büyüklüğü agresif): test döneminde CAGR %8.33'ten
+# %6.66'ya DÜŞTÜ, maksimum düşüş -%7.3'ten -%10.7'ye çıktı. Az sayıda işlemde
+# (39-64) pozisyonu büyütmek getiriyi güvenilir şekilde artırmadı, yalnızca
+# varyansı büyüttü. Kullanıcı onayıyla TÜMÜYLE şartname değerlerine geri
+# döndürüldü — şu ana kadarki EN İYİ risk-ayarlı sonuç (CAGR %8.33, düşüş
+# -%7.3, PF 2.72) bu değerlerle elde edilmişti.
+_RISK_ORANI = 0.015               # tek işlemde riske edilen max sermaye: %1.5
+_TEK_HISSE_TAVAN = 0.15           # tek hisse max ağırlık: %15
+_SEKTOR_TAVAN = 0.30               # aynı sektör max ağırlık: %30
+# Risk-On döneminde toplam hisse ağırlığı %75'i geçmez — bu üst sınır,
+# rejimin kendi hedef_hisse_orani'sı (v21_rejim.py) üzerinden zaten
+# uygulanıyor (Risk-On hedefi hiçbir zaman %75'i aşmaz); burada AYRICA
+# ekstra bir sabit tanımlanmadı, çağıran taraf hedef_hisse_orani'yi kapasite
+# tavanı olarak geçirir.
 
-# ── §4/§6 ATR katsayıları ────────────────────────────────────────────────
-# REVİZYON: stop mesafesi genişletildi (erken/gürültü kaynaklı çıkışları
-# azaltmak için) ve kâr hedefi uzatıldı (kazananın daha uzun koşmasına izin
-# vermek için) — ikisi de "yüksek risk, yeter ki kazansın" talebiyle tutarlı.
-_STOP_ATR_KATSAYI = 2.5             # eskiden 2.0 -> 2.5 (Sert Stop = Maliyet - 2.5xATR14)
-_HEDEF1_ATR_KATSAYI = 4.0           # eskiden 3.0 -> 4.0 (Hedef 1 = Maliyet + 4xATR14)
-_HEDEF1_SATIS_ORANI = 0.40          # Hedef 1'de satılan oran (değişmedi)
+# ── §4/§6 ATR katsayıları (şartnameyle birebir) ─────────────────────────
+_STOP_ATR_KATSAYI = 2.0            # Sert Stop = Maliyet - 2xATR14
+_HEDEF1_ATR_KATSAYI = 3.0          # Hedef 1 = Maliyet + 3xATR14
+_HEDEF1_SATIS_ORANI = 0.40         # Hedef 1'de satılan oran
 
 # ── §6 zaman/momentum stopu ─────────────────────────────────────────────
-_ZAMAN_STOPU_GUN = 40                # eskiden 25 -> 40 (pozisyona daha fazla nefes alanı)
+_ZAMAN_STOPU_GUN = 25
 
 # ── §6 "MA50'yi hacimli kırma" — kirilim hacim çarpanı v2/sinyal.py'deki
 # §3.3a ile AYNI (1.5x) tutuldu; şartname v2.1'de somut bir sayı vermiyor,
@@ -106,12 +105,11 @@ _IKINCI_DILIM_MAKS_BEKLEME_GUN = 15
 _RISKSIZ_AYLIK_GETIRI = 1.40 ** (1.0 / 12.0) - 1.0  # ~0.02844
 
 # REVİZYON GEÇMİŞİ (2026-09-12): "yüksek risk olsun, yeter ki para kazansın"
-# talebiyle bu kilit bir ara devre dışı bırakılmıştı. Walk-forward SONUCU:
-# test döneminde işlem sayısı 64->847'ye fırladı, profit factor 2.72->1.02'ye
-# çöktü, maksimum düşüş -%7.3->-%35.9'a fırladı — aşırı işlemin/disiplinsiz
-# alımın birlikte etkisiydi. Kullanıcı onayıyla kilit TEKRAR AKTİF edildi;
-# "yüksek risk" isteği artık yalnız §5/§6'daki pozisyon büyüklüğü/stop-hedef
-# mesafeleri üzerinden karşılanıyor.
+# talebiyle bu kilit bir ara devre dışı bırakılmış, sonra §5/§6 pozisyon
+# büyüklüğü de agresifleştirilmişti. İKİ deneyde de test döneminde sonuç
+# KÖTÜLEŞTİ (bkz. §5 bloğundaki ve v21_rejim.py/v21_secim.py'deki REVİZYON
+# GEÇMİŞİ notları) — kullanıcı onayıyla TÜM sistem (§2/§3.B/§5/§6/§7)
+# şartnamenin BİREBİR defansif değerlerine geri döndürüldü. Bu kilit AKTİF.
 _S7_KILIDI_YENI_ALIMI_ENGELLER = True
 
 
@@ -366,21 +364,21 @@ if __name__ == "__main__":
                                         hisse_toplam_deger=0.0, hedef_hisse_orani=1.0)
     assert s_sektor["red_nedeni"] is not None
 
-    # ── Sert stop tetiklenmesi (dinamik ATR ile, katsayı artık 2.5) ──
+    # ── Sert stop tetiklenmesi (dinamik ATR ile) ──
     poz = {"sembol": "TEST", "maliyet_ortalama": 100.0, "atr_giris": 4.0,
            "hedef1_alindi": False, "gun_sayisi": 5, "cmf_ardisik_negatif": 0}
-    bugun_dusus = pd.Series({"Open": 93.0, "High": 94.0, "Low": 88.0, "Close": 89.0,
+    bugun_dusus = pd.Series({"Open": 93.0, "High": 94.0, "Low": 91.0, "Close": 92.0,
                               "ATR14": 4.0, "MA50": 95.0, "Volume": 1_000_000, "HACIM_ORT20": 1_000_000,
                               "CMF20": 0.1})
     sonuc_stop = cikis_kontrol(poz, bugun_dusus)
     assert sonuc_stop is not None and sonuc_stop["neden"] == "sert_stop", sonuc_stop
-    assert abs(sonuc_stop["fiyat"] - 90.0) < 1e-9  # 100-2.5*4=90, low=88<=90, open=93>90 -> fiyat=90
+    assert abs(sonuc_stop["fiyat"] - 92.0) < 1e-9  # 100-2*4=92, low=91<=92, open=93>92 -> fiyat=92
 
-    # ── Hedef 1 tetiklenmesi (High hedefi geçiyor, katsayı artık 4.0) ──
+    # ── Hedef 1 tetiklenmesi (High hedefi geçiyor) ──
     poz2 = {"sembol": "TEST2", "maliyet_ortalama": 100.0, "atr_giris": 4.0, "hedef1_alindi": False}
-    bugun_hedef = pd.Series({"Open": 111.0, "High": 118.0, "Low": 110.0, "Close": 117.0, "ATR14": 4.0})
+    bugun_hedef = pd.Series({"Open": 111.0, "High": 115.0, "Low": 110.0, "Close": 113.0, "ATR14": 4.0})
     h1 = hedef1_kontrol(poz2, bugun_hedef)
-    assert h1 is not None and abs(h1["fiyat"] - 116.0) < 1e-9  # 100+4*4=116
+    assert h1 is not None and abs(h1["fiyat"] - 112.0) < 1e-9  # 100+3*4=112
     assert abs(h1["oran"] - _HEDEF1_SATIS_ORANI) < 1e-9
 
     # ── Trailing stop ASLA aşağı inmiyor (sayaclari_guncelle ile) ──
@@ -407,7 +405,7 @@ if __name__ == "__main__":
     sonuc_cmf = cikis_kontrol(poz4, bugun_cmfneg)
     assert sonuc_cmf is not None and sonuc_cmf["neden"] == "cmf_kalici_negatif_ma50_alti", sonuc_cmf
 
-    # ── Zaman/momentum stopu: 40. günde (eskiden 25) hâlâ kârda değilse kapat ──
+    # ── Zaman/momentum stopu: 25. günde hâlâ kârda değilse kapat ──
     poz5 = {"sembol": "DURGUN", "maliyet_ortalama": 100.0, "atr_giris": 4.0,
             "hedef1_alindi": False, "gun_sayisi": _ZAMAN_STOPU_GUN, "cmf_ardisik_negatif": 0}
     bugun_durgun = pd.Series({"Open": 100.0, "High": 101.0, "Low": 99.5, "Close": 100.0,

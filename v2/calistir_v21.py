@@ -119,26 +119,24 @@ def _ozet_yaz(sonuc: dict, ozsermaye: float) -> str:
         "",
         "---",
         "",
-        "## HİBRİT REVİZYON (kullanıcı talebi, 2026-09-12): \"yüksek risk olsun, yeter ki "
-        "para kazansın\"",
+        "## \"Yüksek risk\" deneyi ve SONUCU (kullanıcı talebi, 2026-09-12)",
         "",
-        "Bu koşum şartnamenin BİREBİR uygulaması değil, ama saf 'agresif' deneyden de "
-        "farklı — İKİ TUR sonucunda kalibre edildi:",
-        "1) Önce §2/§3.B eşikleri gevşetildi (kolay giriş, geniş getiri20 aralığı, "
-        "MA50 şartı yok) + §7 kilidi kapatıldı. SONUÇ: geliştirme döneminde CAGR "
-        "%-0.32'den %42.43'e çıktı ama TEST döneminde (asıl referans) işlem sayısı "
-        "64->847'ye fırladı, profit factor 2.72->1.02'ye çöktü, maksimum düşüş "
-        "-%7.3->-%35.9'a fırladı (BIST100'ün kendi düşüşünden bile kötü) — aşırı işlem "
-        "sinyal kalitesini bozdu.",
-        "2) Bunun üzerine §2/§3.B/§7 şartnamenin BİREBİR defansif değerlerine GERİ "
-        "DÖNDÜRÜLDÜ. 'Yüksek risk' isteği artık YALNIZ §5/§6'daki pozisyon büyüklüğü/ "
-        "stop-hedef mesafeleri üzerinden karşılanıyor:",
-        "- **§5 Pozisyon**: işlem riski %1.5->%3.0, tek hisse tavanı %15->%25, sektör "
-        "tavanı %30->%45.",
-        "- **§6 Stop/Hedef**: sert stop 2.0->2.5xATR, Hedef1 3.0->4.0xATR, zaman stopu "
-        "25->40 gün.",
-        "- **§2/§3.B/§7**: şartname değerlerine GERİ DÖNDÜRÜLDÜ (tampon %2/3 gün teyit/ "
-        "MA50>MA200, GETIRI20 %5-25/CMF>0/hacim>=%120, §7 kilidi AKTİF).",
+        "Kullanıcı \"yüksek risk olsun, yeter ki para kazansın\" dedikten sonra İKİ farklı "
+        "yaklaşım denendi, ikisi de test döneminde (asıl referans) SONUCU KÖTÜLEŞTİRDİ, "
+        "bu yüzden kullanıcı onayıyla TÜM sistem şartnamenin BİREBİR defansif değerlerine "
+        "geri döndürüldü (bu koşum artık o hâliyle çalışıyor):",
+        "1) **Agresif giriş/seçim** (tampon/teyit gevşetildi, MA50 şartı kaldırıldı, "
+        "GETIRI20 aralığı genişletildi, §7 kilidi kapatıldı): test döneminde işlem "
+        "sayısı 64->847, profit factor 2.72->1.02, maksimum düşüş -%7.3->-%35.9 "
+        "(BIST100'ün kendi düşüşünden bile kötü) — aşırı işlem sinyal kalitesini bozdu.",
+        "2) **Agresif pozisyon büyüklüğü** (giriş/seçim defansif kalırken yalnız işlem "
+        "riski %1.5->%3.0, tek hisse %15->%25, sektör %30->%45, stop/hedef mesafeleri "
+        "genişletildi): test döneminde CAGR %8.33->%6.66, maksimum düşüş "
+        "-%7.3->-%10.7 — az sayıda işlemde (39-64) pozisyonu büyütmek getiriyi "
+        "güvenilir şekilde artırmadı, yalnızca varyansı büyüttü.",
+        "Sonuç: şu ana kadar bulunan EN İYİ risk-ayarlı performans (CAGR %8.33, "
+        "düşüş -%7.3, PF 2.72) şartnamenin BİREBİR defansif hâliyle elde edildi — "
+        "bu koşum o parametrelerle çalışıyor.",
         "",
         "## Şartname uygulaması — veri yokluğundan atlanan kısımlar (değişmedi)",
         "",
