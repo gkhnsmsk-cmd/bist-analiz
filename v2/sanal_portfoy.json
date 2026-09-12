@@ -9,15 +9,15 @@
       "adet": 554.7222222222222,
       "maliyet": 360.0,
       "eklenme_tarihi": "2026-09-11T11:52:54.848310",
-      "son_fiyat": 360.0,
-      "en_yuksek": 360.0
+      "son_fiyat": 400.0,
+      "en_yuksek": 400.0
     },
     {
       "sembol": "MARTI",
       "adet": 73690.036900369,
       "maliyet": 2.71,
       "eklenme_tarihi": "2026-09-11T11:52:54.848331",
-      "son_fiyat": 2.740000009536743,
+      "son_fiyat": 2.549999952316284,
       "en_yuksek": 2.74
     },
     {
@@ -25,7 +25,7 @@
       "adet": 4950.421417947447,
       "maliyet": 40.34,
       "eklenme_tarihi": "2026-09-11T11:52:54.848340",
-      "son_fiyat": 40.540000915527344,
+      "son_fiyat": 39.2400016784668,
       "en_yuksek": 40.54
     },
     {
@@ -33,7 +33,7 @@
       "adet": 2715.159755268525,
       "maliyet": 73.55,
       "eklenme_tarihi": "2026-09-11T11:52:54.848347",
-      "son_fiyat": 72.6500015258789,
+      "son_fiyat": 72.30000305175781,
       "en_yuksek": 73.55
     },
     {
@@ -41,11 +41,11 @@
       "adet": 459.60874568469507,
       "maliyet": 434.5,
       "eklenme_tarihi": "2026-09-11T11:52:54.848353",
-      "son_fiyat": 434.75,
+      "son_fiyat": 430.0,
       "en_yuksek": 435.5
     }
   ],
-  "son_rebalans_tarihi": "2026-09-11",
+  "son_rebalans_tarihi": "2026-09-12",
   "aktif": true,
   "askida_satislar": []
 }
