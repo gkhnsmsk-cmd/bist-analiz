@@ -28,7 +28,7 @@ KLASOR = os.path.dirname(os.path.abspath(__file__))
 import pandas as pd
 
 import veri_katmani as vk
-import analiz_motoru as am
+import v21_analiz_motoru as am
 import tavsiye_kaydi as tkd
 import tarama_onbellek as tob
 

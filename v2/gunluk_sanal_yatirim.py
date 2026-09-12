@@ -35,7 +35,7 @@ import sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 import veri_katmani as vk
-import analiz_motoru as am
+import v21_analiz_motoru as am
 import sanal_yatirimci as sv
 
 KLASOR = os.path.dirname(os.path.abspath(__file__))
