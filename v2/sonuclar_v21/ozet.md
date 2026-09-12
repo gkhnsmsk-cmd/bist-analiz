@@ -1,6 +1,6 @@
 # PUSULA v2.1 — Dinamik & Defansif BIST İşlem Algoritması — Walk-Forward Backtest Sonucu
 
-Çalıştırma: 12.09.2026 14:20 UTC · Başlangıç özsermayesi: 1,000,000 TL
+Çalıştırma: 12.09.2026 18:54 UTC · Başlangıç özsermayesi: 1,000,000 TL
 
 ---
 
@@ -42,17 +42,25 @@ Sonuç: şu ana kadar bulunan EN İYİ risk-ayarlı performans (CAGR %8.33, dü�
 | Aylık getiri, risksiz ALTINDA kalan ay | 5/13 | — | — |
 | §7: yeni alım engellenen hafta sayısı (3 ay üst üste risksiz altı, kilit AKTİF) | 67 | — | — |
 
-**Getiri ayrıştırması — asıl soru: hisse seçimi bir şey katıyor mu?**
+**ASIL ÖLÇÜT — mevduat üstü fark (karşı-olgusal):**
+
+| Ölçüt | Değer |
+|---|---|
+| Strateji son özsermaye | 2606900 TL |
+| %100 mevduat son değer | 2473292 TL |
+| **Fark** | **133608 TL (+2.76 CAGR puanı)** |
+
+✅ Strateji, parayı mevduatta tutmaya kıyasla 133608 TL FAZLA üretti (+2.76 CAGR puanı) — hem de bunu ortalama %8.2 hisse ağırlığıyla yaptı. Edge ADAYI var; asıl soru bu farkın istatistiksel olarak anlamlı mı yoksa gürültü mü olduğu (iki dönemin İKİSİNDE de pozitif mi?) ve ne kadar ölçeklenebildiği.
+
+Tanımlayıcı ayrıştırma (bağlam; yargı yukarıdaki karşı-olgusal farka göre verilir):
 
 | Ölçüt | Değer | Nasıl okunur |
 |---|---|---|
 | Ortalama hisse ağırlığı | %8.2 | Sermayenin ortalama ne kadarı hissede durdu; kalanı mevduatta faiz kazandı |
 | Ortalama yatırılmış sermaye | 143535 TL | Hisse tarafının fiilen kullandığı sermaye |
-| Nakde işleyen toplam faiz | 1446541 TL | Hiç hisse alınmasa da kazanılacak olan kısım |
-| Toplam işlem K/Z (net) | 132213 TL | Hisse seçiminin ürettiği saf kâr/zarar |
-| **Hisse sleeve yıllık getirisi** | **%34.2** | **Bunu %40 ile kıyasla: ALTINDAysa o sermayeyi mevduatta tutmak daha iyiydi** |
-
-❌ Hisse sleeve'i (%34.2) kullandığı sermaye üzerinden risksiz faizin (%40.00) ALTINDA kaldı — yani seçim motoru, o sermayeyi mevduatta tutmaktan daha kötü kullanmış. Pozisyon büyütmek bu tabloda getiriyi ARTIRMAZ, zararı ölçekler.
+| Nakde işleyen toplam faiz | 1446541 TL | Toplam getirinin faizden gelen kısmı |
+| Toplam işlem K/Z (net) | 132213 TL | İşlemlerin ürettiği saf kâr/zarar |
+| Hisse sleeve yıllık getirisi (⚠️ zamanlamayı görmez) | %34.2 | Tek başına yanıltıcıdır — %40 ile kıyaslamak için KULLANMA |
 
 ### Geliştirme dönemi (2019-01-01 → 2023-12-31) — yalnız kıyas amaçlı
 
@@ -68,17 +76,25 @@ Sonuç: şu ana kadar bulunan EN İYİ risk-ayarlı performans (CAGR %8.33, dü�
 | Aylık getiri, risksiz ALTINDA kalan ay | 4/5 | — | — |
 | §7: yeni alım engellenen hafta sayısı (3 ay üst üste risksiz altı, kilit AKTİF) | 195 | — | — |
 
-**Getiri ayrıştırması — asıl soru: hisse seçimi bir şey katıyor mu?**
+**ASIL ÖLÇÜT — mevduat üstü fark (karşı-olgusal):**
+
+| Ölçüt | Değer |
+|---|---|
+| Strateji son özsermaye | 5151586 TL |
+| %100 mevduat son değer | 5357225 TL |
+| **Fark** | **-205639 TL (-1.09 CAGR puanı)** |
+
+❌ Strateji, parayı mevduatta tutmaya kıyasla 205639 TL EKSİK üretti (-1.09 CAGR puanı) — bu dönemde hisseye girmek, hiç girmemekten kötüydü.
+
+Tanımlayıcı ayrıştırma (bağlam; yargı yukarıdaki karşı-olgusal farka göre verilir):
 
 | Ölçüt | Değer | Nasıl okunur |
 |---|---|---|
 | Ortalama hisse ağırlığı | %0.7 | Sermayenin ortalama ne kadarı hissede durdu; kalanı mevduatta faiz kazandı |
 | Ortalama yatırılmış sermaye | 18548 TL | Hisse tarafının fiilen kullandığı sermaye |
-| Nakde işleyen toplam faiz | 4171214 TL | Hiç hisse alınmasa da kazanılacak olan kısım |
-| Toplam işlem K/Z (net) | -18679 TL | Hisse seçiminin ürettiği saf kâr/zarar |
-| **Hisse sleeve yıllık getirisi** | **%-20.2** | **Bunu %40 ile kıyasla: ALTINDAysa o sermayeyi mevduatta tutmak daha iyiydi** |
-
-❌ Hisse sleeve'i (%-20.2) kullandığı sermaye üzerinden risksiz faizin (%40.00) ALTINDA kaldı — yani seçim motoru, o sermayeyi mevduatta tutmaktan daha kötü kullanmış. Pozisyon büyütmek bu tabloda getiriyi ARTIRMAZ, zararı ölçekler.
+| Nakde işleyen toplam faiz | 4171214 TL | Toplam getirinin faizden gelen kısmı |
+| Toplam işlem K/Z (net) | -18679 TL | İşlemlerin ürettiği saf kâr/zarar |
+| Hisse sleeve yıllık getirisi (⚠️ zamanlamayı görmez) | %-20.2 | Tek başına yanıltıcıdır — %40 ile kıyaslamak için KULLANMA |
 
 ### Test döneminde en kötü tek işlem
 
