@@ -63,6 +63,11 @@ import pandas as pd
 # kazansın." Şartnamenin birebir verdiği %1.5/%15/%30 çok küçük pozisyonlara
 # yol açıyordu (kazanan işlemler bile portföyü belirgin büyütemiyordu).
 # Sabitler BİLİNÇLİ olarak şartname değerlerinin ÜZERİNE çıkarıldı.
+# NOT (HİBRİT REVİZYON sonrası, aynı gün): giriş/seçim eşikleri (v21_rejim.py,
+# v21_secim.py) ve §7 kilidi defansif değerlere geri döndürüldü — ama BU
+# BLOKTAKİ (§5) ve aşağıdaki §6 sabitleri KASITLI olarak agresif KALDI.
+# "Yüksek risk" artık yalnız burada, aynı kaliteli sinyalde daha büyük
+# pozisyon/daha geniş stop-hedef mesafesi olarak uygulanıyor.
 _RISK_ORANI = 0.030               # eskiden %1.5 -> %3.0 (işlem başına 2x risk)
 _TEK_HISSE_TAVAN = 0.25            # eskiden %15 -> %25
 _SEKTOR_TAVAN = 0.45                # eskiden %30 -> %45
@@ -100,16 +105,14 @@ _IKINCI_DILIM_MAKS_BEKLEME_GUN = 15
 # Varsayım: mevduat/PPF getirisi yıllık %40 sabit -> aylık bileşik ~%2.84.
 _RISKSIZ_AYLIK_GETIRI = 1.40 ** (1.0 / 12.0) - 1.0  # ~0.02844
 
-# REVİZYON (kullanıcı talebi, 2026-09-12): "yüksek risk olsun, yeter ki para
-# kazansın." §7 kilidi tek başına en büyük düşük-maruziyet nedeniydi (test
-# döneminde 93, geliştirme döneminde 199 hafta yeni alımı engellemişti) —
-# bug-fix'ten SONRA bile (salt nakit aylar sayıma girmiyor) sistem hâlâ çoğu
-# zaman kilitli kalıyordu, çünkü gerçek işlemli aylar da sık sık eşiğin
-# altında kaldı. Kullanıcı sermaye korumasından çok getiriyi önceliklendirdiği
-# için bu kilit artık YENİ ALIMLARI ENGELLEMİYOR — yalnız BİLGİ/RAPOR amaçlı
-# hesaplanmaya devam ediyor (v21_backtest.py ozet.md'de hâlâ "kilit olsaydı
-# kaç hafta engellenirdi" sayısını gösterir, şeffaflık için).
-_S7_KILIDI_YENI_ALIMI_ENGELLER = False
+# REVİZYON GEÇMİŞİ (2026-09-12): "yüksek risk olsun, yeter ki para kazansın"
+# talebiyle bu kilit bir ara devre dışı bırakılmıştı. Walk-forward SONUCU:
+# test döneminde işlem sayısı 64->847'ye fırladı, profit factor 2.72->1.02'ye
+# çöktü, maksimum düşüş -%7.3->-%35.9'a fırladı — aşırı işlemin/disiplinsiz
+# alımın birlikte etkisiydi. Kullanıcı onayıyla kilit TEKRAR AKTİF edildi;
+# "yüksek risk" isteği artık yalnız §5/§6'daki pozisyon büyüklüğü/stop-hedef
+# mesafeleri üzerinden karşılanıyor.
+_S7_KILIDI_YENI_ALIMI_ENGELLER = True
 
 
 # ═══════════════════════════════════════════════════════════════════════

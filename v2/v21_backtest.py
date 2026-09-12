@@ -357,12 +357,12 @@ def _calistir_ic(veriler: dict, endeks_df: pd.DataFrame, baslangic: str, bitis: 
         bekleyen_sinyaller = kalan_sinyaller
 
         # ── 7) Haftalık tarama (Cuma kapanışı) — §3 seçim + §7 3-ay risksiz kontrolü. ──
-        # REVİZYON (kullanıcı talebi): §7 kilidi artık YENİ ALIMLARI ENGELLEMİYOR
-        # (bkz. v21_portfoy._S7_KILIDI_YENI_ALIMI_ENGELLER) — "yüksek risk olsun,
-        # yeter ki para kazansın" talebiyle sermaye koruma disiplini yerine
-        # piyasa maruziyeti önceliklendirildi. `risksiz_engelli` hâlâ HESAPLANIR
-        # ve raporlanır (şeffaflık: "kilit aktif olsaydı kaç hafta engellenirdi"),
-        # yalnızca ALIM KARARINI artık etkilemiyor.
+        # NOT (HİBRİT REVİZYON): §7 kilidi bir ara devre dışı bırakılmıştı
+        # ("yüksek risk" denemesi) ama aşırı işleme yol açtığı görülünce
+        # TEKRAR AKTİF edildi (bkz. v21_portfoy._S7_KILIDI_YENI_ALIMI_ENGELLER
+        # = True). `fiili_engelli` bu bayrağa göre davranır — bayrak
+        # ileride tekrar False yapılırsa kod değişmeden eski (agresif)
+        # davranışa dönülebilir.
         if T.dayofweek == _HAFTALIK_TARAMA_GUNU:
             evren_guncel = evren.evren_olustur(veriler, T)
             risksiz_engelli = vpf.risksiz_altinda_mi_son_uc_ay(tamamlanan_aylik_getiriler)

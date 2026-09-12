@@ -5,17 +5,15 @@ v2/v21_secim.py — Dinamik & Defansif BIST Algoritması v2.1 §3 hisse seçimi.
 Ağ çağrısı YOK, dosya okuma YOK — saf fonksiyon. Girdi: v2/veri.gostergeler()
 + v2/v21_gosterge.ek_gostergeler() uygulanmış {sembol: DataFrame} sözlüğü.
 
-ŞARTNAME §3 (v2.1) — BİREBİR DEĞİL, AGRESİF REVİZYON UYGULANDI (bkz. aşağıdaki
-"REVİZYON" notu):
+ŞARTNAME §3 (v2.1, birebir):
   A. Temel Sağlık Filtresi (Zombi Koruması) — Cari Oran>1.2, Net Borç/FAVÖK<3.5
      — VERİ YOK (KAP API erişilemiyor). BU FİLTRE ATLANDI — hiçbir sert eleme
      yapılmıyor (aşağıda yalnız kod yorumu olarak not düşülüyor).
-  B. Teknik Zorunluluklar (fiili/uygulanan hâli, agresif revizyon sonrası):
-     - Fiyat > MA200 (MA50>MA200 şartı KALDIRILDI)
-     - Son 20 günlük getiri -%10 ile +%60 arasında (eskiden +%5/+%25)
-     - CMF(20) > -0.05 (eskiden > 0)
-     - Son 5 günlük ortalama hacim, son 20 günlük ortalamanın en az %80'i
-       (eskiden en az %120 — artık bir "premium" değil, "kurumamış olsun" testi)
+  B. Teknik Zorunluluklar (HEPSİ olmalı):
+     - Fiyat > MA200 ve MA50 > MA200
+     - Son 20 günlük getiri +%5 ile +%25 arasında
+     - CMF(20) > 0
+     - Son 5 günlük ortalama hacim, son 20 günlük ortalamanın en az %20 üzerinde
   C. Ek Teyitler (skor artırıcı, ZORUNLU DEĞİL):
      - BIST100'e göre göreceli güç (RS) pozitif
      - Kurumsal/TEFAS fon payı artışı — VERİ YOK, ATLANDI (yalnız not).
@@ -24,32 +22,29 @@ NOT — A ve C'deki "kurumsal/TEFAS" maddesi VERİ YOK gerekçesiyle atlanıyor;
 şartname bunu zaten "veri kaynağı yok, atlandı" şeklinde not düşmemizi
 istiyor. Sert eleme YAPILMIYOR, yalnızca burada belgeleniyor.
 
-REVİZYON (kullanıcı talebi, 2026-09-12): "yüksek risk olsun, yeter ki para
-kazansın." §3.B'nin dört koşulu AYNI ANDA (VE mantığıyla) istemesi ve dar
-getiri20 penceresi (yalnız %5-%25) adayları çok daraltıyordu — walk-forward
-backtest'te bu, evrenin (~120 hisse x haftalık tarama) neredeyse hiç aday
-üretmemesine yol açtı. Şartname sınırlarının DIŞINA çıkılarak eşikler
-gevşetildi (bilinçli, agresif yorum):
-  - GETIRI20 aralığı %5-%25 -> -%10-%60 (hafif düşüşte dip alımına da izin
-    verilir; güçlü/uzamış trendler de artık elenmiyor).
-  - Hacim teyidi zorunluluğu (5G>=1.2x20G) kaldırıldı, yalnız hacmin
-    KURUMAMIŞ olması (>=%80) yeterli.
-  - CMF(20)>0 şartı gevşetildi: CMF(20) > -0.05 (hafif negatif de kabul).
-  - MA50>MA200 şartı KALDIRILDI — yalnız fiyat>MA200 (temel uzun vade
-    trend filtresi) korundu.
-Amaç: aday havuzunu büyütüp sistemin daha sık işlem açmasını sağlamak.
+REVİZYON GEÇMİŞİ (2026-09-12): "yüksek risk olsun, yeter ki para kazansın"
+talebiyle §3.B eşikleri bir ara gevşetilmişti (GETIRI20 -%10/+%60, CMF>-0.05,
+hacim>=%80, MA50 şartı yok). Walk-forward SONUCU: geliştirme döneminde
+iyileşme oldu ama TEST döneminde (asıl referans) işlem sayısı 64->847'ye
+fırladı, profit factor 2.72->1.02'ye çöktü, maksimum düşüş -%7.3->-%35.9'a
+fırladı (BIST100'ün kendisinden bile kötü) — aşırı işlem (overtrading)
+sinyal kalitesini bozdu. Bu yüzden §3.B eşikleri şartnamenin BİREBİR
+defansif değerlerine GERİ DÖNDÜRÜLDÜ (bu modül artık AGRESİF DEĞİL).
+"Yüksek risk" isteği artık yalnız v21_portfoy.py'deki POZİSYON BÜYÜKLÜĞÜ
+(§5) ve stop/hedef mesafeleri (§6) üzerinden uygulanıyor — aynı kaliteli
+sinyalde daha büyük bahis, daha çok/daha düşük kaliteli sinyalde işlem değil.
 """
 
 from __future__ import annotations
 
 import pandas as pd
 
-# §3.B eşikleri — AGRESİF revizyon (bkz. modül başı notu), şartnamenin
-# birebir verdiği %5-%25 aralığının DIŞINA bilinçli olarak çıkıldı.
-_GETIRI20_ALT = -0.10
-_GETIRI20_UST = 0.60
-_HACIM5_HACIM20_CARPAN = 0.80  # eskiden 1.20 ("en az %20 üzerinde") -> artık yalnız "kurumamış olsun"
-_CMF20_ALT = -0.05             # eskiden > 0 idi; hafif negatif para akışı da artık kabul
+# §3.B eşikleri — şartnameyle birebir (agresif deneyden SONRA defansif
+# değerlere geri döndürüldü, bkz. modül başı REVİZYON GEÇMİŞİ notu).
+_GETIRI20_ALT = 0.05
+_GETIRI20_UST = 0.25
+_HACIM5_HACIM20_CARPAN = 1.20  # "en az %20 üzerinde"
+_CMF20_ALT = 0.0                # CMF(20) > 0 (şartname değeri)
 
 _GEREKLI_KOLONLAR = [
     "Open", "High", "Low", "Close", "Volume",
@@ -125,9 +120,8 @@ def secim_yap(veriler: dict, evren: list[str], tarih,
         if atr <= 0:
             continue
 
-        # §3.B — Teknik zorunluluklar — AGRESİF revizyon (bkz. modül başı
-        # notu): MA50>MA200 şartı kaldırıldı, eşikler gevşetildi.
-        if not (kapanis > ma200):
+        # §3.B — Teknik zorunluluklar (HEPSİ olmalı) — şartname birebir.
+        if not (kapanis > ma200 and ma50 > ma200):
             continue
         if not (_GETIRI20_ALT <= getiri20 <= _GETIRI20_UST):
             continue

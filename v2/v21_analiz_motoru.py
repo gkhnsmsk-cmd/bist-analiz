@@ -66,10 +66,10 @@ from analiz_motoru import stoch_rsi_sinyali as _stoch_rsi_sinyali
 # v2.1 §3.B eşikleri — TEK kaynaktan (v21_secim.py) okunur, burada
 # TEKRARLANMAZ (sabit sürüklenmesini önlemek için).
 # ─────────────────────────────────────────────────────────────────────────
-_GETIRI20_ALT = _vs._GETIRI20_ALT              # bkz. v21_secim.py (agresif revizyon: -0.10)
-_GETIRI20_UST = _vs._GETIRI20_UST              # bkz. v21_secim.py (agresif revizyon: 0.60)
-_HACIM_CARPAN = _vs._HACIM5_HACIM20_CARPAN     # bkz. v21_secim.py (agresif revizyon: 0.80)
-_CMF20_ALT = _vs._CMF20_ALT                    # bkz. v21_secim.py (agresif revizyon: -0.05)
+_GETIRI20_ALT = _vs._GETIRI20_ALT              # bkz. v21_secim.py (şartname değeri: 0.05)
+_GETIRI20_UST = _vs._GETIRI20_UST              # bkz. v21_secim.py (şartname değeri: 0.25)
+_HACIM_CARPAN = _vs._HACIM5_HACIM20_CARPAN     # bkz. v21_secim.py (şartname değeri: 1.20)
+_CMF20_ALT = _vs._CMF20_ALT                    # bkz. v21_secim.py (şartname değeri: 0.0)
 
 # analiz_motoru.py'deki AYNI bileşik ağırlıklar ve rejim düzeltme çarpanı —
 # şema/tutarlılık için korunuyor (bu sabitlerin kendisi "V1 mantığı" değil,
@@ -448,24 +448,24 @@ def secim_skoru(df: pd.DataFrame) -> dict:
         if cmf20 is None:
             return {**bos, "ma200_ustunde": ustunde, "neden": "CMF20 hesaplanamadı"}
 
-        # AGRESİF revizyon (bkz. v21_secim.py): MA50>MA200 şartı kaldırıldı,
-        # eşikler v21_secim ile TEK kaynaktan (yukarıdaki _GETIRI20_*/_HACIM_CARPAN/
+        # HİBRİT REVİZYON: eşikler şartname (defansif) değerine geri döndürüldü,
+        # v21_secim ile TEK kaynaktan (yukarıdaki _GETIRI20_*/_HACIM_CARPAN/
         # _CMF20_ALT) okunur — backtest ile canlı tavsiye burada AYNI kurala uyar.
         getiri_ok = getiri20 is not None and _GETIRI20_ALT <= getiri20 <= _GETIRI20_UST
         hacim_ok = (hacim5 is not None and hacim20 is not None and hacim20 > 0
                     and hacim5 >= _HACIM_CARPAN * hacim20)
-        ma_ok = ustunde
+        ma_ok = ustunde and ma50 is not None and ma50 > ma200
         cmf_ok = cmf20 > _CMF20_ALT
         uygun = bool(ma_ok and getiri_ok and cmf_ok and hacim_ok)
 
         if not uygun:
             eksikler = []
             if not ma_ok:
-                eksikler.append(f"fiyat MA200 altında (kapanış {kapanis:.2f}, MA200 {ma200:.2f})")
+                eksikler.append(f"fiyat/MA50 MA200 şartını sağlamıyor (kapanış {kapanis:.2f}, MA200 {ma200:.2f})")
             if not getiri_ok:
                 eksikler.append(f"GETIRI20 aralık dışı ({getiri20})")
             if not cmf_ok:
-                eksikler.append(f"CMF20 çok negatif ({cmf20:+.3f})")
+                eksikler.append(f"CMF20<=0 ({cmf20:+.3f})")
             if not hacim_ok:
                 eksikler.append("hacim teyidi yok")
             return {"skor": None, "cmf": round(cmf20, 4), "ma200_ustunde": ustunde,

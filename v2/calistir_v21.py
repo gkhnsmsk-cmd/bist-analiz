@@ -85,7 +85,7 @@ def _kiyas_tablosu(baslik: str, v21_m: dict, endeks_m: dict, aylik_getiriler: li
         f"| Expectancy (R) | {_sayi(v21_m.get('expectancy_R'), 3)} | — | — |",
         f"| Ortalama tutma (gün) | {_sayi(v21_m.get('ortalama_tutma_gun'), 1)} | — | — |",
         f"| Aylık getiri, risksiz ALTINDA kalan ay | {altinda}/{toplam_ay} | — | — |",
-        f"| §7: kilit aktif olsaydı engellenecek hafta sayısı (BİLGİ AMAÇLI — artık fiilen engellemiyor) | {risksiz_engelli_ay} | — | — |",
+        f"| §7: yeni alım engellenen hafta sayısı (3 ay üst üste risksiz altı, kilit AKTİF) | {risksiz_engelli_ay} | — | — |",
         "",
     ]
     return "\n".join(satirlar)
@@ -119,22 +119,26 @@ def _ozet_yaz(sonuc: dict, ozsermaye: float) -> str:
         "",
         "---",
         "",
-        "## AGRESİF REVİZYON (kullanıcı talebi, 2026-09-12): \"yüksek risk olsun, yeter ki "
+        "## HİBRİT REVİZYON (kullanıcı talebi, 2026-09-12): \"yüksek risk olsun, yeter ki "
         "para kazansın\"",
         "",
-        "Bu koşum artık şartnamenin BİREBİR uygulaması DEĞİL. Birebir uygulama çok düşük "
-        "piyasa maruziyeti üretti (test döneminde 32 aydan yalnızca 11'inde pozisyon "
-        "vardı) ve CAGR risksiz faizin altında kaldı. Kullanıcının açık talimatıyla "
-        "aşağıdaki noktalarda şartname sınırlarının DIŞINA çıkıldı:",
-        "- **§2 Rejim**: giriş tamponu/teyidi gevşetildi (kolay gir), çıkış tetiği "
-        "MA200'ün %5 altına çekildi (zor çık), MA50>MA200 şartı kaldırıldı, Risk-On/"
-        "Risk-Off hedef hisse oranları %95/%40'a yükseltildi (eskiden %70/%20).",
-        "- **§3.B Seçim**: getiri20 aralığı -%10..+%60'a genişletildi, CMF eşiği >-0.05'e, "
-        "hacim teyidi >=%80'e gevşetildi, MA50>MA200 şartı kaldırıldı.",
-        "- **§5/§6 Pozisyon**: işlem riski %1.5->%3.0, tek hisse tavanı %15->%25, sektör "
-        "tavanı %30->%45, sert stop 2.0->2.5xATR, Hedef1 3.0->4.0xATR, zaman stopu "
+        "Bu koşum şartnamenin BİREBİR uygulaması değil, ama saf 'agresif' deneyden de "
+        "farklı — İKİ TUR sonucunda kalibre edildi:",
+        "1) Önce §2/§3.B eşikleri gevşetildi (kolay giriş, geniş getiri20 aralığı, "
+        "MA50 şartı yok) + §7 kilidi kapatıldı. SONUÇ: geliştirme döneminde CAGR "
+        "%-0.32'den %42.43'e çıktı ama TEST döneminde (asıl referans) işlem sayısı "
+        "64->847'ye fırladı, profit factor 2.72->1.02'ye çöktü, maksimum düşüş "
+        "-%7.3->-%35.9'a fırladı (BIST100'ün kendi düşüşünden bile kötü) — aşırı işlem "
+        "sinyal kalitesini bozdu.",
+        "2) Bunun üzerine §2/§3.B/§7 şartnamenin BİREBİR defansif değerlerine GERİ "
+        "DÖNDÜRÜLDÜ. 'Yüksek risk' isteği artık YALNIZ §5/§6'daki pozisyon büyüklüğü/ "
+        "stop-hedef mesafeleri üzerinden karşılanıyor:",
+        "- **§5 Pozisyon**: işlem riski %1.5->%3.0, tek hisse tavanı %15->%25, sektör "
+        "tavanı %30->%45.",
+        "- **§6 Stop/Hedef**: sert stop 2.0->2.5xATR, Hedef1 3.0->4.0xATR, zaman stopu "
         "25->40 gün.",
-        "- **§7 Kilidi**: artık yeni alımları ENGELLEMİYOR, yalnız bilgi amaçlı raporlanıyor.",
+        "- **§2/§3.B/§7**: şartname değerlerine GERİ DÖNDÜRÜLDÜ (tampon %2/3 gün teyit/ "
+        "MA50>MA200, GETIRI20 %5-25/CMF>0/hacim>=%120, §7 kilidi AKTİF).",
         "",
         "## Şartname uygulaması — veri yokluğundan atlanan kısımlar (değişmedi)",
         "",
