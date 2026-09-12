@@ -151,6 +151,7 @@ def _calistir_ic(veriler: dict, endeks_df: pd.DataFrame, baslangic: str, bitis: 
             "aylik_getiriler": [],
             "mevduat_metrikleri": _mevduat_al_tut_metrikleri(takvim, float(ozsermaye)),
             "sleeve_metrikleri": _sleeve_metrikleri([], takvim, 0.0, 0.0, 0.0),
+            "son_ozsermaye": float(ozsermaye),
         }
 
     cash = float(ozsermaye)
@@ -500,6 +501,7 @@ def _calistir_ic(veriler: dict, endeks_df: pd.DataFrame, baslangic: str, bitis: 
             islemler=islemler, takvim=takvim, maruziyet_tl_gun=maruziyet_tl_gun,
             ozsermaye_tl_gun=ozsermaye_tl_gun, kumulatif_faiz=kumulatif_faiz,
         ),
+        "son_ozsermaye": float(ozsermaye_egrisi[-1]["ozsermaye"]) if ozsermaye_egrisi else float(ozsermaye),
     }
 
 
@@ -535,10 +537,23 @@ def _sleeve_metrikleri(islemler: list[dict], takvim, maruziyet_tl_gun: float,
 
         sleeve getirisi = toplam işlem K/Z  /  ortalama yatırılmış sermaye
 
-    Karar kuralı: bu sayı yıllık %40'ın (risksiz) ALTINDAysa, hisse
-    tarafı o sermayeyi mevduatta tutmaktan daha kötü kullanmış demektir —
-    yani seçim motorunun negatif katkısı var. ÜSTÜNDEyse gerçek bir edge
-    adayı var demektir.
+    ⚠️ BU METRİK TEK BAŞINA KARAR VERDİRMEZ (2026-09-12 düzeltmesi).
+    İlk sürümünde bu satıra bakıp "sleeve %34.2 < %40, demek ki edge yok"
+    denmişti; çapraz kontrolde bunun YANLIŞ olduğu görüldü. Sebep: metrik
+    sermayenin NE ZAMAN yatırıldığını görmezden gelir. Yıllık %40 faizde
+    zamanlama sonucu domine eder — erken kaçırılan faiz kalan yıllar
+    boyunca bileşiklenir, geç kazanılan kâr ise az bileşiklenir. Ayrıca
+    işlemden gelen kâr nakde döner ve ORADA faiz kazanmaya başlar; bu
+    ikincil etki de burada görünmez. Nitekim test döneminde bu metrik
+    "❌ %40'ın altında" derken, gerçek karşı-olgusal fark +100.000 TL
+    ARTIydı — yani tam ters yönde bir yargı üretmişti.
+
+    Bu yüzden metrik yalnız TANIMLAYICI olarak (maruziyet ne kadardı,
+    işlem tarafı kaç TL üretti) okunmalıdır. Asıl karar ölçütü, aynı
+    dönemde parayı hiç hisseye sokmamış olmakla FİİLİ karşılaştırmadır:
+    "mevduat üstü fark" (bkz. calistir_v21.py::_kiyas_tablosu) — orada
+    strateji son özsermayesi ile %100 mevduat son değeri doğrudan
+    kıyaslanır, zamanlama ve bileşiklenme kendiliğinden içeride kalır.
 
     Yıllıklandırma BASİT (bölme) yapılır, bileşik değil: sermaye kesintili
     olarak yatırıldığı için bileşiklemek yanıltıcı olurdu.

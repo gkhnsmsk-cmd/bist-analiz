@@ -66,7 +66,8 @@ def _ay_altinda_sayisi(aylik_getiriler: list[float]) -> tuple[int, int]:
 
 def _kiyas_tablosu(baslik: str, v21_m: dict, endeks_m: dict, aylik_getiriler: list[float],
                     risksiz_engelli_ay: int, islem_sayisi_ayri: int,
-                    mevduat_m: dict | None = None, sleeve_m: dict | None = None) -> str:
+                    mevduat_m: dict | None = None, sleeve_m: dict | None = None,
+                    son_ozsermaye: float | None = None) -> str:
     v21_cagr = v21_m.get("cagr")
     v21_dusus = v21_m.get("maksimum_dusus_%")
     endeks_cagr = endeks_m.get("cagr")
@@ -93,39 +94,67 @@ def _kiyas_tablosu(baslik: str, v21_m: dict, endeks_m: dict, aylik_getiriler: li
         "",
     ]
 
-    # ── Getiri ayrıştırması: toplam CAGR'ın ne kadarı faizden, ne kadarı
-    #    hisse seçiminden geldi? Asıl karar bu tabloya göre verilir. ──
-    if sleeve_m:
-        sleeve_yillik = sleeve_m.get("sleeve_yillik_getiri")
-        agirlik = sleeve_m.get("ortalama_hisse_agirligi")
+    # ── ASIL KARAR ÖLÇÜTÜ: karşı-olgusal fark ────────────────────────────
+    # "Aynı parayı hiç hisseye sokmayıp %100 mevduatta tutsaydım ne olurdu?"
+    # Bu kıyas doğrudan son değerler üzerinden yapılır; zamanlama, bileşiklenme
+    # ve işlem kârının nakde dönüp orada faiz kazanması gibi etkiler
+    # kendiliğinden içeride kalır. (Önceki sürümde bu yargı "hisse sleeve
+    # yıllık getirisi" satırından üretiliyordu; o metrik sermayenin NE ZAMAN
+    # yatırıldığını göremediği için test döneminde TERS yönde -- gerçek fark
+    # +100k TL artıyken "❌ edge yok" -- sonuç üretmişti. Bkz.
+    # v21_backtest.py::_sleeve_metrikleri docstring'i.)
+    mevduat_son = mevduat_m.get("son_deger")
+    if (son_ozsermaye is not None and isinstance(mevduat_son, (int, float))
+            and not math.isnan(mevduat_son) and mevduat_son > 0):
+        fark_tl = son_ozsermaye - mevduat_son
+        fark_puan = None
+        if (isinstance(v21_cagr, (int, float)) and not math.isnan(v21_cagr)
+                and isinstance(mevduat_cagr, (int, float)) and not math.isnan(mevduat_cagr)):
+            fark_puan = (v21_cagr - mevduat_cagr) * 100.0
         satirlar += [
-            "**Getiri ayrıştırması — asıl soru: hisse seçimi bir şey katıyor mu?**",
+            "**ASIL ÖLÇÜT — mevduat üstü fark (karşı-olgusal):**",
+            "",
+            "| Ölçüt | Değer |",
+            "|---|---|",
+            f"| Strateji son özsermaye | {_sayi(son_ozsermaye, 0)} TL |",
+            f"| %100 mevduat son değer | {_sayi(mevduat_son, 0)} TL |",
+            f"| **Fark** | **{_sayi(fark_tl, 0)} TL"
+            + (f" ({fark_puan:+.2f} CAGR puanı)**" if fark_puan is not None else "**")
+            + " |",
+            "",
+        ]
+        if fark_tl > 0:
+            satirlar += [
+                f"✅ Strateji, parayı mevduatta tutmaya kıyasla {_sayi(fark_tl, 0)} TL FAZLA üretti"
+                + (f" ({fark_puan:+.2f} CAGR puanı)" if fark_puan is not None else "")
+                + " — hem de bunu ortalama "
+                f"{_yuzde((sleeve_m or {}).get('ortalama_hisse_agirligi'), 1)} hisse ağırlığıyla yaptı. "
+                "Edge ADAYI var; asıl soru bu farkın istatistiksel olarak anlamlı mı yoksa gürültü mü "
+                "olduğu (iki dönemin İKİSİNDE de pozitif mi?) ve ne kadar ölçeklenebildiği.",
+                "",
+            ]
+        else:
+            satirlar += [
+                f"❌ Strateji, parayı mevduatta tutmaya kıyasla {_sayi(abs(fark_tl), 0)} TL EKSİK üretti"
+                + (f" ({fark_puan:+.2f} CAGR puanı)" if fark_puan is not None else "")
+                + " — bu dönemde hisseye girmek, hiç girmemekten kötüydü.",
+                "",
+            ]
+
+    # ── Tanımlayıcı ayrıştırma (KARAR VERDİRMEZ, yalnız bağlam) ──────────
+    if sleeve_m:
+        satirlar += [
+            "Tanımlayıcı ayrıştırma (bağlam; yargı yukarıdaki karşı-olgusal farka göre verilir):",
             "",
             "| Ölçüt | Değer | Nasıl okunur |",
             "|---|---|---|",
-            f"| Ortalama hisse ağırlığı | {_yuzde(agirlik, 1)} | Sermayenin ortalama ne kadarı hissede durdu; kalanı mevduatta faiz kazandı |",
+            f"| Ortalama hisse ağırlığı | {_yuzde(sleeve_m.get('ortalama_hisse_agirligi'), 1)} | Sermayenin ortalama ne kadarı hissede durdu; kalanı mevduatta faiz kazandı |",
             f"| Ortalama yatırılmış sermaye | {_sayi(sleeve_m.get('ortalama_yatirilan_tl'), 0)} TL | Hisse tarafının fiilen kullandığı sermaye |",
-            f"| Nakde işleyen toplam faiz | {_sayi(sleeve_m.get('kumulatif_faiz_tl'), 0)} TL | Hiç hisse alınmasa da kazanılacak olan kısım |",
-            f"| Toplam işlem K/Z (net) | {_sayi(sleeve_m.get('toplam_islem_pnl_tl'), 0)} TL | Hisse seçiminin ürettiği saf kâr/zarar |",
-            f"| **Hisse sleeve yıllık getirisi** | **{_yuzde(sleeve_yillik, 1)}** | **Bunu %40 ile kıyasla: ALTINDAysa o sermayeyi mevduatta tutmak daha iyiydi** |",
+            f"| Nakde işleyen toplam faiz | {_sayi(sleeve_m.get('kumulatif_faiz_tl'), 0)} TL | Toplam getirinin faizden gelen kısmı |",
+            f"| Toplam işlem K/Z (net) | {_sayi(sleeve_m.get('toplam_islem_pnl_tl'), 0)} TL | İşlemlerin ürettiği saf kâr/zarar |",
+            f"| Hisse sleeve yıllık getirisi (⚠️ zamanlamayı görmez) | {_yuzde(sleeve_m.get('sleeve_yillik_getiri'), 1)} | Tek başına yanıltıcıdır — %40 ile kıyaslamak için KULLANMA |",
             "",
         ]
-        if isinstance(sleeve_yillik, (int, float)) and not math.isnan(sleeve_yillik):
-            if sleeve_yillik > _RISKSIZ_YILLIK_VARSAYIM:
-                satirlar += [
-                    f"✅ Hisse sleeve'i ({_yuzde(sleeve_yillik, 1)}) kullandığı sermaye üzerinden "
-                    f"risksiz faizi ({_yuzde(_RISKSIZ_YILLIK_VARSAYIM)}) GEÇTİ — gerçek bir edge adayı var, "
-                    "asıl mesele bu edge'in ne kadar ölçeklenebildiği (pozisyon boyutu / maruziyet).",
-                    "",
-                ]
-            else:
-                satirlar += [
-                    f"❌ Hisse sleeve'i ({_yuzde(sleeve_yillik, 1)}) kullandığı sermaye üzerinden "
-                    f"risksiz faizin ({_yuzde(_RISKSIZ_YILLIK_VARSAYIM)}) ALTINDA kaldı — yani seçim motoru, "
-                    "o sermayeyi mevduatta tutmaktan daha kötü kullanmış. Pozisyon büyütmek bu tabloda "
-                    "getiriyi ARTIRMAZ, zararı ölçekler.",
-                    "",
-                ]
     return "\n".join(satirlar)
 
 
@@ -232,12 +261,14 @@ def _ozet_yaz(sonuc: dict, ozsermaye: float) -> str:
         test_v21_m, test_endeks_m, test.get("aylik_getiriler", []),
         test.get("risksiz_engelli_ay_sayisi", 0), test_v21_m.get("islem_sayisi", 0),
         test.get("mevduat_metrikleri"), test.get("sleeve_metrikleri"),
+        test.get("son_ozsermaye"),
     ))
     satirlar.append(_kiyas_tablosu(
         "Geliştirme dönemi (2019-01-01 → 2023-12-31) — yalnız kıyas amaçlı",
         gelistirme_v21_m, gelistirme_endeks_m, gelistirme.get("aylik_getiriler", []),
         gelistirme.get("risksiz_engelli_ay_sayisi", 0), gelistirme_v21_m.get("islem_sayisi", 0),
         gelistirme.get("mevduat_metrikleri"), gelistirme.get("sleeve_metrikleri"),
+        gelistirme.get("son_ozsermaye"),
     ))
 
     en_kotu = test_v21_m.get("en_kotu_islem")
