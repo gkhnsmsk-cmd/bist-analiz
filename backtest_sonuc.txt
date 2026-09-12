@@ -1,70 +1,70 @@
 BIST Analiz Platformu — Backtest Raporu
-Çalıştırma zamanı: 05.09.2026 10:19
+Çalıştırma zamanı: 12.09.2026 10:26
 Kapsam: TUM · Geçmiş: 5.0 yıl · Adım: 5 iş günü · Puanlama penceresi: 500 iş günü
-Hisse sayısı: 539
+Hisse sayısı: 538
 ======================================================================
 
-Toplam 94976 tarihsel puanlama noktası test edildi.
+Toplam 94632 tarihsel puanlama noktası test edildi.
 
-10 günlük ufukta korelasyon: +0.042 → ölçülebilir bir ilişki YOK — puan bu ufukta ileri getiriyi öngörmüyor gibi görünüyor.
-  İstatistiksel kontrol: örnekler 2.0 kat örtüştüğü için etkin örnek sayısı ~47488 (ham 94976 değil); t≈+9.2 → bu ilişki rastlantıyla açıklanamayacak kadar güçlü.
+10 günlük ufukta korelasyon: +0.043 → ölçülebilir bir ilişki YOK — puan bu ufukta ileri getiriyi öngörmüyor gibi görünüyor.
+  İstatistiksel kontrol: örnekler 2.0 kat örtüştüğü için etkin örnek sayısı ~47316 (ham 94632 değil); t≈+9.3 → bu ilişki rastlantıyla açıklanamayacak kadar güçlü.
 Puan kovaları arttıkça ortalama 10 günlük getiri de MONOTON şekilde arttı (düşükten yükseğe düzenli bir sıralama var).
 
 Kova bazlı sonuçlar:
-  🔴 UZAK DUR/SAT (<40) (n=22407): 5g ort=%+0.59 (pozitif oran %50) 10g ort=%+1.34 (pozitif oran %51) 20g ort=%+2.77 (pozitif oran %52)
-  🟠 ZAYIF/BEKLE (40-52) (n=29149): 5g ort=%+0.71 (pozitif oran %49) 10g ort=%+1.44 (pozitif oran %49) 20g ort=%+3.27 (pozitif oran %50)
-  🟡 İZLE/TUT (52-62) (n=16694): 5g ort=%+0.86 (pozitif oran %50) 10g ort=%+1.90 (pozitif oran %51) 20g ort=%+3.86 (pozitif oran %51)
-  🟢 AL (62-72) (n=16194): 5g ort=%+1.43 (pozitif oran %52) 10g ort=%+2.82 (pozitif oran %54) 20g ort=%+5.40 (pozitif oran %55)
-  🟢 GÜÇLÜ AL (72+) (n=10532): 5g ort=%+1.90 (pozitif oran %54) 10g ort=%+3.58 (pozitif oran %56) 20g ort=%+6.95 (pozitif oran %58)
+  🔴 UZAK DUR/SAT (<40) (n=22467): 5g ort=%+0.59 (pozitif oran %50) 10g ort=%+1.34 (pozitif oran %51) 20g ort=%+2.73 (pozitif oran %52)
+  🟠 ZAYIF/BEKLE (40-52) (n=29083): 5g ort=%+0.71 (pozitif oran %49) 10g ort=%+1.45 (pozitif oran %49) 20g ort=%+3.25 (pozitif oran %50)
+  🟡 İZLE/TUT (52-62) (n=16579): 5g ort=%+0.86 (pozitif oran %50) 10g ort=%+1.92 (pozitif oran %51) 20g ort=%+3.79 (pozitif oran %50)
+  🟢 AL (62-72) (n=16056): 5g ort=%+1.44 (pozitif oran %52) 10g ort=%+2.85 (pozitif oran %54) 20g ort=%+5.37 (pozitif oran %55)
+  🟢 GÜÇLÜ AL (72+) (n=10447): 5g ort=%+1.91 (pozitif oran %54) 10g ort=%+3.64 (pozitif oran %56) 20g ort=%+6.94 (pozitif oran %58)
 
-Walk-forward kontrolü — ilk yarı korelasyon: +0.050, ikinci yarı korelasyon: +0.015.
-İki dönemde de yön tutarlı — bulgu tek bir döneme özgü (overfit) görünmüyor.
+Walk-forward kontrolü — ilk yarı korelasyon: +0.051, ikinci yarı korelasyon: +0.014.
+İki dönem arasında yön/tutarlılık farklı — bulguya temkinli yaklaşılmalı, muhtemelen tek bir piyasa rejimine özgü.
 
 ======================================================================
 GERÇEKÇİLİK KATMANI — maliyet, tavan/taban, endeks karşılaştırması
 ======================================================================
-Toplam gözlem                         : 94,976
-Gerçekte İŞLEME DÖNÜŞTÜRÜLEMEZ olan   : 10,370 (%10.9)
-  bunlardan TAVANDA olanlar           : 2,762
+Toplam gözlem                         : 94,632
+Gerçekte İŞLEME DÖNÜŞTÜRÜLEMEZ olan   : 10,314 (%10.9)
+  bunlardan TAVANDA olanlar           : 2,756
   (tavandaki hisse alınamaz; sığ hisseler de işlem dışı sayıldı)
 
 PORTFÖY SİMÜLASYONU — her dönem en yüksek puanlı 10 hisse
   (işlem maliyeti düşülmüş: al+sat turu %0.5)
 ----------------------------------------------------------------------
-  Dönem sayısı                    : 938
-  Ortalama dönem getirisi (NET)   : %+1.113
-  Aynı dönemde ENDEKS             : %+1.355
-  ENDEKS ÜSTÜ FARK                : %-0.242
+  Dönem sayısı                    : 943
+  Ortalama dönem getirisi (NET)   : %+1.149
+  Aynı dönemde ENDEKS             : %+1.377
+  ENDEKS ÜSTÜ FARK                : %-0.228
   ⚠️  Strateji endeksi YENEMİYOR — bu durumda tek tek hisse seçmek yerine endeks fonu almak daha mantıklıdır.
-  Kazanma oranı                   : %55.4
-  Ortalama kazanç / kayıp         : %+5.86 / %-4.79
-  Profit factor                   : 1.52
-  Sharpe (dönemsel)               : 0.163
-  Sortino (dönemsel)              : 0.272
-  Maksimum düşüş (drawdown)       : %-78.59
+  Kazanma oranı                   : %55.9
+  Ortalama kazanç / kayıp         : %+5.83 / %-4.78
+  Profit factor                   : 1.54
+  Sharpe (dönemsel)               : 0.169
+  Sortino (dönemsel)              : 0.281
+  Maksimum düşüş (drawdown)       : %-90.82
 
   NOT: Sharpe/Sortino DÖNEMSELDİR (yıllıklaştırılmamıştır); farklı ufuklar arasında kıyaslanmamalıdır.
 
 ======================================================================
 AŞIRI UZAMA CEZASI — ÖNCE / SONRA KARŞILAŞTIRMASI
 ======================================================================
-Aynı 94,976 gözlem üzerinde iki puanlama sürümü kıyaslandı.
+Aynı 94,632 gözlem üzerinde iki puanlama sürümü kıyaslandı.
 
 ESKİ puanlama (aşırı uzama cezası YOK)
    Sıralama gücü (Spearman)     : +nan
-   En yüksek puanlı %20 getirisi : %+3.34
-   En düşük  puanlı %20 getirisi : %+1.42
-   Aradaki fark (spread)         : %+1.92
+   En yüksek puanlı %20 getirisi : %+3.39
+   En düşük  puanlı %20 getirisi : %+1.39
+   Aradaki fark (spread)         : %+2.00
 
 YENİ puanlama (aşırı uzama cezası VAR)
    Sıralama gücü (Spearman)     : +nan
-   En yüksek puanlı %20 getirisi : %+3.34
-   En düşük  puanlı %20 getirisi : %+1.42
-   Aradaki fark (spread)         : %+1.92
+   En yüksek puanlı %20 getirisi : %+3.39
+   En düşük  puanlı %20 getirisi : %+1.39
+   Aradaki fark (spread)         : %+2.00
 
 ----------------------------------------------------------------------
 Sıralama gücü değişimi : +nan → +nan (+nan)
-Spread değişimi        : %+1.92 → %+1.92 (+0.00 puan)
+Spread değişimi        : %+2.00 → %+2.00 (+0.00 puan)
 SONUÇ: İki sürüm arasında anlamlı fark yok. Ceza zarar vermiyor ama ölçülebilir bir fayda da göstermiyor.
 
 ⚠️ KAPSAM VE SINIRLAR — sonuçları yorumlarken bunları göz önünde tutun:
