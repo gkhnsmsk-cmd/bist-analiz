@@ -249,5 +249,30 @@
     "komisyon": 291.07,
     "puan": 76.0,
     "gerekce": "birikim skoru en yüksek adaylardan (CMF +0.340, MA200 üstünde, Puan 76)"
+  },
+  {
+    "tarih": "2026-09-14",
+    "sembol": "SELEC",
+    "yon": "SAT",
+    "adet": 605.1515,
+    "fiyat": 324.0,
+    "tutar": 196069.09,
+    "komisyon": 294.1,
+    "gerekce": "takip eden stop tetiklendi (fiyat 324.00 < stop 349.22; zirve 400.00)",
+    "puan": 63.5,
+    "tutma_gunu": 17,
+    "stop_cikisi": true,
+    "getiri_yuzde": -1.82
+  },
+  {
+    "tarih": "2026-09-14",
+    "sembol": "MZHLD",
+    "yon": "AL",
+    "adet": 31733.9813,
+    "fiyat": 6.16,
+    "tutar": 195774.99,
+    "komisyon": 293.66,
+    "puan": 60.9,
+    "gerekce": "birikim skoru en yüksek adaylardan (CMF +0.417, MA200 üstünde, Puan 61)"
   }
 ]

@@ -5,19 +5,11 @@
   "nakit": 0.0,
   "pozisyonlar": [
     {
-      "sembol": "SELEC",
-      "adet": 605.1515151515151,
-      "maliyet": 330.0,
-      "eklenme_tarihi": "2026-08-28T11:25:31.617995",
-      "son_fiyat": 360.0,
-      "en_yuksek": 400.0
-    },
-    {
       "sembol": "KRGYO",
       "adet": 52114.19538096358,
       "maliyet": 3.19,
       "eklenme_tarihi": "2026-09-01T11:53:00.577173",
-      "son_fiyat": 3.7100000381469727,
+      "son_fiyat": 3.690000057220459,
       "en_yuksek": 3.73
     },
     {
@@ -25,15 +17,15 @@
       "adet": 3904.4655995518533,
       "maliyet": 39.14,
       "eklenme_tarihi": "2026-09-10T12:20:48.363412",
-      "son_fiyat": 40.540000915527344,
-      "en_yuksek": 40.54
+      "son_fiyat": 40.97999954223633,
+      "en_yuksek": 40.98
     },
     {
       "sembol": "MARTI",
       "adet": 64440.87049257349,
       "maliyet": 2.55,
       "eklenme_tarihi": "2026-09-10T15:54:46.441824",
-      "son_fiyat": 2.740000009536743,
+      "son_fiyat": 2.640000104904175,
       "en_yuksek": 2.74
     },
     {
@@ -41,11 +33,19 @@
       "adet": 446.9631880785489,
       "maliyet": 433.5,
       "eklenme_tarihi": "2026-09-11T12:20:53.920644",
-      "son_fiyat": 434.75,
+      "son_fiyat": 429.25,
       "en_yuksek": 435.75
+    },
+    {
+      "sembol": "MZHLD",
+      "adet": 31733.98129737308,
+      "maliyet": 6.16,
+      "eklenme_tarihi": "2026-09-14T07:23:57.690941",
+      "son_fiyat": 6.16,
+      "en_yuksek": 6.16
     }
   ],
-  "son_rebalans_tarihi": "2026-09-12",
+  "son_rebalans_tarihi": "2026-09-14",
   "aktif": true,
   "askida_satislar": [],
   "stop_cikislari": {
@@ -64,6 +64,10 @@
     "ANELE": {
       "tarih": "2026-09-11",
       "puan": 69.5
+    },
+    "SELEC": {
+      "tarih": "2026-09-14",
+      "puan": 63.5
     }
   }
 }
