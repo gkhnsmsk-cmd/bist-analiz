@@ -9,7 +9,7 @@
       "adet": 52114.19538096358,
       "maliyet": 3.19,
       "eklenme_tarihi": "2026-09-01T11:53:00.577173",
-      "son_fiyat": 3.75,
+      "son_fiyat": 3.700000047683716,
       "en_yuksek": 3.75
     },
     {
@@ -17,7 +17,7 @@
       "adet": 3904.4655995518533,
       "maliyet": 39.14,
       "eklenme_tarihi": "2026-09-10T12:20:48.363412",
-      "son_fiyat": 40.619998931884766,
+      "son_fiyat": 40.7400016784668,
       "en_yuksek": 40.98
     },
     {
@@ -25,15 +25,15 @@
       "adet": 64440.87049257349,
       "maliyet": 2.55,
       "eklenme_tarihi": "2026-09-10T15:54:46.441824",
-      "son_fiyat": 2.630000114440918,
-      "en_yuksek": 2.74
+      "son_fiyat": 2.75,
+      "en_yuksek": 2.75
     },
     {
       "sembol": "BIMAS",
       "adet": 446.9631880785489,
       "maliyet": 433.5,
       "eklenme_tarihi": "2026-09-11T12:20:53.920644",
-      "son_fiyat": 432.5,
+      "son_fiyat": 429.25,
       "en_yuksek": 435.75
     },
     {
@@ -41,8 +41,8 @@
       "adet": 31733.98129737308,
       "maliyet": 6.16,
       "eklenme_tarihi": "2026-09-14T07:23:57.690941",
-      "son_fiyat": 6.150000095367432,
-      "en_yuksek": 6.16
+      "son_fiyat": 6.269999980926514,
+      "en_yuksek": 6.27
     }
   ],
   "son_rebalans_tarihi": "2026-09-14",
