@@ -5,35 +5,27 @@
   "nakit": 0.0,
   "pozisyonlar": [
     {
-      "sembol": "SELEC",
-      "adet": 554.7222222222222,
-      "maliyet": 360.0,
-      "eklenme_tarihi": "2026-09-11T11:52:54.848310",
-      "son_fiyat": 360.0,
-      "en_yuksek": 400.0
-    },
-    {
       "sembol": "MARTI",
       "adet": 73690.036900369,
       "maliyet": 2.71,
       "eklenme_tarihi": "2026-09-11T11:52:54.848331",
-      "son_fiyat": 2.740000009536743,
-      "en_yuksek": 2.74
+      "son_fiyat": 2.75,
+      "en_yuksek": 2.75
     },
     {
       "sembol": "AHGAZ",
       "adet": 4950.421417947447,
       "maliyet": 40.34,
       "eklenme_tarihi": "2026-09-11T11:52:54.848340",
-      "son_fiyat": 40.540000915527344,
-      "en_yuksek": 40.54
+      "son_fiyat": 40.7400016784668,
+      "en_yuksek": 40.74
     },
     {
       "sembol": "KUYAS",
       "adet": 2715.159755268525,
       "maliyet": 73.55,
       "eklenme_tarihi": "2026-09-11T11:52:54.848347",
-      "son_fiyat": 72.6500015258789,
+      "son_fiyat": 72.0,
       "en_yuksek": 73.55
     },
     {
@@ -41,11 +33,25 @@
       "adet": 459.60874568469507,
       "maliyet": 434.5,
       "eklenme_tarihi": "2026-09-11T11:52:54.848353",
-      "son_fiyat": 434.75,
+      "son_fiyat": 429.25,
       "en_yuksek": 435.5
+    },
+    {
+      "sembol": "PETKM",
+      "adet": 7491.271504703175,
+      "maliyet": 23.92,
+      "eklenme_tarihi": "2026-09-14T14:16:15.274215",
+      "son_fiyat": 23.92,
+      "en_yuksek": 23.92
     }
   ],
-  "son_rebalans_tarihi": "2026-09-12",
+  "son_rebalans_tarihi": "2026-09-14",
   "aktif": true,
-  "askida_satislar": []
+  "askida_satislar": [],
+  "stop_cikislari": {
+    "SELEC": {
+      "tarih": "2026-09-14",
+      "puan": 74.5
+    }
+  }
 }
