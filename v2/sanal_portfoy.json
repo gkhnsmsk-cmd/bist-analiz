@@ -9,23 +9,23 @@
       "adet": 73690.036900369,
       "maliyet": 2.71,
       "eklenme_tarihi": "2026-09-11T11:52:54.848331",
-      "son_fiyat": 2.7699999809265137,
-      "en_yuksek": 2.77
+      "son_fiyat": 3.0399999618530273,
+      "en_yuksek": 3.04
     },
     {
       "sembol": "AHGAZ",
       "adet": 4950.421417947447,
       "maliyet": 40.34,
       "eklenme_tarihi": "2026-09-11T11:52:54.848340",
-      "son_fiyat": 40.779998779296875,
-      "en_yuksek": 40.78
+      "son_fiyat": 40.880001068115234,
+      "en_yuksek": 40.88
     },
     {
       "sembol": "KUYAS",
       "adet": 2715.159755268525,
       "maliyet": 73.55,
       "eklenme_tarihi": "2026-09-11T11:52:54.848347",
-      "son_fiyat": 72.69999694824219,
+      "son_fiyat": 70.69999694824219,
       "en_yuksek": 73.55
     },
     {
@@ -33,7 +33,7 @@
       "adet": 459.60874568469507,
       "maliyet": 434.5,
       "eklenme_tarihi": "2026-09-11T11:52:54.848353",
-      "son_fiyat": 429.75,
+      "son_fiyat": 419.25,
       "en_yuksek": 435.5
     },
     {
@@ -41,11 +41,11 @@
       "adet": 7491.271504703175,
       "maliyet": 23.92,
       "eklenme_tarihi": "2026-09-14T14:16:15.274215",
-      "son_fiyat": 23.65999984741211,
+      "son_fiyat": 22.899999618530273,
       "en_yuksek": 23.92
     }
   ],
-  "son_rebalans_tarihi": "2026-09-14",
+  "son_rebalans_tarihi": "2026-09-15",
   "aktif": true,
   "askida_satislar": [],
   "stop_cikislari": {
