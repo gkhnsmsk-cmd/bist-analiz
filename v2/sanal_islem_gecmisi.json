@@ -128,5 +128,19 @@
     "komisyon": 243.17,
     "puan": 91.3,
     "gerekce": "birikim skoru en yüksek adaylardan (CMF +0.171, MA200 üstünde, Puan 91)"
+  },
+  {
+    "tarih": "2026-09-16",
+    "sembol": "BIMAS",
+    "yon": "SAT",
+    "adet": 459.6087,
+    "fiyat": 405.5,
+    "tutar": 186371.35,
+    "komisyon": 279.56,
+    "gerekce": "takip eden stop tetiklendi (fiyat 405.50 < stop 405.77; zirve 435.50)",
+    "puan": 76.9,
+    "tutma_gunu": 5,
+    "stop_cikisi": true,
+    "getiri_yuzde": -6.67
   }
 ]
