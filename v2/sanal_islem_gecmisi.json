@@ -78,5 +78,55 @@
     "komisyon": 269.19,
     "puan": 88.0,
     "gerekce": "birikim skoru en yüksek adaylardan (CMF +0.038, MA200 üstünde, Puan 88)"
+  },
+  {
+    "tarih": "2026-09-16",
+    "sembol": "KUYAS",
+    "yon": "SAT",
+    "adet": 2715.1598,
+    "fiyat": 62.7,
+    "tutar": 170240.52,
+    "komisyon": 255.36,
+    "gerekce": "takip eden stop tetiklendi (fiyat 62.70 < stop 64.60; zirve 73.55)",
+    "puan": 46.6,
+    "tutma_gunu": 5,
+    "stop_cikisi": true,
+    "getiri_yuzde": -14.75
+  },
+  {
+    "tarih": "2026-09-16",
+    "sembol": "PETKM",
+    "yon": "SAT",
+    "adet": 7491.2715,
+    "fiyat": 20.62,
+    "tutar": 154470.02,
+    "komisyon": 231.71,
+    "gerekce": "takip eden stop tetiklendi (fiyat 20.62 < stop 20.64; zirve 23.92)",
+    "puan": 60.3,
+    "tutma_gunu": 2,
+    "stop_cikisi": true,
+    "getiri_yuzde": -13.8
+  },
+  {
+    "tarih": "2026-09-16",
+    "sembol": "CEOEM",
+    "yon": "AL",
+    "adet": 5359.8863,
+    "fiyat": 30.2,
+    "tutar": 162111.73,
+    "komisyon": 243.17,
+    "puan": 86.5,
+    "gerekce": "birikim skoru en yüksek adaylardan (CMF +0.339, MA200 üstünde, Puan 86)"
+  },
+  {
+    "tarih": "2026-09-16",
+    "sembol": "DEVA",
+    "yon": "AL",
+    "adet": 1711.9891,
+    "fiyat": 94.55,
+    "tutar": 162111.73,
+    "komisyon": 243.17,
+    "puan": 91.3,
+    "gerekce": "birikim skoru en yüksek adaylardan (CMF +0.171, MA200 üstünde, Puan 91)"
   }
 ]

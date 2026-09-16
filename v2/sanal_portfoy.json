@@ -9,7 +9,7 @@
       "adet": 73690.036900369,
       "maliyet": 2.71,
       "eklenme_tarihi": "2026-09-11T11:52:54.848331",
-      "son_fiyat": 3.0399999618530273,
+      "son_fiyat": 2.740000009536743,
       "en_yuksek": 3.04
     },
     {
@@ -17,41 +17,49 @@
       "adet": 4950.421417947447,
       "maliyet": 40.34,
       "eklenme_tarihi": "2026-09-11T11:52:54.848340",
-      "son_fiyat": 41.099998474121094,
+      "son_fiyat": 39.040000915527344,
       "en_yuksek": 41.1
-    },
-    {
-      "sembol": "KUYAS",
-      "adet": 2715.159755268525,
-      "maliyet": 73.55,
-      "eklenme_tarihi": "2026-09-11T11:52:54.848347",
-      "son_fiyat": 69.6500015258789,
-      "en_yuksek": 73.55
     },
     {
       "sembol": "BIMAS",
       "adet": 459.60874568469507,
       "maliyet": 434.5,
       "eklenme_tarihi": "2026-09-11T11:52:54.848353",
-      "son_fiyat": 415.75,
+      "son_fiyat": 408.25,
       "en_yuksek": 435.5
     },
     {
-      "sembol": "PETKM",
-      "adet": 7491.271504703175,
-      "maliyet": 23.92,
-      "eklenme_tarihi": "2026-09-14T14:16:15.274215",
-      "son_fiyat": 22.68000030517578,
-      "en_yuksek": 23.92
+      "sembol": "CEOEM",
+      "adet": 5359.8863257578305,
+      "maliyet": 30.2,
+      "eklenme_tarihi": "2026-09-16T12:44:32.228816",
+      "son_fiyat": 30.2,
+      "en_yuksek": 30.2
+    },
+    {
+      "sembol": "DEVA",
+      "adet": 1711.989074964426,
+      "maliyet": 94.55,
+      "eklenme_tarihi": "2026-09-16T12:44:32.228832",
+      "son_fiyat": 94.55,
+      "en_yuksek": 94.55
     }
   ],
-  "son_rebalans_tarihi": "2026-09-15",
+  "son_rebalans_tarihi": "2026-09-16",
   "aktif": true,
   "askida_satislar": [],
   "stop_cikislari": {
     "SELEC": {
       "tarih": "2026-09-14",
       "puan": 74.5
+    },
+    "KUYAS": {
+      "tarih": "2026-09-16",
+      "puan": 46.6
+    },
+    "PETKM": {
+      "tarih": "2026-09-16",
+      "puan": 60.3
     }
   }
 }
