@@ -17,7 +17,7 @@
       "adet": 3904.4655995518533,
       "maliyet": 39.14,
       "eklenme_tarihi": "2026-09-10T12:20:48.363412",
-      "son_fiyat": 41.099998474121094,
+      "son_fiyat": 39.0,
       "en_yuksek": 41.1
     },
     {
@@ -25,27 +25,27 @@
       "adet": 64440.87049257349,
       "maliyet": 2.55,
       "eklenme_tarihi": "2026-09-10T15:54:46.441824",
-      "son_fiyat": 3.0399999618530273,
+      "son_fiyat": 2.740000009536743,
       "en_yuksek": 3.04
     },
     {
-      "sembol": "BIMAS",
-      "adet": 446.9631880785489,
-      "maliyet": 433.5,
-      "eklenme_tarihi": "2026-09-11T12:20:53.920644",
-      "son_fiyat": 415.75,
-      "en_yuksek": 435.75
+      "sembol": "CEOEM",
+      "adet": 5848.621115119399,
+      "maliyet": 30.0,
+      "eklenme_tarihi": "2026-09-16T15:28:59.193364",
+      "son_fiyat": 30.0,
+      "en_yuksek": 30.0
     },
     {
-      "sembol": "MZHLD",
-      "adet": 31733.98129737308,
-      "maliyet": 6.16,
-      "eklenme_tarihi": "2026-09-14T07:23:57.690941",
-      "son_fiyat": 5.900000095367432,
-      "en_yuksek": 6.27
+      "sembol": "MRGYO",
+      "adet": 82374.94528337182,
+      "maliyet": 2.13,
+      "eklenme_tarihi": "2026-09-16T15:28:59.193378",
+      "son_fiyat": 2.13,
+      "en_yuksek": 2.13
     }
   ],
-  "son_rebalans_tarihi": "2026-09-15",
+  "son_rebalans_tarihi": "2026-09-16",
   "aktif": true,
   "askida_satislar": [],
   "stop_cikislari": {
@@ -68,6 +68,14 @@
     "SELEC": {
       "tarih": "2026-09-14",
       "puan": 63.5
+    },
+    "BIMAS": {
+      "tarih": "2026-09-16",
+      "puan": 64.5
+    },
+    "MZHLD": {
+      "tarih": "2026-09-16",
+      "puan": 47.1
     }
   }
 }

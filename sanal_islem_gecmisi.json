@@ -274,5 +274,55 @@
     "komisyon": 293.66,
     "puan": 60.9,
     "gerekce": "birikim skoru en yüksek adaylardan (CMF +0.417, MA200 üstünde, Puan 61)"
+  },
+  {
+    "tarih": "2026-09-16",
+    "sembol": "BIMAS",
+    "yon": "SAT",
+    "adet": 446.9632,
+    "fiyat": 405.5,
+    "tutar": 181243.57,
+    "komisyon": 271.87,
+    "gerekce": "takip eden stop tetiklendi (fiyat 405.50 < stop 406.02; zirve 435.75)",
+    "puan": 64.5,
+    "tutma_gunu": 5,
+    "stop_cikisi": true,
+    "getiri_yuzde": -6.46
+  },
+  {
+    "tarih": "2026-09-16",
+    "sembol": "MZHLD",
+    "yon": "SAT",
+    "adet": 31733.9813,
+    "fiyat": 5.38,
+    "tutar": 170728.82,
+    "komisyon": 256.09,
+    "gerekce": "takip eden stop tetiklendi (fiyat 5.38 < stop 5.60; zirve 6.27)",
+    "puan": 47.1,
+    "tutma_gunu": 2,
+    "stop_cikisi": true,
+    "getiri_yuzde": -12.66
+  },
+  {
+    "tarih": "2026-09-16",
+    "sembol": "CEOEM",
+    "yon": "AL",
+    "adet": 5848.6211,
+    "fiyat": 30.0,
+    "tutar": 175722.22,
+    "komisyon": 263.58,
+    "puan": 59.9,
+    "gerekce": "birikim skoru en yüksek adaylardan (CMF +0.317, MA200 üstünde, Puan 60)"
+  },
+  {
+    "tarih": "2026-09-16",
+    "sembol": "MRGYO",
+    "yon": "AL",
+    "adet": 82374.9453,
+    "fiyat": 2.13,
+    "tutar": 175722.22,
+    "komisyon": 263.58,
+    "puan": 76.8,
+    "gerekce": "birikim skoru en yüksek adaylardan (CMF +0.314, MA200 üstünde, Puan 77)"
   }
 ]
