@@ -324,5 +324,30 @@
     "komisyon": 263.58,
     "puan": 76.8,
     "gerekce": "birikim skoru en yüksek adaylardan (CMF +0.314, MA200 üstünde, Puan 77)"
+  },
+  {
+    "tarih": "2026-09-17",
+    "sembol": "MARTI",
+    "yon": "SAT",
+    "adet": 64440.8705,
+    "fiyat": 2.47,
+    "tutar": 159168.95,
+    "komisyon": 238.75,
+    "gerekce": "takip eden stop tetiklendi (fiyat 2.47 < stop 2.51; zirve 3.04)",
+    "puan": 70.5,
+    "tutma_gunu": 7,
+    "stop_cikisi": true,
+    "getiri_yuzde": -3.14
+  },
+  {
+    "tarih": "2026-09-17",
+    "sembol": "ENERY",
+    "yon": "AL",
+    "adet": 12534.8974,
+    "fiyat": 12.66,
+    "tutar": 158930.2,
+    "komisyon": 238.4,
+    "puan": 82.2,
+    "gerekce": "birikim skoru en yüksek adaylardan (CMF +0.369, MA200 üstünde, Puan 82)"
   }
 ]
