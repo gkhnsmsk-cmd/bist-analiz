@@ -9,7 +9,7 @@
       "adet": 4950.421417947447,
       "maliyet": 40.34,
       "eklenme_tarihi": "2026-09-11T11:52:54.848340",
-      "son_fiyat": 39.2400016784668,
+      "son_fiyat": 40.97999954223633,
       "en_yuksek": 41.1
     },
     {
@@ -17,32 +17,32 @@
       "adet": 5359.8863257578305,
       "maliyet": 30.2,
       "eklenme_tarihi": "2026-09-16T12:44:32.228816",
-      "son_fiyat": 28.1200008392334,
-      "en_yuksek": 30.2
+      "son_fiyat": 32.0,
+      "en_yuksek": 32.0
     },
     {
       "sembol": "DEVA",
       "adet": 1711.989074964426,
       "maliyet": 94.55,
       "eklenme_tarihi": "2026-09-16T12:44:32.228832",
-      "son_fiyat": 96.05000305175781,
-      "en_yuksek": 96.05
+      "son_fiyat": 99.9000015258789,
+      "en_yuksek": 99.9
     },
     {
       "sembol": "TKFEN",
       "adet": 719.4542785003088,
       "maliyet": 255.25,
       "eklenme_tarihi": "2026-09-17T12:42:07.750354",
-      "son_fiyat": 255.25,
-      "en_yuksek": 255.25
+      "son_fiyat": 258.0,
+      "en_yuksek": 258.0
     },
     {
       "sembol": "CELHA",
       "adet": 6644.019702865549,
       "maliyet": 27.64,
       "eklenme_tarihi": "2026-09-17T12:42:07.750369",
-      "son_fiyat": 27.64,
-      "en_yuksek": 27.64
+      "son_fiyat": 28.0,
+      "en_yuksek": 28.0
     }
   ],
   "son_rebalans_tarihi": "2026-09-17",
