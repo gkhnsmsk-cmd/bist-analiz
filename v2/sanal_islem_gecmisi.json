@@ -142,5 +142,41 @@
     "tutma_gunu": 5,
     "stop_cikisi": true,
     "getiri_yuzde": -6.67
+  },
+  {
+    "tarih": "2026-09-17",
+    "sembol": "MARTI",
+    "yon": "SAT",
+    "adet": 73690.0369,
+    "fiyat": 2.47,
+    "tutar": 182014.39,
+    "komisyon": 273.02,
+    "gerekce": "takip eden stop tetiklendi (fiyat 2.47 < stop 2.51; zirve 3.04)",
+    "puan": 63.5,
+    "tutma_gunu": 6,
+    "stop_cikisi": true,
+    "getiri_yuzde": -8.86
+  },
+  {
+    "tarih": "2026-09-17",
+    "sembol": "TKFEN",
+    "yon": "AL",
+    "adet": 719.4543,
+    "fiyat": 255.25,
+    "tutar": 183916.58,
+    "komisyon": 275.87,
+    "puan": 92.6,
+    "gerekce": "birikim skoru en yüksek adaylardan (CMF +0.106, MA200 üstünde, Puan 93)"
+  },
+  {
+    "tarih": "2026-09-17",
+    "sembol": "CELHA",
+    "yon": "AL",
+    "adet": 6644.0197,
+    "fiyat": 27.64,
+    "tutar": 183916.58,
+    "komisyon": 275.87,
+    "puan": 89.6,
+    "gerekce": "birikim skoru en yüksek adaylardan (CMF +0.105, MA200 üstünde, Puan 90)"
   }
 ]
