@@ -349,5 +349,55 @@
     "komisyon": 238.4,
     "puan": 82.2,
     "gerekce": "birikim skoru en yüksek adaylardan (CMF +0.369, MA200 üstünde, Puan 82)"
+  },
+  {
+    "tarih": "2026-09-18",
+    "sembol": "KRGYO",
+    "yon": "SAT",
+    "adet": 52114.1954,
+    "fiyat": 3.18,
+    "tutar": 165723.14,
+    "komisyon": 248.58,
+    "gerekce": "takip eden stop tetiklendi (fiyat 3.18 < stop 3.24; zirve 3.75)",
+    "puan": 69.0,
+    "tutma_gunu": 17,
+    "stop_cikisi": true,
+    "getiri_yuzde": -0.31
+  },
+  {
+    "tarih": "2026-09-18",
+    "sembol": "MRGYO",
+    "yon": "SAT",
+    "adet": 82374.9453,
+    "fiyat": 1.73,
+    "tutar": 142508.66,
+    "komisyon": 213.76,
+    "gerekce": "takip eden stop tetiklendi (fiyat 1.73 < stop 1.74; zirve 2.13)",
+    "puan": 62.4,
+    "tutma_gunu": 2,
+    "stop_cikisi": true,
+    "getiri_yuzde": -18.78
+  },
+  {
+    "tarih": "2026-09-18",
+    "sembol": "RYSAS",
+    "yon": "AL",
+    "adet": 6674.8001,
+    "fiyat": 23.02,
+    "tutar": 153884.72,
+    "komisyon": 230.83,
+    "puan": 57.2,
+    "gerekce": "birikim skoru en yüksek adaylardan (CMF +0.195, MA200 üstünde, Puan 57)"
+  },
+  {
+    "tarih": "2026-09-18",
+    "sembol": "BAHKM",
+    "yon": "AL",
+    "adet": 869.575,
+    "fiyat": 176.7,
+    "tutar": 153884.72,
+    "komisyon": 230.83,
+    "puan": 70.5,
+    "gerekce": "birikim skoru en yüksek adaylardan (CMF +0.192, MA200 üstünde, Puan 70)"
   }
 ]

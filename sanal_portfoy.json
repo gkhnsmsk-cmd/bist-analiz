@@ -5,47 +5,47 @@
   "nakit": 0.0,
   "pozisyonlar": [
     {
-      "sembol": "KRGYO",
-      "adet": 52114.19538096358,
-      "maliyet": 3.19,
-      "eklenme_tarihi": "2026-09-01T11:53:00.577173",
-      "son_fiyat": 3.319999933242798,
-      "en_yuksek": 3.75
-    },
-    {
       "sembol": "AHGAZ",
       "adet": 3904.4655995518533,
       "maliyet": 39.14,
       "eklenme_tarihi": "2026-09-10T12:20:48.363412",
-      "son_fiyat": 40.97999954223633,
-      "en_yuksek": 41.1
+      "son_fiyat": 41.380001068115234,
+      "en_yuksek": 41.38
     },
     {
       "sembol": "CEOEM",
       "adet": 5848.621115119399,
       "maliyet": 30.0,
       "eklenme_tarihi": "2026-09-16T15:28:59.193364",
-      "son_fiyat": 32.0,
+      "son_fiyat": 30.920000076293945,
       "en_yuksek": 32.0
-    },
-    {
-      "sembol": "MRGYO",
-      "adet": 82374.94528337182,
-      "maliyet": 2.13,
-      "eklenme_tarihi": "2026-09-16T15:28:59.193378",
-      "son_fiyat": 1.9199999570846558,
-      "en_yuksek": 2.13
     },
     {
       "sembol": "ENERY",
       "adet": 12534.897424679648,
       "maliyet": 12.66,
       "eklenme_tarihi": "2026-09-17T15:35:36.814698",
-      "son_fiyat": 12.65999984741211,
-      "en_yuksek": 12.66
+      "son_fiyat": 12.789999961853027,
+      "en_yuksek": 12.79
+    },
+    {
+      "sembol": "RYSAS",
+      "adet": 6674.800060453624,
+      "maliyet": 23.02,
+      "eklenme_tarihi": "2026-09-18T12:22:24.885068",
+      "son_fiyat": 23.02,
+      "en_yuksek": 23.02
+    },
+    {
+      "sembol": "BAHKM",
+      "adet": 869.5749710902231,
+      "maliyet": 176.7,
+      "eklenme_tarihi": "2026-09-18T12:22:24.885085",
+      "son_fiyat": 176.7,
+      "en_yuksek": 176.7
     }
   ],
-  "son_rebalans_tarihi": "2026-09-17",
+  "son_rebalans_tarihi": "2026-09-18",
   "aktif": true,
   "askida_satislar": [],
   "stop_cikislari": {
@@ -80,6 +80,14 @@
     "MARTI": {
       "tarih": "2026-09-17",
       "puan": 70.5
+    },
+    "KRGYO": {
+      "tarih": "2026-09-18",
+      "puan": 69.0
+    },
+    "MRGYO": {
+      "tarih": "2026-09-18",
+      "puan": 62.4
     }
   }
 }
