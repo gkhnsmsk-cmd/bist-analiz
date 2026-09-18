@@ -9,15 +9,15 @@
       "adet": 3904.4655995518533,
       "maliyet": 39.14,
       "eklenme_tarihi": "2026-09-10T12:20:48.363412",
-      "son_fiyat": 41.099998474121094,
-      "en_yuksek": 41.38
+      "son_fiyat": 41.7599983215332,
+      "en_yuksek": 41.76
     },
     {
       "sembol": "CEOEM",
       "adet": 5848.621115119399,
       "maliyet": 30.0,
       "eklenme_tarihi": "2026-09-16T15:28:59.193364",
-      "son_fiyat": 30.959999084472656,
+      "son_fiyat": 30.219999313354492,
       "en_yuksek": 32.0
     },
     {
@@ -25,7 +25,7 @@
       "adet": 12534.897424679648,
       "maliyet": 12.66,
       "eklenme_tarihi": "2026-09-17T15:35:36.814698",
-      "son_fiyat": 12.9399995803833,
+      "son_fiyat": 12.850000381469727,
       "en_yuksek": 12.94
     },
     {
@@ -33,16 +33,16 @@
       "adet": 6674.800060453624,
       "maliyet": 23.02,
       "eklenme_tarihi": "2026-09-18T12:22:24.885068",
-      "son_fiyat": 23.479999542236328,
-      "en_yuksek": 23.48
+      "son_fiyat": 24.18000030517578,
+      "en_yuksek": 24.18
     },
     {
       "sembol": "BAHKM",
       "adet": 869.5749710902231,
       "maliyet": 176.7,
       "eklenme_tarihi": "2026-09-18T12:22:24.885085",
-      "son_fiyat": 178.3000030517578,
-      "en_yuksek": 178.3
+      "son_fiyat": 178.8000030517578,
+      "en_yuksek": 178.8
     }
   ],
   "son_rebalans_tarihi": "2026-09-18",
