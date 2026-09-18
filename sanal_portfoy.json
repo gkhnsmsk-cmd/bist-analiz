@@ -9,7 +9,7 @@
       "adet": 3904.4655995518533,
       "maliyet": 39.14,
       "eklenme_tarihi": "2026-09-10T12:20:48.363412",
-      "son_fiyat": 41.380001068115234,
+      "son_fiyat": 41.099998474121094,
       "en_yuksek": 41.38
     },
     {
@@ -17,7 +17,7 @@
       "adet": 5848.621115119399,
       "maliyet": 30.0,
       "eklenme_tarihi": "2026-09-16T15:28:59.193364",
-      "son_fiyat": 30.920000076293945,
+      "son_fiyat": 30.959999084472656,
       "en_yuksek": 32.0
     },
     {
@@ -25,24 +25,24 @@
       "adet": 12534.897424679648,
       "maliyet": 12.66,
       "eklenme_tarihi": "2026-09-17T15:35:36.814698",
-      "son_fiyat": 12.789999961853027,
-      "en_yuksek": 12.79
+      "son_fiyat": 12.9399995803833,
+      "en_yuksek": 12.94
     },
     {
       "sembol": "RYSAS",
       "adet": 6674.800060453624,
       "maliyet": 23.02,
       "eklenme_tarihi": "2026-09-18T12:22:24.885068",
-      "son_fiyat": 23.02,
-      "en_yuksek": 23.02
+      "son_fiyat": 23.479999542236328,
+      "en_yuksek": 23.48
     },
     {
       "sembol": "BAHKM",
       "adet": 869.5749710902231,
       "maliyet": 176.7,
       "eklenme_tarihi": "2026-09-18T12:22:24.885085",
-      "son_fiyat": 176.7,
-      "en_yuksek": 176.7
+      "son_fiyat": 178.3000030517578,
+      "en_yuksek": 178.3
     }
   ],
   "son_rebalans_tarihi": "2026-09-18",
