@@ -116196,5 +116196,64 @@
       "piyasa_rejim_durumu": "RİSK KAPALI — Savunma modu"
     },
     "kayit_zamani": "2026-09-21T14:21:18"
+  },
+  {
+    "tarih": "2026-09-21",
+    "kaynak": "One Cikan Hisseler",
+    "sembol": "AYGAZ",
+    "sinyal": "🟡 İZLE / TUT",
+    "puan": 57.2,
+    "kayit_anindaki_fiyat": 311.5,
+    "ek": {
+      "kisa": 45,
+      "orta": 86,
+      "uzun": 65,
+      "takas": 51,
+      "snapshot_durumu": "tam",
+      "rsi14": 47.2,
+      "macd_hist": -3.723,
+      "ma20_uzaklik_yuzde": -4.19,
+      "ma50_uzaklik_yuzde": 3.66,
+      "ma200_uzaklik_yuzde": 24.53,
+      "zirve52_uzaklik_yuzde": -7.57,
+      "onceki_1ay_getiri": -7.57,
+      "onceki_3ay_getiri": 45.29,
+      "trend_yonu": "yukselis",
+      "hacim_orani_5g_60g": 0.87,
+      "atr_yuzde": 4.23,
+      "yillik_volatilite": 37.8,
+      "piyasa_rejim_puani": 30.0,
+      "piyasa_rejim_durumu": "RİSK KAPALI — Savunma modu"
+    },
+    "kayit_zamani": "2026-09-21T15:42:57"
+  },
+  {
+    "tarih": "2026-09-21",
+    "kaynak": "Vade: Kisa (~2 hafta)",
+    "sembol": "ANSGR",
+    "sinyal": "🟢 AL",
+    "puan": 62,
+    "kayit_anindaki_fiyat": 26.98,
+    "ek": {
+      "genel_puan": 40.9,
+      "bir_ay": -5.3,
+      "uc_ay": -8.9,
+      "snapshot_durumu": "tam",
+      "rsi14": 49.9,
+      "macd_hist": 0.076,
+      "ma20_uzaklik_yuzde": 0.95,
+      "ma50_uzaklik_yuzde": -1.78,
+      "ma200_uzaklik_yuzde": 1.43,
+      "zirve52_uzaklik_yuzde": -12.97,
+      "onceki_1ay_getiri": -5.33,
+      "onceki_3ay_getiri": -5.99,
+      "trend_yonu": "yatay",
+      "hacim_orani_5g_60g": 1.39,
+      "atr_yuzde": 3.12,
+      "yillik_volatilite": 27.0,
+      "piyasa_rejim_puani": 30.0,
+      "piyasa_rejim_durumu": "RİSK KAPALI — Savunma modu"
+    },
+    "kayit_zamani": "2026-09-21T15:42:57"
   }
 ]
