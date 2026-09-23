@@ -9,43 +9,43 @@
       "adet": 3904.4655995518533,
       "maliyet": 39.14,
       "eklenme_tarihi": "2026-09-10T12:20:48.363412",
-      "son_fiyat": 44.0,
-      "en_yuksek": 44.0
-    },
-    {
-      "sembol": "CEOEM",
-      "adet": 5848.621115119399,
-      "maliyet": 30.0,
-      "eklenme_tarihi": "2026-09-16T15:28:59.193364",
-      "son_fiyat": 27.3799991607666,
-      "en_yuksek": 32.0
+      "son_fiyat": 44.52000045776367,
+      "en_yuksek": 44.52
     },
     {
       "sembol": "ENERY",
       "adet": 12534.897424679648,
       "maliyet": 12.66,
       "eklenme_tarihi": "2026-09-17T15:35:36.814698",
-      "son_fiyat": 12.609999656677246,
-      "en_yuksek": 12.94
+      "son_fiyat": 13.0600004196167,
+      "en_yuksek": 13.06
     },
     {
       "sembol": "RYSAS",
       "adet": 6674.800060453624,
       "maliyet": 23.02,
       "eklenme_tarihi": "2026-09-18T12:22:24.885068",
-      "son_fiyat": 26.399999618530273,
-      "en_yuksek": 26.4
+      "son_fiyat": 28.420000076293945,
+      "en_yuksek": 28.42
     },
     {
       "sembol": "BAHKM",
       "adet": 869.5749710902231,
       "maliyet": 176.7,
       "eklenme_tarihi": "2026-09-18T12:22:24.885085",
-      "son_fiyat": 190.0,
-      "en_yuksek": 191.8
+      "son_fiyat": 196.8000030517578,
+      "en_yuksek": 196.8
+    },
+    {
+      "sembol": "TKFEN",
+      "adet": 545.1929486994898,
+      "maliyet": 263.75,
+      "eklenme_tarihi": "2026-09-23T12:53:24.959497",
+      "son_fiyat": 263.75,
+      "en_yuksek": 263.75
     }
   ],
-  "son_rebalans_tarihi": "2026-09-22",
+  "son_rebalans_tarihi": "2026-09-23",
   "aktif": true,
   "askida_satislar": [],
   "stop_cikislari": {
@@ -88,6 +88,10 @@
     "MRGYO": {
       "tarih": "2026-09-18",
       "puan": 62.4
+    },
+    "CEOEM": {
+      "tarih": "2026-09-23",
+      "puan": 49.1
     }
   }
 }

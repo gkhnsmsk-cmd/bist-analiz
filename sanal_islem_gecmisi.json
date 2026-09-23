@@ -399,5 +399,30 @@
     "komisyon": 230.83,
     "puan": 70.5,
     "gerekce": "birikim skoru en yüksek adaylardan (CMF +0.192, MA200 üstünde, Puan 70)"
+  },
+  {
+    "tarih": "2026-09-23",
+    "sembol": "CEOEM",
+    "yon": "SAT",
+    "adet": 5848.6211,
+    "fiyat": 24.66,
+    "tutar": 144227.0,
+    "komisyon": 216.34,
+    "gerekce": "takip eden stop tetiklendi (fiyat 24.66 < stop 26.72; zirve 32.00)",
+    "puan": 49.1,
+    "tutma_gunu": 7,
+    "stop_cikisi": true,
+    "getiri_yuzde": -17.8
+  },
+  {
+    "tarih": "2026-09-23",
+    "sembol": "TKFEN",
+    "yon": "AL",
+    "adet": 545.1929,
+    "fiyat": 263.75,
+    "tutar": 144010.66,
+    "komisyon": 216.02,
+    "puan": 78.7,
+    "gerekce": "birikim skoru en yüksek adaylardan (CMF +0.233, MA200 üstünde, Puan 79)"
   }
 ]
