@@ -9,7 +9,7 @@
       "adet": 3904.4655995518533,
       "maliyet": 39.14,
       "eklenme_tarihi": "2026-09-10T12:20:48.363412",
-      "son_fiyat": 44.20000076293945,
+      "son_fiyat": 44.279998779296875,
       "en_yuksek": 44.52
     },
     {
@@ -17,7 +17,7 @@
       "adet": 12534.897424679648,
       "maliyet": 12.66,
       "eklenme_tarihi": "2026-09-17T15:35:36.814698",
-      "son_fiyat": 13.029999732971191,
+      "son_fiyat": 13.039999961853027,
       "en_yuksek": 13.06
     },
     {
@@ -25,7 +25,7 @@
       "adet": 6674.800060453624,
       "maliyet": 23.02,
       "eklenme_tarihi": "2026-09-18T12:22:24.885068",
-      "son_fiyat": 27.020000457763672,
+      "son_fiyat": 26.719999313354492,
       "en_yuksek": 28.42
     },
     {
@@ -33,7 +33,7 @@
       "adet": 869.5749710902231,
       "maliyet": 176.7,
       "eklenme_tarihi": "2026-09-18T12:22:24.885085",
-      "son_fiyat": 192.0,
+      "son_fiyat": 172.8000030517578,
       "en_yuksek": 196.8
     },
     {
@@ -41,11 +41,11 @@
       "adet": 545.1929486994898,
       "maliyet": 263.75,
       "eklenme_tarihi": "2026-09-23T12:53:24.959497",
-      "son_fiyat": 266.0,
-      "en_yuksek": 266.0
+      "son_fiyat": 275.5,
+      "en_yuksek": 275.5
     }
   ],
-  "son_rebalans_tarihi": "2026-09-23",
+  "son_rebalans_tarihi": "2026-09-24",
   "aktif": true,
   "askida_satislar": [],
   "stop_cikislari": {
