@@ -424,5 +424,29 @@
     "komisyon": 216.02,
     "puan": 78.7,
     "gerekce": "birikim skoru en yüksek adaylardan (CMF +0.233, MA200 üstünde, Puan 79)"
+  },
+  {
+    "tarih": "2026-09-24",
+    "sembol": "BAHKM",
+    "yon": "SAT",
+    "adet": 869.575,
+    "fiyat": 172.8,
+    "tutar": 150262.56,
+    "komisyon": 225.39,
+    "puan": 67.5,
+    "tutma_gunu": 6,
+    "gerekce": "takas: HRKET birikim skoru +0.247, bu pozisyonunki +0.110 (marj: 0.10)",
+    "getiri_yuzde": -2.21
+  },
+  {
+    "tarih": "2026-09-24",
+    "sembol": "HRKET",
+    "yon": "AL",
+    "adet": 18541.1022,
+    "fiyat": 8.08,
+    "tutar": 150037.16,
+    "komisyon": 225.06,
+    "puan": 57.0,
+    "gerekce": "birikim skoru en yüksek adaylardan (CMF +0.247, MA200 üstünde, Puan 57)"
   }
 ]
