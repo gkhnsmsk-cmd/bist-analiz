@@ -9,7 +9,7 @@
       "adet": 3904.4655995518533,
       "maliyet": 39.14,
       "eklenme_tarihi": "2026-09-10T12:20:48.363412",
-      "son_fiyat": 44.2400016784668,
+      "son_fiyat": 44.31999969482422,
       "en_yuksek": 44.52
     },
     {
@@ -17,15 +17,15 @@
       "adet": 12534.897424679648,
       "maliyet": 12.66,
       "eklenme_tarihi": "2026-09-17T15:35:36.814698",
-      "son_fiyat": 13.039999961853027,
-      "en_yuksek": 13.06
+      "son_fiyat": 13.399999618530273,
+      "en_yuksek": 13.4
     },
     {
       "sembol": "RYSAS",
       "adet": 6674.800060453624,
       "maliyet": 23.02,
       "eklenme_tarihi": "2026-09-18T12:22:24.885068",
-      "son_fiyat": 27.260000228881836,
+      "son_fiyat": 26.31999969482422,
       "en_yuksek": 28.42
     },
     {
@@ -33,7 +33,7 @@
       "adet": 545.1929486994898,
       "maliyet": 263.75,
       "eklenme_tarihi": "2026-09-23T12:53:24.959497",
-      "son_fiyat": 274.0,
+      "son_fiyat": 273.75,
       "en_yuksek": 275.5
     },
     {
@@ -41,11 +41,11 @@
       "adet": 18541.102157193833,
       "maliyet": 8.08,
       "eklenme_tarihi": "2026-09-24T15:51:42.641369",
-      "son_fiyat": 8.079999923706055,
+      "son_fiyat": 8.020000457763672,
       "en_yuksek": 8.08
     }
   ],
-  "son_rebalans_tarihi": "2026-09-24",
+  "son_rebalans_tarihi": "2026-09-25",
   "aktif": true,
   "askida_satislar": [],
   "stop_cikislari": {
