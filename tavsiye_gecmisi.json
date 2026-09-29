@@ -132391,5 +132391,34 @@
       "piyasa_rejim_durumu": "RİSK KAPALI — Savunma modu"
     },
     "kayit_zamani": "2026-09-29T14:13:34"
+  },
+  {
+    "tarih": "2026-09-29",
+    "kaynak": "Vade: Kisa (~2 hafta)",
+    "sembol": "GLYHO",
+    "sinyal": "🟢 AL",
+    "puan": 68,
+    "kayit_anindaki_fiyat": 16.3,
+    "ek": {
+      "genel_puan": 46.0,
+      "bir_ay": -1.5,
+      "uc_ay": -9.3,
+      "snapshot_durumu": "tam",
+      "rsi14": 51.2,
+      "macd_hist": 0.025,
+      "ma20_uzaklik_yuzde": 1.08,
+      "ma50_uzaklik_yuzde": -1.8,
+      "ma200_uzaklik_yuzde": 5.49,
+      "zirve52_uzaklik_yuzde": -12.97,
+      "onceki_1ay_getiri": -1.51,
+      "onceki_3ay_getiri": -9.89,
+      "trend_yonu": "yatay",
+      "hacim_orani_5g_60g": 1.54,
+      "atr_yuzde": 3.94,
+      "yillik_volatilite": 41.4,
+      "piyasa_rejim_puani": 24.0,
+      "piyasa_rejim_durumu": "RİSK KAPALI — Savunma modu"
+    },
+    "kayit_zamani": "2026-09-29T16:53:45"
   }
 ]
