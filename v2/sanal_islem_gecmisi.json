@@ -203,5 +203,44 @@
     "komisyon": 219.0,
     "puan": 90.7,
     "gerekce": "birikim skoru en yüksek adaylardan (CMF +0.149, MA200 üstünde, Puan 91)"
+  },
+  {
+    "tarih": "2026-09-30",
+    "sembol": "DEVA",
+    "yon": "SAT",
+    "adet": 1711.9891,
+    "fiyat": 89.7,
+    "tutar": 153565.42,
+    "komisyon": 230.35,
+    "gerekce": "takip eden stop tetiklendi (fiyat 89.70 < stop 90.78; zirve 102.60)",
+    "puan": 67.0,
+    "tutma_gunu": 14,
+    "stop_cikisi": true,
+    "getiri_yuzde": -5.13
+  },
+  {
+    "tarih": "2026-09-30",
+    "sembol": "TKFEN",
+    "yon": "SAT",
+    "adet": 719.4543,
+    "fiyat": 223.8,
+    "tutar": 161013.87,
+    "komisyon": 241.52,
+    "gerekce": "takip eden stop tetiklendi (fiyat 223.80 < stop 233.99; zirve 277.50)",
+    "puan": 79.1,
+    "tutma_gunu": 13,
+    "stop_cikisi": true,
+    "getiri_yuzde": -12.32
+  },
+  {
+    "tarih": "2026-09-30",
+    "sembol": "SKYMD",
+    "yon": "AL",
+    "adet": 13076.9049,
+    "fiyat": 19.24,
+    "tutar": 251977.62,
+    "komisyon": 377.97,
+    "puan": 96.0,
+    "gerekce": "birikim skoru en yüksek adaylardan (CMF +0.241, MA200 üstünde, Puan 96)"
   }
 ]
