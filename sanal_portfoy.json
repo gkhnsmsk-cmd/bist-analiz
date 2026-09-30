@@ -9,7 +9,7 @@
       "adet": 3904.4655995518533,
       "maliyet": 39.14,
       "eklenme_tarihi": "2026-09-10T12:20:48.363412",
-      "son_fiyat": 42.220001220703125,
+      "son_fiyat": 43.099998474121094,
       "en_yuksek": 44.52
     },
     {
@@ -17,35 +17,35 @@
       "adet": 12534.897424679648,
       "maliyet": 12.66,
       "eklenme_tarihi": "2026-09-17T15:35:36.814698",
-      "son_fiyat": 13.079999923706055,
+      "son_fiyat": 13.25,
       "en_yuksek": 13.51
-    },
-    {
-      "sembol": "RYSAS",
-      "adet": 6674.800060453624,
-      "maliyet": 23.02,
-      "eklenme_tarihi": "2026-09-18T12:22:24.885068",
-      "son_fiyat": 25.219999313354492,
-      "en_yuksek": 28.42
-    },
-    {
-      "sembol": "TKFEN",
-      "adet": 545.1929486994898,
-      "maliyet": 263.75,
-      "eklenme_tarihi": "2026-09-23T12:53:24.959497",
-      "son_fiyat": 238.3000030517578,
-      "en_yuksek": 277.5
     },
     {
       "sembol": "HRKET",
       "adet": 18541.102157193833,
       "maliyet": 8.08,
       "eklenme_tarihi": "2026-09-24T15:51:42.641369",
-      "son_fiyat": 7.889999866485596,
+      "son_fiyat": 8.25,
       "en_yuksek": 8.25
+    },
+    {
+      "sembol": "ETILR",
+      "adet": 19862.905165701202,
+      "maliyet": 7.1,
+      "eklenme_tarihi": "2026-09-30T14:00:02.966841",
+      "son_fiyat": 7.1,
+      "en_yuksek": 7.1
+    },
+    {
+      "sembol": "BIMAS",
+      "adet": 335.77768256304415,
+      "maliyet": 420.0,
+      "eklenme_tarihi": "2026-09-30T14:00:02.966856",
+      "son_fiyat": 420.0,
+      "en_yuksek": 420.0
     }
   ],
-  "son_rebalans_tarihi": "2026-09-29",
+  "son_rebalans_tarihi": "2026-09-30",
   "aktif": true,
   "askida_satislar": [],
   "stop_cikislari": {
@@ -92,6 +92,14 @@
     "CEOEM": {
       "tarih": "2026-09-23",
       "puan": 49.1
+    },
+    "RYSAS": {
+      "tarih": "2026-09-30",
+      "puan": 52.2
+    },
+    "TKFEN": {
+      "tarih": "2026-09-30",
+      "puan": 63.0
     }
   }
 }

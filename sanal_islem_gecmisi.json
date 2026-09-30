@@ -448,5 +448,55 @@
     "komisyon": 225.06,
     "puan": 57.0,
     "gerekce": "birikim skoru en yüksek adaylardan (CMF +0.247, MA200 üstünde, Puan 57)"
+  },
+  {
+    "tarih": "2026-09-30",
+    "sembol": "RYSAS",
+    "yon": "SAT",
+    "adet": 6674.8001,
+    "fiyat": 24.12,
+    "tutar": 160996.18,
+    "komisyon": 241.49,
+    "gerekce": "takip eden stop tetiklendi (fiyat 24.12 < stop 24.37; zirve 28.42)",
+    "puan": 52.2,
+    "tutma_gunu": 12,
+    "stop_cikisi": true,
+    "getiri_yuzde": 4.78
+  },
+  {
+    "tarih": "2026-09-30",
+    "sembol": "TKFEN",
+    "yon": "SAT",
+    "adet": 545.1929,
+    "fiyat": 223.6,
+    "tutar": 121905.14,
+    "komisyon": 182.86,
+    "gerekce": "takip eden stop tetiklendi (fiyat 223.60 < stop 233.99; zirve 277.50)",
+    "puan": 63.0,
+    "tutma_gunu": 7,
+    "stop_cikisi": true,
+    "getiri_yuzde": -15.22
+  },
+  {
+    "tarih": "2026-09-30",
+    "sembol": "ETILR",
+    "yon": "AL",
+    "adet": 19862.9052,
+    "fiyat": 7.1,
+    "tutar": 141238.48,
+    "komisyon": 211.86,
+    "puan": 69.9,
+    "gerekce": "birikim skoru en yüksek adaylardan (CMF +0.259, MA200 üstünde, Puan 70)"
+  },
+  {
+    "tarih": "2026-09-30",
+    "sembol": "BIMAS",
+    "yon": "AL",
+    "adet": 335.7777,
+    "fiyat": 420.0,
+    "tutar": 141238.48,
+    "komisyon": 211.86,
+    "puan": 68.7,
+    "gerekce": "birikim skoru en yüksek adaylardan (CMF +0.241, MA200 üstünde, Puan 69)"
   }
 ]
