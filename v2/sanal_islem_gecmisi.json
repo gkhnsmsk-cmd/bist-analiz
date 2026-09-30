@@ -242,5 +242,16 @@
     "komisyon": 377.97,
     "puan": 96.0,
     "gerekce": "birikim skoru en yüksek adaylardan (CMF +0.241, MA200 üstünde, Puan 96)"
+  },
+  {
+    "tarih": "2026-09-30",
+    "sembol": "HRKET",
+    "yon": "AL",
+    "adet": 7658.8404,
+    "fiyat": 8.1,
+    "tutar": 62129.8,
+    "komisyon": 93.19,
+    "puan": 93.3,
+    "gerekce": "birikim skoru en yüksek adaylardan (CMF +0.253, MA200 üstünde, Puan 93)"
   }
 ]
