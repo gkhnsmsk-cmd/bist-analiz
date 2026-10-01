@@ -522,5 +522,29 @@
     "komisyon": 236.04,
     "puan": 82.7,
     "gerekce": "birikim skoru en yüksek adaylardan (CMF +0.399, MA200 üstünde, Puan 83)"
+  },
+  {
+    "tarih": "2026-10-01",
+    "sembol": "BIMAS",
+    "yon": "SAT",
+    "adet": 335.7777,
+    "fiyat": 408.0,
+    "tutar": 136997.29,
+    "komisyon": 205.5,
+    "puan": 66.8,
+    "tutma_gunu": 1,
+    "gerekce": "takas: HRKET birikim skoru +0.254, bu pozisyonunki +0.103 (marj: 0.10)",
+    "getiri_yuzde": -2.86
+  },
+  {
+    "tarih": "2026-10-01",
+    "sembol": "HRKET",
+    "yon": "AL",
+    "adet": 16183.2477,
+    "fiyat": 8.44,
+    "tutar": 136791.8,
+    "komisyon": 205.19,
+    "puan": 64.4,
+    "gerekce": "birikim skoru en yüksek adaylardan (CMF +0.254, MA200 üstünde, Puan 64)"
   }
 ]
