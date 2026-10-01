@@ -498,5 +498,29 @@
     "komisyon": 211.86,
     "puan": 68.7,
     "gerekce": "birikim skoru en yüksek adaylardan (CMF +0.241, MA200 üstünde, Puan 69)"
+  },
+  {
+    "tarih": "2026-10-01",
+    "sembol": "HRKET",
+    "yon": "SAT",
+    "adet": 18541.1022,
+    "fiyat": 8.5,
+    "tutar": 157599.37,
+    "komisyon": 236.4,
+    "puan": 64.4,
+    "tutma_gunu": 7,
+    "gerekce": "takas: SKYMD birikim skoru +0.399, bu pozisyonunki +0.258 (marj: 0.10)",
+    "getiri_yuzde": 5.2
+  },
+  {
+    "tarih": "2026-10-01",
+    "sembol": "SKYMD",
+    "yon": "AL",
+    "adet": 7694.7564,
+    "fiyat": 20.42,
+    "tutar": 157362.97,
+    "komisyon": 236.04,
+    "puan": 82.7,
+    "gerekce": "birikim skoru en yüksek adaylardan (CMF +0.399, MA200 üstünde, Puan 83)"
   }
 ]
