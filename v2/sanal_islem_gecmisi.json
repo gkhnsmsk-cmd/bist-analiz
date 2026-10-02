@@ -253,5 +253,19 @@
     "komisyon": 93.19,
     "puan": 93.3,
     "gerekce": "birikim skoru en yüksek adaylardan (CMF +0.253, MA200 üstünde, Puan 93)"
+  },
+  {
+    "tarih": "2026-10-02",
+    "sembol": "SKYMD",
+    "yon": "SAT",
+    "adet": 13076.9049,
+    "fiyat": 16.7,
+    "tutar": 218384.31,
+    "komisyon": 327.58,
+    "gerekce": "takip eden stop tetiklendi (fiyat 16.70 < stop 16.94; zirve 20.40)",
+    "puan": 82.7,
+    "tutma_gunu": 2,
+    "stop_cikisi": true,
+    "getiri_yuzde": -13.2
   }
 ]
