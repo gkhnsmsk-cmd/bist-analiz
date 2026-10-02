@@ -9,43 +9,43 @@
       "adet": 3904.4655995518533,
       "maliyet": 39.14,
       "eklenme_tarihi": "2026-09-10T12:20:48.363412",
-      "son_fiyat": 44.599998474121094,
-      "en_yuksek": 44.6
+      "son_fiyat": 45.84000015258789,
+      "en_yuksek": 45.84
     },
     {
       "sembol": "ENERY",
       "adet": 12534.897424679648,
       "maliyet": 12.66,
       "eklenme_tarihi": "2026-09-17T15:35:36.814698",
-      "son_fiyat": 13.529999732971191,
-      "en_yuksek": 13.53
+      "son_fiyat": 13.600000381469727,
+      "en_yuksek": 13.6
     },
     {
       "sembol": "ETILR",
       "adet": 19862.905165701202,
       "maliyet": 7.1,
       "eklenme_tarihi": "2026-09-30T14:00:02.966841",
-      "son_fiyat": 7.650000095367432,
+      "son_fiyat": 7.53000020980835,
       "en_yuksek": 7.65
-    },
-    {
-      "sembol": "SKYMD",
-      "adet": 7694.756357968555,
-      "maliyet": 20.42,
-      "eklenme_tarihi": "2026-10-01T14:38:22.455650",
-      "son_fiyat": 18.510000228881836,
-      "en_yuksek": 20.42
     },
     {
       "sembol": "HRKET",
       "adet": 16183.247730589745,
       "maliyet": 8.44,
       "eklenme_tarihi": "2026-10-01T17:25:06.855615",
-      "son_fiyat": 8.4399995803833,
-      "en_yuksek": 8.44
+      "son_fiyat": 8.529999732971191,
+      "en_yuksek": 8.53
+    },
+    {
+      "sembol": "KLSYN",
+      "adet": 8860.933987611754,
+      "maliyet": 14.45,
+      "eklenme_tarihi": "2026-10-02T14:02:14.727394",
+      "son_fiyat": 14.45,
+      "en_yuksek": 14.45
     }
   ],
-  "son_rebalans_tarihi": "2026-10-01",
+  "son_rebalans_tarihi": "2026-10-02",
   "aktif": true,
   "askida_satislar": [],
   "stop_cikislari": {
@@ -100,6 +100,10 @@
     "TKFEN": {
       "tarih": "2026-09-30",
       "puan": 63.0
+    },
+    "SKYMD": {
+      "tarih": "2026-10-02",
+      "puan": 71.0
     }
   }
 }

@@ -546,5 +546,30 @@
     "komisyon": 205.19,
     "puan": 64.4,
     "gerekce": "birikim skoru en yüksek adaylardan (CMF +0.254, MA200 üstünde, Puan 64)"
+  },
+  {
+    "tarih": "2026-10-02",
+    "sembol": "SKYMD",
+    "yon": "SAT",
+    "adet": 7694.7564,
+    "fiyat": 16.69,
+    "tutar": 128425.48,
+    "komisyon": 192.64,
+    "gerekce": "takip eden stop tetiklendi (fiyat 16.69 < stop 16.96; zirve 20.42)",
+    "puan": 71.0,
+    "tutma_gunu": 1,
+    "stop_cikisi": true,
+    "getiri_yuzde": -18.27
+  },
+  {
+    "tarih": "2026-10-02",
+    "sembol": "KLSYN",
+    "yon": "AL",
+    "adet": 8860.934,
+    "fiyat": 14.45,
+    "tutar": 128232.85,
+    "komisyon": 192.35,
+    "puan": 55.4,
+    "gerekce": "birikim skoru en yüksek adaylardan (CMF +0.226, MA200 üstünde, Puan 55)"
   }
 ]
