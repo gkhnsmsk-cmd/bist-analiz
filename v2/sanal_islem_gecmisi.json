@@ -267,5 +267,16 @@
     "tutma_gunu": 2,
     "stop_cikisi": true,
     "getiri_yuzde": -13.2
+  },
+  {
+    "tarih": "2026-10-05",
+    "sembol": "DURDO",
+    "yon": "AL",
+    "adet": 39160.0091,
+    "fiyat": 5.56,
+    "tutar": 218056.74,
+    "komisyon": 327.09,
+    "puan": 93.3,
+    "gerekce": "birikim skoru en yüksek adaylardan (CMF +0.133, MA200 üstünde, Puan 93)"
   }
 ]

@@ -2,42 +2,50 @@
   "baslangic_butce": 1000000.0,
   "baslangic_tarihi": "2026-09-11",
   "hedef_aylik_yuzde": 10.0,
-  "nakit": 218056.73551686987,
+  "nakit": 0.0,
   "pozisyonlar": [
     {
       "sembol": "AHGAZ",
       "adet": 4950.421417947447,
       "maliyet": 40.34,
       "eklenme_tarihi": "2026-09-11T11:52:54.848340",
-      "son_fiyat": 45.599998474121094,
-      "en_yuksek": 45.86
+      "son_fiyat": 45.97999954223633,
+      "en_yuksek": 45.98
     },
     {
       "sembol": "CELHA",
       "adet": 6644.019702865549,
       "maliyet": 27.64,
       "eklenme_tarihi": "2026-09-17T12:42:07.750369",
-      "son_fiyat": 28.040000915527344,
-      "en_yuksek": 28.04
+      "son_fiyat": 28.799999237060547,
+      "en_yuksek": 28.8
     },
     {
       "sembol": "ISDMR",
       "adet": 2326.8854726192544,
       "maliyet": 62.65,
       "eklenme_tarihi": "2026-09-21T14:23:40.192980",
-      "son_fiyat": 60.95000076293945,
-      "en_yuksek": 63.6
+      "son_fiyat": 64.80000305175781,
+      "en_yuksek": 64.8
     },
     {
       "sembol": "HRKET",
       "adet": 7658.8403751874475,
       "maliyet": 8.1,
       "eklenme_tarihi": "2026-09-30T16:48:27.246105",
-      "son_fiyat": 8.4399995803833,
+      "son_fiyat": 8.399999618530273,
       "en_yuksek": 8.54
+    },
+    {
+      "sembol": "DURDO",
+      "adet": 39160.00906719327,
+      "maliyet": 5.56,
+      "eklenme_tarihi": "2026-10-05T16:15:44.266906",
+      "son_fiyat": 5.56,
+      "en_yuksek": 5.56
     }
   ],
-  "son_rebalans_tarihi": "2026-10-02",
+  "son_rebalans_tarihi": "2026-10-05",
   "aktif": true,
   "askida_satislar": [],
   "stop_cikislari": {
