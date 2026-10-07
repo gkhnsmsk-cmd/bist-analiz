@@ -9,23 +9,23 @@
       "adet": 3904.4655995518533,
       "maliyet": 39.14,
       "eklenme_tarihi": "2026-09-10T12:20:48.363412",
-      "son_fiyat": 47.0,
-      "en_yuksek": 47.0
+      "son_fiyat": 47.959999084472656,
+      "en_yuksek": 47.96
     },
     {
       "sembol": "ENERY",
       "adet": 12534.897424679648,
       "maliyet": 12.66,
       "eklenme_tarihi": "2026-09-17T15:35:36.814698",
-      "son_fiyat": 13.819999694824219,
-      "en_yuksek": 13.82
+      "son_fiyat": 13.869999885559082,
+      "en_yuksek": 13.87
     },
     {
       "sembol": "ETILR",
       "adet": 19862.905165701202,
       "maliyet": 7.1,
       "eklenme_tarihi": "2026-09-30T14:00:02.966841",
-      "son_fiyat": 7.449999809265137,
+      "son_fiyat": 7.050000190734863,
       "en_yuksek": 7.65
     },
     {
@@ -33,19 +33,19 @@
       "adet": 16183.247730589745,
       "maliyet": 8.44,
       "eklenme_tarihi": "2026-10-01T17:25:06.855615",
-      "son_fiyat": 8.470000267028809,
-      "en_yuksek": 8.53
+      "son_fiyat": 8.640000343322754,
+      "en_yuksek": 8.64
     },
     {
-      "sembol": "KLSYN",
-      "adet": 8860.933987611754,
-      "maliyet": 14.45,
-      "eklenme_tarihi": "2026-10-02T14:02:14.727394",
-      "son_fiyat": 14.449999809265137,
-      "en_yuksek": 14.8
+      "sembol": "SANKO",
+      "adet": 5760.139413368387,
+      "maliyet": 21.84,
+      "eklenme_tarihi": "2026-10-07T14:40:31.303020",
+      "son_fiyat": 21.84,
+      "en_yuksek": 21.84
     }
   ],
-  "son_rebalans_tarihi": "2026-10-06",
+  "son_rebalans_tarihi": "2026-10-07",
   "aktif": true,
   "askida_satislar": [],
   "stop_cikislari": {

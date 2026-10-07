@@ -571,5 +571,29 @@
     "komisyon": 192.35,
     "puan": 55.4,
     "gerekce": "birikim skoru en yüksek adaylardan (CMF +0.226, MA200 üstünde, Puan 55)"
+  },
+  {
+    "tarih": "2026-10-07",
+    "sembol": "KLSYN",
+    "yon": "SAT",
+    "adet": 8860.934,
+    "fiyat": 14.24,
+    "tutar": 126179.7,
+    "komisyon": 189.27,
+    "puan": 51.8,
+    "tutma_gunu": 5,
+    "gerekce": "takas: SANKO birikim skoru +0.233, bu pozisyonunki +0.023 (marj: 0.10)",
+    "getiri_yuzde": -1.45
+  },
+  {
+    "tarih": "2026-10-07",
+    "sembol": "SANKO",
+    "yon": "AL",
+    "adet": 5760.1394,
+    "fiyat": 21.84,
+    "tutar": 125990.43,
+    "komisyon": 188.99,
+    "puan": 60.9,
+    "gerekce": "birikim skoru en yüksek adaylardan (CMF +0.233, MA200 üstünde, Puan 61)"
   }
 ]
