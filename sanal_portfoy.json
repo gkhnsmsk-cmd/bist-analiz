@@ -9,23 +9,23 @@
       "adet": 3904.4655995518533,
       "maliyet": 39.14,
       "eklenme_tarihi": "2026-09-10T12:20:48.363412",
-      "son_fiyat": 47.959999084472656,
-      "en_yuksek": 47.96
+      "son_fiyat": 48.0,
+      "en_yuksek": 48.0
     },
     {
       "sembol": "ENERY",
       "adet": 12534.897424679648,
       "maliyet": 12.66,
       "eklenme_tarihi": "2026-09-17T15:35:36.814698",
-      "son_fiyat": 13.869999885559082,
-      "en_yuksek": 13.87
+      "son_fiyat": 14.0,
+      "en_yuksek": 14.0
     },
     {
       "sembol": "ETILR",
       "adet": 19862.905165701202,
       "maliyet": 7.1,
       "eklenme_tarihi": "2026-09-30T14:00:02.966841",
-      "son_fiyat": 7.050000190734863,
+      "son_fiyat": 7.099999904632568,
       "en_yuksek": 7.65
     },
     {
@@ -33,7 +33,7 @@
       "adet": 16183.247730589745,
       "maliyet": 8.44,
       "eklenme_tarihi": "2026-10-01T17:25:06.855615",
-      "son_fiyat": 8.640000343322754,
+      "son_fiyat": 8.630000114440918,
       "en_yuksek": 8.64
     },
     {
@@ -41,7 +41,7 @@
       "adet": 5760.139413368387,
       "maliyet": 21.84,
       "eklenme_tarihi": "2026-10-07T14:40:31.303020",
-      "son_fiyat": 21.84,
+      "son_fiyat": 21.579999923706055,
       "en_yuksek": 21.84
     }
   ],
