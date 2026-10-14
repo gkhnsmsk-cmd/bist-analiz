@@ -162968,5 +162968,64 @@
       "piyasa_rejim_durumu": "RİSK KAPALI — Savunma modu"
     },
     "kayit_zamani": "2026-10-14T12:58:46"
+  },
+  {
+    "tarih": "2026-10-14",
+    "kaynak": "One Cikan Hisseler",
+    "sembol": "YKBNK",
+    "sinyal": "🟡 İZLE / TUT",
+    "puan": 54.7,
+    "kayit_anindaki_fiyat": 35.94,
+    "ek": {
+      "kisa": 62,
+      "orta": 65,
+      "uzun": 40,
+      "takas": 76,
+      "snapshot_durumu": "tam",
+      "rsi14": 50.9,
+      "macd_hist": 0.046,
+      "ma20_uzaklik_yuzde": 0.29,
+      "ma50_uzaklik_yuzde": 0.55,
+      "ma200_uzaklik_yuzde": -2.46,
+      "zirve52_uzaklik_yuzde": -18.36,
+      "onceki_1ay_getiri": 3.63,
+      "onceki_3ay_getiri": 8.19,
+      "trend_yonu": "yatay",
+      "hacim_orani_5g_60g": 0.64,
+      "atr_yuzde": 3.15,
+      "yillik_volatilite": 43.8,
+      "piyasa_rejim_puani": 24.0,
+      "piyasa_rejim_durumu": "RİSK KAPALI — Savunma modu"
+    },
+    "kayit_zamani": "2026-10-14T15:50:03"
+  },
+  {
+    "tarih": "2026-10-14",
+    "kaynak": "Vade: Kisa (~2 hafta)",
+    "sembol": "METRO",
+    "sinyal": "🟢 AL",
+    "puan": 63,
+    "kayit_anindaki_fiyat": 7.71,
+    "ek": {
+      "genel_puan": 40.8,
+      "bir_ay": -5.4,
+      "uc_ay": -13.4,
+      "snapshot_durumu": "tam",
+      "rsi14": 52.0,
+      "macd_hist": 0.116,
+      "ma20_uzaklik_yuzde": 6.98,
+      "ma50_uzaklik_yuzde": -2.87,
+      "ma200_uzaklik_yuzde": 11.03,
+      "zirve52_uzaklik_yuzde": -17.8,
+      "onceki_1ay_getiri": -5.4,
+      "onceki_3ay_getiri": -13.76,
+      "trend_yonu": "yatay",
+      "hacim_orani_5g_60g": 0.5,
+      "atr_yuzde": 4.79,
+      "yillik_volatilite": 57.9,
+      "piyasa_rejim_puani": 24.0,
+      "piyasa_rejim_durumu": "RİSK KAPALI — Savunma modu"
+    },
+    "kayit_zamani": "2026-10-14T15:50:04"
   }
 ]
