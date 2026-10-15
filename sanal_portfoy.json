@@ -9,7 +9,7 @@
       "adet": 3904.4655995518533,
       "maliyet": 39.14,
       "eklenme_tarihi": "2026-09-10T12:20:48.363412",
-      "son_fiyat": 47.15999984741211,
+      "son_fiyat": 47.279998779296875,
       "en_yuksek": 48.7
     },
     {
@@ -17,7 +17,7 @@
       "adet": 12534.897424679648,
       "maliyet": 12.66,
       "eklenme_tarihi": "2026-09-17T15:35:36.814698",
-      "son_fiyat": 14.039999961853027,
+      "son_fiyat": 14.279999732971191,
       "en_yuksek": 14.6
     },
     {
@@ -25,7 +25,7 @@
       "adet": 19862.905165701202,
       "maliyet": 7.1,
       "eklenme_tarihi": "2026-09-30T14:00:02.966841",
-      "son_fiyat": 7.0,
+      "son_fiyat": 6.949999809265137,
       "en_yuksek": 7.65
     },
     {
@@ -33,19 +33,19 @@
       "adet": 16183.247730589745,
       "maliyet": 8.44,
       "eklenme_tarihi": "2026-10-01T17:25:06.855615",
-      "son_fiyat": 10.09000015258789,
-      "en_yuksek": 10.19
+      "son_fiyat": 10.270000457763672,
+      "en_yuksek": 10.27
     },
     {
       "sembol": "GLYHO",
       "adet": 7076.742672781455,
       "maliyet": 17.48,
       "eklenme_tarihi": "2026-10-09T14:30:48.810160",
-      "son_fiyat": 17.709999084472656,
+      "son_fiyat": 17.549999237060547,
       "en_yuksek": 17.78
     }
   ],
-  "son_rebalans_tarihi": "2026-10-14",
+  "son_rebalans_tarihi": "2026-10-15",
   "aktif": true,
   "askida_satislar": [],
   "stop_cikislari": {
