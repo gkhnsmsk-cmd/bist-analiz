@@ -619,5 +619,29 @@
     "komisyon": 185.83,
     "puan": 55.3,
     "gerekce": "birikim skoru en yüksek adaylardan (CMF +0.300, MA200 üstünde, Puan 55)"
+  },
+  {
+    "tarih": "2026-10-16",
+    "sembol": "GLYHO",
+    "yon": "SAT",
+    "adet": 7076.7427,
+    "fiyat": 17.22,
+    "tutar": 121861.51,
+    "komisyon": 182.79,
+    "puan": 59.0,
+    "tutma_gunu": 7,
+    "gerekce": "takas: BEGYO birikim skoru +0.536, bu pozisyonunki +0.384 (marj: 0.10)",
+    "getiri_yuzde": -1.49
+  },
+  {
+    "tarih": "2026-10-16",
+    "sembol": "BEGYO",
+    "yon": "AL",
+    "adet": 29205.8169,
+    "fiyat": 4.16,
+    "tutar": 121678.72,
+    "komisyon": 182.52,
+    "puan": 56.2,
+    "gerekce": "birikim skoru en yüksek adaylardan (CMF +0.535, MA200 üstünde, Puan 56)"
   }
 ]
