@@ -278,5 +278,47 @@
     "komisyon": 327.09,
     "puan": 93.3,
     "gerekce": "birikim skoru en yüksek adaylardan (CMF +0.133, MA200 üstünde, Puan 93)"
+  },
+  {
+    "tarih": "2026-10-16",
+    "sembol": "CELHA",
+    "yon": "SAT",
+    "adet": 6644.0197,
+    "fiyat": 27.04,
+    "tutar": 179654.29,
+    "komisyon": 269.48,
+    "gerekce": "takip eden stop tetiklendi (fiyat 27.04 < stop 28.59; zirve 34.24)",
+    "puan": 76.0,
+    "tutma_gunu": 29,
+    "stop_cikisi": true,
+    "getiri_yuzde": -2.17
+  },
+  {
+    "tarih": "2026-10-16",
+    "sembol": "ISDMR",
+    "yon": "SAT",
+    "adet": 2326.8855,
+    "fiyat": 58.15,
+    "tutar": 135308.39,
+    "komisyon": 202.96,
+    "gerekce": "takip eden stop tetiklendi (fiyat 58.15 < stop 59.02; zirve 65.90)",
+    "puan": 49.5,
+    "tutma_gunu": 25,
+    "stop_cikisi": true,
+    "getiri_yuzde": -7.18
+  },
+  {
+    "tarih": "2026-10-16",
+    "sembol": "DURDO",
+    "yon": "SAT",
+    "adet": 39160.0091,
+    "fiyat": 5.68,
+    "tutar": 222428.85,
+    "komisyon": 333.64,
+    "gerekce": "takip eden stop tetiklendi (fiyat 5.68 < stop 5.96; zirve 7.01)",
+    "puan": 87.7,
+    "tutma_gunu": 11,
+    "stop_cikisi": true,
+    "getiri_yuzde": 2.16
   }
 ]
