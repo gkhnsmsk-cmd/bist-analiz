@@ -1,15 +1,15 @@
 {
- "guncelleme": "2026-10-10T12:40:20",
+ "guncelleme": "2026-10-17T10:44:42",
  "ufuk": 10,
  "hipotez": {
   "durum": "ölçüldü",
-  "toplam_olgun_karar": 5103,
-  "genel_basari_orani": 32.2,
+  "toplam_olgun_karar": 5529,
+  "genel_basari_orani": 32.6,
   "genel_basari_guven_araligi": [
-   30.9,
-   33.5
+   31.4,
+   33.9
   ],
-  "ortalama_getiri": -7.07,
+  "ortalama_getiri": -6.73,
   "yeterli_veri_mi": true,
   "bulgular": [
    {
@@ -22,9 +22,9 @@
      12.5
     ],
     "ortalama_getiri": -42.52,
-    "kontrol_grubu_basari": 27.1,
-    "fark_puan": -27.1,
-    "aday_oneri": "'Aşırı oynak hissede pozisyon açıldı (yıllık volatilite %80+)' koşulunu taşıyan kararlar, taşımayanlara göre %27 daha düşük başarı gösteriyor. Bu koşula PUAN CEZASI eklemeyi backtest'te denemeye değer.",
+    "kontrol_grubu_basari": 28.3,
+    "fark_puan": -28.3,
+    "aday_oneri": "'Aşırı oynak hissede pozisyon açıldı (yıllık volatilite %80+)' koşulunu taşıyan kararlar, taşımayanlara göre %28 daha düşük başarı gösteriyor. Bu koşula PUAN CEZASI eklemeyi backtest'te denemeye değer.",
     "oncelik": "yüksek"
    },
    {
@@ -37,73 +37,87 @@
      28.3
     ],
     "ortalama_getiri": -15.94,
-    "kontrol_grubu_basari": 27.4,
-    "fark_puan": -2.8
+    "kontrol_grubu_basari": 28.7,
+    "fark_puan": -4.1
    },
    {
     "kategori": "MOMENTUM_CHASE",
     "aciklama": "Zaten çok yükselmiş hisse kovalandı (son 1 ayda %25+)",
-    "ornek_sayisi": 1451,
-    "basari_orani": 25.7,
+    "ornek_sayisi": 1502,
+    "basari_orani": 26.4,
     "guven_araligi": [
-     23.5,
-     28.0
+     24.3,
+     28.7
     ],
-    "ortalama_getiri": -13.79,
-    "kontrol_grubu_basari": 27.7,
-    "fark_puan": -2.0
-   },
-   {
-    "kategori": "REGIME_MISMATCH",
-    "aciklama": "Piyasa rejimi olumsuzken (50 altı) pozisyon açıldı",
-    "ornek_sayisi": 1023,
-    "basari_orani": 25.8,
-    "guven_araligi": [
-     23.2,
-     28.6
-    ],
-    "ortalama_getiri": -8.75,
-    "kontrol_grubu_basari": 27.4,
-    "fark_puan": -1.6
+    "ortalama_getiri": -13.49,
+    "kontrol_grubu_basari": 29.1,
+    "fark_puan": -2.6
    },
    {
     "kategori": "OVEREXTENDED_ENTRY",
     "aciklama": "Fiyat 50 günlük ortalamadan çok uzaktayken alındı (şişmiş giriş)",
-    "ornek_sayisi": 1555,
-    "basari_orani": 27.0,
+    "ornek_sayisi": 1618,
+    "basari_orani": 27.8,
     "guven_araligi": [
-     24.9,
-     29.3
+     25.7,
+     30.0
     ],
-    "ortalama_getiri": -12.45,
-    "kontrol_grubu_basari": 26.9,
-    "fark_puan": 0.1
+    "ortalama_getiri": -12.18,
+    "kontrol_grubu_basari": 28.3,
+    "fark_puan": -0.5
    },
    {
     "kategori": "FALSE_BREAKOUT",
     "aciklama": "52 haftalık zirveye yapışıkken alındı, kırılım tutmadı",
-    "ornek_sayisi": 459,
-    "basari_orani": 30.9,
+    "ornek_sayisi": 499,
+    "basari_orani": 30.1,
     "guven_araligi": [
-     26.9,
-     35.3
+     26.2,
+     34.2
     ],
-    "ortalama_getiri": -6.55,
-    "kontrol_grubu_basari": 26.4,
-    "fark_puan": 4.6
+    "ortalama_getiri": -6.61,
+    "kontrol_grubu_basari": 27.9,
+    "fark_puan": 2.2
+   },
+   {
+    "kategori": "REGIME_MISMATCH",
+    "aciklama": "Piyasa rejimi olumsuzken (50 altı) pozisyon açıldı",
+    "ornek_sayisi": 1449,
+    "basari_orani": 29.5,
+    "guven_araligi": [
+     27.2,
+     31.9
+    ],
+    "ortalama_getiri": -6.96,
+    "kontrol_grubu_basari": 27.4,
+    "fark_puan": 2.2
+   },
+   {
+    "kategori": "FALLING_KNIFE",
+    "aciklama": "Düşüş trendindeyken alındı (düşen bıçak)",
+    "ornek_sayisi": 2,
+    "basari_orani": 50.0,
+    "guven_araligi": [
+     9.5,
+     90.5
+    ],
+    "ortalama_getiri": -0.23,
+    "kontrol_grubu_basari": 28.1,
+    "fark_puan": 21.9,
+    "not": "Sadece 2 örnek — sonuç güvenilir değil, yalnızca izleme amaçlı."
    }
   ],
   "uyarilar": [
    "Bu rapor bir ÖNERİ listesidir. Hiçbir kural otomatik değiştirilmedi. Bir öneriyi uygulamadan önce backtest'te önce/sonra karşılaştırması yapılmalıdır."
   ],
   "basarisiz_kararlarda_hata_sayimi": {
-   "OVEREXTENDED_ENTRY": 1135,
-   "MOMENTUM_CHASE": 1078,
-   "REGIME_MISMATCH": 759,
+   "OVEREXTENDED_ENTRY": 1168,
+   "MOMENTUM_CHASE": 1105,
+   "REGIME_MISMATCH": 1021,
    "OVERBOUGHT_ENTRY": 435,
-   "FALSE_BREAKOUT": 317,
+   "FALSE_BREAKOUT": 349,
    "HIGH_VOLATILITY_ENTRY": 27,
-   "FALLING_KNIFE": 0
+   "FALLING_KNIFE": 1
   }
  }
 }
