@@ -9,7 +9,7 @@
       "adet": 4950.421417947447,
       "maliyet": 40.34,
       "eklenme_tarihi": "2026-09-11T11:52:54.848340",
-      "son_fiyat": 45.119998931884766,
+      "son_fiyat": 44.81999969482422,
       "en_yuksek": 48.7
     },
     {
@@ -17,8 +17,8 @@
       "adet": 63317.70109993084,
       "maliyet": 3.91,
       "eklenme_tarihi": "2026-10-19T14:48:54.156081",
-      "son_fiyat": 3.91,
-      "en_yuksek": 3.91
+      "son_fiyat": 3.9200000762939453,
+      "en_yuksek": 3.92
     }
   ],
   "son_rebalans_tarihi": "2026-10-19",
