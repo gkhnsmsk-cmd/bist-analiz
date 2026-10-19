@@ -320,5 +320,30 @@
     "tutma_gunu": 11,
     "stop_cikisi": true,
     "getiri_yuzde": 2.16
+  },
+  {
+    "tarih": "2026-10-19",
+    "sembol": "HRKET",
+    "yon": "SAT",
+    "adet": 7658.8404,
+    "fiyat": 8.7,
+    "tutar": 66631.91,
+    "komisyon": 99.95,
+    "gerekce": "takip eden stop tetiklendi (fiyat 8.70 < stop 8.93; zirve 10.43)",
+    "puan": 74.1,
+    "tutma_gunu": 19,
+    "stop_cikisi": true,
+    "getiri_yuzde": 7.41
+  },
+  {
+    "tarih": "2026-10-19",
+    "sembol": "AKFYE",
+    "yon": "AL",
+    "adet": 63317.7011,
+    "fiyat": 3.91,
+    "tutar": 247944.13,
+    "komisyon": 371.92,
+    "puan": 91.1,
+    "gerekce": "birikim skoru en yüksek adaylardan (CMF +0.165, MA200 üstünde, Puan 91)"
   }
 ]
