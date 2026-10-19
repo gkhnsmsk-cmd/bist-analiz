@@ -643,5 +643,30 @@
     "komisyon": 182.52,
     "puan": 56.2,
     "gerekce": "birikim skoru en yüksek adaylardan (CMF +0.535, MA200 üstünde, Puan 56)"
+  },
+  {
+    "tarih": "2026-10-19",
+    "sembol": "HRKET",
+    "yon": "SAT",
+    "adet": 16183.2477,
+    "fiyat": 8.72,
+    "tutar": 141117.92,
+    "komisyon": 211.68,
+    "gerekce": "takip eden stop tetiklendi (fiyat 8.72 < stop 8.93; zirve 10.43)",
+    "puan": 67.2,
+    "tutma_gunu": 18,
+    "stop_cikisi": true,
+    "getiri_yuzde": 3.32
+  },
+  {
+    "tarih": "2026-10-19",
+    "sembol": "GLYHO",
+    "yon": "AL",
+    "adet": 8266.4444,
+    "fiyat": 17.02,
+    "tutar": 140906.24,
+    "komisyon": 211.36,
+    "puan": 62.8,
+    "gerekce": "birikim skoru en yüksek adaylardan (CMF +0.330, MA200 üstünde, Puan 63)"
   }
 ]

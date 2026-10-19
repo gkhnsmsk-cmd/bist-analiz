@@ -9,7 +9,7 @@
       "adet": 3904.4655995518533,
       "maliyet": 39.14,
       "eklenme_tarihi": "2026-09-10T12:20:48.363412",
-      "son_fiyat": 46.47999954223633,
+      "son_fiyat": 45.119998931884766,
       "en_yuksek": 48.7
     },
     {
@@ -17,7 +17,7 @@
       "adet": 12534.897424679648,
       "maliyet": 12.66,
       "eklenme_tarihi": "2026-09-17T15:35:36.814698",
-      "son_fiyat": 13.850000381469727,
+      "son_fiyat": 13.300000190734863,
       "en_yuksek": 14.6
     },
     {
@@ -25,27 +25,27 @@
       "adet": 19862.905165701202,
       "maliyet": 7.1,
       "eklenme_tarihi": "2026-09-30T14:00:02.966841",
-      "son_fiyat": 7.070000171661377,
+      "son_fiyat": 7.010000228881836,
       "en_yuksek": 7.65
-    },
-    {
-      "sembol": "HRKET",
-      "adet": 16183.247730589745,
-      "maliyet": 8.44,
-      "eklenme_tarihi": "2026-10-01T17:25:06.855615",
-      "son_fiyat": 9.390000343322754,
-      "en_yuksek": 10.43
     },
     {
       "sembol": "BEGYO",
       "adet": 29205.816944042213,
       "maliyet": 4.16,
       "eklenme_tarihi": "2026-10-16T12:37:32.995101",
-      "son_fiyat": 4.159999847412109,
+      "son_fiyat": 3.75,
       "en_yuksek": 4.16
+    },
+    {
+      "sembol": "GLYHO",
+      "adet": 8266.444416300285,
+      "maliyet": 17.02,
+      "eklenme_tarihi": "2026-10-19T14:50:55.354961",
+      "son_fiyat": 17.02,
+      "en_yuksek": 17.02
     }
   ],
-  "son_rebalans_tarihi": "2026-10-16",
+  "son_rebalans_tarihi": "2026-10-19",
   "aktif": true,
   "askida_satislar": [],
   "stop_cikislari": {
@@ -104,6 +104,10 @@
     "SKYMD": {
       "tarih": "2026-10-02",
       "puan": 71.0
+    },
+    "HRKET": {
+      "tarih": "2026-10-19",
+      "puan": 67.2
     }
   }
 }
