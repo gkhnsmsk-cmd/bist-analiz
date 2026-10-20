@@ -345,5 +345,16 @@
     "komisyon": 371.92,
     "puan": 91.1,
     "gerekce": "birikim skoru en yüksek adaylardan (CMF +0.165, MA200 üstünde, Puan 91)"
+  },
+  {
+    "tarih": "2026-10-20",
+    "sembol": "INDES",
+    "yon": "AL",
+    "adet": 21717.7397,
+    "fiyat": 11.57,
+    "tutar": 251651.73,
+    "komisyon": 377.48,
+    "puan": 88.1,
+    "gerekce": "birikim skoru en yüksek adaylardan (CMF +0.045, MA200 üstünde, Puan 88)"
   }
 ]
