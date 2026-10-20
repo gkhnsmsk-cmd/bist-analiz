@@ -356,5 +356,27 @@
     "komisyon": 377.48,
     "puan": 88.1,
     "gerekce": "birikim skoru en yüksek adaylardan (CMF +0.045, MA200 üstünde, Puan 88)"
+  },
+  {
+    "tarih": "2026-10-20",
+    "sembol": "VERUS",
+    "yon": "AL",
+    "adet": 108.521,
+    "fiyat": 476.25,
+    "tutar": 51760.78,
+    "komisyon": 77.64,
+    "puan": 74.9,
+    "gerekce": "birikim skoru en yüksek adaylardan (CMF +0.117, MA200 üstünde, Puan 75)"
+  },
+  {
+    "tarih": "2026-10-20",
+    "sembol": "DOCO",
+    "yon": "AL",
+    "adet": 4.6146,
+    "fiyat": 11200.0,
+    "tutar": 51760.78,
+    "komisyon": 77.64,
+    "puan": 84.0,
+    "gerekce": "birikim skoru en yüksek adaylardan (CMF +0.039, MA200 üstünde, Puan 84)"
   }
 ]
