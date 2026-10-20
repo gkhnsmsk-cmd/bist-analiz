@@ -668,5 +668,30 @@
     "komisyon": 211.36,
     "puan": 62.8,
     "gerekce": "birikim skoru en yüksek adaylardan (CMF +0.330, MA200 üstünde, Puan 63)"
+  },
+  {
+    "tarih": "2026-10-20",
+    "sembol": "BEGYO",
+    "yon": "SAT",
+    "adet": 29205.8169,
+    "fiyat": 3.37,
+    "tutar": 98423.6,
+    "komisyon": 147.64,
+    "gerekce": "takip eden stop tetiklendi (fiyat 3.37 < stop 3.49; zirve 4.16)",
+    "puan": 50.5,
+    "tutma_gunu": 4,
+    "stop_cikisi": true,
+    "getiri_yuzde": -18.99
+  },
+  {
+    "tarih": "2026-10-20",
+    "sembol": "ETYAT",
+    "yon": "AL",
+    "adet": 8204.7286,
+    "fiyat": 11.96,
+    "tutar": 98275.97,
+    "komisyon": 147.41,
+    "puan": 50.4,
+    "gerekce": "birikim skoru en yüksek adaylardan (CMF +0.456, MA200 üstünde, Puan 50)"
   }
 ]
