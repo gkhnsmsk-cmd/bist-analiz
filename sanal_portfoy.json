@@ -9,23 +9,15 @@
       "adet": 3904.4655995518533,
       "maliyet": 39.14,
       "eklenme_tarihi": "2026-09-10T12:20:48.363412",
-      "son_fiyat": 46.5,
+      "son_fiyat": 44.20000076293945,
       "en_yuksek": 48.7
-    },
-    {
-      "sembol": "ENERY",
-      "adet": 12534.897424679648,
-      "maliyet": 12.66,
-      "eklenme_tarihi": "2026-09-17T15:35:36.814698",
-      "son_fiyat": 13.819999694824219,
-      "en_yuksek": 14.6
     },
     {
       "sembol": "ETILR",
       "adet": 19862.905165701202,
       "maliyet": 7.1,
       "eklenme_tarihi": "2026-09-30T14:00:02.966841",
-      "son_fiyat": 7.159999847412109,
+      "son_fiyat": 7.199999809265137,
       "en_yuksek": 7.65
     },
     {
@@ -33,7 +25,7 @@
       "adet": 8266.444416300285,
       "maliyet": 17.02,
       "eklenme_tarihi": "2026-10-19T14:50:55.354961",
-      "son_fiyat": 16.799999237060547,
+      "son_fiyat": 16.700000762939453,
       "en_yuksek": 17.47
     },
     {
@@ -41,8 +33,16 @@
       "adet": 8204.728574015466,
       "maliyet": 11.96,
       "eklenme_tarihi": "2026-10-20T12:54:22.558064",
-      "son_fiyat": 11.739999771118164,
+      "son_fiyat": 11.130000114440918,
       "en_yuksek": 12.36
+    },
+    {
+      "sembol": "KLSYN",
+      "adet": 10836.659984439213,
+      "maliyet": 14.75,
+      "eklenme_tarihi": "2026-10-21T15:58:41.157044",
+      "son_fiyat": 14.75,
+      "en_yuksek": 14.75
     }
   ],
   "son_rebalans_tarihi": "2026-10-21",
@@ -112,6 +112,10 @@
     "BEGYO": {
       "tarih": "2026-10-20",
       "puan": 50.5
+    },
+    "ENERY": {
+      "tarih": "2026-10-21",
+      "puan": 64.5
     }
   }
 }

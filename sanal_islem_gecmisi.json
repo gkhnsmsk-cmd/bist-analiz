@@ -693,5 +693,30 @@
     "komisyon": 147.41,
     "puan": 50.4,
     "gerekce": "birikim skoru en yüksek adaylardan (CMF +0.456, MA200 üstünde, Puan 50)"
+  },
+  {
+    "tarih": "2026-10-21",
+    "sembol": "ENERY",
+    "yon": "SAT",
+    "adet": 12534.8974,
+    "fiyat": 12.79,
+    "tutar": 160321.34,
+    "komisyon": 240.48,
+    "gerekce": "takip eden stop tetiklendi (fiyat 12.79 < stop 12.93; zirve 14.60)",
+    "puan": 64.5,
+    "tutma_gunu": 34,
+    "stop_cikisi": true,
+    "getiri_yuzde": 1.03
+  },
+  {
+    "tarih": "2026-10-21",
+    "sembol": "KLSYN",
+    "yon": "AL",
+    "adet": 10836.66,
+    "fiyat": 14.75,
+    "tutar": 160080.86,
+    "komisyon": 240.12,
+    "puan": 57.3,
+    "gerekce": "birikim skoru en yüksek adaylardan (CMF +0.279, MA200 üstünde, Puan 57)"
   }
 ]
