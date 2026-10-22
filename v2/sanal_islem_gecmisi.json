@@ -378,5 +378,19 @@
     "komisyon": 77.64,
     "puan": 84.0,
     "gerekce": "birikim skoru en yüksek adaylardan (CMF +0.039, MA200 üstünde, Puan 84)"
+  },
+  {
+    "tarih": "2026-10-22",
+    "sembol": "AHGAZ",
+    "yon": "SAT",
+    "adet": 4950.4214,
+    "fiyat": 42.68,
+    "tutar": 211283.99,
+    "komisyon": 316.93,
+    "gerekce": "takip eden stop tetiklendi (fiyat 42.68 < stop 43.70; zirve 48.70)",
+    "puan": 67.2,
+    "tutma_gunu": 41,
+    "stop_cikisi": true,
+    "getiri_yuzde": 5.8
   }
 ]
