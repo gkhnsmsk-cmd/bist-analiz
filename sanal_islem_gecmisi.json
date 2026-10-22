@@ -718,5 +718,30 @@
     "komisyon": 240.12,
     "puan": 57.3,
     "gerekce": "birikim skoru en yüksek adaylardan (CMF +0.279, MA200 üstünde, Puan 57)"
+  },
+  {
+    "tarih": "2026-10-22",
+    "sembol": "AHGAZ",
+    "yon": "SAT",
+    "adet": 3904.4656,
+    "fiyat": 42.58,
+    "tutar": 166252.15,
+    "komisyon": 249.38,
+    "gerekce": "takip eden stop tetiklendi (fiyat 42.58 < stop 43.70; zirve 48.70)",
+    "puan": 65.0,
+    "tutma_gunu": 42,
+    "stop_cikisi": true,
+    "getiri_yuzde": 8.79
+  },
+  {
+    "tarih": "2026-10-22",
+    "sembol": "METRO",
+    "yon": "AL",
+    "adet": 22705.9949,
+    "fiyat": 7.3,
+    "tutar": 166002.77,
+    "komisyon": 249.0,
+    "puan": 46.9,
+    "gerekce": "birikim skoru en yüksek adaylardan (CMF +0.229, MA200 üstünde, Puan 47)"
   }
 ]
