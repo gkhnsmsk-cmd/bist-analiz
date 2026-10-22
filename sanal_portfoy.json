@@ -9,7 +9,7 @@
       "adet": 19862.905165701202,
       "maliyet": 7.1,
       "eklenme_tarihi": "2026-09-30T14:00:02.966841",
-      "son_fiyat": 6.960000038146973,
+      "son_fiyat": 6.849999904632568,
       "en_yuksek": 7.65
     },
     {
@@ -17,7 +17,7 @@
       "adet": 8266.444416300285,
       "maliyet": 17.02,
       "eklenme_tarihi": "2026-10-19T14:50:55.354961",
-      "son_fiyat": 16.229999542236328,
+      "son_fiyat": 15.970000267028809,
       "en_yuksek": 17.47
     },
     {
@@ -33,16 +33,16 @@
       "adet": 10836.659984439213,
       "maliyet": 14.75,
       "eklenme_tarihi": "2026-10-21T15:58:41.157044",
-      "son_fiyat": 14.789999961853027,
-      "en_yuksek": 14.79
+      "son_fiyat": 14.829999923706055,
+      "en_yuksek": 14.83
     },
     {
       "sembol": "METRO",
       "adet": 22705.994912405193,
       "maliyet": 7.3,
       "eklenme_tarihi": "2026-10-22T13:07:25.978149",
-      "son_fiyat": 7.3,
-      "en_yuksek": 7.3
+      "son_fiyat": 7.690000057220459,
+      "en_yuksek": 7.69
     }
   ],
   "son_rebalans_tarihi": "2026-10-22",
