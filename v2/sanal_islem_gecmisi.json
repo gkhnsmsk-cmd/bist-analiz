@@ -392,5 +392,16 @@
     "tutma_gunu": 41,
     "stop_cikisi": true,
     "getiri_yuzde": 5.8
+  },
+  {
+    "tarih": "2026-10-22",
+    "sembol": "METRO",
+    "yon": "AL",
+    "adet": 27392.7971,
+    "fiyat": 7.69,
+    "tutar": 210967.06,
+    "komisyon": 316.45,
+    "puan": 86.7,
+    "gerekce": "birikim skoru en yüksek adaylardan (CMF +0.289, MA200 üstünde, Puan 87)"
   }
 ]
