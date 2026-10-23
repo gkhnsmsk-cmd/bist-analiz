@@ -743,5 +743,55 @@
     "komisyon": 249.0,
     "puan": 46.9,
     "gerekce": "birikim skoru en yüksek adaylardan (CMF +0.229, MA200 üstünde, Puan 47)"
+  },
+  {
+    "tarih": "2026-10-23",
+    "sembol": "GLYHO",
+    "yon": "SAT",
+    "adet": 8266.4444,
+    "fiyat": 15.27,
+    "tutar": 126228.61,
+    "komisyon": 189.34,
+    "gerekce": "takip eden stop tetiklendi (fiyat 15.27 < stop 15.75; zirve 17.47)",
+    "puan": 45.5,
+    "tutma_gunu": 4,
+    "stop_cikisi": true,
+    "getiri_yuzde": -10.28
+  },
+  {
+    "tarih": "2026-10-23",
+    "sembol": "ETYAT",
+    "yon": "SAT",
+    "adet": 8204.7286,
+    "fiyat": 9.29,
+    "tutar": 76221.93,
+    "komisyon": 114.33,
+    "gerekce": "motor puanı satım eşiğinin altına düştü (Puan: 40.2 < 45)",
+    "puan": 40.2,
+    "tutma_gunu": 3,
+    "stop_cikisi": false,
+    "getiri_yuzde": -22.32
+  },
+  {
+    "tarih": "2026-10-23",
+    "sembol": "VERUS",
+    "yon": "AL",
+    "adet": 209.8167,
+    "fiyat": 481.0,
+    "tutar": 101073.43,
+    "komisyon": 151.61,
+    "puan": 47.0,
+    "gerekce": "birikim skoru en yüksek adaylardan (CMF +0.117, MA200 üstünde, Puan 47)"
+  },
+  {
+    "tarih": "2026-10-23",
+    "sembol": "SOKM",
+    "yon": "AL",
+    "adet": 1803.7859,
+    "fiyat": 55.95,
+    "tutar": 101073.43,
+    "komisyon": 151.61,
+    "puan": 52.9,
+    "gerekce": "birikim skoru en yüksek adaylardan (CMF +0.101, MA200 üstünde, Puan 53)"
   }
 ]
