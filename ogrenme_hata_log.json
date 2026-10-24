@@ -1,15 +1,15 @@
 {
- "guncelleme": "2026-10-17T10:44:42",
+ "guncelleme": "2026-10-24T11:02:35",
  "ufuk": 10,
  "hipotez": {
   "durum": "ölçüldü",
-  "toplam_olgun_karar": 5529,
-  "genel_basari_orani": 32.6,
+  "toplam_olgun_karar": 6043,
+  "genel_basari_orani": 31.4,
   "genel_basari_guven_araligi": [
-   31.4,
-   33.9
+   30.3,
+   32.6
   ],
-  "ortalama_getiri": -6.73,
+  "ortalama_getiri": -6.88,
   "yeterli_veri_mi": true,
   "bulgular": [
    {
@@ -22,102 +22,102 @@
      12.5
     ],
     "ortalama_getiri": -42.52,
-    "kontrol_grubu_basari": 28.3,
-    "fark_puan": -28.3,
-    "aday_oneri": "'Aşırı oynak hissede pozisyon açıldı (yıllık volatilite %80+)' koşulunu taşıyan kararlar, taşımayanlara göre %28 daha düşük başarı gösteriyor. Bu koşula PUAN CEZASI eklemeyi backtest'te denemeye değer.",
+    "kontrol_grubu_basari": 27.2,
+    "fark_puan": -27.2,
+    "aday_oneri": "'Aşırı oynak hissede pozisyon açıldı (yıllık volatilite %80+)' koşulunu taşıyan kararlar, taşımayanlara göre %27 daha düşük başarı gösteriyor. Bu koşula PUAN CEZASI eklemeyi backtest'te denemeye değer.",
     "oncelik": "yüksek"
    },
    {
     "kategori": "OVERBOUGHT_ENTRY",
     "aciklama": "RSI aşırı alım bölgesindeyken (75+) alındı",
-    "ornek_sayisi": 577,
-    "basari_orani": 24.6,
+    "ornek_sayisi": 601,
+    "basari_orani": 23.6,
     "guven_araligi": [
-     21.3,
-     28.3
+     20.4,
+     27.2
     ],
-    "ortalama_getiri": -15.94,
-    "kontrol_grubu_basari": 28.7,
-    "fark_puan": -4.1
+    "ortalama_getiri": -15.87,
+    "kontrol_grubu_basari": 27.6,
+    "fark_puan": -3.9
    },
    {
     "kategori": "MOMENTUM_CHASE",
     "aciklama": "Zaten çok yükselmiş hisse kovalandı (son 1 ayda %25+)",
-    "ornek_sayisi": 1502,
-    "basari_orani": 26.4,
+    "ornek_sayisi": 1554,
+    "basari_orani": 26.6,
     "guven_araligi": [
-     24.3,
-     28.7
+     24.4,
+     28.8
     ],
-    "ortalama_getiri": -13.49,
-    "kontrol_grubu_basari": 29.1,
-    "fark_puan": -2.6
-   },
-   {
-    "kategori": "OVEREXTENDED_ENTRY",
-    "aciklama": "Fiyat 50 günlük ortalamadan çok uzaktayken alındı (şişmiş giriş)",
-    "ornek_sayisi": 1618,
-    "basari_orani": 27.8,
-    "guven_araligi": [
-     25.7,
-     30.0
-    ],
-    "ortalama_getiri": -12.18,
-    "kontrol_grubu_basari": 28.3,
-    "fark_puan": -0.5
-   },
-   {
-    "kategori": "FALSE_BREAKOUT",
-    "aciklama": "52 haftalık zirveye yapışıkken alındı, kırılım tutmadı",
-    "ornek_sayisi": 499,
-    "basari_orani": 30.1,
-    "guven_araligi": [
-     26.2,
-     34.2
-    ],
-    "ortalama_getiri": -6.61,
-    "kontrol_grubu_basari": 27.9,
-    "fark_puan": 2.2
+    "ortalama_getiri": -13.34,
+    "kontrol_grubu_basari": 27.3,
+    "fark_puan": -0.7
    },
    {
     "kategori": "REGIME_MISMATCH",
     "aciklama": "Piyasa rejimi olumsuzken (50 altı) pozisyon açıldı",
-    "ornek_sayisi": 1449,
-    "basari_orani": 29.5,
+    "ornek_sayisi": 1963,
+    "basari_orani": 26.6,
     "guven_araligi": [
-     27.2,
-     31.9
+     24.7,
+     28.6
     ],
-    "ortalama_getiri": -6.96,
+    "ortalama_getiri": -7.36,
     "kontrol_grubu_basari": 27.4,
-    "fark_puan": 2.2
+    "fark_puan": -0.7
+   },
+   {
+    "kategori": "OVEREXTENDED_ENTRY",
+    "aciklama": "Fiyat 50 günlük ortalamadan çok uzaktayken alındı (şişmiş giriş)",
+    "ornek_sayisi": 1705,
+    "basari_orani": 27.6,
+    "guven_araligi": [
+     25.5,
+     29.7
+    ],
+    "ortalama_getiri": -11.97,
+    "kontrol_grubu_basari": 26.8,
+    "fark_puan": 0.8
+   },
+   {
+    "kategori": "FALSE_BREAKOUT",
+    "aciklama": "52 haftalık zirveye yapışıkken alındı, kırılım tutmadı",
+    "ornek_sayisi": 508,
+    "basari_orani": 29.9,
+    "guven_araligi": [
+     26.1,
+     34.0
+    ],
+    "ortalama_getiri": -6.67,
+    "kontrol_grubu_basari": 26.7,
+    "fark_puan": 3.2
    },
    {
     "kategori": "FALLING_KNIFE",
     "aciklama": "Düşüş trendindeyken alındı (düşen bıçak)",
-    "ornek_sayisi": 2,
-    "basari_orani": 50.0,
+    "ornek_sayisi": 3,
+    "basari_orani": 33.3,
     "guven_araligi": [
-     9.5,
-     90.5
+     6.1,
+     79.2
     ],
-    "ortalama_getiri": -0.23,
-    "kontrol_grubu_basari": 28.1,
-    "fark_puan": 21.9,
-    "not": "Sadece 2 örnek — sonuç güvenilir değil, yalnızca izleme amaçlı."
+    "ortalama_getiri": -6.37,
+    "kontrol_grubu_basari": 27.1,
+    "fark_puan": 6.3,
+    "not": "Sadece 3 örnek — sonuç güvenilir değil, yalnızca izleme amaçlı."
    }
   ],
   "uyarilar": [
    "Bu rapor bir ÖNERİ listesidir. Hiçbir kural otomatik değiştirilmedi. Bir öneriyi uygulamadan önce backtest'te önce/sonra karşılaştırması yapılmalıdır."
   ],
   "basarisiz_kararlarda_hata_sayimi": {
-   "OVEREXTENDED_ENTRY": 1168,
-   "MOMENTUM_CHASE": 1105,
-   "REGIME_MISMATCH": 1021,
-   "OVERBOUGHT_ENTRY": 435,
-   "FALSE_BREAKOUT": 349,
+   "REGIME_MISMATCH": 1440,
+   "OVEREXTENDED_ENTRY": 1235,
+   "MOMENTUM_CHASE": 1141,
+   "OVERBOUGHT_ENTRY": 459,
+   "FALSE_BREAKOUT": 356,
    "HIGH_VOLATILITY_ENTRY": 27,
-   "FALLING_KNIFE": 1
+   "FALLING_KNIFE": 2
   }
  }
 }
