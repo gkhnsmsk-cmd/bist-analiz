@@ -9,7 +9,7 @@
       "adet": 19862.905165701202,
       "maliyet": 7.1,
       "eklenme_tarihi": "2026-09-30T14:00:02.966841",
-      "son_fiyat": 6.860000133514404,
+      "son_fiyat": 6.71999979019165,
       "en_yuksek": 7.65
     },
     {
@@ -17,7 +17,7 @@
       "adet": 10836.659984439213,
       "maliyet": 14.75,
       "eklenme_tarihi": "2026-10-21T15:58:41.157044",
-      "son_fiyat": 15.0,
+      "son_fiyat": 14.850000381469727,
       "en_yuksek": 15.0
     },
     {
@@ -25,7 +25,7 @@
       "adet": 22705.994912405193,
       "maliyet": 7.3,
       "eklenme_tarihi": "2026-10-22T13:07:25.978149",
-      "son_fiyat": 7.340000152587891,
+      "son_fiyat": 7.579999923706055,
       "en_yuksek": 7.69
     },
     {
@@ -33,19 +33,19 @@
       "adet": 209.81667214048184,
       "maliyet": 481.0,
       "eklenme_tarihi": "2026-10-23T12:47:17.845583",
-      "son_fiyat": 485.5,
-      "en_yuksek": 485.5
+      "son_fiyat": 485.75,
+      "en_yuksek": 485.75
     },
     {
       "sembol": "SOKM",
       "adet": 1803.7858677313989,
       "maliyet": 55.95,
       "eklenme_tarihi": "2026-10-23T12:47:17.845596",
-      "son_fiyat": 57.400001525878906,
-      "en_yuksek": 57.4
+      "son_fiyat": 57.599998474121094,
+      "en_yuksek": 57.6
     }
   ],
-  "son_rebalans_tarihi": "2026-10-23",
+  "son_rebalans_tarihi": "2026-10-26",
   "aktif": true,
   "askida_satislar": [],
   "stop_cikislari": {
