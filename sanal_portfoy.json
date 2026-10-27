@@ -13,19 +13,11 @@
       "en_yuksek": 15.0
     },
     {
-      "sembol": "VERUS",
-      "adet": 209.81667214048184,
-      "maliyet": 481.0,
-      "eklenme_tarihi": "2026-10-23T12:47:17.845583",
-      "son_fiyat": 478.5,
-      "en_yuksek": 485.75
-    },
-    {
       "sembol": "SOKM",
       "adet": 1803.7858677313989,
       "maliyet": 55.95,
       "eklenme_tarihi": "2026-10-23T12:47:17.845596",
-      "son_fiyat": 57.849998474121094,
+      "son_fiyat": 55.75,
       "en_yuksek": 57.85
     },
     {
@@ -33,16 +25,24 @@
       "adet": 45847.74417907181,
       "maliyet": 3.19,
       "eklenme_tarihi": "2026-10-27T13:25:49.271473",
-      "son_fiyat": 3.19,
-      "en_yuksek": 3.19
+      "son_fiyat": 3.2200000286102295,
+      "en_yuksek": 3.22
     },
     {
       "sembol": "GMTAS",
       "adet": 2759.5151685139444,
       "maliyet": 53.0,
       "eklenme_tarihi": "2026-10-27T13:25:49.271484",
-      "son_fiyat": 53.0,
-      "en_yuksek": 53.0
+      "son_fiyat": 54.5,
+      "en_yuksek": 54.5
+    },
+    {
+      "sembol": "INDES",
+      "adet": 9249.126649053544,
+      "maliyet": 10.63,
+      "eklenme_tarihi": "2026-10-27T16:28:47.145653",
+      "son_fiyat": 10.63,
+      "en_yuksek": 10.63
     }
   ],
   "son_rebalans_tarihi": "2026-10-27",
