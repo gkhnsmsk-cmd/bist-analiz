@@ -793,5 +793,55 @@
     "komisyon": 151.61,
     "puan": 52.9,
     "gerekce": "birikim skoru en yüksek adaylardan (CMF +0.101, MA200 üstünde, Puan 53)"
+  },
+  {
+    "tarih": "2026-10-27",
+    "sembol": "ETILR",
+    "yon": "SAT",
+    "adet": 19862.9052,
+    "fiyat": 6.22,
+    "tutar": 123547.27,
+    "komisyon": 185.32,
+    "gerekce": "takip eden stop tetiklendi (fiyat 6.22 < stop 6.58; zirve 7.65)",
+    "puan": 53.5,
+    "tutma_gunu": 27,
+    "stop_cikisi": true,
+    "getiri_yuzde": -12.39
+  },
+  {
+    "tarih": "2026-10-27",
+    "sembol": "METRO",
+    "yon": "SAT",
+    "adet": 22705.9949,
+    "fiyat": 7.48,
+    "tutar": 169840.84,
+    "komisyon": 254.76,
+    "gerekce": "motor puanı satım eşiğinin altına düştü (Puan: 42.5 < 45)",
+    "puan": 42.5,
+    "tutma_gunu": 5,
+    "stop_cikisi": false,
+    "getiri_yuzde": 2.47
+  },
+  {
+    "tarih": "2026-10-27",
+    "sembol": "KRGYO",
+    "yon": "AL",
+    "adet": 45847.7442,
+    "fiyat": 3.19,
+    "tutar": 146474.01,
+    "komisyon": 219.71,
+    "puan": 56.5,
+    "gerekce": "birikim skoru en yüksek adaylardan (CMF +0.120, MA200 üstünde, Puan 56)"
+  },
+  {
+    "tarih": "2026-10-27",
+    "sembol": "GMTAS",
+    "yon": "AL",
+    "adet": 2759.5152,
+    "fiyat": 53.0,
+    "tutar": 146474.01,
+    "komisyon": 219.71,
+    "puan": 74.2,
+    "gerekce": "birikim skoru en yüksek adaylardan (CMF +0.106, MA200 üstünde, Puan 74)"
   }
 ]
