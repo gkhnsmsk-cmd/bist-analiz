@@ -403,5 +403,30 @@
     "komisyon": 316.45,
     "puan": 86.7,
     "gerekce": "birikim skoru en yüksek adaylardan (CMF +0.289, MA200 üstünde, Puan 87)"
+  },
+  {
+    "tarih": "2026-10-28",
+    "sembol": "AKFYE",
+    "yon": "SAT",
+    "adet": 63317.7011,
+    "fiyat": 3.44,
+    "tutar": 217812.89,
+    "komisyon": 326.72,
+    "gerekce": "takip eden stop tetiklendi (fiyat 3.44 < stop 3.53; zirve 3.98)",
+    "puan": 54.4,
+    "tutma_gunu": 9,
+    "stop_cikisi": true,
+    "getiri_yuzde": -12.02
+  },
+  {
+    "tarih": "2026-10-28",
+    "sembol": "ENJSA",
+    "yon": "AL",
+    "adet": 1918.3741,
+    "fiyat": 113.2,
+    "tutar": 217486.17,
+    "komisyon": 326.23,
+    "puan": 87.3,
+    "gerekce": "birikim skoru en yüksek adaylardan (CMF +0.011, MA200 üstünde, Puan 87)"
   }
 ]
