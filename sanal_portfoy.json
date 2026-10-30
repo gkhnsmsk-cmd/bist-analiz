@@ -9,7 +9,7 @@
       "adet": 10836.659984439213,
       "maliyet": 14.75,
       "eklenme_tarihi": "2026-10-21T15:58:41.157044",
-      "son_fiyat": 14.25,
+      "son_fiyat": 14.079999923706055,
       "en_yuksek": 15.0
     },
     {
@@ -17,7 +17,7 @@
       "adet": 1803.7858677313989,
       "maliyet": 55.95,
       "eklenme_tarihi": "2026-10-23T12:47:17.845596",
-      "son_fiyat": 54.5,
+      "son_fiyat": 52.599998474121094,
       "en_yuksek": 57.85
     },
     {
@@ -33,19 +33,19 @@
       "adet": 2759.5151685139444,
       "maliyet": 53.0,
       "eklenme_tarihi": "2026-10-27T13:25:49.271484",
-      "son_fiyat": 52.25,
-      "en_yuksek": 54.5
+      "son_fiyat": 56.349998474121094,
+      "en_yuksek": 56.35
     },
     {
       "sembol": "INDES",
       "adet": 9249.126649053544,
       "maliyet": 10.63,
       "eklenme_tarihi": "2026-10-27T16:28:47.145653",
-      "son_fiyat": 10.670000076293945,
+      "son_fiyat": 10.319999694824219,
       "en_yuksek": 10.67
     }
   ],
-  "son_rebalans_tarihi": "2026-10-29",
+  "son_rebalans_tarihi": "2026-10-30",
   "aktif": true,
   "askida_satislar": [],
   "stop_cikislari": {
