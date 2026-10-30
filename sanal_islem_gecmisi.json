@@ -868,5 +868,30 @@
     "komisyon": 147.7,
     "puan": 53.0,
     "gerekce": "birikim skoru en yüksek adaylardan (CMF +0.101, MA200 üstünde, Puan 53)"
+  },
+  {
+    "tarih": "2026-10-30",
+    "sembol": "SOKM",
+    "yon": "SAT",
+    "adet": 1803.7859,
+    "fiyat": 51.85,
+    "tutar": 93526.3,
+    "komisyon": 140.29,
+    "gerekce": "takip eden stop tetiklendi (fiyat 51.85 < stop 52.23; zirve 57.85)",
+    "puan": 46.4,
+    "tutma_gunu": 7,
+    "stop_cikisi": true,
+    "getiri_yuzde": -7.33
+  },
+  {
+    "tarih": "2026-10-30",
+    "sembol": "RYSAS",
+    "yon": "AL",
+    "adet": 3765.9907,
+    "fiyat": 24.76,
+    "tutar": 93386.01,
+    "komisyon": 140.08,
+    "puan": 51.8,
+    "gerekce": "birikim skoru en yüksek adaylardan (CMF +0.116, MA200 üstünde, Puan 52)"
   }
 ]

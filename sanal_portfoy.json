@@ -9,31 +9,23 @@
       "adet": 10836.659984439213,
       "maliyet": 14.75,
       "eklenme_tarihi": "2026-10-21T15:58:41.157044",
-      "son_fiyat": 14.079999923706055,
+      "son_fiyat": 14.109999656677246,
       "en_yuksek": 15.0
-    },
-    {
-      "sembol": "SOKM",
-      "adet": 1803.7858677313989,
-      "maliyet": 55.95,
-      "eklenme_tarihi": "2026-10-23T12:47:17.845596",
-      "son_fiyat": 52.599998474121094,
-      "en_yuksek": 57.85
     },
     {
       "sembol": "KRGYO",
       "adet": 45847.74417907181,
       "maliyet": 3.19,
       "eklenme_tarihi": "2026-10-27T13:25:49.271473",
-      "son_fiyat": 3.2300000190734863,
-      "en_yuksek": 3.23
+      "son_fiyat": 3.2799999713897705,
+      "en_yuksek": 3.28
     },
     {
       "sembol": "GMTAS",
       "adet": 2759.5151685139444,
       "maliyet": 53.0,
       "eklenme_tarihi": "2026-10-27T13:25:49.271484",
-      "son_fiyat": 56.349998474121094,
+      "son_fiyat": 55.150001525878906,
       "en_yuksek": 56.35
     },
     {
@@ -41,8 +33,16 @@
       "adet": 9249.126649053544,
       "maliyet": 10.63,
       "eklenme_tarihi": "2026-10-27T16:28:47.145653",
-      "son_fiyat": 10.319999694824219,
+      "son_fiyat": 10.1899995803833,
       "en_yuksek": 10.67
+    },
+    {
+      "sembol": "RYSAS",
+      "adet": 3765.99066172521,
+      "maliyet": 24.76,
+      "eklenme_tarihi": "2026-10-30T17:04:04.129722",
+      "son_fiyat": 24.76,
+      "en_yuksek": 24.76
     }
   ],
   "son_rebalans_tarihi": "2026-10-30",
@@ -128,6 +128,10 @@
     "ETILR": {
       "tarih": "2026-10-27",
       "puan": 53.5
+    },
+    "SOKM": {
+      "tarih": "2026-10-30",
+      "puan": 46.4
     }
   }
 }
