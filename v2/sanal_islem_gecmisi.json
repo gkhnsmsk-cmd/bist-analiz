@@ -456,5 +456,30 @@
     "tutma_gunu": 10,
     "stop_cikisi": false,
     "getiri_yuzde": -2.57
+  },
+  {
+    "tarih": "2026-10-30",
+    "sembol": "ENJSA",
+    "yon": "SAT",
+    "adet": 1918.3741,
+    "fiyat": 105.5,
+    "tutar": 202388.46,
+    "komisyon": 303.58,
+    "gerekce": "motor puanı satım eşiğinin altına düştü (Puan: 41.3 < 45)",
+    "puan": 41.3,
+    "tutma_gunu": 2,
+    "stop_cikisi": false,
+    "getiri_yuzde": -6.8
+  },
+  {
+    "tarih": "2026-10-30",
+    "sembol": "RYGYO",
+    "yon": "AL",
+    "adet": 4240.8498,
+    "fiyat": 51.25,
+    "tutar": 217670.06,
+    "komisyon": 326.51,
+    "puan": 87.5,
+    "gerekce": "birikim skoru en yüksek adaylardan (CMF +0.018, MA200 üstünde, Puan 88)"
   }
 ]

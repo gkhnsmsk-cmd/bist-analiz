@@ -2,14 +2,14 @@
   "baslangic_butce": 1000000.0,
   "baslangic_tarihi": "2026-09-11",
   "hedef_aylik_yuzde": 10.0,
-  "nakit": 273852.2555429688,
+  "nakit": 258267.07671542934,
   "pozisyonlar": [
     {
       "sembol": "DOCO",
       "adet": 4.614565860846116,
       "maliyet": 11200.0,
       "eklenme_tarihi": "2026-10-20T15:40:22.401187",
-      "son_fiyat": 11840.0,
+      "son_fiyat": 11652.5,
       "en_yuksek": 11840.0
     },
     {
@@ -17,16 +17,16 @@
       "adet": 27392.797080443666,
       "maliyet": 7.69,
       "eklenme_tarihi": "2026-10-22T15:55:46.475375",
-      "son_fiyat": 7.099999904632568,
+      "son_fiyat": 7.150000095367432,
       "en_yuksek": 7.69
     },
     {
-      "sembol": "ENJSA",
-      "adet": 1918.374056425948,
-      "maliyet": 113.2,
-      "eklenme_tarihi": "2026-10-28T14:10:23.978084",
-      "son_fiyat": 109.0999984741211,
-      "en_yuksek": 113.2
+      "sembol": "RYGYO",
+      "adet": 4240.84983409597,
+      "maliyet": 51.25,
+      "eklenme_tarihi": "2026-10-30T17:03:06.404796",
+      "son_fiyat": 51.25,
+      "en_yuksek": 51.25
     }
   ],
   "son_rebalans_tarihi": "2026-10-30",
