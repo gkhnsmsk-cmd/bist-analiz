@@ -428,5 +428,33 @@
     "komisyon": 326.23,
     "puan": 87.3,
     "gerekce": "birikim skoru en yüksek adaylardan (CMF +0.011, MA200 üstünde, Puan 87)"
+  },
+  {
+    "tarih": "2026-10-30",
+    "sembol": "INDES",
+    "yon": "SAT",
+    "adet": 21717.7397,
+    "fiyat": 10.31,
+    "tutar": 223909.9,
+    "komisyon": 335.86,
+    "gerekce": "motor puanı satım eşiğinin altına düştü (Puan: 43.5 < 45)",
+    "puan": 43.5,
+    "tutma_gunu": 10,
+    "stop_cikisi": false,
+    "getiri_yuzde": -10.89
+  },
+  {
+    "tarih": "2026-10-30",
+    "sembol": "VERUS",
+    "yon": "SAT",
+    "adet": 108.521,
+    "fiyat": 464.0,
+    "tutar": 50353.76,
+    "komisyon": 75.53,
+    "gerekce": "motor puanı satım eşiğinin altına düştü (Puan: 38.5 < 45)",
+    "puan": 38.5,
+    "tutma_gunu": 10,
+    "stop_cikisi": false,
+    "getiri_yuzde": -2.57
   }
 ]
