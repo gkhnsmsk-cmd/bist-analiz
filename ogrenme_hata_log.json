@@ -1,15 +1,15 @@
 {
- "guncelleme": "2026-10-24T11:02:35",
+ "guncelleme": "2026-10-31T12:16:22",
  "ufuk": 10,
  "hipotez": {
   "durum": "ölçüldü",
-  "toplam_olgun_karar": 6043,
-  "genel_basari_orani": 31.4,
+  "toplam_olgun_karar": 6419,
+  "genel_basari_orani": 30.1,
   "genel_basari_guven_araligi": [
-   30.3,
-   32.6
+   29.0,
+   31.3
   ],
-  "ortalama_getiri": -6.88,
+  "ortalama_getiri": -7.1,
   "yeterli_veri_mi": true,
   "bulgular": [
    {
@@ -22,75 +22,75 @@
      12.5
     ],
     "ortalama_getiri": -42.52,
-    "kontrol_grubu_basari": 27.2,
-    "fark_puan": -27.2,
-    "aday_oneri": "'Aşırı oynak hissede pozisyon açıldı (yıllık volatilite %80+)' koşulunu taşıyan kararlar, taşımayanlara göre %27 daha düşük başarı gösteriyor. Bu koşula PUAN CEZASI eklemeyi backtest'te denemeye değer.",
+    "kontrol_grubu_basari": 25.9,
+    "fark_puan": -25.9,
+    "aday_oneri": "'Aşırı oynak hissede pozisyon açıldı (yıllık volatilite %80+)' koşulunu taşıyan kararlar, taşımayanlara göre %26 daha düşük başarı gösteriyor. Bu koşula PUAN CEZASI eklemeyi backtest'te denemeye değer.",
     "oncelik": "yüksek"
    },
    {
     "kategori": "OVERBOUGHT_ENTRY",
     "aciklama": "RSI aşırı alım bölgesindeyken (75+) alındı",
-    "ornek_sayisi": 601,
-    "basari_orani": 23.6,
+    "ornek_sayisi": 625,
+    "basari_orani": 22.7,
     "guven_araligi": [
-     20.4,
-     27.2
+     19.6,
+     26.2
     ],
-    "ortalama_getiri": -15.87,
-    "kontrol_grubu_basari": 27.6,
-    "fark_puan": -3.9
-   },
-   {
-    "kategori": "MOMENTUM_CHASE",
-    "aciklama": "Zaten çok yükselmiş hisse kovalandı (son 1 ayda %25+)",
-    "ornek_sayisi": 1554,
-    "basari_orani": 26.6,
-    "guven_araligi": [
-     24.4,
-     28.8
-    ],
-    "ortalama_getiri": -13.34,
-    "kontrol_grubu_basari": 27.3,
-    "fark_puan": -0.7
+    "ortalama_getiri": -16.37,
+    "kontrol_grubu_basari": 26.2,
+    "fark_puan": -3.5
    },
    {
     "kategori": "REGIME_MISMATCH",
     "aciklama": "Piyasa rejimi olumsuzken (50 altı) pozisyon açıldı",
-    "ornek_sayisi": 1963,
-    "basari_orani": 26.6,
+    "ornek_sayisi": 2339,
+    "basari_orani": 23.9,
     "guven_araligi": [
-     24.7,
-     28.6
+     22.2,
+     25.6
     ],
-    "ortalama_getiri": -7.36,
+    "ortalama_getiri": -7.88,
     "kontrol_grubu_basari": 27.4,
-    "fark_puan": -0.7
+    "fark_puan": -3.5
+   },
+   {
+    "kategori": "MOMENTUM_CHASE",
+    "aciklama": "Zaten çok yükselmiş hisse kovalandı (son 1 ayda %25+)",
+    "ornek_sayisi": 1578,
+    "basari_orani": 26.2,
+    "guven_araligi": [
+     24.1,
+     28.4
+    ],
+    "ortalama_getiri": -13.58,
+    "kontrol_grubu_basari": 25.6,
+    "fark_puan": 0.6
    },
    {
     "kategori": "OVEREXTENDED_ENTRY",
     "aciklama": "Fiyat 50 günlük ortalamadan çok uzaktayken alındı (şişmiş giriş)",
-    "ornek_sayisi": 1705,
-    "basari_orani": 27.6,
+    "ornek_sayisi": 1765,
+    "basari_orani": 26.6,
     "guven_araligi": [
-     25.5,
-     29.7
+     24.6,
+     28.7
     ],
-    "ortalama_getiri": -11.97,
-    "kontrol_grubu_basari": 26.8,
-    "fark_puan": 0.8
+    "ortalama_getiri": -12.16,
+    "kontrol_grubu_basari": 25.3,
+    "fark_puan": 1.4
    },
    {
     "kategori": "FALSE_BREAKOUT",
     "aciklama": "52 haftalık zirveye yapışıkken alındı, kırılım tutmadı",
-    "ornek_sayisi": 508,
-    "basari_orani": 29.9,
+    "ornek_sayisi": 515,
+    "basari_orani": 30.1,
     "guven_araligi": [
-     26.1,
-     34.0
+     26.3,
+     34.2
     ],
-    "ortalama_getiri": -6.67,
-    "kontrol_grubu_basari": 26.7,
-    "fark_puan": 3.2
+    "ortalama_getiri": -6.57,
+    "kontrol_grubu_basari": 25.3,
+    "fark_puan": 4.8
    },
    {
     "kategori": "FALLING_KNIFE",
@@ -102,8 +102,8 @@
      79.2
     ],
     "ortalama_getiri": -6.37,
-    "kontrol_grubu_basari": 27.1,
-    "fark_puan": 6.3,
+    "kontrol_grubu_basari": 25.7,
+    "fark_puan": 7.6,
     "not": "Sadece 3 örnek — sonuç güvenilir değil, yalnızca izleme amaçlı."
    }
   ],
@@ -111,11 +111,11 @@
    "Bu rapor bir ÖNERİ listesidir. Hiçbir kural otomatik değiştirilmedi. Bir öneriyi uygulamadan önce backtest'te önce/sonra karşılaştırması yapılmalıdır."
   ],
   "basarisiz_kararlarda_hata_sayimi": {
-   "REGIME_MISMATCH": 1440,
-   "OVEREXTENDED_ENTRY": 1235,
-   "MOMENTUM_CHASE": 1141,
-   "OVERBOUGHT_ENTRY": 459,
-   "FALSE_BREAKOUT": 356,
+   "REGIME_MISMATCH": 1781,
+   "OVEREXTENDED_ENTRY": 1295,
+   "MOMENTUM_CHASE": 1165,
+   "OVERBOUGHT_ENTRY": 483,
+   "FALSE_BREAKOUT": 360,
    "HIGH_VOLATILITY_ENTRY": 27,
    "FALLING_KNIFE": 2
   }
