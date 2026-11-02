@@ -893,5 +893,29 @@
     "komisyon": 140.08,
     "puan": 51.8,
     "gerekce": "birikim skoru en yüksek adaylardan (CMF +0.116, MA200 üstünde, Puan 52)"
+  },
+  {
+    "tarih": "2026-11-02",
+    "sembol": "INDES",
+    "yon": "SAT",
+    "adet": 9249.1266,
+    "fiyat": 10.19,
+    "tutar": 94248.6,
+    "komisyon": 141.37,
+    "puan": 49.3,
+    "tutma_gunu": 6,
+    "gerekce": "takas: GLYHO birikim skoru +0.170, bu pozisyonunki -0.044 (marj: 0.10)",
+    "getiri_yuzde": -4.14
+  },
+  {
+    "tarih": "2026-11-02",
+    "sembol": "GLYHO",
+    "yon": "AL",
+    "adet": 5854.5836,
+    "fiyat": 16.05,
+    "tutar": 94107.23,
+    "komisyon": 141.16,
+    "puan": 47.4,
+    "gerekce": "birikim skoru en yüksek adaylardan (CMF +0.170, MA200 üstünde, Puan 47)"
   }
 ]
