@@ -917,5 +917,29 @@
     "komisyon": 141.16,
     "puan": 47.4,
     "gerekce": "birikim skoru en yüksek adaylardan (CMF +0.170, MA200 üstünde, Puan 47)"
+  },
+  {
+    "tarih": "2026-11-03",
+    "sembol": "GLYHO",
+    "yon": "SAT",
+    "adet": 5854.5836,
+    "fiyat": 16.05,
+    "tutar": 93966.07,
+    "komisyon": 140.95,
+    "puan": 47.4,
+    "tutma_gunu": 1,
+    "gerekce": "takas: MARKA birikim skoru +0.356, bu pozisyonunki +0.168 (marj: 0.10)",
+    "getiri_yuzde": 0.0
+  },
+  {
+    "tarih": "2026-11-03",
+    "sembol": "MARKA",
+    "yon": "AL",
+    "adet": 1351.867,
+    "fiyat": 69.3,
+    "tutar": 93825.12,
+    "komisyon": 140.74,
+    "puan": 56.2,
+    "gerekce": "birikim skoru en yüksek adaylardan (CMF +0.356, MA200 üstünde, Puan 56)"
   }
 ]
