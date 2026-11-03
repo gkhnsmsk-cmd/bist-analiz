@@ -187370,5 +187370,64 @@
       "piyasa_rejim_durumu": "RİSK KAPALI — Savunma modu"
     },
     "kayit_zamani": "2026-11-03T15:21:28"
+  },
+  {
+    "tarih": "2026-11-03",
+    "kaynak": "One Cikan Hisseler",
+    "sembol": "MARKA",
+    "sinyal": "🟡 İZLE / TUT",
+    "puan": 53.1,
+    "kayit_anindaki_fiyat": 68.7,
+    "ek": {
+      "kisa": 62,
+      "orta": 48,
+      "uzun": 50,
+      "takas": 82,
+      "snapshot_durumu": "tam",
+      "rsi14": 52.6,
+      "macd_hist": 1.045,
+      "ma20_uzaklik_yuzde": 4.72,
+      "ma50_uzaklik_yuzde": 0.74,
+      "ma200_uzaklik_yuzde": null,
+      "zirve52_uzaklik_yuzde": -22.81,
+      "onceki_1ay_getiri": 57.64,
+      "onceki_3ay_getiri": -22.02,
+      "trend_yonu": "yatay",
+      "hacim_orani_5g_60g": 1.51,
+      "atr_yuzde": 6.56,
+      "yillik_volatilite": 74.7,
+      "piyasa_rejim_puani": 24.0,
+      "piyasa_rejim_durumu": "RİSK KAPALI — Savunma modu"
+    },
+    "kayit_zamani": "2026-11-03T18:22:16"
+  },
+  {
+    "tarih": "2026-11-03",
+    "kaynak": "Vade: Kisa (~2 hafta)",
+    "sembol": "MARKA",
+    "sinyal": "🟢 AL",
+    "puan": 62,
+    "kayit_anindaki_fiyat": 68.7,
+    "ek": {
+      "genel_puan": 53.1,
+      "bir_ay": 57.6,
+      "uc_ay": -14.3,
+      "snapshot_durumu": "tam",
+      "rsi14": 52.6,
+      "macd_hist": 1.045,
+      "ma20_uzaklik_yuzde": 4.72,
+      "ma50_uzaklik_yuzde": 0.74,
+      "ma200_uzaklik_yuzde": null,
+      "zirve52_uzaklik_yuzde": -22.81,
+      "onceki_1ay_getiri": 57.64,
+      "onceki_3ay_getiri": -22.02,
+      "trend_yonu": "yatay",
+      "hacim_orani_5g_60g": 1.51,
+      "atr_yuzde": 6.56,
+      "yillik_volatilite": 74.7,
+      "piyasa_rejim_puani": 24.0,
+      "piyasa_rejim_durumu": "RİSK KAPALI — Savunma modu"
+    },
+    "kayit_zamani": "2026-11-03T18:22:16"
   }
 ]
