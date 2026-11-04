@@ -9,43 +9,43 @@
       "adet": 10836.659984439213,
       "maliyet": 14.75,
       "eklenme_tarihi": "2026-10-21T15:58:41.157044",
-      "son_fiyat": 14.399999618530273,
-      "en_yuksek": 15.1
+      "son_fiyat": 15.600000381469727,
+      "en_yuksek": 15.6
     },
     {
       "sembol": "KRGYO",
       "adet": 45847.74417907181,
       "maliyet": 3.19,
       "eklenme_tarihi": "2026-10-27T13:25:49.271473",
-      "son_fiyat": 3.4200000762939453,
-      "en_yuksek": 3.42
-    },
-    {
-      "sembol": "GMTAS",
-      "adet": 2759.5151685139444,
-      "maliyet": 53.0,
-      "eklenme_tarihi": "2026-10-27T13:25:49.271484",
-      "son_fiyat": 53.0,
-      "en_yuksek": 56.35
+      "son_fiyat": 3.6600000858306885,
+      "en_yuksek": 3.66
     },
     {
       "sembol": "RYSAS",
       "adet": 3765.99066172521,
       "maliyet": 24.76,
       "eklenme_tarihi": "2026-10-30T17:04:04.129722",
-      "son_fiyat": 25.479999542236328,
-      "en_yuksek": 27.84
+      "son_fiyat": 28.3799991607666,
+      "en_yuksek": 28.38
     },
     {
       "sembol": "MARKA",
       "adet": 1351.8669557685569,
       "maliyet": 69.3,
       "eklenme_tarihi": "2026-11-03T21:40:30.031718",
-      "son_fiyat": 69.3,
+      "son_fiyat": 64.95,
       "en_yuksek": 69.3
+    },
+    {
+      "sembol": "ENTRA",
+      "adet": 26653.72419093822,
+      "maliyet": 4.87,
+      "eklenme_tarihi": "2026-11-04T15:38:50.951329",
+      "son_fiyat": 4.87,
+      "en_yuksek": 4.87
     }
   ],
-  "son_rebalans_tarihi": "2026-11-03",
+  "son_rebalans_tarihi": "2026-11-04",
   "aktif": true,
   "askida_satislar": [],
   "stop_cikislari": {
@@ -132,6 +132,10 @@
     "SOKM": {
       "tarih": "2026-10-30",
       "puan": 46.4
+    },
+    "GMTAS": {
+      "tarih": "2026-11-04",
+      "puan": 52.4
     }
   }
 }

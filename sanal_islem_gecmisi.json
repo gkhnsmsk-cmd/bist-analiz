@@ -941,5 +941,30 @@
     "komisyon": 140.74,
     "puan": 56.2,
     "gerekce": "birikim skoru en yüksek adaylardan (CMF +0.356, MA200 üstünde, Puan 56)"
+  },
+  {
+    "tarih": "2026-11-04",
+    "sembol": "GMTAS",
+    "yon": "SAT",
+    "adet": 2759.5152,
+    "fiyat": 47.18,
+    "tutar": 130193.93,
+    "komisyon": 195.29,
+    "gerekce": "takip eden stop tetiklendi (fiyat 47.18 < stop 48.08; zirve 56.35)",
+    "puan": 52.4,
+    "tutma_gunu": 8,
+    "stop_cikisi": true,
+    "getiri_yuzde": -10.98
+  },
+  {
+    "tarih": "2026-11-04",
+    "sembol": "ENTRA",
+    "yon": "AL",
+    "adet": 26653.7242,
+    "fiyat": 4.87,
+    "tutar": 129998.63,
+    "komisyon": 195.0,
+    "puan": 58.4,
+    "gerekce": "birikim skoru en yüksek adaylardan (CMF +0.274, MA200 üstünde, Puan 58)"
   }
 ]
