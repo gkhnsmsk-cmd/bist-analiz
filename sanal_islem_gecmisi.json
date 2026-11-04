@@ -966,5 +966,30 @@
     "komisyon": 195.0,
     "puan": 58.4,
     "gerekce": "birikim skoru en yüksek adaylardan (CMF +0.274, MA200 üstünde, Puan 58)"
+  },
+  {
+    "tarih": "2026-11-04",
+    "sembol": "ENTRA",
+    "yon": "SAT",
+    "adet": 26653.7242,
+    "fiyat": 4.43,
+    "tutar": 118076.0,
+    "komisyon": 177.11,
+    "gerekce": "takip eden stop tetiklendi (fiyat 4.43 < stop 4.59; zirve 4.87)",
+    "puan": 59.5,
+    "tutma_gunu": 0,
+    "stop_cikisi": true,
+    "getiri_yuzde": -9.03
+  },
+  {
+    "tarih": "2026-11-04",
+    "sembol": "PCILT",
+    "yon": "AL",
+    "adet": 4048.2131,
+    "fiyat": 29.08,
+    "tutar": 117898.88,
+    "komisyon": 176.85,
+    "puan": 45.1,
+    "gerekce": "birikim skoru en yüksek adaylardan (CMF +0.155, MA200 üstünde, Puan 45)"
   }
 ]
