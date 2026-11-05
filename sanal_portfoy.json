@@ -9,7 +9,7 @@
       "adet": 10836.659984439213,
       "maliyet": 14.75,
       "eklenme_tarihi": "2026-10-21T15:58:41.157044",
-      "son_fiyat": 15.100000381469727,
+      "son_fiyat": 14.039999961853027,
       "en_yuksek": 15.6
     },
     {
@@ -17,7 +17,7 @@
       "adet": 45847.74417907181,
       "maliyet": 3.19,
       "eklenme_tarihi": "2026-10-27T13:25:49.271473",
-      "son_fiyat": 3.3299999237060547,
+      "son_fiyat": 3.5299999713897705,
       "en_yuksek": 3.66
     },
     {
@@ -25,27 +25,27 @@
       "adet": 3765.99066172521,
       "maliyet": 24.76,
       "eklenme_tarihi": "2026-10-30T17:04:04.129722",
-      "son_fiyat": 27.84000015258789,
+      "son_fiyat": 26.68000030517578,
       "en_yuksek": 28.38
-    },
-    {
-      "sembol": "MARKA",
-      "adet": 1351.8669557685569,
-      "maliyet": 69.3,
-      "eklenme_tarihi": "2026-11-03T21:40:30.031718",
-      "son_fiyat": 64.95,
-      "en_yuksek": 69.3
     },
     {
       "sembol": "PCILT",
       "adet": 4048.2130619791824,
       "maliyet": 29.08,
       "eklenme_tarihi": "2026-11-04T21:49:02.029871",
-      "son_fiyat": 29.08,
-      "en_yuksek": 29.08
+      "son_fiyat": 31.280000686645508,
+      "en_yuksek": 31.28
+    },
+    {
+      "sembol": "GARAN",
+      "adet": 634.0422654437115,
+      "maliyet": 142.0,
+      "eklenme_tarihi": "2026-11-05T15:41:45.750163",
+      "son_fiyat": 142.0,
+      "en_yuksek": 142.0
     }
   ],
-  "son_rebalans_tarihi": "2026-11-04",
+  "son_rebalans_tarihi": "2026-11-05",
   "aktif": true,
   "askida_satislar": [],
   "stop_cikislari": {

@@ -991,5 +991,30 @@
     "komisyon": 176.85,
     "puan": 45.1,
     "gerekce": "birikim skoru en yüksek adaylardan (CMF +0.155, MA200 üstünde, Puan 45)"
+  },
+  {
+    "tarih": "2026-11-05",
+    "sembol": "MARKA",
+    "yon": "SAT",
+    "adet": 1351.867,
+    "fiyat": 66.8,
+    "tutar": 90304.71,
+    "komisyon": 135.46,
+    "gerekce": "motor puanı satım eşiğinin altına düştü (Puan: 43.4 < 45)",
+    "puan": 43.4,
+    "tutma_gunu": 2,
+    "stop_cikisi": false,
+    "getiri_yuzde": -3.61
+  },
+  {
+    "tarih": "2026-11-05",
+    "sembol": "GARAN",
+    "yon": "AL",
+    "adet": 634.0423,
+    "fiyat": 142.0,
+    "tutar": 90169.26,
+    "komisyon": 135.25,
+    "puan": 68.3,
+    "gerekce": "birikim skoru en yüksek adaylardan (CMF +0.225, MA200 üstünde, Puan 68)"
   }
 ]
