@@ -492,5 +492,16 @@
     "komisyon": 328.37,
     "puan": 90.6,
     "gerekce": "birikim skoru en yüksek adaylardan (CMF +0.022, MA200 üstünde, Puan 91)"
+  },
+  {
+    "tarih": "2026-11-05",
+    "sembol": "MARKA",
+    "yon": "AL",
+    "adet": 588.2163,
+    "fiyat": 66.8,
+    "tutar": 39351.88,
+    "komisyon": 59.03,
+    "puan": 79.1,
+    "gerekce": "birikim skoru en yüksek adaylardan (CMF +0.283, MA200 üstünde, Puan 79)"
   }
 ]
