@@ -158481,5 +158481,63 @@
       "piyasa_rejim_durumu": "RİSK KAPALI — Savunma modu (v2.1 Risk-Off)"
     },
     "kayit_zamani": "2026-11-06T15:10:44"
+  },
+  {
+    "tarih": "2026-11-06",
+    "kaynak": "Vade: Orta (~3 ay)",
+    "sembol": "RYGYO",
+    "sinyal": "🟢 AL",
+    "puan": 70,
+    "kayit_anindaki_fiyat": 49.1,
+    "ek": {
+      "genel_puan": 51.1,
+      "bir_ay": 0.9,
+      "uc_ay": 21.7,
+      "snapshot_durumu": "tam",
+      "rsi14": 49.2,
+      "macd_hist": -0.329,
+      "ma20_uzaklik_yuzde": -1.52,
+      "ma50_uzaklik_yuzde": 1.57,
+      "ma200_uzaklik_yuzde": 34.32,
+      "zirve52_uzaklik_yuzde": -9.41,
+      "onceki_1ay_getiri": 0.86,
+      "onceki_3ay_getiri": 23.06,
+      "trend_yonu": "yukselis",
+      "hacim_orani_5g_60g": 0.76,
+      "atr_yuzde": 5.96,
+      "yillik_volatilite": 48.3,
+      "piyasa_rejim_puani": 20.0,
+      "piyasa_rejim_durumu": "RİSK KAPALI — Savunma modu (v2.1 Risk-Off)"
+    },
+    "kayit_zamani": "2026-11-06T17:53:40"
+  },
+  {
+    "tarih": "2026-11-06",
+    "kaynak": "Vade: Uzun (~6 ay)",
+    "sembol": "RYGYO",
+    "sinyal": "🟢 AL",
+    "puan": 100,
+    "kayit_anindaki_fiyat": 49.1,
+    "ek": {
+      "genel_puan": 51.1,
+      "bir_ay": 0.9,
+      "uc_ay": 21.7,
+      "snapshot_durumu": "tam",
+      "rsi14": 49.2,
+      "macd_hist": -0.329,
+      "ma20_uzaklik_yuzde": -1.52,
+      "ma50_uzaklik_yuzde": 1.57,
+      "ma200_uzaklik_yuzde": 34.32,
+      "zirve52_uzaklik_yuzde": -9.41,
+      "onceki_1ay_getiri": 0.86,
+      "onceki_3ay_getiri": 23.06,
+      "trend_yonu": "yukselis",
+      "hacim_orani_5g_60g": 0.76,
+      "atr_yuzde": 5.96,
+      "yillik_volatilite": 48.3,
+      "piyasa_rejim_puani": 20.0,
+      "piyasa_rejim_durumu": "RİSK KAPALI — Savunma modu (v2.1 Risk-Off)"
+    },
+    "kayit_zamani": "2026-11-06T17:53:40"
   }
 ]

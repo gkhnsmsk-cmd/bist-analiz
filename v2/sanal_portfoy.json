@@ -9,7 +9,7 @@
       "adet": 4.614565860846116,
       "maliyet": 11200.0,
       "eklenme_tarihi": "2026-10-20T15:40:22.401187",
-      "son_fiyat": 12097.5,
+      "son_fiyat": 12045.0,
       "en_yuksek": 12200.0
     },
     {
@@ -17,15 +17,15 @@
       "adet": 27392.797080443666,
       "maliyet": 7.69,
       "eklenme_tarihi": "2026-10-22T15:55:46.475375",
-      "son_fiyat": 7.920000076293945,
-      "en_yuksek": 7.92
+      "son_fiyat": 8.010000228881836,
+      "en_yuksek": 8.01
     },
     {
       "sembol": "RYGYO",
       "adet": 4240.84983409597,
       "maliyet": 51.25,
       "eklenme_tarihi": "2026-10-30T17:03:06.404796",
-      "son_fiyat": 49.0,
+      "son_fiyat": 49.099998474121094,
       "en_yuksek": 51.3
     },
     {
@@ -33,16 +33,16 @@
       "adet": 1843.0592379970853,
       "maliyet": 118.6,
       "eklenme_tarihi": "2026-11-04T15:37:02.330603",
-      "son_fiyat": 121.5,
-      "en_yuksek": 121.5
+      "son_fiyat": 122.0,
+      "en_yuksek": 122.0
     },
     {
       "sembol": "MARKA",
       "adet": 588.2163244596089,
       "maliyet": 66.8,
       "eklenme_tarihi": "2026-11-05T15:41:50.955921",
-      "son_fiyat": 67.2,
-      "en_yuksek": 67.2
+      "son_fiyat": 67.6,
+      "en_yuksek": 67.6
     }
   ],
   "son_rebalans_tarihi": "2026-11-06",
