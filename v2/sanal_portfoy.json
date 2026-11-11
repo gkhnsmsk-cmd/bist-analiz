@@ -9,7 +9,7 @@
       "adet": 4.614565860846116,
       "maliyet": 11200.0,
       "eklenme_tarihi": "2026-10-20T15:40:22.401187",
-      "son_fiyat": 12777.5,
+      "son_fiyat": 12680.0,
       "en_yuksek": 12777.5
     },
     {
@@ -17,15 +17,15 @@
       "adet": 27392.797080443666,
       "maliyet": 7.69,
       "eklenme_tarihi": "2026-10-22T15:55:46.475375",
-      "son_fiyat": 8.09000015258789,
-      "en_yuksek": 8.16
+      "son_fiyat": 8.359999656677246,
+      "en_yuksek": 8.36
     },
     {
       "sembol": "RYGYO",
       "adet": 4240.84983409597,
       "maliyet": 51.25,
       "eklenme_tarihi": "2026-10-30T17:03:06.404796",
-      "son_fiyat": 48.380001068115234,
+      "son_fiyat": 47.7599983215332,
       "en_yuksek": 51.3
     },
     {
@@ -33,7 +33,7 @@
       "adet": 1843.0592379970853,
       "maliyet": 118.6,
       "eklenme_tarihi": "2026-11-04T15:37:02.330603",
-      "son_fiyat": 120.5999984741211,
+      "son_fiyat": 119.0,
       "en_yuksek": 122.0
     },
     {
@@ -41,11 +41,11 @@
       "adet": 588.2163244596089,
       "maliyet": 66.8,
       "eklenme_tarihi": "2026-11-05T15:41:50.955921",
-      "son_fiyat": 63.0,
+      "son_fiyat": 61.35,
       "en_yuksek": 67.6
     }
   ],
-  "son_rebalans_tarihi": "2026-11-10",
+  "son_rebalans_tarihi": "2026-11-11",
   "aktif": true,
   "askida_satislar": [],
   "stop_cikislari": {
