@@ -503,5 +503,19 @@
     "komisyon": 59.03,
     "puan": 79.1,
     "gerekce": "birikim skoru en yüksek adaylardan (CMF +0.283, MA200 üstünde, Puan 79)"
+  },
+  {
+    "tarih": "2026-11-12",
+    "sembol": "RYGYO",
+    "yon": "SAT",
+    "adet": 4240.8498,
+    "fiyat": 46.36,
+    "tutar": 196605.8,
+    "komisyon": 294.91,
+    "gerekce": "motor puanı satım eşiğinin altına düştü (Puan: 44.3 < 45)",
+    "puan": 44.3,
+    "tutma_gunu": 13,
+    "stop_cikisi": false,
+    "getiri_yuzde": -9.54
   }
 ]
