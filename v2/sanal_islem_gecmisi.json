@@ -517,5 +517,16 @@
     "tutma_gunu": 13,
     "stop_cikisi": false,
     "getiri_yuzde": -9.54
+  },
+  {
+    "tarih": "2026-11-12",
+    "sembol": "KLSYN",
+    "yon": "AL",
+    "adet": 13050.3611,
+    "fiyat": 15.02,
+    "tutar": 196310.89,
+    "komisyon": 294.47,
+    "puan": 93.1,
+    "gerekce": "birikim skoru en yüksek adaylardan (CMF +0.243, MA200 üstünde, Puan 93)"
   }
 ]
