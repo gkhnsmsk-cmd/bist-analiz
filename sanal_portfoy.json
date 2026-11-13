@@ -21,14 +21,6 @@
       "en_yuksek": 3.78
     },
     {
-      "sembol": "RYSAS",
-      "adet": 3765.99066172521,
-      "maliyet": 24.76,
-      "eklenme_tarihi": "2026-10-30T17:04:04.129722",
-      "son_fiyat": 25.5,
-      "en_yuksek": 28.38
-    },
-    {
       "sembol": "GARAN",
       "adet": 634.0422654437115,
       "maliyet": 142.0,
@@ -41,8 +33,16 @@
       "adet": 12139.450873065314,
       "maliyet": 9.05,
       "eklenme_tarihi": "2026-11-13T15:34:40.557512",
-      "son_fiyat": 9.05,
+      "son_fiyat": 9.050000190734863,
       "en_yuksek": 9.05
+    },
+    {
+      "sembol": "MARKA",
+      "adet": 1439.7726264975202,
+      "maliyet": 66.5,
+      "eklenme_tarihi": "2026-11-13T18:32:41.918528",
+      "son_fiyat": 66.5,
+      "en_yuksek": 66.5
     }
   ],
   "son_rebalans_tarihi": "2026-11-13",

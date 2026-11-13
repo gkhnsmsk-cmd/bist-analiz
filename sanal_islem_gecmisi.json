@@ -1041,5 +1041,29 @@
     "komisyon": 165.04,
     "puan": 60.5,
     "gerekce": "birikim skoru en yüksek adaylardan (CMF +0.309, MA200 üstünde, Puan 60)"
+  },
+  {
+    "tarih": "2026-11-13",
+    "sembol": "RYSAS",
+    "yon": "SAT",
+    "adet": 3765.9907,
+    "fiyat": 25.5,
+    "tutar": 96032.76,
+    "komisyon": 144.05,
+    "puan": 47.8,
+    "tutma_gunu": 14,
+    "gerekce": "takas: MARKA birikim skoru +0.238, bu pozisyonunki +0.084 (marj: 0.10)",
+    "getiri_yuzde": 2.99
+  },
+  {
+    "tarih": "2026-11-13",
+    "sembol": "MARKA",
+    "yon": "AL",
+    "adet": 1439.7726,
+    "fiyat": 66.5,
+    "tutar": 95888.71,
+    "komisyon": 143.83,
+    "puan": 50.0,
+    "gerekce": "birikim skoru en yüksek adaylardan (CMF +0.238, MA200 üstünde, Puan 50)"
   }
 ]
