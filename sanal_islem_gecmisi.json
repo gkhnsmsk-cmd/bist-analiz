@@ -1016,5 +1016,30 @@
     "komisyon": 135.25,
     "puan": 68.3,
     "gerekce": "birikim skoru en yüksek adaylardan (CMF +0.225, MA200 üstünde, Puan 68)"
+  },
+  {
+    "tarih": "2026-11-13",
+    "sembol": "PCILT",
+    "yon": "SAT",
+    "adet": 4048.2131,
+    "fiyat": 27.22,
+    "tutar": 110192.36,
+    "komisyon": 165.29,
+    "gerekce": "motor puanı satım eşiğinin altına düştü (Puan: 43.2 < 45)",
+    "puan": 43.2,
+    "tutma_gunu": 9,
+    "stop_cikisi": false,
+    "getiri_yuzde": -6.4
+  },
+  {
+    "tarih": "2026-11-13",
+    "sembol": "METRO",
+    "yon": "AL",
+    "adet": 12139.4509,
+    "fiyat": 9.05,
+    "tutar": 110027.07,
+    "komisyon": 165.04,
+    "puan": 60.5,
+    "gerekce": "birikim skoru en yüksek adaylardan (CMF +0.309, MA200 üstünde, Puan 60)"
   }
 ]
