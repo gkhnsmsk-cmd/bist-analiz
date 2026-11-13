@@ -9,31 +9,31 @@
       "adet": 4.614565860846116,
       "maliyet": 11200.0,
       "eklenme_tarihi": "2026-10-20T15:40:22.401187",
-      "son_fiyat": 12680.0,
-      "en_yuksek": 12777.5
+      "son_fiyat": 12925.0,
+      "en_yuksek": 12925.0
     },
     {
       "sembol": "METRO",
       "adet": 27392.797080443666,
       "maliyet": 7.69,
       "eklenme_tarihi": "2026-10-22T15:55:46.475375",
-      "son_fiyat": 8.359999656677246,
-      "en_yuksek": 8.62
+      "son_fiyat": 9.050000190734863,
+      "en_yuksek": 9.05
     },
     {
       "sembol": "ENJSA",
       "adet": 1843.0592379970853,
       "maliyet": 118.6,
       "eklenme_tarihi": "2026-11-04T15:37:02.330603",
-      "son_fiyat": 119.0,
-      "en_yuksek": 122.0
+      "son_fiyat": 122.30000305175781,
+      "en_yuksek": 122.3
     },
     {
       "sembol": "MARKA",
       "adet": 588.2163244596089,
       "maliyet": 66.8,
       "eklenme_tarihi": "2026-11-05T15:41:50.955921",
-      "son_fiyat": 62.2,
+      "son_fiyat": 66.5,
       "en_yuksek": 67.6
     },
     {
@@ -41,11 +41,11 @@
       "adet": 13050.361070360139,
       "maliyet": 15.02,
       "eklenme_tarihi": "2026-11-12T22:06:34.039491",
-      "son_fiyat": 15.02,
-      "en_yuksek": 15.02
+      "son_fiyat": 15.619999885559082,
+      "en_yuksek": 15.62
     }
   ],
-  "son_rebalans_tarihi": "2026-11-12",
+  "son_rebalans_tarihi": "2026-11-13",
   "aktif": true,
   "askida_satislar": [],
   "stop_cikislari": {
