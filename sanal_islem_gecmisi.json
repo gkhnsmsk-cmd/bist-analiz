@@ -1065,5 +1065,30 @@
     "komisyon": 143.83,
     "puan": 50.0,
     "gerekce": "birikim skoru en yüksek adaylardan (CMF +0.238, MA200 üstünde, Puan 50)"
+  },
+  {
+    "tarih": "2026-11-16",
+    "sembol": "MARKA",
+    "yon": "SAT",
+    "adet": 1439.7726,
+    "fiyat": 60.5,
+    "tutar": 87106.24,
+    "komisyon": 130.66,
+    "gerekce": "motor puanı satım eşiğinin altına düştü (Puan: 37.7 < 45)",
+    "puan": 37.7,
+    "tutma_gunu": 3,
+    "stop_cikisi": false,
+    "getiri_yuzde": -9.02
+  },
+  {
+    "tarih": "2026-11-16",
+    "sembol": "MPARK",
+    "yon": "AL",
+    "adet": 187.6718,
+    "fiyat": 462.75,
+    "tutar": 86975.58,
+    "komisyon": 130.46,
+    "puan": 63.4,
+    "gerekce": "birikim skoru en yüksek adaylardan (CMF +0.192, MA200 üstünde, Puan 63)"
   }
 ]
