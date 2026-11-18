@@ -9,15 +9,15 @@
       "adet": 10836.659984439213,
       "maliyet": 14.75,
       "eklenme_tarihi": "2026-10-21T15:58:41.157044",
-      "son_fiyat": 15.699999809265137,
-      "en_yuksek": 15.86
+      "son_fiyat": 16.309999465942383,
+      "en_yuksek": 16.31
     },
     {
       "sembol": "KRGYO",
       "adet": 45847.74417907181,
       "maliyet": 3.19,
       "eklenme_tarihi": "2026-10-27T13:25:49.271473",
-      "son_fiyat": 3.680000066757202,
+      "son_fiyat": 3.609999895095825,
       "en_yuksek": 3.93
     },
     {
@@ -25,7 +25,7 @@
       "adet": 634.0422654437115,
       "maliyet": 142.0,
       "eklenme_tarihi": "2026-11-05T15:41:45.750163",
-      "son_fiyat": 150.10000610351562,
+      "son_fiyat": 145.6999969482422,
       "en_yuksek": 155.4
     },
     {
@@ -33,19 +33,19 @@
       "adet": 12139.450873065314,
       "maliyet": 9.05,
       "eklenme_tarihi": "2026-11-13T15:34:40.557512",
-      "son_fiyat": 9.460000038146973,
-      "en_yuksek": 9.46
+      "son_fiyat": 9.680000305175781,
+      "en_yuksek": 9.68
     },
     {
       "sembol": "MPARK",
       "adet": 187.67179073028515,
       "maliyet": 462.75,
       "eklenme_tarihi": "2026-11-16T17:15:09.446122",
-      "son_fiyat": 462.75,
+      "son_fiyat": 442.0,
       "en_yuksek": 466.0
     }
   ],
-  "son_rebalans_tarihi": "2026-11-17",
+  "son_rebalans_tarihi": "2026-11-18",
   "aktif": true,
   "askida_satislar": [],
   "stop_cikislari": {
