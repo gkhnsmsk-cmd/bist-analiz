@@ -2,14 +2,14 @@
   "baslangic_butce": 1000000.0,
   "baslangic_tarihi": "2026-09-11",
   "hedef_aylik_yuzde": 10.0,
-  "nakit": 0.0,
+  "nakit": 16274.782208541059,
   "pozisyonlar": [
     {
       "sembol": "DOCO",
       "adet": 4.614565860846116,
       "maliyet": 11200.0,
       "eklenme_tarihi": "2026-10-20T15:40:22.401187",
-      "son_fiyat": 12592.5,
+      "son_fiyat": 12642.5,
       "en_yuksek": 12925.0
     },
     {
@@ -17,35 +17,27 @@
       "adet": 27392.797080443666,
       "maliyet": 7.69,
       "eklenme_tarihi": "2026-10-22T15:55:46.475375",
-      "son_fiyat": 9.220000267028809,
+      "son_fiyat": 9.229999542236328,
       "en_yuksek": 9.68
-    },
-    {
-      "sembol": "ENJSA",
-      "adet": 1843.0592379970853,
-      "maliyet": 118.6,
-      "eklenme_tarihi": "2026-11-04T15:37:02.330603",
-      "son_fiyat": 118.0,
-      "en_yuksek": 122.3
-    },
-    {
-      "sembol": "MARKA",
-      "adet": 588.2163244596089,
-      "maliyet": 66.8,
-      "eklenme_tarihi": "2026-11-05T15:41:50.955921",
-      "son_fiyat": 55.4,
-      "en_yuksek": 67.6
     },
     {
       "sembol": "KLSYN",
       "adet": 13050.361070360139,
       "maliyet": 15.02,
       "eklenme_tarihi": "2026-11-12T22:06:34.039491",
-      "son_fiyat": 15.859999656677246,
+      "son_fiyat": 14.680000305175781,
       "en_yuksek": 16.31
+    },
+    {
+      "sembol": "KRGYO",
+      "adet": 61696.512475793505,
+      "maliyet": 3.6,
+      "eklenme_tarihi": "2026-11-19T16:43:42.285016",
+      "son_fiyat": 3.6,
+      "en_yuksek": 3.6
     }
   ],
-  "son_rebalans_tarihi": "2026-11-18",
+  "son_rebalans_tarihi": "2026-11-19",
   "aktif": true,
   "askida_satislar": [],
   "stop_cikislari": {

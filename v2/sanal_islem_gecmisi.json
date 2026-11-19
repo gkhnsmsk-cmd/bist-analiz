@@ -528,5 +528,44 @@
     "komisyon": 294.47,
     "puan": 93.1,
     "gerekce": "birikim skoru en yüksek adaylardan (CMF +0.243, MA200 üstünde, Puan 93)"
+  },
+  {
+    "tarih": "2026-11-19",
+    "sembol": "ENJSA",
+    "yon": "SAT",
+    "adet": 1843.0592,
+    "fiyat": 113.2,
+    "tutar": 208634.31,
+    "komisyon": 312.95,
+    "gerekce": "motor puanı satım eşiğinin altına düştü (Puan: 42.7 < 45)",
+    "puan": 42.7,
+    "tutma_gunu": 15,
+    "stop_cikisi": false,
+    "getiri_yuzde": -4.55
+  },
+  {
+    "tarih": "2026-11-19",
+    "sembol": "MARKA",
+    "yon": "SAT",
+    "adet": 588.2163,
+    "fiyat": 51.75,
+    "tutar": 30440.19,
+    "komisyon": 45.66,
+    "gerekce": "motor puanı satım eşiğinin altına düştü (Puan: 43.0 < 45)",
+    "puan": 43.0,
+    "tutma_gunu": 14,
+    "stop_cikisi": false,
+    "getiri_yuzde": -22.53
+  },
+  {
+    "tarih": "2026-11-19",
+    "sembol": "KRGYO",
+    "yon": "AL",
+    "adet": 61696.5125,
+    "fiyat": 3.6,
+    "tutar": 222441.11,
+    "komisyon": 333.66,
+    "puan": 87.3,
+    "gerekce": "birikim skoru en yüksek adaylardan (CMF +0.171, MA200 üstünde, Puan 87)"
   }
 ]
