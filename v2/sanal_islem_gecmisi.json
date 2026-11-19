@@ -567,5 +567,16 @@
     "komisyon": 333.66,
     "puan": 87.3,
     "gerekce": "birikim skoru en yüksek adaylardan (CMF +0.171, MA200 üstünde, Puan 87)"
+  },
+  {
+    "tarih": "2026-11-19",
+    "sembol": "KRPLS",
+    "yon": "AL",
+    "adet": 1500.4958,
+    "fiyat": 10.83,
+    "tutar": 16274.78,
+    "komisyon": 24.41,
+    "puan": 89.8,
+    "gerekce": "birikim skoru en yüksek adaylardan (CMF +0.112, MA200 üstünde, Puan 90)"
   }
 ]
