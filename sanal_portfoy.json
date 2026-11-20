@@ -5,27 +5,11 @@
   "nakit": 0.0,
   "pozisyonlar": [
     {
-      "sembol": "KLSYN",
-      "adet": 10836.659984439213,
-      "maliyet": 14.75,
-      "eklenme_tarihi": "2026-10-21T15:58:41.157044",
-      "son_fiyat": 16.309999465942383,
-      "en_yuksek": 16.31
-    },
-    {
-      "sembol": "KRGYO",
-      "adet": 45847.74417907181,
-      "maliyet": 3.19,
-      "eklenme_tarihi": "2026-10-27T13:25:49.271473",
-      "son_fiyat": 3.609999895095825,
-      "en_yuksek": 3.93
-    },
-    {
       "sembol": "GARAN",
       "adet": 634.0422654437115,
       "maliyet": 142.0,
       "eklenme_tarihi": "2026-11-05T15:41:45.750163",
-      "son_fiyat": 145.6999969482422,
+      "son_fiyat": 144.1999969482422,
       "en_yuksek": 155.4
     },
     {
@@ -33,7 +17,7 @@
       "adet": 12139.450873065314,
       "maliyet": 9.05,
       "eklenme_tarihi": "2026-11-13T15:34:40.557512",
-      "son_fiyat": 9.680000305175781,
+      "son_fiyat": 9.09000015258789,
       "en_yuksek": 9.68
     },
     {
@@ -41,11 +25,27 @@
       "adet": 187.67179073028515,
       "maliyet": 462.75,
       "eklenme_tarihi": "2026-11-16T17:15:09.446122",
-      "son_fiyat": 442.0,
+      "son_fiyat": 440.0,
       "en_yuksek": 466.0
+    },
+    {
+      "sembol": "ENERY",
+      "adet": 10339.77916937961,
+      "maliyet": 14.45,
+      "eklenme_tarihi": "2026-11-20T16:18:36.046716",
+      "son_fiyat": 14.45,
+      "en_yuksek": 14.45
+    },
+    {
+      "sembol": "OZYSR",
+      "adet": 10779.928499100675,
+      "maliyet": 13.86,
+      "eklenme_tarihi": "2026-11-20T16:18:36.046727",
+      "son_fiyat": 13.86,
+      "en_yuksek": 13.86
     }
   ],
-  "son_rebalans_tarihi": "2026-11-19",
+  "son_rebalans_tarihi": "2026-11-20",
   "aktif": true,
   "askida_satislar": [],
   "stop_cikislari": {
@@ -82,8 +82,8 @@
       "puan": 70.5
     },
     "KRGYO": {
-      "tarih": "2026-09-18",
-      "puan": 69.0
+      "tarih": "2026-11-20",
+      "puan": 52.8
     },
     "MRGYO": {
       "tarih": "2026-09-18",
@@ -140,6 +140,10 @@
     "ENTRA": {
       "tarih": "2026-11-04",
       "puan": 59.5
+    },
+    "KLSYN": {
+      "tarih": "2026-11-20",
+      "puan": 48.1
     }
   }
 }

@@ -1090,5 +1090,55 @@
     "komisyon": 130.46,
     "puan": 63.4,
     "gerekce": "birikim skoru en yüksek adaylardan (CMF +0.192, MA200 üstünde, Puan 63)"
+  },
+  {
+    "tarih": "2026-11-20",
+    "sembol": "KLSYN",
+    "yon": "SAT",
+    "adet": 10836.66,
+    "fiyat": 13.95,
+    "tutar": 151171.41,
+    "komisyon": 226.76,
+    "gerekce": "takip eden stop tetiklendi (fiyat 13.95 < stop 13.99; zirve 16.31)",
+    "puan": 48.1,
+    "tutma_gunu": 30,
+    "stop_cikisi": true,
+    "getiri_yuzde": -5.42
+  },
+  {
+    "tarih": "2026-11-20",
+    "sembol": "KRGYO",
+    "yon": "SAT",
+    "adet": 45847.7442,
+    "fiyat": 3.24,
+    "tutar": 148546.69,
+    "komisyon": 222.82,
+    "gerekce": "takip eden stop tetiklendi (fiyat 3.24 < stop 3.35; zirve 3.93)",
+    "puan": 52.8,
+    "tutma_gunu": 24,
+    "stop_cikisi": true,
+    "getiri_yuzde": 1.57
+  },
+  {
+    "tarih": "2026-11-20",
+    "sembol": "ENERY",
+    "yon": "AL",
+    "adet": 10339.7792,
+    "fiyat": 14.45,
+    "tutar": 149634.26,
+    "komisyon": 224.45,
+    "puan": 74.5,
+    "gerekce": "birikim skoru en yüksek adaylardan (CMF +0.358, MA200 üstünde, Puan 74)"
+  },
+  {
+    "tarih": "2026-11-20",
+    "sembol": "OZYSR",
+    "yon": "AL",
+    "adet": 10779.9285,
+    "fiyat": 13.86,
+    "tutar": 149634.26,
+    "komisyon": 224.45,
+    "puan": 72.7,
+    "gerekce": "birikim skoru en yüksek adaylardan (CMF +0.310, MA200 üstünde, Puan 73)"
   }
 ]
