@@ -9,7 +9,7 @@
       "adet": 634.0422654437115,
       "maliyet": 142.0,
       "eklenme_tarihi": "2026-11-05T15:41:45.750163",
-      "son_fiyat": 144.1999969482422,
+      "son_fiyat": 146.39999389648438,
       "en_yuksek": 155.4
     },
     {
@@ -17,32 +17,32 @@
       "adet": 12139.450873065314,
       "maliyet": 9.05,
       "eklenme_tarihi": "2026-11-13T15:34:40.557512",
-      "son_fiyat": 9.09000015258789,
+      "son_fiyat": 9.229999542236328,
       "en_yuksek": 9.68
-    },
-    {
-      "sembol": "MPARK",
-      "adet": 187.67179073028515,
-      "maliyet": 462.75,
-      "eklenme_tarihi": "2026-11-16T17:15:09.446122",
-      "son_fiyat": 440.0,
-      "en_yuksek": 466.0
     },
     {
       "sembol": "ENERY",
       "adet": 10339.77916937961,
       "maliyet": 14.45,
       "eklenme_tarihi": "2026-11-20T16:18:36.046716",
-      "son_fiyat": 14.449999809265137,
-      "en_yuksek": 14.45
+      "son_fiyat": 14.819999694824219,
+      "en_yuksek": 14.82
     },
     {
       "sembol": "OZYSR",
       "adet": 10779.928499100675,
       "maliyet": 13.86,
       "eklenme_tarihi": "2026-11-20T16:18:36.046727",
-      "son_fiyat": 13.859999656677246,
+      "son_fiyat": 13.34000015258789,
       "en_yuksek": 13.86
+    },
+    {
+      "sembol": "CELHA",
+      "adet": 2483.6384629948516,
+      "maliyet": 33.28,
+      "eklenme_tarihi": "2026-11-20T22:35:58.743635",
+      "son_fiyat": 33.28,
+      "en_yuksek": 33.28
     }
   ],
   "son_rebalans_tarihi": "2026-11-20",

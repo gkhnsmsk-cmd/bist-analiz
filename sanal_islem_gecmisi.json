@@ -1140,5 +1140,29 @@
     "komisyon": 224.45,
     "puan": 72.7,
     "gerekce": "birikim skoru en yüksek adaylardan (CMF +0.310, MA200 üstünde, Puan 73)"
+  },
+  {
+    "tarih": "2026-11-20",
+    "sembol": "MPARK",
+    "yon": "SAT",
+    "adet": 187.6718,
+    "fiyat": 441.75,
+    "tutar": 82904.01,
+    "komisyon": 124.36,
+    "puan": 64.9,
+    "tutma_gunu": 4,
+    "gerekce": "takas: CELHA birikim skoru +0.325, bu pozisyonunki +0.116 (marj: 0.10)",
+    "getiri_yuzde": -4.54
+  },
+  {
+    "tarih": "2026-11-20",
+    "sembol": "CELHA",
+    "yon": "AL",
+    "adet": 2483.6385,
+    "fiyat": 33.28,
+    "tutar": 82779.66,
+    "komisyon": 124.17,
+    "puan": 77.2,
+    "gerekce": "birikim skoru en yüksek adaylardan (CMF +0.325, MA200 üstünde, Puan 77)"
   }
 ]
