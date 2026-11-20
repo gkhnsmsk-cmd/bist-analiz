@@ -578,5 +578,19 @@
     "komisyon": 24.41,
     "puan": 89.8,
     "gerekce": "birikim skoru en yüksek adaylardan (CMF +0.112, MA200 üstünde, Puan 90)"
+  },
+  {
+    "tarih": "2026-11-20",
+    "sembol": "KLSYN",
+    "yon": "SAT",
+    "adet": 13050.3611,
+    "fiyat": 13.95,
+    "tutar": 182052.54,
+    "komisyon": 273.08,
+    "gerekce": "takip eden stop tetiklendi (fiyat 13.95 < stop 13.99; zirve 16.31)",
+    "puan": 70.8,
+    "tutma_gunu": 8,
+    "stop_cikisi": true,
+    "getiri_yuzde": -7.12
   }
 ]
