@@ -218043,5 +218043,34 @@
       "piyasa_rejim_durumu": "RİSK KAPALI — Savunma modu"
     },
     "kayit_zamani": "2026-11-20T16:16:11"
+  },
+  {
+    "tarih": "2026-11-20",
+    "kaynak": "Vade: Kisa (~2 hafta)",
+    "sembol": "ALARK",
+    "sinyal": "🟢 AL",
+    "puan": 62,
+    "kayit_anindaki_fiyat": 102.7,
+    "ek": {
+      "genel_puan": 41.7,
+      "bir_ay": -1.5,
+      "uc_ay": -4.6,
+      "snapshot_durumu": "tam",
+      "rsi14": 49.1,
+      "macd_hist": 0.427,
+      "ma20_uzaklik_yuzde": 1.68,
+      "ma50_uzaklik_yuzde": -1.59,
+      "ma200_uzaklik_yuzde": 1.7,
+      "zirve52_uzaklik_yuzde": -12.52,
+      "onceki_1ay_getiri": -1.53,
+      "onceki_3ay_getiri": -1.25,
+      "trend_yonu": "yatay",
+      "hacim_orani_5g_60g": 0.55,
+      "atr_yuzde": 3.87,
+      "yillik_volatilite": 35.8,
+      "piyasa_rejim_puani": 24.0,
+      "piyasa_rejim_durumu": "RİSK KAPALI — Savunma modu"
+    },
+    "kayit_zamani": "2026-11-20T19:03:33"
   }
 ]
