@@ -592,5 +592,16 @@
     "tutma_gunu": 8,
     "stop_cikisi": true,
     "getiri_yuzde": -7.12
+  },
+  {
+    "tarih": "2026-11-24",
+    "sembol": "AVGYO",
+    "yon": "AL",
+    "adet": 11516.9282,
+    "fiyat": 15.76,
+    "tutar": 181779.46,
+    "komisyon": 272.67,
+    "puan": 89.1,
+    "gerekce": "birikim skoru en yüksek adaylardan (CMF +0.085, MA200 üstünde, Puan 89)"
   }
 ]
