@@ -1164,5 +1164,30 @@
     "komisyon": 124.17,
     "puan": 77.2,
     "gerekce": "birikim skoru en yüksek adaylardan (CMF +0.325, MA200 üstünde, Puan 77)"
+  },
+  {
+    "tarih": "2026-11-24",
+    "sembol": "GARAN",
+    "yon": "SAT",
+    "adet": 634.0423,
+    "fiyat": 143.3,
+    "tutar": 90858.26,
+    "komisyon": 136.29,
+    "gerekce": "takip eden stop tetiklendi (fiyat 143.30 < stop 143.75; zirve 155.40)",
+    "puan": 71.3,
+    "tutma_gunu": 19,
+    "stop_cikisi": true,
+    "getiri_yuzde": 0.92
+  },
+  {
+    "tarih": "2026-11-24",
+    "sembol": "AKSA",
+    "yon": "AL",
+    "adet": 8160.8907,
+    "fiyat": 11.1,
+    "tutar": 90721.97,
+    "komisyon": 136.08,
+    "puan": 56.8,
+    "gerekce": "birikim skoru en yüksek adaylardan (CMF +0.129, MA200 üstünde, Puan 57)"
   }
 ]
